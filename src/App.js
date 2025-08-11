@@ -8,6 +8,10 @@ function App() {
 
   useEffect(() => {
     try {
+      console.log('WebApp object:', WebApp);
+      console.log('initDataUnsafe:', WebApp.initDataUnsafe);
+      console.log('user:', WebApp.initDataUnsafe?.user);
+      
       WebApp.ready();
 
       const tgUser = WebApp.initDataUnsafe?.user;
