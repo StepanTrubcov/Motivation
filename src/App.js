@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import  WebApp  from '@twa-dev/sdk';
+import WebApp from '@twa-dev/sdk';
 import './App.css';
 
 function App() {
@@ -8,10 +8,9 @@ function App() {
 
   useEffect(() => {
     try {
-      const webApp = new WebApp();
-      webApp.ready();
+      WebApp.ready();
 
-      const tgUser = webApp.initDataUnsafe?.user;
+      const tgUser = WebApp.initDataUnsafe?.user;
       if (tgUser) {
         setUser(tgUser);
       } else {
