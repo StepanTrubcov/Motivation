@@ -12,14 +12,14 @@ export const addProfile = async (setUser) => {
         }
       
         // Сохраняем пользователя в БД
-        await fetch("https://f7a2d8a411c3.ngrok-free.app/api/profile", {
+        await fetch(" https://f748cd9be673.ngrok-free.app/api/profile", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(userData)
         });
       
         // Получаем данные из БД
-        const res = await fetch(`https://f7a2d8a411c3.ngrok-free.app/api/profile/${userData.id}`);
+        const res = await fetch(` https://f748cd9be673.ngrok-free.app/api/profile/${userData.id}`);
         const data = await res.json();
       
         setUser(data);
