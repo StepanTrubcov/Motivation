@@ -1,33 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import WebApp from '@twa-dev/sdk';
 import './App.css';
+import ProfileConteiner from './Component/Profile/ProfileConteiner';
+import { addProfile } from './Api/Api';
 
 function App() {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    try {
-      console.log('WebApp object:', WebApp);
-      console.log('initDataUnsafe:', WebApp.initDataUnsafe);
-      console.log('user:', WebApp.initDataUnsafe?.user);
-      
-      WebApp.ready();
-
-      const tgUser = WebApp.initDataUnsafe?.user;
-      if (tgUser) {
-        setUser(tgUser);
-      } else {
-        setError('Данные пользователя не найдены.');
-      }
-    } catch (err) {
-      setError('Ошибка инициализации: ' + err.message);
-    }
+    addProfile(setUser);
   }, []);
-
-  if (error) {
-    return <div className="App">Ошибка: {error}</div>;
-  }
 
   if (!user) {
     return <div className="App">Загрузка данных пользователя...</div>;
@@ -35,10 +16,12 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Добро пожаловать, {user.first_name}!</h1>
-      <p><strong>ID:</strong> {user.id}</p>
-      <p><strong>Username:</strong> @{user.username || 'нет username'}</p>
-      <p><strong>Имя:</strong> {user.first_name} {user.last_name || ''}</p>
+      <ProfileConteiner user={user} />
+      <div>
+      <h2>{user.first_name} {user.last_name}</h2>
+      <p>@{user.username}</p>
+      <p>ID: {user.id}</p>
+    </div>
     </div>
   );
 }
