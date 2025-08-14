@@ -1,10 +1,9 @@
+import { addProfileApi } from '../Api/Api';
 
 const SET_PROFILE = 'profile/SET_PROFILE'
 
 const initial = {
-    profile: {},
-    name: 'stepan',
-    avatar: 'https://www.shutterstock.com/image-vector/avatar-photo-default-user-icon-600nw-2345549599.jpg',
+    profile: null,
 }
 
 const ProfileReducer = (state = initial, action) => {
@@ -20,5 +19,11 @@ const setProfile = (user) => ({
     type: SET_PROFILE,
     user: user,
 })
+
+export const addProfile = () => async (dispath) => {
+    await addProfileApi().then(response => {
+        dispath(setProfile(response))
+    })
+}
 
 export default ProfileReducer

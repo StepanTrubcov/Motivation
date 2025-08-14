@@ -1,0 +1,27 @@
+.ProfileInfo {
+    margin-top: 20px;
+    display: flex;
+}
+
+.avatar {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 100%;
+}
+
+.info {
+    margin-left: 30px;
+}
+
+.name {
+    font-weight: 500;
+    font-size: 35px;
+    margin-bottom: 5px;
+}
+
+.glasses {
+    color: #00ff1e;
+    text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
+    font-weight: 600;
+    font-size: 30px;
+}

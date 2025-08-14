@@ -1,29 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import ProfileConteiner from './Component/Profile/ProfileConteiner';
-import { addProfile } from './Api/Api';
+import { connect } from 'react-redux';
+import { addProfile } from './redux/profile_reducer';
+import BottomNav from './Component/BottomNav/BottomNav'
 
-function App() {
-  const [user, setUser] = useState(null);
+const App = (props) => {
+
 
   useEffect(() => {
-    addProfile(setUser);
+    props.addProfile();
   }, []);
 
-  if (!user) {
+  if (!props.user) {
     return <div className="App">Загрузка данных пользователя...</div>;
   }
 
   return (
     <div className="App">
-      <ProfileConteiner user={user} />
-      <div>
-      <h2>{user.first_name} {user.last_name}</h2>
-      <p>@{user.username}</p>
-      <p>ID: {user.id}</p>
-    </div>
+      <ProfileConteiner />
+      <BottomNav />
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => ({
+  user: state.profile.profile
+})
+
+export default connect(mapStateToProps, { addProfile })(App);

@@ -1,0 +1,25 @@
+.navbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 80%;
+    height: 60px;
+    background-color: #000000;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    z-index: 9999;
+}
+
+.navItem {
+    font-size: 24px;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.navItem.active {
+    color: #00ff6a;
+    text-shadow: 0 0 8px rgba(0, 255, 106, 0.8);
+}
