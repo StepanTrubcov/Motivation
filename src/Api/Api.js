@@ -17,7 +17,7 @@ export const addProfileApi = async (setProfile) => {
   }
 
   try {
-    const postResponse = await axios.post("http://5.129.201.197/api/users", {
+    const postResponse = await axios.post("https://9130bb41d35c.ngrok-free.app/api/users", {
         telegramId: userData.id,
         firstName: userData.first_name,
         username: userData.username
@@ -25,7 +25,7 @@ export const addProfileApi = async (setProfile) => {
     console.log('POST response:', postResponse.data);
 
     
-    const getResponse = await axios.get(`http://5.129.201.197/api/users/${userData.id}`);
+    const getResponse = await axios.get(`https://9130bb41d35c.ngrok-free.app/api/users/${userData.id}`);
     console.log('GET response:', getResponse.data);
 
     return getResponse.data;
