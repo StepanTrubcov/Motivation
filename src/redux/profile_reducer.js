@@ -1,4 +1,5 @@
 import { addProfileApi } from '../Api/Api';
+import { initializeUserGoals } from '../lib/firebase';
 
 const SET_PROFILE = 'profile/SET_PROFILE'
 
@@ -23,6 +24,7 @@ const setProfile = (user) => ({
 export const addProfile = () => async (dispath) => {
     await addProfileApi().then(response => {
         dispath(setProfile(response))
+        initializeUserGoals(response.id)
     })
 }
 

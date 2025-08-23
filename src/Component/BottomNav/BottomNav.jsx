@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaHome, FaBars, FaTrophy } from "react-icons/fa";
 import c from './BottomNav.module.css'
+import { Link } from "react-router-dom";
 
 const BottomNav = () => {
 
@@ -8,24 +9,27 @@ const BottomNav = () => {
 
     return (
         <div className={c.navbar} >
-            <div
+            <Link
+                to={'/'}
                 className={`${c.navItem} ${activeTab === "home" ? c.active : ""}`}
                 onClick={() => setActiveTab("home")}
             >
                 <FaHome />
-            </div>
-            <div
+            </Link>
+            <Link
+                to={'/goals'}
                 className={`${c.navItem} ${activeTab === "menu" ? c.active : ""}`}
                 onClick={() => setActiveTab("menu")}
             >
                 <FaBars />
-            </div>
-            <div
+            </Link>
+            <Link
+                to={'/'}
                 className={`${c.navItem} ${activeTab === "trophy" ? c.active : ""}`}
                 onClick={() => setActiveTab("trophy")}
             >
                 <FaTrophy />
-            </div>
+            </Link>
         </div>
     );
 };

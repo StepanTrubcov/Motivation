@@ -1,11 +1,12 @@
 .ProfileInfo {
-    margin-top: 20px;
+    margin-top: 30px;
     display: flex;
+    margin-bottom: 30px;
 }
 
 .avatar {
-    max-width: 80px;
-    max-height: 80px;
+    max-width: 100px;
+    max-height: 100px;
     border-radius: 100%;
 }
 
@@ -15,7 +16,7 @@
 
 .name {
     font-weight: 500;
-    font-size: 35px;
+    font-size: 45px;
     margin-bottom: 5px;
 }
 

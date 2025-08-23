@@ -1,0 +1,24 @@
+.blok {
+    margin: 20px 10px;
+    background: #151515;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content:space-between;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.pts {
+    margin-top: 10px;
+    font-size: 20px;
+    color: #00ff1e;
+    text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
+}
+
+.img{
+    width: 50px;
+}

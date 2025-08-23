@@ -1,31 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
+import { Route, Routes } from 'react-router-dom';
 import ProfileConteiner from './Component/Profile/ProfileConteiner';
 import { connect } from 'react-redux';
 import { addProfile } from './redux/profile_reducer';
-import BottomNav from './Component/BottomNav/BottomNav'
+import BottomNav from './Component/BottomNav/BottomNav';
+import GoalsConteiner from './Component/Goals/GoalsConteiner';
+import { addGoals } from './redux/goals_reducer';
+import { Toaster, toast } from "react-hot-toast";
+import About from './Component/About/About';
+
 
 const App = (props) => {
-
-
   useEffect(() => {
     props.addProfile();
+
   }, []);
 
   if (!props.user) {
-    return <div className="App">Загрузка данных пользователя...</div>;
+    return <div className="loading-wrapper">
+      <div className="loading-box">
+        <h2 className="loading-title">Загрузка данных пользователя...</h2>
+        <p className="loading-text">
+          Если приложение не запускается попробуйте зайти чуть позже, когда нагрузка уменьшится.
+        </p>
+        <p className="loading-support">
+          Чтобы приложение работало стабильнее, вы можете нас поддержать!
+          <br />
+          Информация о поддержке доступна в нашем Telegram-боте.
+        </p>
+      </div>
+    </div>
+  } else if (!props.ThereAreUsers) {
+    props.addGoals(props.user.id)
+    return <div className="loading-wrapper">
+      <div className="loading-box">
+        <h2 className="loading-title">Загрузка целей пользователя...</h2>
+        <p className="loading-text">
+          Если приложение не запускается попробуйте зайти чуть позже, когда нагрузка уменьшится.
+        </p>
+        <p className="loading-support">
+          Чтобы приложение работало стабильнее, вы можете нас поддержать!
+          <br />
+          Информация о поддержке доступна в нашем Telegram-боте.
+        </p>
+      </div>
+    </div>
+  }
+
+  if (props.TheFirstTime) {
+    return <About />
   }
 
   return (
     <div className="App">
-      <ProfileConteiner />
+      <Toaster position="top-center" reverseOrder={false} />
+      <Routes>
+        <Route path="/" element={<ProfileConteiner />} />
+        <Route path="/goals" element={<GoalsConteiner />} />
+      </Routes>
       <BottomNav />
     </div>
   );
 }
 
 const mapStateToProps = (state) => ({
-  user: state.profile.profile
+  user: state.profile.profile,
+  ThereAreUsers: state.goals.ThereAreUsers,
+  TheFirstTime: state.goals.TheFirstTime
 })
 
-export default connect(mapStateToProps, { addProfile })(App);
+export default connect(mapStateToProps, { addProfile, addGoals })(App);

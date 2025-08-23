@@ -3,7 +3,6 @@ import Profile from "./Profile";
 import { connect } from "react-redux";
 
 const ProfileConteiner = (props) => {
-    console.log(props)
     return <Profile />
 }
 
