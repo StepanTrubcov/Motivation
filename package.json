@@ -12,6 +12,8 @@
     "@twa-dev/sdk": "^8.0.2",
     "axios": "^1.11.0",
     "firebase": "^12.1.0",
+    "framer-motion": "10",
+    "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-github-contribution-calendar": "^2.2.0",

@@ -9,16 +9,17 @@
 
 .title {
     font-weight: 600;
-    font-size: 20px;
+    font-size: 17px;
 }
 
 .pts {
     margin-top: 10px;
-    font-size: 20px;
+    font-size: 15px;
     color: #00ff1e;
     text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
 }
 
 .img{
     width: 50px;
+    margin-left: 10px;
 }

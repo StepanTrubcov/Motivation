@@ -8,7 +8,7 @@ import BottomNav from './Component/BottomNav/BottomNav';
 import GoalsConteiner from './Component/Goals/GoalsConteiner';
 import { addGoals } from './redux/goals_reducer';
 import { Toaster, toast } from "react-hot-toast";
-import About from './Component/About/About';
+import About from './Component/About/AboutConteiner';
 
 
 const App = (props) => {

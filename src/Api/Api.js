@@ -3,13 +3,13 @@ import axios from 'axios';
 import { collection, getDocs } from "firebase/firestore";
 import { doc, updateDoc } from "firebase/firestore";
 
-export const addProfileApi = async (setProfile) => {
+export const addProfileApi = async () => {
   WebApp.ready();
 
   const userData = WebApp.initDataUnsafe?.user || {
-    id: "5102803347",
-    first_name: "Stefan",
-    username: "Stepan4853",
+    id: "2551",
+    first_name: "Stepan243",
+    username: "Stepan123",
     photo_url: "https://t.me/i/userpic/320/oBN9n-AW0sT2iVFeGc17067iUAw_QccFVfwQefEbwRJFd3WRBg0IiDoe6whGY1zK.svg"
   };
   console.log(userData)
@@ -19,7 +19,7 @@ export const addProfileApi = async (setProfile) => {
   }
 
   try {
-    const postResponse = await axios.post("https://97a4b39a082c.ngrok-free.app/api/users", {
+    const postResponse = await axios.post("http://localhost:5002/api/users", {
       telegramId: userData.id,
       firstName: userData.first_name,
       username: userData.username
@@ -27,7 +27,7 @@ export const addProfileApi = async (setProfile) => {
     console.log('POST response:', postResponse.data);
 
 
-    const getResponse = await axios.get(`https://97a4b39a082c.ngrok-free.app/api/users/${userData.id}`);
+    const getResponse = await axios.get(`http://localhost:5002/api/users/${userData.id}`);
     console.log('GET response:', getResponse.data);
 
     return getResponse.data;

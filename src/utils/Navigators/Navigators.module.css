@@ -1,5 +1,6 @@
 .navItem {
     position: relative;
+    font-size: 13px;
     flex: 1;
     text-align: center;
     padding: 10px 12px;

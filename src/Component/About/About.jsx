@@ -1,7 +1,8 @@
 import React from "react";
 import "./About.css";
+import { Link } from "react-router-dom";
 
-const About = () => {
+const About = (props) => {
     return (
         <div className="about-container">
             <h1 className="title">Привет новый пользователь!</h1>
@@ -14,7 +15,7 @@ const About = () => {
             <div className="about-section">
                 <h2 className="about-subtitle">Как это работает?</h2>
                 <ul className="about-list">
-                    <li>Выбирайте цели из предложенных или создавайте свои.</li>
+                    <li>Выбирайте цели из предложенных.</li>
                     <li>Выполняйте их каждый день и получайте очки.</li>
                     <li>За достижения вы получаете награды и бейджи.</li>
                     <li>Каждый новый день — новый шанс начать заново.</li>
@@ -36,6 +37,7 @@ const About = () => {
                     баланс и получать удовольствие от процесса!
                 </p>
             </div>
+            <div onClick={() => props.setTheFirstTimeFalse()} >Далее</div>
         </div>
     );
 };

@@ -6,12 +6,12 @@ const filter = (goals = [], text, funct = () => { }, img = 'https://assets-globa
         return <div className={c.blok}>У вас нет таких целей</div>;
     }
     return filteredGoals.map(d => (
-        <div className={c.blok} >
+        <div onClick={() => funct(d)} className={c.blok} >
             <div>
                 <div className={c.title} >{d.title}</div>
                 <div className={c.pts} >{d.points} pts</div>
             </div>
-            <div onClick={() => funct(d.id,text)} >
+            <div>
                 <img className={c.img} src={img} />
             </div>
         </div>
