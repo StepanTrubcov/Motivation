@@ -2,92 +2,96 @@ import React, { useState, useEffect } from "react";
 import Goals from "./Goals";
 import { connect } from "react-redux";
 import filter from "../../utils/Filter/filter";
-import { addStatusNew } from "../../redux/goals_reducer";
+import { addStatusNew, addGoals, addStatus } from '../../redux/goals_reducer';
 import { toast } from "react-hot-toast";
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
 import styles from "./Goals.module.css";
+import ModalWindow from "../../utils/ModalWindow/ModalWindow";
 
-const GoalsConteiner = (props) => {
+const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus }) => {
     const [isModalOpen, setIsModalOpen] = useState(null);
+    const [isModalOpenDone, setIsModalOpenDone] = useState(null);
+
+    useEffect(() => {
+        if (userId) {
+            addStatus(userId)
+            addGoals(userId)
+        }
+    }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
-        setIsModalOpen(goal)
+        setIsModalOpen(goal);
     };
 
     const closeModal = () => {
         setIsModalOpen(null);
     };
 
-    const addNewStatus = () => {
-        props.addStatusNew(isModalOpen.id,props.userId,"in_progress")
-        setIsModalOpen(null);
-        toast.success("Цель успешно взята на 30 дней!");
-    }
+    const ModalDone = (goal) => {
+        setIsModalOpenDone({
+            title: "Выполнить цель",
+            description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
+            id: goal.id,
+        });
+    };
+
+    const closeModalDone = () => {
+        setIsModalOpenDone(null);
+    };
+
+    const addNewStatus = async () => {
+        try {
+            await addStatusNew(isModalOpen.id, userId, "in_progress");
+            toast.success("Цель успешно взята на 30 дней!");
+            setIsModalOpen(null);
+        } catch (error) {
+            console.error("Ошибка при взятии цели:", error);
+            toast.error("Не удалось взять цель. Попробуйте снова.");
+        }
+    };
+
+    const addNewStatusDone = async () => {
+        try {
+            await addStatusNew(isModalOpenDone.id, userId, "done");
+            toast.success("Цель успешно выполнена!");
+            setIsModalOpenDone(null);
+            await addStatus(userId);
+        } catch (error) {
+            console.error("Ошибка при выполнении цели:", error);
+            toast.error("Не удалось выполнить цель. Попробуйте снова.");
+        }
+    };
 
     return (
         <div className={styles.container}>
             <Goals
                 completed={filter(
-                    props.goals.goals,
+                    goals.goals,
                     "done",
-                    null,
+                    ()=>{toast.success("Эта цель уже выполнена!");},
                     "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png"
                 )}
-                inProgress={filter(props.goals.goals, "in_progress")}
-                available={filter(props.goals.goals, "not_started", Modal)}
+                inProgress={filter(goals.goals, "in_progress", ModalDone)}
+                available={filter(goals.goals, "not_started", Modal)}
             />
-            <AnimatePresence>
-                {isModalOpen && (
-                    <motion.div
-                        className={styles.modalBackdrop}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        onClick={closeModal}
-                    >
-                        <motion.div
-                            className={styles.modalContent}
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button
-                                onClick={closeModal}
-                                className={styles.closeButton}
-                                aria-label="Close modal"
-                            >
-                                <X size={24} />
-                            </button>
-
-                            <h2 className={styles.modalTitle}>
-                                {isModalOpen.title}
-                            </h2>
-                            <p className={styles.modalText}>
-                                {isModalOpen.description}
-                            </p>
-                            <button
-                                onClick={() => {
-                                    addNewStatus()
-                                }}
-                                className={styles.actionButton}
-                            >
-                                Взять цель на 30 дней
-                            </button>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            <ModalWindow
+                isModalOpen={isModalOpen}
+                buttonText="Взять цель на 30 дней"
+                addNewStatus={addNewStatus}
+                closeModal={closeModal}
+            />
+            <ModalWindow
+                isModalOpen={isModalOpenDone}
+                buttonText="Выполнить цель"
+                addNewStatus={addNewStatusDone}
+                closeModal={closeModalDone}
+            />
         </div>
     );
 };
 
 const mapStateToProps = (state) => ({
     goals: state.goals,
-    userId: state.profile.profile.id
+    userId: state.profile.profile?.id,
 });
 
-export default connect(mapStateToProps, { addStatusNew })(GoalsConteiner);
+export default connect(mapStateToProps, { addStatusNew, addGoals, addStatus })(GoalsConteiner);

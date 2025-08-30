@@ -7,14 +7,14 @@ import { addProfile } from './redux/profile_reducer';
 import BottomNav from './Component/BottomNav/BottomNav';
 import GoalsConteiner from './Component/Goals/GoalsConteiner';
 import { addGoals } from './redux/goals_reducer';
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import About from './Component/About/AboutConteiner';
+import AchievementsConteiner from './Component/Achievements/AchievementsConteiner';
 
 
 const App = (props) => {
   useEffect(() => {
     props.addProfile();
-
   }, []);
 
   if (!props.user) {
@@ -31,7 +31,8 @@ const App = (props) => {
         </p>
       </div>
     </div>
-  } else if (!props.ThereAreUsers) {
+  }
+  else if (!props.ThereAreUsers) {
     props.addGoals(props.user.id)
     return <div className="loading-wrapper">
       <div className="loading-box">
@@ -48,7 +49,7 @@ const App = (props) => {
     </div>
   }
 
-  if (props.TheFirstTime) {
+  if (props.theFirstTime) {
     return <About />
   }
 
@@ -58,6 +59,7 @@ const App = (props) => {
       <Routes>
         <Route path="/" element={<ProfileConteiner />} />
         <Route path="/goals" element={<GoalsConteiner />} />
+        <Route path="/achievements" element={<AchievementsConteiner />} />
       </Routes>
       <BottomNav />
     </div>
@@ -67,7 +69,7 @@ const App = (props) => {
 const mapStateToProps = (state) => ({
   user: state.profile.profile,
   ThereAreUsers: state.goals.ThereAreUsers,
-  TheFirstTime: state.goals.TheFirstTime
+  theFirstTime: state.profile.theFirstTime
 })
 
 export default connect(mapStateToProps, { addProfile, addGoals })(App);

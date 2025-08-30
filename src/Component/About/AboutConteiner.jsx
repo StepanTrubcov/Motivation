@@ -3,10 +3,10 @@ import "./About.css";
 import { Link } from "react-router-dom";
 import About from "./About";
 import { connect } from "react-redux";
-import { setTheFirstTimeFalse } from "../../redux/goals_reducer";
+import {setTheFirstTime } from '../../redux/profile_reducer'
 
 const AboutConteiner = (props) => {
     return <About {...props} />
 };
 
-export default connect(null, { setTheFirstTimeFalse })(AboutConteiner);
+export default connect(null,{setTheFirstTime})(AboutConteiner);

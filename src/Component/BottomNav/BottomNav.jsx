@@ -24,7 +24,7 @@ const BottomNav = () => {
                 <FaBars />
             </Link>
             <Link
-                to={'/'}
+                to={'/achievements'}
                 className={`${c.navItem} ${activeTab === "trophy" ? c.active : ""}`}
                 onClick={() => setActiveTab("trophy")}
             >
