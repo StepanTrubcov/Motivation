@@ -13,6 +13,7 @@ export const addProfileApi = async () => {
     username: "Stepan",
     photo_url: "https://t.me/i/userpic/320/oBN9n-AW0sT2iVFeGc17067iUAw_QccFVfwQefEbwRJFd3WRBg0IiDoe6whGY1zK.svg"
   };
+  
   console.log('userData:', userData);
   if (!userData) {
     console.error("Нет данных пользователя от Telegram");

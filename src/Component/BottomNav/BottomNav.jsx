@@ -10,7 +10,7 @@ const BottomNav = () => {
     return (
         <div className={c.navbar} >
             <Link
-                to={'/'}
+                to={'/Motivation'}
                 className={`${c.navItem} ${activeTab === "home" ? c.active : ""}`}
                 onClick={() => setActiveTab("home")}
             >
