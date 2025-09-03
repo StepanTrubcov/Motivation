@@ -8,7 +8,6 @@ import BottomNav from './Component/BottomNav/BottomNav';
 import GoalsConteiner from './Component/Goals/GoalsConteiner';
 import { addGoals } from './redux/goals_reducer';
 import { Toaster } from "react-hot-toast";
-import About from './Component/About/AboutConteiner';
 import AchievementsConteiner from './Component/Achievements/AchievementsConteiner';
 
 
@@ -49,15 +48,15 @@ const App = (props) => {
     </div>
   }
 
-  if (props.theFirstTime) {
-    return <About />
-  }
+  // if (props.theFirstTime) {
+  //   return <About />
+  // }
 
   return (
     <div className="App">
       <Toaster position="top-center" reverseOrder={false} />
       <Routes>
-        <Route path="/" element={<ProfileConteiner />} />
+        <Route path="/Motivation" element={<ProfileConteiner />} />
         <Route path="/goals" element={<GoalsConteiner />} />
         <Route path="/achievements" element={<AchievementsConteiner />} />
       </Routes>

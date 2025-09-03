@@ -1,7 +1,6 @@
 import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
 import { toast } from "react-hot-toast";
-import { setTheFirstTime } from '../redux/profile_reducer';
 
 const BASE_URL = 'https://motivationserver.onrender.com/api';
 

@@ -6,7 +6,7 @@ import ContributionCalendarConteiner from "./ContributionCalendar/ContributionCa
 
 const Profile = () => {
     return <div>
-        <MonthlyPointsScale userPoints={580} />
+        <MonthlyPointsScale userPoints={0} />
         <ProfileInfoConteiner />
         <TodaysGoalsConteiner />
         <ContributionCalendarConteiner/>
