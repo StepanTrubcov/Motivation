@@ -3,7 +3,13 @@ import { connect } from "react-redux";
 import Achievements from "./Achievements";
 
 const AchievementsConteiner = (props) => {
-    return <Achievements />
+    return <Achievements assignments={props.assignments} />
 }
 
-export default connect()(AchievementsConteiner);
+const mapStateToProps = (state) => ({
+    assignments: state.assignments.assignments
+})
+
+export default connect(
+    mapStateToProps
+)(AchievementsConteiner);

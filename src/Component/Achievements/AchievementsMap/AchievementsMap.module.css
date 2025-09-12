@@ -1,15 +1,18 @@
 .blok {
-    margin: 20px 10px;
-    background: #151515;
-    padding: 20px;
+    text-align: center;
+    background-color: #111;
+    margin: 8px;
+    width: 150px;
+    height: 200px;
     border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
+
+    /* Анимация */
     opacity: 0;
     transform: translateY(20px);
     animation: slideFadeIn 0.6s ease forwards;
 }
 
+/* Задержка для плавного появления */
 .blok:nth-child(1) {
     animation-delay: 0.1s;
 }
@@ -25,12 +28,7 @@
 .blok:nth-child(5) {
     animation-delay: 0.5s;
 }
-.blok:nth-child(6) {
-    animation-delay: 0.6s;
-}
-.blok:nth-child(6) {
-    animation-delay: 0.7s;
-}
+/* при необходимости продолжай дальше или сделаем динамически в JS */
 
 @keyframes slideFadeIn {
     from {
@@ -44,18 +42,26 @@
 }
 
 .title {
-    font-weight: 600;
-    font-size: 17px;
+    margin: 10px;
+    font-size: 15px;
+    font-weight: 500;
 }
 
-.pts {
+.img {
+    margin-top: 10px;
+    width: 100px;
+}
+
+.points {
     margin-top: 10px;
     font-size: 15px;
     color: #00ff1e;
     text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
 }
 
-.img {
-    width: 50px;
-    margin-left: 10px;
+.achievements{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
