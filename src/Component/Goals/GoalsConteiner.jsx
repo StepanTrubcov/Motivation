@@ -6,8 +6,9 @@ import { addStatusNew, addGoals, addStatus } from '../../redux/goals_reducer';
 import { toast } from "react-hot-toast";
 import styles from "./Goals.module.css";
 import ModalWindow from "../../utils/ModalWindow/ModalWindow";
+import { setPoints } from "../../redux/profile_reducer";
 
-const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus }) => {
+const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus, setPoints }) => {
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [isModalOpenDone, setIsModalOpenDone] = useState(null);
 
@@ -30,6 +31,7 @@ const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus }) =>
         setIsModalOpenDone({
             title: "Выполнить цель",
             description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
+            points: goal.points,
             id: goal.id,
         });
     };
@@ -52,6 +54,7 @@ const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus }) =>
     const addNewStatusDone = async () => {
         try {
             await addStatusNew(isModalOpenDone.id, userId, "done");
+            setPoints(userId, isModalOpenDone.points)
             toast.success("Цель успешно выполнена!");
             setIsModalOpenDone(null);
             await addStatus(userId);
@@ -67,7 +70,7 @@ const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus }) =>
                 completed={filter(
                     goals.goals,
                     "done",
-                    ()=>{toast.success("Эта цель уже выполнена!");},
+                    () => { toast.success("Эта цель уже выполнена!"); },
                     "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png"
                 )}
                 inProgress={filter(goals.goals, "in_progress", ModalDone)}
@@ -94,4 +97,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile?.id,
 });
 
-export default connect(mapStateToProps, { addStatusNew, addGoals, addStatus })(GoalsConteiner);
+export default connect(mapStateToProps, { addStatusNew, addGoals, addStatus, setPoints })(GoalsConteiner);

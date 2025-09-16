@@ -31,6 +31,15 @@
 .blok:nth-child(6) {
     animation-delay: 0.7s;
 }
+.blok:nth-child(7) {
+    animation-delay: 0.8s;
+}
+.blok:nth-child(8) {
+    animation-delay: 0.9s;
+}
+.blok:nth-child(9) {
+    animation-delay: 1.0s;
+}
 
 @keyframes slideFadeIn {
     from {

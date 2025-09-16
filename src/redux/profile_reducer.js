@@ -1,4 +1,4 @@
-import { addProfileApi, initializeUserGoals } from '../Api/Api';
+import { addProfileApi, initializeUserGoals, addPoints } from '../Api/Api';
 
 const SET_PROFILE = 'profile/SET_PROFILE';
 const THE_FIRST_TIME = 'profile/THE_FIRST_TIME';
@@ -31,12 +31,19 @@ const setProfile = (user) => ({
 
 export const addProfile = () => async (dispath) => {
     await addProfileApi().then(response => {
+        console.log(response)
         dispath(setProfile(response))
         initializeUserGoals(response.id).then(response => {
             if (response) {
                 dispath(setTheFirstTime(true))
             }
         })
+    })
+}
+
+export const setPoints = (customUserId, points) => async (dispath) => {
+    await addPoints(customUserId, points).then(response => {
+        dispath(addProfile())
     })
 }
 

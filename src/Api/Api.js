@@ -2,7 +2,7 @@ import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 
-const BASE_URL = 'https://motivationserver.onrender.com/api';
+const BASE_URL = 'http://localhost:5002/api';
 
 export const addProfileApi = async () => {
   WebApp.ready();
@@ -51,6 +51,27 @@ export async function getAllGoals(customUserId) {
     throw error;
   }
 }
+
+/**
+ * Прибавляет очки пользователю.
+ * @param {string} customUserId - ID пользователя (telegramId).
+ * @param {number} points - Количество очков для добавления.
+ * @returns {Promise<object>} - Обновлённый пользователь с новыми очками.
+ */
+export async function addPoints(customUserId, points) {
+  console.log(customUserId, points)
+  try {
+    const response = await axios.post(`${BASE_URL}/users/${customUserId}/pts/increment`, {
+      amount: points
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка добавления очков:", error);
+    throw error;
+  }
+}
+
+
 
 /**
  * Обновляет статус цели для пользователя.

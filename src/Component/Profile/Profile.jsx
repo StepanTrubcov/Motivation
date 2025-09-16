@@ -4,12 +4,12 @@ import ProfileInfoConteiner from "./ProfileInfo/ProfileInfoConteiner";
 import TodaysGoalsConteiner from "./TodaysGoals/TodaysGoalsConteiner";
 import ContributionCalendarConteiner from "./ContributionCalendar/ContributionCalendarConteiner";
 
-const Profile = () => {
+const Profile = (props) => {
     return <div>
-        <MonthlyPointsScale userPoints={0} />
+        <MonthlyPointsScale userPoints={props.pts} />
         <ProfileInfoConteiner />
         <TodaysGoalsConteiner />
-        <ContributionCalendarConteiner/>
+        <ContributionCalendarConteiner />
     </div>
 }
 

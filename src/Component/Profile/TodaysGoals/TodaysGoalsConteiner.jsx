@@ -5,8 +5,9 @@ import filter from "../../../utils/Filter/filter";
 import { addStatusNew, addGoals, addStatus } from "../../../redux/goals_reducer";
 import { toast } from "react-hot-toast";
 import ModalWindow from "../../../utils/ModalWindow/ModalWindow";
+import { setPoints } from "../../../redux/profile_reducer";
 
-const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals }) => {
+const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(null);
 
@@ -18,9 +19,11 @@ const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals
     }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
+        console.log(goals)
         setIsModalOpen({
             title: 'Выполнить цель',
             description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
+            points: goal.points,
             id: goal.id
         });
     };
@@ -32,6 +35,7 @@ const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals
     const addNewStatusDone = async () => {
         try {
             addStatusNew(isModalOpen.id, userId, "done");
+            setPoints(userId,isModalOpen.points)
             setIsModalOpen(null);
             toast.success("Цель успешно выполнена!");
             await addStatus(userId);
@@ -42,7 +46,7 @@ const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals
     };
 
     return <div>
-        <TodaysGoals inProgress={filter(goals.goals, "in_progress", Modal)} />
+        <TodaysGoals inProgress={filter(goals.goals, "in_progress", Modal,)} />
         <ModalWindow isModalOpen={isModalOpen} buttonText='Выполнить цель' addNewStatus={addNewStatusDone} closeModal={closeModal} />
     </div>
 }
@@ -52,4 +56,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile.id,
 })
 
-export default connect(mapStateToProps, { addStatusNew, addStatus, addGoals })(TodaysGoalsConteiner);
+export default connect(mapStateToProps, { addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);

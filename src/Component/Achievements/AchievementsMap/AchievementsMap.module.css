@@ -16,25 +16,41 @@
 .blok:nth-child(1) {
     animation-delay: 0.1s;
 }
+
 .blok:nth-child(2) {
     animation-delay: 0.2s;
 }
+
 .blok:nth-child(3) {
     animation-delay: 0.3s;
 }
+
 .blok:nth-child(4) {
     animation-delay: 0.4s;
 }
+
 .blok:nth-child(5) {
     animation-delay: 0.5s;
 }
-/* при необходимости продолжай дальше или сделаем динамически в JS */
+
+.blok:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.blok:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.blok:nth-child(8) {
+    animation-delay: 0.8s;
+}
 
 @keyframes slideFadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -59,7 +75,7 @@
     text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
 }
 
-.achievements{
+.achievements {
     margin-top: 20px;
     display: flex;
     justify-content: center;
