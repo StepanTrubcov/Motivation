@@ -2,7 +2,7 @@ import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 
-const BASE_URL = 'https://motivationserver.onrender.com';
+const BASE_URL = 'https://motivationserver.onrender.com/api';
 
 export const addProfileApi = async () => {
   WebApp.ready();
