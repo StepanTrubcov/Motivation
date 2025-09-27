@@ -7,8 +7,10 @@ import { toast } from "react-hot-toast";
 import styles from "./Goals.module.css";
 import ModalWindow from "../../utils/ModalWindow/ModalWindow";
 import { setPoints } from "../../redux/profile_reducer";
+import { addCalendarDataNew } from "../../redux/calendar_reducer";
 
-const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus, setPoints }) => {
+const GoalsConteiner = ({ profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew }) => {
+
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [isModalOpenDone, setIsModalOpenDone] = useState(null);
 
@@ -20,23 +22,22 @@ const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus, setP
     }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
-        setIsModalOpen(goal);
+        if (goal.status === "not_started") {
+            setIsModalOpen(goal);
+        }
+        if (goal.status === "in_progress") {
+            setIsModalOpenDone({
+                title: "Выполнить цель",
+                description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
+                points: goal.points,
+                id: goal.id,
+                status: goal.status,
+            });
+        }
     };
 
     const closeModal = () => {
         setIsModalOpen(null);
-    };
-
-    const ModalDone = (goal) => {
-        setIsModalOpenDone({
-            title: "Выполнить цель",
-            description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
-            points: goal.points,
-            id: goal.id,
-        });
-    };
-
-    const closeModalDone = () => {
         setIsModalOpenDone(null);
     };
 
@@ -52,8 +53,10 @@ const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus, setP
     };
 
     const addNewStatusDone = async () => {
+        const until = new Date().toISOString().slice(0, 10);
         try {
             await addStatusNew(isModalOpenDone.id, userId, "done");
+            addCalendarDataNew(profile.telegramId, until)
             setPoints(userId, isModalOpenDone.points)
             toast.success("Цель успешно выполнена!");
             setIsModalOpenDone(null);
@@ -73,28 +76,29 @@ const GoalsConteiner = ({ goals, userId, addStatusNew, addGoals, addStatus, setP
                     () => { toast.success("Эта цель уже выполнена!"); },
                     "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png"
                 )}
-                inProgress={filter(goals.goals, "in_progress", ModalDone)}
+                inProgress={filter(goals.goals, "in_progress", Modal)}
                 available={filter(goals.goals, "not_started", Modal)}
             />
             <ModalWindow
                 isModalOpen={isModalOpen}
-                buttonText="Взять цель на 30 дней"
                 addNewStatus={addNewStatus}
+                buttonText={'Взять цель на 30 дней'}
                 closeModal={closeModal}
             />
             <ModalWindow
                 isModalOpen={isModalOpenDone}
-                buttonText="Выполнить цель"
                 addNewStatus={addNewStatusDone}
-                closeModal={closeModalDone}
+                buttonText={'Выполнить цель'}
+                closeModal={closeModal}
             />
         </div>
     );
 };
 
 const mapStateToProps = (state) => ({
+    profile: state.profile.profile,
     goals: state.goals,
     userId: state.profile.profile?.id,
 });
 
-export default connect(mapStateToProps, { addStatusNew, addGoals, addStatus, setPoints })(GoalsConteiner);
+export default connect(mapStateToProps, { addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew })(GoalsConteiner);

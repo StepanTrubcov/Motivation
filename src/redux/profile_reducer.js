@@ -31,7 +31,6 @@ const setProfile = (user) => ({
 
 export const addProfile = () => async (dispath) => {
     await addProfileApi().then(response => {
-        console.log(response)
         dispath(setProfile(response))
         initializeUserGoals(response.id).then(response => {
             if (response) {

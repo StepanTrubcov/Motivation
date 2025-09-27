@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { addProfile } from './redux/profile_reducer';
 import BottomNav from './Component/BottomNav/BottomNav';
 import GoalsConteiner from './Component/Goals/GoalsConteiner';
-import { addGoals } from './redux/goals_reducer';
+import { addGoals, addStatus } from './redux/goals_reducer';
 import { Toaster } from "react-hot-toast";
 import AchievementsConteiner from './Component/Achievements/AchievementsConteiner';
 import { AnimatePresence, motion } from "framer-motion";
@@ -43,6 +43,7 @@ const App = (props) => {
   }
   else if (!props.ThereAreUsers) {
     props.addGoals(props.user.id)
+    props.addStatus(props.user.id)
     return (
       <div className="loading-wrapper">
         <div className="loading-box">
@@ -73,7 +74,7 @@ const App = (props) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                transition = {{ duration: 0.1 }}
+                transition={{ duration: 0.1 }}
               >
                 <ProfileConteiner />
               </motion.div>
@@ -87,7 +88,7 @@ const App = (props) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                transition = {{ duration: 0.1 }}
+                transition={{ duration: 0.1 }}
               >
                 <GoalsConteiner />
               </motion.div>
@@ -101,7 +102,7 @@ const App = (props) => {
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                transition = {{ duration: 0.1 }}
+                transition={{ duration: 0.1 }}
               >
                 <AchievementsConteiner />
               </motion.div>
@@ -120,4 +121,4 @@ const mapStateToProps = (state) => ({
   theFirstTime: state.profile.theFirstTime
 })
 
-export default connect(mapStateToProps, { addProfile, addGoals })(App);
+export default connect(mapStateToProps, { addProfile, addGoals, addStatus })(App);

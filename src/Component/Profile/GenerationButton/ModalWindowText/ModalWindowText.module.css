@@ -1,0 +1,63 @@
+.container {
+    position: relative;
+  }
+  
+  .modalBackdrop {
+    position: fixed;
+    right: 20px;
+    top: 0;
+    left: 20px;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modalImg {
+    width: 100px;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .modalContent {
+    background-color: #151515;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 28rem;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #ec0000;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  
+  .closeButton:hover {
+    color: #000000;
+  }
+  
+  .previewText {
+    overflow: hidden;
+    white-space: pre-wrap;
+    flex: 1;
+    position: relative;
+  }
+  
+  .previewText::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, #111, transparent);
+  }

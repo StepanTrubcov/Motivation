@@ -6,8 +6,9 @@ import { addStatusNew, addGoals, addStatus } from "../../../redux/goals_reducer"
 import { toast } from "react-hot-toast";
 import ModalWindow from "../../../utils/ModalWindow/ModalWindow";
 import { setPoints } from "../../../redux/profile_reducer";
+import { addCalendarDataNew } from "../../../redux/calendar_reducer";
 
-const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
+const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(null);
 
@@ -19,7 +20,6 @@ const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals
     }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
-        console.log(goals)
         setIsModalOpen({
             title: 'Выполнить цель',
             description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
@@ -33,9 +33,11 @@ const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals
     };
 
     const addNewStatusDone = async () => {
+        const until = new Date().toISOString().slice(0, 10);
         try {
             addStatusNew(isModalOpen.id, userId, "done");
-            setPoints(userId,isModalOpen.points)
+            addCalendarDataNew(profile.telegramId, until)
+            setPoints(userId, isModalOpen.points)
             setIsModalOpen(null);
             toast.success("Цель успешно выполнена!");
             await addStatus(userId);
@@ -52,8 +54,9 @@ const TodaysGoalsConteiner = ({ addStatusNew, goals, userId, addStatus, addGoals
 }
 
 const mapStateToProps = (state) => ({
+    profile: state.profile.profile,
     goals: state.goals,
     userId: state.profile.profile.id,
 })
 
-export default connect(mapStateToProps, { addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);
+export default connect(mapStateToProps, { addCalendarDataNew, addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);

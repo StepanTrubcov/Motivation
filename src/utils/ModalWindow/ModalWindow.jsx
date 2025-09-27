@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import styles from './ModalWindow.module.css'
 
 
-const ModalWindow = ({ isModalOpen, buttonText, addNewStatus, closeModal }) => {
+const ModalWindow = ({ isModalOpen, addNewStatus, buttonText, closeModal }) => {
     return <AnimatePresence>
         {isModalOpen && (
             <motion.div
@@ -31,8 +31,9 @@ const ModalWindow = ({ isModalOpen, buttonText, addNewStatus, closeModal }) => {
                         <X size={24} />
                     </button>
                     <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
+                    {isModalOpen.image && (<img className={styles.modalImg} src={isModalOpen.image} />)}
                     <p className={styles.modalText}>{isModalOpen.description}</p>
-                    <button onClick={() => addNewStatus()} className={styles.actionButton}>
+                    <button onClick={addNewStatus} className={styles.actionButton}>
                         {buttonText}
                     </button>
                 </motion.div>

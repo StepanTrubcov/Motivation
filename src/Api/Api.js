@@ -2,7 +2,7 @@ import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 
-const BASE_URL = 'https://motivationserver.onrender.com/api';
+const BASE_URL = 'http://localhost:5002/api';
 
 export const addProfileApi = async () => {
   WebApp.ready();
@@ -13,7 +13,7 @@ export const addProfileApi = async () => {
     username: "Stepan",
     photo_url: "https://t.me/i/userpic/320/oBN9n-AW0sT2iVFeGc17067iUAw_QccFVfwQefEbwRJFd3WRBg0IiDoe6whGY1zK.svg"
   };
-  
+
   console.log('userData:', userData);
   if (!userData) {
     console.error("Нет данных пользователя от Telegram");
@@ -52,12 +52,6 @@ export async function getAllGoals(customUserId) {
   }
 }
 
-/**
- * Прибавляет очки пользователю.
- * @param {string} customUserId - ID пользователя (telegramId).
- * @param {number} points - Количество очков для добавления.
- * @returns {Promise<object>} - Обновлённый пользователь с новыми очками.
- */
 export async function addPoints(customUserId, points) {
   console.log(customUserId, points)
   try {
@@ -70,18 +64,6 @@ export async function addPoints(customUserId, points) {
     throw error;
   }
 }
-
-
-
-/**
- * Обновляет статус цели для пользователя.
- * @param {string} customUserId - ID пользователя (telegramId).
- * @param {string} goalId - ID цели.
- * @param {string} newStatus - Новый статус (например, "not_started", "in_progress", "done").
- * @returns {Promise<void>} - Ничего не возвращает при успехе.
- * @throws {Error} - Выбрасывает ошибку, если параметры отсутствуют или запрос не удался.
- * Функция: Отправляет PUT-запрос на сервер для обновления статуса цели. Используется для изменения состояния задачи (начата, в процессе, завершена).
- */
 
 export async function getAllStatus(customUserId, goalId, newStatus) {
   if (!customUserId || !goalId || !newStatus) {
@@ -188,6 +170,31 @@ export async function initializeUserGoals(customUserId) {
     return true;
   } catch (error) {
     console.error("Ошибка инициализации целей:", error);
+    throw error;
+  }
+}
+
+export async function addCompletedDate(customUserId, date) {
+  if (!customUserId || !date) {
+    throw new Error("customUserId и date обязательны");
+  }
+
+  try {
+    const response = await axios.post(`${BASE_URL}/users/${customUserId}/completed-dates`, { date });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка добавления даты:", error);
+    throw error;
+  }
+}
+
+export async function getCompletedDates(customUserId) {
+  if (!customUserId) throw new Error("customUserId обязателен");
+  try {
+    const response = await axios.get(`${BASE_URL}/users/${customUserId}/completed-dates`);
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка получения дат:", error);
     throw error;
   }
 }

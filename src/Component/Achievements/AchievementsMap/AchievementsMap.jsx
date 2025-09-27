@@ -12,6 +12,7 @@ const AchievementsMap = ({ achievements, activeTab, setIsModalOpen, setIsModalOp
         setIsModalOpenLocked({
             title: info.title,
             description: info.requirement,
+            image: info.image
         });
     };
 

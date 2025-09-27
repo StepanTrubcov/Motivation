@@ -1,24 +1,18 @@
 import React, { useEffect, useState } from "react";
 import GitHubCalendar from "react-github-contribution-calendar";
-import c from './ContributionCalendar.module.css'
+import c from './ContributionCalendar.module.css';
+import transformDates from './transformDates'
 
-const ContributionCalendar = (props) => {
-  const [values, setValues] = useState({});
+const ContributionCalendar = ({ calendarData }) => {
+  const [values, setValues] = useState([]);
 
   useEffect(() => {
-    const grouped = props.goals.reduce((acc, task) => {
-      if (task.status === "done") {
-        const date = task.completedAt;
-        acc[date] = (acc[date] || 0) + 1;
-      }
-      return acc;
-    }, {});
-
-    setValues(grouped);
-  }, []);
+    if (calendarData && calendarData.length > 0) {
+      setValues(transformDates(calendarData));
+    }
+  }, [calendarData]);
 
   const until = new Date().toISOString().slice(0, 10);
-
   return (
     <div className={c.calendar} style={{ background: "#0d1117", padding: "20px", borderRadius: "8px" }}>
       <GitHubCalendar
