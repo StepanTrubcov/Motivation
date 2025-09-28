@@ -56,8 +56,8 @@ const GoalsConteiner = ({ profile, goals, userId, addStatusNew, addGoals, addSta
         const until = new Date().toISOString().slice(0, 10);
         try {
             await addStatusNew(isModalOpenDone.id, userId, "done");
-            addCalendarDataNew(profile.telegramId, until)
-            setPoints(userId, isModalOpenDone.points)
+            await addCalendarDataNew(profile.telegramId, until)
+            await setPoints(userId, isModalOpenDone.points)
             toast.success("Цель успешно выполнена!");
             setIsModalOpenDone(null);
             await addStatus(userId);

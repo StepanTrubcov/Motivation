@@ -6,41 +6,25 @@ import styles from "./ModalWindowGeneration.module.css";
 import gpt from '../../../../img/gpt.gif'
 import { toast } from "react-hot-toast";
 
-const ModalWindowGeneration = ({ isModalOpen, closeModal, goalsDone = [], goalsInProgress = [],setIsModalOpenText }) => {
+const ModalWindowGeneration = ({text, addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
     const [loading, setLoading] = useState(false);
-    const [generatedText, setGeneratedText] = useState("");
+    const [generatedText, setGeneratedText] = useState('');
     const [error, setError] = useState("");
 
     const generation = async () => {
-        try {
-            setLoading(true);
-            setError("");
-            setGeneratedText("");
-
-            const goals = [...goalsDone, ...goalsInProgress]; // объединяем выполненные и в прогрессе
-
-            const res = await axios.post("http://localhost:5002/api/generate-report", {
-                goals,
-            });
-
-            if (res.data?.success) {
-                setGeneratedText(res.data.message);
-            } else {
-                setError("Сервер вернул пустой результат");
-            }
-        } catch (err) {
-            console.error("Ошибка генерации:", err);
-            setError("Не удалось сгенерировать отчёт");
-        } finally {
-            setLoading(false);
-        }
+        setLoading(true);
+        setError("");
+        setGeneratedText("");
+        await addTextGenerationData(goalsDone, goalsInProgress)
+        setGeneratedText(text)
+        setLoading(false);
     };
 
 
     const copyToClipboard = async () => {
-            await navigator.clipboard.writeText(generatedText);
-            toast.success("Отчёт скопирован!");
-            closeModal()
+        await navigator.clipboard.writeText(generatedText);
+        toast.success("Отчёт скопирован!");
+        closeModal()
     };
 
 
@@ -83,7 +67,7 @@ const ModalWindowGeneration = ({ isModalOpen, closeModal, goalsDone = [], goalsI
 
                         {generatedText && (
                             <div className={styles.generatedBox}>
-                                <div onClick={()=>setIsModalOpenText(generatedText)} className={styles.previewWrapper}>
+                                <div onClick={() => setIsModalOpenText(generatedText)} className={styles.previewWrapper}>
                                     <pre className={styles.previewText}>
                                         {generatedText.split("\n").slice(0, 1).join("\n")}
                                         {generatedText.split("\n").length > 1 ? "\n..." : ""}

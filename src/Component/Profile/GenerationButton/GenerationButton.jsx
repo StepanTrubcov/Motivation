@@ -5,7 +5,7 @@ import ModalWindowText from "./ModalWindowText/ModalWindowText";
 
 
 
-const GenerationButton = ({ goalsDone = [], goalsInProgress = [] }) => {
+const GenerationButton = ({ text, addTextGenerationData, goalsDone = [], goalsInProgress = [] }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(null)
     const [isModalOpenText, setIsModalOpenText] = useState();
@@ -18,6 +18,8 @@ const GenerationButton = ({ goalsDone = [], goalsInProgress = [] }) => {
             </button>
             <div>
                 <ModalWindowGeneration
+                    addTextGenerationData={addTextGenerationData}
+                    text={text}
                     goalsDone={goalsDone}
                     goalsInProgress={goalsInProgress}
                     isModalOpen={isModalOpen}

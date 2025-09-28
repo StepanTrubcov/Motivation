@@ -10,6 +10,7 @@ import { addGoals, addStatus } from './redux/goals_reducer';
 import { Toaster } from "react-hot-toast";
 import AchievementsConteiner from './Component/Achievements/AchievementsConteiner';
 import { AnimatePresence, motion } from "framer-motion";
+import { getInitializeAchievementsData } from './redux/assignments_reducer';
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -40,8 +41,7 @@ const App = (props) => {
         </div>
       </div>
     )
-  }
-  else if (!props.ThereAreUsers) {
+  } else if (!props.ThereAreUsers) {
     props.addGoals(props.user.id)
     props.addStatus(props.user.id)
     return (
@@ -59,7 +59,25 @@ const App = (props) => {
         </div>
       </div>
     )
+  } else if (props.assignments.length === 0) {
+    props.getInitializeAchievementsData(props.user.id)
+    return (
+      <div className="loading-wrapper">
+        <div className="loading-box">
+          <h2 className="loading-title">Загрузка достижений пользователя...</h2>
+          <p className="loading-text">
+            Если приложение не запускается попробуйте зайти чуть позже, когда нагрузка уменьшится.
+          </p>
+          <p className="loading-support">
+            Чтобы приложение работало стабильнее, вы можете нас поддержать!
+            <br />
+            Информация о поддержке доступна в нашем Telegram-боте.
+          </p>
+        </div>
+      </div>
+    )
   }
+
 
   return (
     <div className="App">
@@ -118,7 +136,8 @@ const App = (props) => {
 const mapStateToProps = (state) => ({
   user: state.profile.profile,
   ThereAreUsers: state.goals.ThereAreUsers,
-  theFirstTime: state.profile.theFirstTime
+  theFirstTime: state.profile.theFirstTime,
+  assignments: state.assignments.assignments,
 })
 
-export default connect(mapStateToProps, { addProfile, addGoals, addStatus })(App);
+export default connect(mapStateToProps, { addProfile, addGoals, addStatus, getInitializeAchievementsData })(App);

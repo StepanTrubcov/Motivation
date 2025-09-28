@@ -3,6 +3,7 @@ import ProfileReducer from './profile_reducer';
 import GoalsReducer from './goals_reducer';
 import AssignmentsReducer from './assignments_reducer';
 import CalendarReducer from './calendar_reducer';
+import GenerationReducer from './generation_reducer';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     goals: GoalsReducer,
     assignments: AssignmentsReducer,
     calendar: CalendarReducer,
+    generation:GenerationReducer,
   },
 });
 

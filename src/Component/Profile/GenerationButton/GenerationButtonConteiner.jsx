@@ -1,6 +1,7 @@
 import React from "react";
 import GenerationButton from "./GenerationButton";
 import { connect } from "react-redux";
+import { addTextGenerationData } from "../../../redux/generation_reducer";
 
 const GenerationButtonConteiner = (props) => {
 
@@ -8,12 +9,13 @@ const GenerationButtonConteiner = (props) => {
     const goalsInProgress = props.goals.filter(g => g.status === "in_progress")
 
     return <div>
-        <GenerationButton goalsInProgress={goalsInProgress} goalsDone={goalsDone} />
+        <GenerationButton addTextGenerationData={props.addTextGenerationData} text={props.text} goalsInProgress={goalsInProgress} goalsDone={goalsDone} />
     </div>
 }
 
 const mapStateToProps = (state) => ({
-    goals: state.goals.goals
+    goals: state.goals.goals,
+    text: state.generation.generationText
 })
 
-export default connect(mapStateToProps)(GenerationButtonConteiner) 
+export default connect(mapStateToProps, { addTextGenerationData })(GenerationButtonConteiner) 

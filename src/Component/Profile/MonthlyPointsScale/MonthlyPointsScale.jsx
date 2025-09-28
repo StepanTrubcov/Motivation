@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import c from "./MonthlyPointsScale.module.css";
+import { toast } from "react-hot-toast";
 
 const MonthlyPointsScale = ({ userPoints = 0 }) => {
 
@@ -12,7 +13,6 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
         1000000
     ];
 
-
     let currentLevel = 1;
     for (let i = 0; i < levels.length - 1; i++) {
         if (userPoints < levels[i + 1]) {
@@ -24,6 +24,15 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
     const levelMin = levels[currentLevel - 1];
     const levelMax = levels[currentLevel];
     const progress = Math.min(((userPoints - levelMin) / (levelMax - levelMin)) * 100, 100);
+
+    const prevLevel = useRef(currentLevel);
+
+    useEffect(() => {
+        if (prevLevel.current !== currentLevel) {
+            toast.success(`Поздравляем! Вы достигли уровня ${currentLevel}! 🎉`);
+            prevLevel.current = currentLevel;
+        }
+    }, [currentLevel]);
 
     return (
         <div className={c.points_scale}>

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import c from './Goals.module.css'
 import { navigator } from "../../utils/Navigators/Navigators";
 
-const Goals = ({ completed, inProgress, available }) => {
+const Goals = ({ completed, inProgress, available, setIsModalOpen }) => {
 
     const tabs = ["Completed", "InProgress", "Available"];
     const [activeTab, setActiveTab] = useState("Completed");
