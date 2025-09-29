@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
-import './App.css';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import ProfileConteiner from './Component/Profile/ProfileConteiner';
-import { connect } from 'react-redux';
-import { addProfile } from './redux/profile_reducer';
-import BottomNav from './Component/BottomNav/BottomNav';
-import GoalsConteiner from './Component/Goals/GoalsConteiner';
-import { addGoals, addStatus } from './redux/goals_reducer';
+import React, { useEffect } from "react";
+import "./App.css";
+import { Route, Routes, useLocation } from "react-router-dom";
+import { connect } from "react-redux";
 import { Toaster } from "react-hot-toast";
-import AchievementsConteiner from './Component/Achievements/AchievementsConteiner';
 import { AnimatePresence, motion } from "framer-motion";
-import { getInitializeAchievementsData } from './redux/assignments_reducer';
+
+import ProfileConteiner from "./Component/Profile/ProfileConteiner";
+import GoalsConteiner from "./Component/Goals/GoalsConteiner";
+import AchievementsConteiner from "./Component/Achievements/AchievementsConteiner";
+import BottomNav from "./Component/BottomNav/BottomNav";
+
+import { addProfile } from "./redux/profile_reducer";
+import { addGoals, addStatus } from "./redux/goals_reducer";
+import { getInitializeAchievementsData } from "./redux/assignments_reducer";
+
+import LoadingScreen from "./Component/LoadingScreen/LoadingScreen";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -19,65 +23,35 @@ const pageVariants = {
 };
 
 const App = (props) => {
+  const { user, ThereAreUsers, assignments } = props;
   const location = useLocation();
 
   useEffect(() => {
     props.addProfile();
   }, []);
 
-  if (!props.user) {
-    return (
-      <div className="loading-wrapper">
-        <div className="loading-box">
-          <h2 className="loading-title">Загрузка данных пользователя...</h2>
-          <p className="loading-text">
-            Если приложение не запускается попробуйте зайти чуть позже, когда нагрузка уменьшится.
-          </p>
-          <p className="loading-support">
-            Чтобы приложение работало стабильнее, вы можете нас поддержать!
-            <br />
-            Информация о поддержке доступна в нашем Telegram-боте.
-          </p>
-        </div>
-      </div>
-    )
-  } else if (!props.ThereAreUsers) {
-    props.addGoals(props.user.id)
-    props.addStatus(props.user.id)
-    return (
-      <div className="loading-wrapper">
-        <div className="loading-box">
-          <h2 className="loading-title">Загрузка целей пользователя...</h2>
-          <p className="loading-text">
-            Если приложение не запускается попробуйте зайти чуть позже, когда нагрузка уменьшится.
-          </p>
-          <p className="loading-support">
-            Чтобы приложение работало стабильнее, вы можете нас поддержать!
-            <br />
-            Информация о поддержке доступна в нашем Telegram-боте.
-          </p>
-        </div>
-      </div>
-    )
-  } else if (props.assignments.length === 0) {
-    props.getInitializeAchievementsData(props.user.id)
-    return (
-      <div className="loading-wrapper">
-        <div className="loading-box">
-          <h2 className="loading-title">Загрузка достижений пользователя...</h2>
-          <p className="loading-text">
-            Если приложение не запускается попробуйте зайти чуть позже, когда нагрузка уменьшится.
-          </p>
-          <p className="loading-support">
-            Чтобы приложение работало стабильнее, вы можете нас поддержать!
-            <br />
-            Информация о поддержке доступна в нашем Telegram-боте.
-          </p>
-        </div>
-      </div>
-    )
-  }
+  useEffect(() => {
+    if (user && !ThereAreUsers) {
+      props.addGoals(user.id);
+      props.addStatus(user.id);
+    }
+  }, [user, ThereAreUsers]);
 
+  useEffect(() => {
+    if (user && assignments.length === 0) {
+      props.getInitializeAchievementsData(user.id);
+    }
+  }, [user, assignments]);
+
+  if (!user) {
+    return <LoadingScreen title="Загрузка данных пользователя..." />;
+  }
+  if (!ThereAreUsers) {
+    return <LoadingScreen title="Загрузка целей пользователя..." />;
+  }
+  if (assignments.length === 0) {
+    return <LoadingScreen title="Загрузка достижений пользователя..." />;
+  }
 
   return (
     <div className="App">
@@ -131,13 +105,18 @@ const App = (props) => {
       <BottomNav />
     </div>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   user: state.profile.profile,
   ThereAreUsers: state.goals.ThereAreUsers,
   theFirstTime: state.profile.theFirstTime,
   assignments: state.assignments.assignments,
-})
+});
 
-export default connect(mapStateToProps, { addProfile, addGoals, addStatus, getInitializeAchievementsData })(App);
+export default connect(mapStateToProps, {
+  addProfile,
+  addGoals,
+  addStatus,
+  getInitializeAchievementsData,
+})(App);

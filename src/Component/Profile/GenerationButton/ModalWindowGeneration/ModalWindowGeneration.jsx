@@ -6,7 +6,7 @@ import styles from "./ModalWindowGeneration.module.css";
 import gpt from '../../../../img/gpt.gif'
 import { toast } from "react-hot-toast";
 
-const ModalWindowGeneration = ({text, addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
+const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
     const [loading, setLoading] = useState(false);
     const [generatedText, setGeneratedText] = useState('');
     const [error, setError] = useState("");
@@ -15,9 +15,7 @@ const ModalWindowGeneration = ({text, addTextGenerationData, isModalOpen, closeM
         setLoading(true);
         setError("");
         setGeneratedText("");
-        await addTextGenerationData(goalsDone, goalsInProgress)
-        setGeneratedText(text)
-        setLoading(false);
+        await addTextGenerationData(goalsDone, goalsInProgress, setGeneratedText, setLoading)
     };
 
 
