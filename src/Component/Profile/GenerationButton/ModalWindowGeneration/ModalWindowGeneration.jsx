@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy } from "lucide-react";
 import axios from "axios";
@@ -10,6 +10,18 @@ const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, is
     const [loading, setLoading] = useState(false);
     const [generatedText, setGeneratedText] = useState('');
     const [error, setError] = useState("");
+    const [prevGoals, setPrevGoals] = useState({ done: [], inProgress: [] });
+
+    useEffect(() => {
+        const currentGoals = {
+            done: goalsDone || [],
+            inProgress: goalsInProgress || []
+        };
+        if (JSON.stringify(currentGoals) !== JSON.stringify(prevGoals)) {
+            setGeneratedText('');
+            setPrevGoals(currentGoals);
+        }
+    }, [goalsDone, goalsInProgress, prevGoals]);
 
     const generation = async () => {
         setLoading(true);
@@ -17,7 +29,6 @@ const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, is
         setGeneratedText("");
         await addTextGenerationData(goalsDone, goalsInProgress, setGeneratedText, setLoading)
     };
-
 
     const copyToClipboard = async () => {
         await navigator.clipboard.writeText(generatedText);

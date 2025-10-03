@@ -1,4 +1,4 @@
-import { getAchievements, initializeAchievements } from "../Api/Api";
+import { getAchievements, initializeAchievements, achievementNewStatus } from "../Api/Api";
 
 const SET_ASSIGNMENTS = 'assignments/SET_ASSIGNMENTS';
 
@@ -30,6 +30,12 @@ export const getAchievementsData = (customUserId) => async (dispatch) => {
 export const getInitializeAchievementsData = (customUserId) => async (dispatch) => {
     await initializeAchievements(customUserId).then(response => {
         dispatch(getAchievementsData(customUserId))
+    })
+}
+
+export const getAchievementsNewStatus = (achievement, userId) => async (dispatch) => {
+    await achievementNewStatus(achievement, userId).then(response => {
+         dispatch(getAchievementsData(userId))
     })
 }
 

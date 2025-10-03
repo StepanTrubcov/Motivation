@@ -5,7 +5,7 @@ import { addTextGenerationData } from "../../../redux/generation_reducer";
 
 const GenerationButtonConteiner = (props) => {
 
-    const goalsDone = props.goals.filter(g => g.status === "done")
+    const goalsDone = props.goals.filter(g => g.status === "completed")
     const goalsInProgress = props.goals.filter(g => g.status === "in_progress")
 
     return <div>

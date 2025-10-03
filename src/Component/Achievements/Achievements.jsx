@@ -23,9 +23,6 @@ const Achievements = (props) => {
     };
 
     return <div>
-        <div className={c.title} >
-            Достижения
-        </div>
         <Navigator activeIndex={activeIndex} activeTab={activeTab} setActiveTab={setActiveTab} />
         <AchievementsMap activeTab={activeTab} setIsModalOpenLocked={setIsModalOpenLocked} setIsModalOpen={setIsModalOpen} achievements={props.assignments} />
         <ModalWindow

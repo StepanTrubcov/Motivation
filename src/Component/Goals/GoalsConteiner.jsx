@@ -72,7 +72,7 @@ const GoalsConteiner = ({ profile, goals, userId, addStatusNew, addGoals, addSta
             <Goals
                 completed={filter(
                     goals.goals,
-                    "done",
+                    "completed",
                     () => { toast.success("Эта цель уже выполнена!"); },
                     "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png"
                 )}
