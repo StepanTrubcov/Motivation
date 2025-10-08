@@ -14,7 +14,7 @@ const ModalWindowMe = ({ isModalOpen, addNewStatus, buttonText, closeModal, user
     setShareImage(null);
 
     try {
-      const response = await axios.post("http://localhost:5002/api/achievement/share", {
+      const response = await axios.post("https://motivationserver.onrender.com/api/achievement/share", {
         title: isModalOpen.title,
         description: isModalOpen.description,
         points: isModalOpen.points || 0,
