@@ -4,6 +4,7 @@ import c from './Achievements.module.css'
 import Navigator from "./Navigator/Navigator";
 import AchievementsMap from "./AchievementsMap/AchievementsMap";
 import ModalWindow from "../../utils/ModalWindow/ModalWindow";
+import ModalWindowMe from "./ModalWindowMe/ModalWindowMe";
 
 const Achievements = (props) => {
 
@@ -25,7 +26,7 @@ const Achievements = (props) => {
     return <div>
         <Navigator activeIndex={activeIndex} activeTab={activeTab} setActiveTab={setActiveTab} />
         <AchievementsMap activeTab={activeTab} setIsModalOpenLocked={setIsModalOpenLocked} setIsModalOpen={setIsModalOpen} achievements={props.assignments} />
-        <ModalWindow
+        <ModalWindowMe
             isModalOpen={isModalOpen}
             buttonText="Понятно"
             addNewStatus={closeModal}

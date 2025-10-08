@@ -2,6 +2,7 @@ import WebApp from '@twa-dev/sdk';
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 
+
 const BASE_URL = 'https://motivationserver.onrender.com/api';
 
 export const addProfileApi = async () => {
@@ -44,7 +45,7 @@ export const addProfileApi = async () => {
 
       if (attempts >= maxAttempts) {
         console.error("Все попытки создания профиля провалились");
-        return null; // возвращаем null вместо throw, чтобы не падало приложение
+        return null;
       }
     }
   }
@@ -384,5 +385,26 @@ export async function achievementNewStatus(achievement, userId) {
     return response.data
   } catch (error) {
     console.error("❌ Error updating achievement:", error.response?.data || error.message);
+  }
+}
+
+export async function generateAchievementShare(achievement, user) {
+  try {
+    const response = await axios.post(`${BASE_URL}/achievement/share`, {
+      title: achievement.title,
+      description: achievement.description,
+      image: achievement.image,
+      points: achievement.points,
+      username: user.username || user.first_name || "Пользователь"
+    });
+
+    if (response.data.success) {
+      return response.data.url;
+    } else {
+      throw new Error("Ошибка генерации изображения");
+    }
+  } catch (error) {
+    console.error("Ошибка share-карточки:", error);
+    throw error;
   }
 }

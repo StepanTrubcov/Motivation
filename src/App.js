@@ -115,6 +115,7 @@ const App = ({ getAchievementsNewStatus, setPoints, addProfile, addGoals, addSta
       <BottomNav />
     </div>
   );
+
 };
 
 const mapStateToProps = (state) => ({
