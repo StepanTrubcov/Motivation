@@ -3,16 +3,15 @@ import { connect } from "react-redux";
 import c from "./Achievements.module.css";
 import Achievements from "./Achievements";
 import axios from "axios";
-import { getAchievementsNewStatus } from "../../redux/assignments_reducer";
+import { getAchievementsNewStatus, getMakingPicture } from "../../redux/assignments_reducer";
 import { toast } from "react-hot-toast";
 import { setPoints } from "../../redux/profile_reducer";
 import { checkAll } from "../../utils/checkAll/checkAll";
 
-const AchievementsConteiner = ({ assignments = [], goals = [], userId, user, getAchievementsNewStatus, setPoints }) => {
+const AchievementsConteiner = ({getMakingPicture, assignments = [], goals = [], userId, user, getAchievementsNewStatus, setPoints }) => {
     const triggeredRef = useRef(new Set());
 
-    const userRegistrationStub =  new Date(Date.now() - 100 * 24 * 60 * 60 * 1000);
-    console.log( user.registrationDate)
+    const userRegistrationStub = new Date(Date.now() - 100 * 24 * 60 * 60 * 1000);
 
     const newStatusAssignment = (achievement, userId) => {
         getAchievementsNewStatus(achievement, userId)
@@ -23,11 +22,10 @@ const AchievementsConteiner = ({ assignments = [], goals = [], userId, user, get
     useEffect(() => {
         checkAll(assignments, triggeredRef, goals, newStatusAssignment, userId, userRegistrationStub);
     }, [assignments, goals]);
-
     return (
         <div>
             <div className={c.title}>Достижения</div>
-            <Achievements assignments={assignments} />
+            <Achievements getMakingPicture={getMakingPicture} username={user.username} assignments={assignments} />
         </div>
     );
 };
@@ -39,4 +37,4 @@ const mapStateToProps = (state) => ({
     user: state.profile.profile
 });
 
-export default connect(mapStateToProps, { getAchievementsNewStatus, setPoints })(AchievementsConteiner);
+export default connect(mapStateToProps, { getAchievementsNewStatus, setPoints, getMakingPicture })(AchievementsConteiner);

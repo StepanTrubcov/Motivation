@@ -3,58 +3,33 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Share2 } from "lucide-react";
 import axios from "axios";
 import styles from "./ModalWindowMe.module.css";
+import { toast } from "react-hot-toast";
 
-const ModalWindowMe = ({ isModalOpen, addNewStatus, buttonText, closeModal, username }) => {
+const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) => {
   const [isSharing, setIsSharing] = useState(false);
-  const [shareImage, setShareImage] = useState(null);
 
   const handleShare = async () => {
     if (!isModalOpen?.title) return;
     setIsSharing(true);
-    setShareImage(null);
 
     try {
-      const response = await axios.post("https://motivationserver.onrender.com/api/achievement/share", {
-        title: isModalOpen.title,
-        description: isModalOpen.description,
-        points: isModalOpen.points || 0,
-        username: username || "user",
-      });
+      const response = await getMakingPicture(isModalOpen, username)
+      const base64 = response.data?.url;
 
-      if (response.data?.url) {
-        setShareImage(response.data.url);
-
-        // ⚡ Если Telegram WebApp открыт
-        if (window.Telegram?.WebApp) {
-          // Тут мы можем показать картинку и кнопку "Отправить в Telegram"
-          window.Telegram.WebApp.showAlert("Картинка готова! Нажмите 'Отправить' ниже 👇");
-        } else {
-          // Просто показать в браузере
-          alert("Картинка сгенерирована ✅");
-        }
+      if (base64) {
+        const blob = await fetch(base64).then(res => res.blob());
+        const clipboardItem = new ClipboardItem({ [blob.type]: blob });
+        await navigator.clipboard.write([clipboardItem]);
+        toast.success("📋 Изображение скопировано!");
       } else {
-        alert("Ошибка при создании карточки 😔");
+        toast.success("Ошибка при создании карточки 😔");
+
       }
     } catch (err) {
       console.error("Ошибка при создании share-карточки:", err);
       alert("Не удалось создать карточку достижения 😔");
     } finally {
       setIsSharing(false);
-    }
-  };
-
-  // 🟢 Эта функция потом отправит изображение через твой Telegram-бот API
-  const sendToTelegram = async () => {
-    try {
-      if (!shareImage) return;
-      await axios.post("https://motivationserver.onrender.com/api/telegram/send-image", {
-        imageBase64: shareImage,
-        caption: `🏆 ${isModalOpen.title}\n${isModalOpen.description}`,
-      });
-      alert("Изображение отправлено в Telegram 📩");
-    } catch (err) {
-      console.error("Ошибка при отправке в Telegram:", err);
-      alert("Не удалось отправить в Telegram 😔");
     }
   };
 
@@ -88,21 +63,11 @@ const ModalWindowMe = ({ isModalOpen, addNewStatus, buttonText, closeModal, user
             <p className={styles.modalText}>{isModalOpen.description}</p>
 
             <div className={styles.buttonsRow}>
-              <button onClick={addNewStatus} className={styles.actionButton}>
-                {buttonText}
-              </button>
-
               <button onClick={handleShare} className={styles.shareButton} disabled={isSharing}>
                 <Share2 size={18} />
                 {isSharing ? "Создание..." : "Поделиться"}
               </button>
             </div>
-
-            {shareImage && (
-              <div className={styles.sharePreview}>
-                <img src={shareImage} alt="achievement" className={styles.shareImg} />
-              </div>
-            )}
           </motion.div>
         </motion.div>
       )}

@@ -27,8 +27,9 @@ const Achievements = (props) => {
         <Navigator activeIndex={activeIndex} activeTab={activeTab} setActiveTab={setActiveTab} />
         <AchievementsMap activeTab={activeTab} setIsModalOpenLocked={setIsModalOpenLocked} setIsModalOpen={setIsModalOpen} achievements={props.assignments} />
         <ModalWindowMe
+            getMakingPicture={props.getMakingPicture}
+            username={props.username}
             isModalOpen={isModalOpen}
-            buttonText="Понятно"
             addNewStatus={closeModal}
             closeModal={closeModal}
         />

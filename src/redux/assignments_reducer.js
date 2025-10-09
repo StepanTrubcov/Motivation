@@ -1,4 +1,4 @@
-import { getAchievements, initializeAchievements, achievementNewStatus } from "../Api/Api";
+import { getAchievements, initializeAchievements, achievementNewStatus, makingPicture } from "../Api/Api";
 
 const SET_ASSIGNMENTS = 'assignments/SET_ASSIGNMENTS';
 
@@ -37,6 +37,12 @@ export const getAchievementsNewStatus = (achievement, userId) => async (dispatch
     await achievementNewStatus(achievement, userId).then(response => {
          dispatch(getAchievementsData(userId))
     })
+}
+
+export const getMakingPicture = (isModalOpen, username) => async (dispatch) => {
+   const response = await makingPicture(isModalOpen, username)
+
+   return response
 }
 
 export default AssignmentsReducer;
