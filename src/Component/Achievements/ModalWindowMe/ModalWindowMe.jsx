@@ -1,35 +1,32 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Share2 } from "lucide-react";
-import axios from "axios";
+import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
 
 const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) => {
-  const [isSharing, setIsSharing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  const handleShare = async () => {
+  const handleGenerate = async () => {
     if (!isModalOpen?.title) return;
-    setIsSharing(true);
+    setIsLoading(true);
 
     try {
-      const response = await getMakingPicture(isModalOpen, username)
+      const response = await getMakingPicture(isModalOpen, username);
       const base64 = response.data?.url;
 
       if (base64) {
-        const blob = await fetch(base64).then(res => res.blob());
-        const clipboardItem = new ClipboardItem({ [blob.type]: blob });
-        await navigator.clipboard.write([clipboardItem]);
-        toast.success("📋 Изображение скопировано!");
+        setImageUrl(base64);
+        toast.success("Картинка готова! Удерживайте её, чтобы сохранить или отправить.");
       } else {
-        toast.success("Ошибка при создании карточки 😔");
-
+        toast.error("Ошибка при создании карточки 😔");
       }
     } catch (err) {
-      console.error("Ошибка при создании share-карточки:", err);
-      alert("Не удалось создать карточку достижения 😔");
+      console.error("Ошибка при создании карточки:", err);
+      toast.error("Не удалось создать карточку 😔");
     } finally {
-      setIsSharing(false);
+      setIsLoading(false);
     }
   };
 
@@ -52,22 +49,42 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
             transition={{ duration: 0.3 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button onClick={closeModal} className={styles.closeButton} aria-label="Close modal">
+            <button
+              onClick={closeModal}
+              className={styles.closeButton}
+              aria-label="Закрыть модальное окно"
+            >
               <X size={24} />
             </button>
 
             <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
-
             {isModalOpen.image && <img className={styles.modalImg} src={isModalOpen.image} />}
+            {isModalOpen.description && (
+              <p className={styles.modalText}>{isModalOpen.description}</p>
+            )}
 
-            <p className={styles.modalText}>{isModalOpen.description}</p>
-
-            <div className={styles.buttonsRow}>
-              <button onClick={handleShare} className={styles.shareButton} disabled={isSharing}>
-                <Share2 size={18} />
-                {isSharing ? "Создание..." : "Поделиться"}
-              </button>
-            </div>
+            {imageUrl ? (
+              <div className={styles.imageWrapper}>
+                <img
+                  className={styles.modalImCopy}
+                  src={imageUrl}
+                  alt={isModalOpen.title}
+                />
+                <p className={styles.shareText}>
+                  Чтобы поделиться или сохранить изображение, удерживайте его и выберите соответствующую опцию.
+                </p>
+              </div>
+            ) : (
+              <div className={styles.shareContainer} >
+                <button
+                  className={styles.shareButton}
+                  onClick={handleGenerate}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Создание..." : "Поделиться"}
+                </button>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

@@ -79,13 +79,6 @@
   background-color: #1f2937;
 }
 
-.buttonsRow {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 20px;
-}
-
 .shareButton {
   flex: 1;
   background-color: #1c1c1c;
@@ -114,7 +107,24 @@
   text-align: center;
 }
 
-.shareImg{
+.shareImg {
   margin-top: 10px;
   width: 100%;
+}
+
+.shareContainer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.shareText {
+  font-size: 12px;
+  text-align: center;
+  color: #00ff1e;
+}
+
+.modalImCopy {
+  width: 300px;
 }
