@@ -30,17 +30,22 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
     }
   };
 
-  const handleCopyImage = async () => {
+  // 💾 Сохранение base64 картинки на устройство
+  const handleSaveImage = () => {
     if (!imageUrl) return;
+
     try {
-      const blob = await fetch(imageUrl).then(res => res.blob());
-      const item = new ClipboardItem({ [blob.type]: blob });
-      await navigator.clipboard.write([item]);
-      toast.success("✅ Изображение скопировано!");
-      closeModal()
+      const link = document.createElement("a");
+      link.href = imageUrl;
+      link.download = "achievement.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("📸 Изображение сохранено!");
+      closeModal();
     } catch (err) {
-      console.error("Ошибка при копировании:", err);
-      toast.error("Не удалось скопировать изображение 😔");
+      console.error("Ошибка при сохранении:", err);
+      toast.error("Не удалось сохранить изображение 😔");
     }
   };
 
@@ -72,19 +77,28 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
             </button>
 
             <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
-            {isModalOpen.image && <img className={styles.modalImg} src={isModalOpen.image} alt="" />}
+            {isModalOpen.image && (
+              <img className={styles.modalImg} src={isModalOpen.image} alt="" />
+            )}
             {isModalOpen.description && (
               <p className={styles.modalText}>{isModalOpen.description}</p>
             )}
 
             {imageUrl ? (
               <div className={styles.imageWrapper}>
-                <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
+                <img
+                  className={styles.modalImCopy}
+                  src={imageUrl}
+                  alt={isModalOpen.title}
+                />
                 <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleCopyImage}>
-                    📋 Скопировать изображение
+                  <button className={styles.shareButton} onClick={handleSaveImage}>
+                    💾 Сохранить изображение
                   </button>
                 </div>
+                <p className={styles.shareText}>
+                  После сохранения вы можете отправить изображение прямо в чат Telegram.
+                </p>
               </div>
             ) : (
               <div className={styles.shareContainer}>
