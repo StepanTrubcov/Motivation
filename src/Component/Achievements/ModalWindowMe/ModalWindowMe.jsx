@@ -8,8 +8,12 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
 
+  // Функция для генерации изображения
   const handleGenerate = async () => {
-    if (!isModalOpen?.title) return;
+    if (!isModalOpen?.title) {
+      toast.error("Отсутствует заголовок карточки 😔");
+      return;
+    }
     setIsLoading(true);
 
     try {
@@ -20,7 +24,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
         setImageUrl(url);
         toast.success("Картинка готова!");
       } else {
-        toast.error("Ошибка при создании карточки 😔");
+        toast.error("Ошибка при создании карточки: пустой URL 😔");
       }
     } catch (err) {
       console.error("Ошибка при создании карточки:", err);
@@ -30,63 +34,83 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
     }
   };
 
-  // Функция для отправки изображения в Telegram
-  const handleShareToTelegram = async () => {
-    if (!imageUrl) return;
-
+  // Функция для конвертации base64 в Blob
+  const base64ToBlob = (base64) => {
     try {
-      // Проверяем наличие Telegram Web Apps API
-      if (!window.Telegram?.WebApp) {
-        toast.error("Это приложение не работает в Telegram 😔");
-        return;
+      const byteString = atob(base64.split(",")[1]);
+      const mimeString = base64.split(",")[0].split(":")[1].split(";")[0];
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
       }
-
-      const telegram = window.Telegram.WebApp;
-
-      // Предполагаем, что imageUrl - это публичный URL
-      // Если imageUrl - это base64, нужно сначала загрузить на сервер
-      const isBase64 = imageUrl.startsWith("data:image");
-      let imageUrlForSharing = imageUrl;
-
-      if (isBase64) {
-        // Загружаем base64 на сервер для получения публичного URL
-        // Это пример, замените на реальный API-вызов
-        const formData = new FormData();
-        const blob = await fetch(imageUrl).then((res) => res.blob());
-        formData.append("image", blob, "shared_image.png");
-
-        const uploadResponse = await fetch("/upload-image", {
-          method: "POST",
-          body: formData,
-        });
-        const uploadData = await uploadResponse.json();
-        imageUrlForSharing = uploadData.url; // Публичный URL от сервера
-      }
-
-      // Открываем Telegram с предзаполненным сообщением
-      telegram.openTelegramLink(
-        `https://t.me/share/url?url=${encodeURIComponent(imageUrlForSharing)}&text=${encodeURIComponent(
-          isModalOpen.title || "Посмотрите это изображение!"
-        )}`
-      );
-
-      toast.success("Открыт диалог для отправки в Telegram!");
+      return new Blob([ab], { type: mimeString });
     } catch (err) {
-      console.error("Ошибка при отправке в Telegram:", err);
-      toast.error("Не удалось поделиться изображением 😔");
+      console.error("Ошибка при конвертации base64:", err);
+      throw new Error("Неверный формат base64");
     }
   };
 
-  const handleCopyImage = async () => {
-    if (!imageUrl) return;
+  // Функция для скачивания изображения
+  const handleDownloadImage = () => {
+    if (!imageUrl) {
+      toast.error("Изображение отсутствует 😔");
+      return;
+    }
+
     try {
-      const blob = await fetch(imageUrl).then((res) => res.blob());
+      let fileUrl;
+      let blob;
+
+      if (imageUrl.startsWith("data:image")) {
+        // Конвертируем base64 в Blob
+        blob = base64ToBlob(imageUrl);
+        fileUrl = URL.createObjectURL(blob);
+      } else {
+        // Если imageUrl — публичный URL
+        fileUrl = imageUrl;
+      }
+
+      // Создаем ссылку для скачивания
+      const link = document.createElement("a");
+      link.href = fileUrl;
+      link.download = `image_${Date.now()}.png`; // Уникальное имя файла
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Освобождаем URL, если использовался Blob
+      if (imageUrl.startsWith("data:image")) {
+        URL.revokeObjectURL(fileUrl);
+      }
+
+      toast.success("Изображение скачано! Откройте его в Telegram для отправки.");
+    } catch (err) {
+      console.error("Ошибка при скачивании изображения:", err);
+      toast.error("Не удалось скачать изображение 😔");
+    }
+  };
+
+  // Функция для копирования изображения (оставлена для совместимости)
+  const handleCopyImage = async () => {
+    if (!imageUrl) {
+      toast.error("Изображение отсутствует 😔");
+      return;
+    }
+
+    try {
+      const blob = imageUrl.startsWith("data:image")
+        ? base64ToBlob(imageUrl)
+        : await fetch(imageUrl).then((res) => {
+            if (!res.ok) throw new Error("Ошибка загрузки изображения");
+            return res.blob();
+          });
       const item = new ClipboardItem({ [blob.type]: blob });
       await navigator.clipboard.write([item]);
       toast.success("✅ Изображение скопировано!");
     } catch (err) {
       console.error("Ошибка при копировании:", err);
-      toast.error("Не удалось скопировать изображение 😔");
+      toast.error("Не удалось скопировать изображение 😔 (попробуйте скачать)");
     }
   };
 
@@ -127,8 +151,8 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
               <div className={styles.imageWrapper}>
                 <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
                 <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleShareToTelegram}>
-                    📤 Поделиться в Telegram
+                  <button className={styles.shareButton} onClick={handleDownloadImage}>
+                    📥 Скачать изображение
                   </button>
                   <button className={styles.shareButton} onClick={handleCopyImage}>
                     📋 Скопировать изображение
@@ -142,7 +166,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
                   onClick={handleGenerate}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Создание..." : "Поделиться"}
+                  {isLoading ? "Создание..." : "Сгенерировать"}
                 </button>
               </div>
             )}
