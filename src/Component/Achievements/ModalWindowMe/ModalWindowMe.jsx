@@ -1,92 +1,93 @@
-// ModalWindowMe.jsx
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
 
-/**
- * Props:
- *  - getMakingPicture(isModalOpen, username) -> axios response (response.data.url = base64 image)
- *  - isModalOpen - объект достижения или false/null
- *  - closeModal() - закрыть модалку
- *  - username - имя пользователя для генерации
- */
 const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
-  const newWindowRef = useRef(null);
 
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return;
     setIsLoading(true);
-    setImageUrl(null);
-
-    // Открываем пустую вкладку синхронно (чтобы не заблокировал pop-up)
-    try {
-      newWindowRef.current = window.open("", "_blank");
-    } catch (err) {
-      newWindowRef.current = null;
-    }
 
     try {
       const response = await getMakingPicture(isModalOpen, username);
-      const base64 = response?.data?.url;
+      const url = response.data?.url;
 
-      if (!base64) {
-        toast.error("Сервер вернул пустой результат.");
-        // Закрываем пустую вкладку если открыли
-        if (newWindowRef.current && !newWindowRef.current.closed) newWindowRef.current.close();
-        return;
-      }
-
-      setImageUrl(base64);
-      toast.success("Картинка готова — открываю в новой вкладке...");
-
-      // Если удалось открыть пустую вкладку — загружаем в неё картинку
-      if (newWindowRef.current && !newWindowRef.current.closed) {
-        try {
-          // Попытка перенаправить location на data:url
-          newWindowRef.current.location.href = base64;
-        } catch (err) {
-          // Некоторым браузерам запрещено устанавливать location на data:
-          // в таком случае вставим html с тегом img
-          try {
-            newWindowRef.current.document.write(`
-              <html>
-                <head><title>Achievement</title></head>
-                <body style="margin:0;display:flex;align-items:center;justify-content:center;background:#0b0b0b;">
-                  <img src="${base64}" style="max-width:100%;height:auto;display:block" />
-                </body>
-              </html>
-            `);
-            newWindowRef.current.document.close();
-          } catch (err2) {
-            // Если и это не удалось — закроем вкладку и уведомим пользователя
-            console.warn("Не удалось вставить картинку в новую вкладку:", err2);
-            if (newWindowRef.current && !newWindowRef.current.closed) newWindowRef.current.close();
-            toast("Попап/вкладка заблокирована. Нажмите «Открыть изображение», чтобы открыть картинку вручную.", { icon: "⚠️" });
-          }
-        }
+      if (url) {
+        setImageUrl(url);
+        toast.success("Картинка готова!");
       } else {
-        // Попап заблокирован — уведомляем пользователя и показываем превью в модалке
-        toast("Попап заблокирован — откройте картинку вручную (кнопка ниже).", { icon: "⚠️" });
+        toast.error("Ошибка при создании карточки 😔");
       }
     } catch (err) {
       console.error("Ошибка при создании карточки:", err);
-      toast.error("Не удалось создать карточку. Попробуй позже.");
-      if (newWindowRef.current && !newWindowRef.current.closed) newWindowRef.current.close();
+      toast.error("Не удалось создать карточку 😔");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleOpenImage = () => {
-    if (!imageUrl) {
-      toast.error("Сначала сгенерируйте изображение");
-      return;
+  // Функция для отправки изображения в Telegram
+  const handleShareToTelegram = async () => {
+    if (!imageUrl) return;
+
+    try {
+      // Проверяем наличие Telegram Web Apps API
+      if (!window.Telegram?.WebApp) {
+        toast.error("Это приложение не работает в Telegram 😔");
+        return;
+      }
+
+      const telegram = window.Telegram.WebApp;
+
+      // Предполагаем, что imageUrl - это публичный URL
+      // Если imageUrl - это base64, нужно сначала загрузить на сервер
+      const isBase64 = imageUrl.startsWith("data:image");
+      let imageUrlForSharing = imageUrl;
+
+      if (isBase64) {
+        // Загружаем base64 на сервер для получения публичного URL
+        // Это пример, замените на реальный API-вызов
+        const formData = new FormData();
+        const blob = await fetch(imageUrl).then((res) => res.blob());
+        formData.append("image", blob, "shared_image.png");
+
+        const uploadResponse = await fetch("/upload-image", {
+          method: "POST",
+          body: formData,
+        });
+        const uploadData = await uploadResponse.json();
+        imageUrlForSharing = uploadData.url; // Публичный URL от сервера
+      }
+
+      // Открываем Telegram с предзаполненным сообщением
+      telegram.openTelegramLink(
+        `https://t.me/share/url?url=${encodeURIComponent(imageUrlForSharing)}&text=${encodeURIComponent(
+          isModalOpen.title || "Посмотрите это изображение!"
+        )}`
+      );
+
+      toast.success("Открыт диалог для отправки в Telegram!");
+    } catch (err) {
+      console.error("Ошибка при отправке в Telegram:", err);
+      toast.error("Не удалось поделиться изображением 😔");
     }
-    window.open(imageUrl, "_blank");
+  };
+
+  const handleCopyImage = async () => {
+    if (!imageUrl) return;
+    try {
+      const blob = await fetch(imageUrl).then((res) => res.blob());
+      const item = new ClipboardItem({ [blob.type]: blob });
+      await navigator.clipboard.write([item]);
+      toast.success("✅ Изображение скопировано!");
+    } catch (err) {
+      console.error("Ошибка при копировании:", err);
+      toast.error("Не удалось скопировать изображение 😔");
+    }
   };
 
   return (
@@ -97,15 +98,15 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.3 }}
           onClick={closeModal}
         >
           <motion.div
             className={styles.modalContent}
-            initial={{ scale: 0.95, opacity: 0 }}
+            initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.3 }}
             onClick={(e) => e.stopPropagation()}
           >
             <button
@@ -113,15 +114,11 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
               className={styles.closeButton}
               aria-label="Закрыть модальное окно"
             >
-              <X size={20} />
+              <X size={24} />
             </button>
 
             <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
-
-            {isModalOpen.image && (
-              <img className={styles.modalImg} src={isModalOpen.image} alt={isModalOpen.title} />
-            )}
-
+            {isModalOpen.image && <img className={styles.modalImg} src={isModalOpen.image} alt="" />}
             {isModalOpen.description && (
               <p className={styles.modalText}>{isModalOpen.description}</p>
             )}
@@ -130,13 +127,13 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
               <div className={styles.imageWrapper}>
                 <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
                 <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleOpenImage}>
-                    🔗 Открыть изображение
+                  <button className={styles.shareButton} onClick={handleShareToTelegram}>
+                    📤 Поделиться в Telegram
+                  </button>
+                  <button className={styles.shareButton} onClick={handleCopyImage}>
+                    📋 Скопировать изображение
                   </button>
                 </div>
-                <p className={styles.shareText}>
-                  Откройте картинку в новой вкладке и удерживайте, чтобы сохранить в галерею.
-                </p>
               </div>
             ) : (
               <div className={styles.shareContainer}>
