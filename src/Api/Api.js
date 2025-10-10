@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from "react-hot-toast";
 
 
-const BASE_URL = 'http://localhost:5002/api';
+const BASE_URL = 'https://motivationserver.onrender.com/api';
 
 export const addProfileApi = async () => {
   WebApp.ready();
@@ -209,8 +209,8 @@ export async function initializeUserGoals(customUserId) {
       return false;
     }
 
-    console.log(`У пользователя ${customUserId} найдено ${existingGoals.length} целей. Инициализируем все цели...`);
-    const response = await axios.post(`${BASE_URL}/initialize-goals/${customUserId}`, { goalsArray });
+    // console.log(`У пользователя ${customUserId} найдено ${existingGoals.length} целей. Инициализируем все цели...`);
+    // const response = await axios.post(`${BASE_URL}/initialize-goals/${customUserId}`, { goalsArray });
     return true;
   } catch (error) {
     console.error("Ошибка инициализации целей:", error);
