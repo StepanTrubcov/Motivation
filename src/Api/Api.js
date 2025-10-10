@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from "react-hot-toast";
 
 
-const BASE_URL = 'https://motivationserver.onrender.com/api';
+const BASE_URL = 'http://localhost:5002/api';
 
 export const addProfileApi = async () => {
   WebApp.ready();

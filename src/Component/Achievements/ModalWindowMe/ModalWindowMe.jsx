@@ -18,7 +18,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
 
       if (base64) {
         setImageUrl(base64);
-        toast.success("Картинка готова! Удерживайте её, чтобы сохранить или отправить.");
+        toast.success("Картинка готова!");
       } else {
         toast.error("Ошибка при создании карточки 😔");
       }
@@ -27,6 +27,20 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
       toast.error("Не удалось создать карточку 😔");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleCopyImage = async () => {
+    if (!imageUrl) return;
+    try {
+      const blob = await fetch(imageUrl).then(res => res.blob());
+      const item = new ClipboardItem({ [blob.type]: blob });
+      await navigator.clipboard.write([item]);
+      toast.success("✅ Изображение скопировано!");
+      closeModal()
+    } catch (err) {
+      console.error("Ошибка при копировании:", err);
+      toast.error("Не удалось скопировать изображение 😔");
     }
   };
 
@@ -58,24 +72,22 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
             </button>
 
             <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
-            {isModalOpen.image && <img className={styles.modalImg} src={isModalOpen.image} />}
+            {isModalOpen.image && <img className={styles.modalImg} src={isModalOpen.image} alt="" />}
             {isModalOpen.description && (
               <p className={styles.modalText}>{isModalOpen.description}</p>
             )}
 
             {imageUrl ? (
               <div className={styles.imageWrapper}>
-                <img
-                  className={styles.modalImCopy}
-                  src={imageUrl}
-                  alt={isModalOpen.title}
-                />
-                <p className={styles.shareText}>
-                  Чтобы поделиться или сохранить изображение, удерживайте его и выберите соответствующую опцию.
-                </p>
+                <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
+                <div className={styles.shareContainer}>
+                  <button className={styles.shareButton} onClick={handleCopyImage}>
+                    📋 Скопировать изображение
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className={styles.shareContainer} >
+              <div className={styles.shareContainer}>
                 <button
                   className={styles.shareButton}
                   onClick={handleGenerate}
