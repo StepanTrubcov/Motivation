@@ -8,23 +8,26 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
 
-  // Функция для генерации изображения
+  // Telegram WebApp API
+  const tg = window.Telegram?.WebApp;
+
+  // Генерация изображения
   const handleGenerate = async () => {
     if (!isModalOpen?.title) {
       toast.error("Отсутствует заголовок карточки 😔");
       return;
     }
-    setIsLoading(true);
 
+    setIsLoading(true);
     try {
       const response = await getMakingPicture(isModalOpen, username);
       const url = response.data?.url;
 
       if (url) {
         setImageUrl(url);
-        toast.success("Картинка готова!");
+        toast.success("✨ Картинка готова!");
       } else {
-        toast.error("Ошибка при создании карточки: пустой URL 😔");
+        toast.error("Ошибка: не удалось получить ссылку на изображение.");
       }
     } catch (err) {
       console.error("Ошибка при создании карточки:", err);
@@ -34,83 +37,35 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
     }
   };
 
-  // Функция для конвертации base64 в Blob
-  const base64ToBlob = (base64) => {
-    try {
-      const byteString = atob(base64.split(",")[1]);
-      const mimeString = base64.split(",")[0].split(":")[1].split(";")[0];
-      const ab = new ArrayBuffer(byteString.length);
-      const ia = new Uint8Array(ab);
-      for (let i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-      return new Blob([ab], { type: mimeString });
-    } catch (err) {
-      console.error("Ошибка при конвертации base64:", err);
-      throw new Error("Неверный формат base64");
-    }
-  };
-
-  // Функция для скачивания изображения
-  const handleDownloadImage = () => {
+  // Открытие картинки в новом окне (внутри Telegram)
+  const handleOpenImage = () => {
     if (!imageUrl) {
-      toast.error("Изображение отсутствует 😔");
+      toast.error("Сначала сгенерируйте изображение 😔");
       return;
     }
 
     try {
-      let fileUrl;
-      let blob;
-
-      if (imageUrl.startsWith("data:image")) {
-        // Конвертируем base64 в Blob
-        blob = base64ToBlob(imageUrl);
-        fileUrl = URL.createObjectURL(blob);
+      if (tg) {
+        // Используем Telegram WebApp API для показа popup
+        tg.showPopup({
+          title: "📸 Ваша карточка готова!",
+          message: "Откройте изображение в браузере, затем сохраните или поделитесь им.",
+          buttons: [
+            { id: "open", type: "default", text: "Открыть изображение" },
+            { type: "cancel" },
+          ],
+        }, (buttonId) => {
+          if (buttonId === "open") {
+            window.open(imageUrl, "_blank");
+          }
+        });
       } else {
-        // Если imageUrl — публичный URL
-        fileUrl = imageUrl;
+        // Если не Telegram WebApp — просто открыть ссылку
+        window.open(imageUrl, "_blank");
       }
-
-      // Создаем ссылку для скачивания
-      const link = document.createElement("a");
-      link.href = fileUrl;
-      link.download = `image_${Date.now()}.png`; // Уникальное имя файла
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      // Освобождаем URL, если использовался Blob
-      if (imageUrl.startsWith("data:image")) {
-        URL.revokeObjectURL(fileUrl);
-      }
-
-      toast.success("Изображение скачано! Откройте его в Telegram для отправки.");
     } catch (err) {
-      console.error("Ошибка при скачивании изображения:", err);
-      toast.error("Не удалось скачать изображение 😔");
-    }
-  };
-
-  // Функция для копирования изображения (оставлена для совместимости)
-  const handleCopyImage = async () => {
-    if (!imageUrl) {
-      toast.error("Изображение отсутствует 😔");
-      return;
-    }
-
-    try {
-      const blob = imageUrl.startsWith("data:image")
-        ? base64ToBlob(imageUrl)
-        : await fetch(imageUrl).then((res) => {
-            if (!res.ok) throw new Error("Ошибка загрузки изображения");
-            return res.blob();
-          });
-      const item = new ClipboardItem({ [blob.type]: blob });
-      await navigator.clipboard.write([item]);
-      toast.success("✅ Изображение скопировано!");
-    } catch (err) {
-      console.error("Ошибка при копировании:", err);
-      toast.error("Не удалось скопировать изображение 😔 (попробуйте скачать)");
+      console.error("Ошибка при открытии изображения:", err);
+      toast.error("Не удалось открыть изображение 😔");
     }
   };
 
@@ -151,11 +106,8 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
               <div className={styles.imageWrapper}>
                 <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
                 <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleDownloadImage}>
-                    📥 Скачать изображение
-                  </button>
-                  <button className={styles.shareButton} onClick={handleCopyImage}>
-                    📋 Скопировать изображение
+                  <button className={styles.shareButton} onClick={handleOpenImage}>
+                    🔗 Открыть изображение
                   </button>
                 </div>
               </div>
@@ -166,7 +118,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
                   onClick={handleGenerate}
                   disabled={isLoading}
                 >
-                  {isLoading ? "Создание..." : "Сгенерировать"}
+                  {isLoading ? "Создание..." : "Сгенерировать карточку"}
                 </button>
               </div>
             )}
