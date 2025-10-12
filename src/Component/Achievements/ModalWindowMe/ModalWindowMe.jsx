@@ -102,7 +102,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
               <p className={styles.modalText}>{isModalOpen.description}</p>
             )}
 
-            {imageUrl ? (
+            {/* {imageUrl ? (
               <div className={styles.imageWrapper}>
                 <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
                 <div className={styles.shareContainer}>
@@ -121,7 +121,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
                   {isLoading ? "Создание..." : "Сгенерировать карточку"}
                 </button>
               </div>
-            )}
+            )} */}
           </motion.div>
         </motion.div>
       )}
