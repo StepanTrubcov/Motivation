@@ -8,10 +8,9 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
 
-  // Telegram WebApp API
   const tg = window.Telegram?.WebApp;
 
-  // Генерация изображения
+
   const handleGenerate = async () => {
     if (!isModalOpen?.title) {
       toast.error("Отсутствует заголовок карточки 😔");
@@ -37,7 +36,6 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
     }
   };
 
-  // Открытие картинки в новом окне (внутри Telegram)
   const handleOpenImage = () => {
     if (!imageUrl) {
       toast.error("Сначала сгенерируйте изображение 😔");
@@ -46,7 +44,6 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
 
     try {
       if (tg) {
-        // Используем Telegram WebApp API для показа popup
         tg.showPopup({
           title: "📸 Ваша карточка готова!",
           message: "Откройте изображение в браузере, затем сохраните или поделитесь им.",
@@ -60,7 +57,6 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
           }
         });
       } else {
-        // Если не Telegram WebApp — просто открыть ссылку
         window.open(imageUrl, "_blank");
       }
     } catch (err) {

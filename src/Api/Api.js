@@ -208,9 +208,6 @@ export async function initializeUserGoals(customUserId) {
       console.log(existingGoals)
       return false;
     }
-
-    // console.log(`У пользователя ${customUserId} найдено ${existingGoals.length} целей. Инициализируем все цели...`);
-    // const response = await axios.post(`${BASE_URL}/initialize-goals/${customUserId}`, { goalsArray });
     return true;
   } catch (error) {
     console.error("Ошибка инициализации целей:", error);

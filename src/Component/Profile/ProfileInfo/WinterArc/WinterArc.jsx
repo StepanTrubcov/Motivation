@@ -7,7 +7,6 @@ const WinterArc = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [snowflakes, setSnowflakes] = useState([]);
 
-  // ❄️ Генерация снежинок только для кнопки
   useEffect(() => {
     const flakes = Array.from({ length: 20 }, () => ({
       left: Math.random() * 100,
@@ -20,7 +19,6 @@ const WinterArc = () => {
 
   return (
     <>
-      {/* ❄️ Блок-кнопка с падающим снегом */}
       <motion.div
         className={styles.WinterArc}
         whileHover={{ scale: 1.02 }}

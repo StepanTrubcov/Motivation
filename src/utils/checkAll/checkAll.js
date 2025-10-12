@@ -1,5 +1,4 @@
 export const checkAll = (assignments, triggeredRef, goals, newStatusAssignment, userId, userRegistrationStub) => {
-    // Преобразуем строку регистрации в объект Date
     const registrationDate = new Date(userRegistrationStub);
 
     assignments.forEach((achievement) => {
