@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/mongo-client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("MONGODB_URL")
+}
+
+model User {
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  telegramId       String        @unique
+  firstName        String?
+  username         String?
+  photoUrl         String?
+  pts              Int           @default(0)
+  completedDates   String[]      @default([])
+  achievements     Achievement[] 
+  registrationDate DateTime?     @default(now())
+  yesterdayReport  Json?       // 🆕 текстовое поле для вчерашнего отчёта
+}
+
+
+model Achievement {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  requirement String
+  status      String
+  image       String
+  points      Int
+  type        String?
+  goalIds     String[] @default([])
+  target      Int?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  userId      String   @db.ObjectId
+}
+

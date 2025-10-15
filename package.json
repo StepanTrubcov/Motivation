@@ -1,57 +1,26 @@
 {
-  "homepage": "https://StepanTrubcov.github.io/Motivation",
-  "name": "my-app",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@reduxjs/toolkit": "^2.8.2",
-    "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.4",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@twa-dev/sdk": "^8.0.2",
-    "axios": "^1.11.0",
-    "firebase": "^12.1.0",
-    "framer-motion": "^12.23.12",
-    "lucide-react": "^0.541.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-github-contribution-calendar": "^2.2.0",
-    "react-hot-toast": "^2.6.0",
-    "react-icons": "^5.5.0",
-    "react-redux": "^9.2.0",
-    "react-router-dom": "^7.8.1",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "motivation-app-fullstack",
+  "version": "2.0.0",
+  "description": "Next.js + Express полный стек в одной папке",
   "scripts": {
-    "start": "react-scripts start",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    " ": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd client && npm start",
+    "install": "cd client && npm install"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "keywords": [
+    "nextjs",
+    "express",
+    "prisma",
+    "mongodb",
+    "postgresql",
+    "telegram",
+    "motivation",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
-    "gh-pages": "^6.3.0",
-    "ngrok": "^5.0.0-beta.2"
+    "concurrently": "^8.2.2"
   }
 }

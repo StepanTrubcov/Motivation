@@ -40,7 +40,6 @@ const App = ({ addTextGenerationData, getAchievementsNewStatus, setPoints, addPr
 
     addTextGenerationData(user.telegramId, goalsDone, goalsInProgress, null, null, loading)
 
-    // addProfile();
   }
 
   useEffect(() => {
