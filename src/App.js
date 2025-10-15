@@ -14,6 +14,7 @@ import { getAchievementsNewStatus, getInitializeAchievementsData } from "./redux
 import { toast } from "react-hot-toast";
 import LoadingScreen from "./Component/LoadingScreen/LoadingScreen";
 import { checkAll } from "./utils/checkAll/checkAll";
+import { addTextGenerationData } from "./redux/generation_reducer";
 
 const pageVariants = {
   initial: { opacity: 0 },
@@ -21,7 +22,7 @@ const pageVariants = {
   exit: { opacity: 0 },
 };
 
-const App = ({ getAchievementsNewStatus, setPoints, addProfile, addGoals, addStatus, getInitializeAchievementsData, user, ThereAreUsers, assignments, goals }) => {
+const App = ({ addTextGenerationData, getAchievementsNewStatus, setPoints, addProfile, addGoals, addStatus, getInitializeAchievementsData, user, ThereAreUsers, assignments, goals }) => {
   const location = useLocation();
   const triggeredRef = useRef(new Set());
 
@@ -30,6 +31,17 @@ const App = ({ getAchievementsNewStatus, setPoints, addProfile, addGoals, addSta
   useEffect(() => {
     addProfile();
   }, []);
+
+  const generation = (goals) => {
+
+    const goalsDone = goals?.filter(g => g.status === "completed")
+    const goalsInProgress = goals?.filter(g => g.status === "in_progress")
+    const loading = true
+
+    addTextGenerationData(user.telegramId, goalsDone, goalsInProgress, null, null, loading)
+
+    // addProfile();
+  }
 
   useEffect(() => {
     if (user && !ThereAreUsers) {
@@ -43,6 +55,13 @@ const App = ({ getAchievementsNewStatus, setPoints, addProfile, addGoals, addSta
     setPoints(userId, achievement.points)
     toast.success(`Вы получили новое достижение!`);
   };
+
+  useEffect(() => {
+    if (goals.length !== 0) {
+      generation(goals);
+    }
+  }, [goals]);
+
 
   useEffect(() => {
     if (user && assignments.length === 0) {
@@ -133,4 +152,5 @@ export default connect(mapStateToProps, {
   getInitializeAchievementsData,
   setPoints,
   getAchievementsNewStatus,
+  addTextGenerationData,
 })(App);

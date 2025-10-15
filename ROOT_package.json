@@ -1,0 +1,28 @@
+{
+  "name": "motivation-app-monorepo",
+  "version": "1.0.0",
+  "description": "Мотивационное приложение с Next.js фронтендом и Express бэкендом",
+  "scripts": {
+    "install:all": "cd server && npm install",
+    "dev:server": "cd server && npm run dev",
+    "start:server": "cd server && npm start",
+    "dev:client": "cd next-app && npm run dev",
+    "build:client": "cd next-app && npm run build",
+    "start:client": "cd next-app && npm start",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "old:start": "react-scripts start",
+    "old:build": "react-scripts build"
+  },
+  "keywords": [
+    "motivation",
+    "goals",
+    "nextjs",
+    "express",
+    "telegram"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

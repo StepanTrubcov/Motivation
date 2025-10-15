@@ -6,7 +6,7 @@ import styles from "./ModalWindowGeneration.module.css";
 import gpt from '../../../../img/gpt.gif'
 import { toast } from "react-hot-toast";
 
-const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
+const ModalWindowGeneration = ({ telegramId, yesterdayReport, addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
     const [loading, setLoading] = useState(false);
     const [generatedText, setGeneratedText] = useState('');
     const [error, setError] = useState("");
@@ -27,15 +27,15 @@ const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, is
         setLoading(true);
         setError("");
         setGeneratedText("");
-        await addTextGenerationData(goalsDone, goalsInProgress, setGeneratedText, setLoading)
+        await addTextGenerationData(telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading)
+        toast.success("Отчёт за сегодня успешно сохранён! 📝");
     };
 
-    const copyToClipboard = async () => {
-        await navigator.clipboard.writeText(generatedText);
+    const copyToClipboard = async (text) => {
+        await navigator.clipboard.writeText(text);
         toast.success("Отчёт скопирован!");
         closeModal()
     };
-
 
     return (
         <AnimatePresence>
@@ -65,16 +65,12 @@ const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, is
                         </button>
 
                         <h2 className={styles.modalTitle}>
-                            Сгенерировать отчёт о сегодняшних целях
+                            Генерация отчёта о сегодняшних целях
                         </h2>
-
-                        <div className={styles.modalTextInfo}>
-                            ✨ В конце дня вы можете собрать готовое сообщение: с галочками,
-                            датой и личным комментарием от вашего лица. Такой отчёт удобно
-                            копировать и отправлять в Telegram-чат или сохранять для себя.
-                        </div>
-
-                        {generatedText && (
+                        {generatedText && (<div>
+                            <div className={styles.generation__text}>
+                                Сегодняшний отчёт
+                            </div>
                             <div className={styles.generatedBox}>
                                 <div onClick={() => setIsModalOpenText(generatedText)} className={styles.previewWrapper}>
                                     <pre className={styles.previewText}>
@@ -84,36 +80,63 @@ const ModalWindowGeneration = ({ nerationIsOver, text, addTextGenerationData, is
                                 </div>
                                 <button
                                     className={styles.copyButton}
-                                    onClick={copyToClipboard}
+                                    onClick={() => copyToClipboard(generatedText)}
                                     aria-label="Копировать отчёт"
                                 >
                                     <Copy size={28} />
                                 </button>
                             </div>
+                        </div>
                         ) || (
-                                <button
-                                    className={styles.button}
-                                    onClick={generation}
-                                    disabled={loading}
-                                >
-                                    {loading ? (
-                                        <div className={styles.text}> <img
-                                            className={styles.img}
-                                            src={gpt}
-                                            alt="generate"
-                                        /> Генерация...</div>
-                                    ) : (
-                                        <div className={styles.text}>
-                                            <img
+                                <div>
+                                    <div className={styles.modalTextInfo}>
+                                        ✨ Сгенерируйте сегодняшний отчёт и можете отправлить его в Хорошую компанию, Telegram-канал или сохранить для себя.
+                                    </div>
+                                    <button
+                                        className={styles.button}
+                                        onClick={generation}
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <div className={styles.text}> <img
                                                 className={styles.img}
-                                                src="https://cdn-icons-png.flaticon.com/512/11865/11865338.png"
+                                                src={gpt}
                                                 alt="generate"
-                                            />
-                                            Сгенерировать
-                                        </div>
-                                    )}
-                                </button>
+                                            /> Генерация...</div>
+                                        ) : (
+                                            <div className={styles.text}>
+                                                <img
+                                                    className={styles.img}
+                                                    src="https://cdn-icons-png.flaticon.com/512/11865/11865338.png"
+                                                    alt="generate"
+                                                />
+                                                Сгенерировать
+                                            </div>
+                                        )}
+                                    </button>
+                                </div>
                             )}
+                        {yesterdayReport[0] && (<div>
+                            <div className={styles.generation__text}>
+                                Вчерашний отчёт
+                            </div>
+                            <div className={styles.generatedBox}>
+                                <div onClick={() => setIsModalOpenText(yesterdayReport[0].text)} className={styles.previewWrapper}>
+                                    <pre className={styles.previewText}>
+                                        {yesterdayReport[0].text.split("\n").slice(0, 1).join("\n")}
+                                        {yesterdayReport[0].text.split("\n").length > 1 ? "\n..." : ""}
+                                    </pre>
+                                </div>
+                                <button
+                                    className={styles.copyButton}
+                                    onClick={() => copyToClipboard(yesterdayReport[0].text)}
+                                    aria-label="Копировать отчёт"
+                                >
+                                    <Copy size={28} />
+                                </button>
+                            </div>
+                        </div>
+                        )}
                     </motion.div>
                 </motion.div>
             )}

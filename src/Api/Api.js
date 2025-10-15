@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toast } from "react-hot-toast";
 
 
-const BASE_URL = 'https://motivationserver.onrender.com/api';
+const BASE_URL = 'http://localhost:5002/api';
 
 export const addProfileApi = async () => {
   WebApp.ready();
@@ -240,17 +240,25 @@ export async function getCompletedDates(customUserId) {
   }
 }
 
-export async function getGeneraleText(goalsDone, goalsInProgress) {
-  const goals = [...goalsDone, ...goalsInProgress];
-  const res = await axios.post(`${BASE_URL}/generate-report`, {
-    goals,
-  });
-  if (res.data?.success) {
-    return (res.data.message);
-  } else {
-    return "Сервер вернул пустой результат";
+export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress) => {
+  try {
+    if (!telegramId) {
+      console.error("❌ Нет telegramId для отчёта");
+      return;
+    }
+    const response = await axios.post(`${BASE_URL}/generate-report/${telegramId}`, {
+      goalsDone,
+      goalsInProgress,
+    });
+
+    const { message, success } = response.data;
+
+    return message;
+  } catch (err) {
+    console.error("❌ Ошибка при генерации отчёта:", err);
+    toast.error("Произошла ошибка при создании отчёта");
   }
-}
+};
 
 export async function initializeAchievements(userId) {
 
