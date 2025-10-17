@@ -2,8 +2,13 @@
   text-align: center;
   font-size: 30px;
   font-weight: 600;
+  margin-top: 15px;
   margin-bottom: 16px;
   color: white;
+}
+
+.container{
+  margin-bottom: 70px;
 }
 
 /* Контейнер вкладок */

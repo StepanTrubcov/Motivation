@@ -8,7 +8,6 @@ import { getAchievementsNewStatus, getMakingPicture } from "../../redux/assignme
 import { toast } from "react-hot-toast";
 import { setPoints } from "../../redux/profile_reducer";
 import { checkAll } from "../../utils/checkAll/checkAll";
-import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const AchievementsConteiner = ({getMakingPicture, assignments = [], goals = [], userId, user, getAchievementsNewStatus, setPoints }) => {
     const triggeredRef = useRef(new Set());
@@ -26,12 +25,6 @@ const AchievementsConteiner = ({getMakingPicture, assignments = [], goals = [], 
             checkAll(assignments, triggeredRef, goals, newStatusAssignment, userId, userRegistrationStub);
         }
     }, [assignments, goals, user]);
-
-    // Проверка на загрузку данных
-    if (!user) {
-        return <LoadingScreen title="Загрузка данных..." />;
-    }
-
     return (
         <div>
             <div className={c.title}>Достижения</div>

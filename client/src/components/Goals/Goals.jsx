@@ -10,7 +10,7 @@ const Goals = ({ completed, inProgress, available, setIsModalOpen }) => {
 
     const activeIndex = tabs.indexOf(activeTab);
 
-    return <div>
+    return <div className={c.container} >
         <div className={c.name} >Цели</div>
         <div className={`${c.navigator} ${c[`tab-${activeIndex}`]}`}>
             <div className={c.navHighlight}></div>

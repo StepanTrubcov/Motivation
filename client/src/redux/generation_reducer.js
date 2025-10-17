@@ -1,4 +1,5 @@
 import { getGeneraleText } from "@/lib/api/Api";
+import { addProfile } from "./profile_reducer";
 
 
 const SET_GENERATION_TEXT = 'generation/SET_GENERATION_TEXT';
@@ -28,12 +29,14 @@ const setTextData = (generationText) => ({
 });
 
 
-export const addTextGenerationData = (telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, loading = false) => async (dispatch) => {
+export const addTextGenerationData = (telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, loading = true) => async (dispatch) => {
     await getGeneraleText(telegramId, goalsDone, goalsInProgress).then(response => {
-        dispatch(setTextData(response))
-        if (!loading) {
+        if (loading) {
+            dispatch(setTextData(response))
             setGeneratedText(response)
             setLoading(false)
+        } else if (!loading) {
+            dispatch(addProfile())
         }
     })
 }

@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { toast } from "react-hot-toast";
 
-// Dynamic import for Telegram SDK to avoid SSR issues
 let WebApp;
+let isWebAppLoading = true;
+
 if (typeof window !== 'undefined') {
   import('@twa-dev/sdk').then(module => {
     WebApp = module.default;
+    isWebAppLoading = false;
   });
 }
 
@@ -14,15 +16,21 @@ const BASE_URL = typeof window !== 'undefined'
   : '/api';
 
 export const addProfileApi = async () => {
-  if (typeof window === 'undefined' || !WebApp) {
-    console.log('Running on server or WebApp not loaded, using stub data');
-    return {
-      id: "stub",
-      telegramId: "2521351",
-      firstName: "Stepan",
-      username: "Stepan",
-      photoUrl: "https://t.me/i/userpic/320/oBN9n-AW0sT2iVFeGc17067iUAw_QccFVfwRJFd3WRBg0IiDoe6whGY1zK.svg"
-    };
+  if (typeof window === 'undefined') {
+    console.log('Running on server, skipping API call');
+    return null;
+  }
+
+  // Ждём загрузки WebApp SDK
+  let waitAttempts = 0;
+  while (isWebAppLoading && waitAttempts < 50) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    waitAttempts++;
+  }
+
+  if (!WebApp) {
+    console.error('WebApp SDK failed to load');
+    return null;
   }
 
   WebApp.ready();
@@ -95,9 +103,6 @@ export async function addPoints(customUserId, points) {
     throw error;
   }
 }
-
-
-
 
 export async function getAllStatus(customUserId, goalId, newStatus) {
   if (!customUserId || !goalId || !newStatus) {

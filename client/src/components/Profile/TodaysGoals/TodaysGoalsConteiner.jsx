@@ -49,7 +49,12 @@ const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals
     };
 
     return <div>
-        <TodaysGoals inProgress={filter(goals.goals, "in_progress", Modal,)} />
+        <TodaysGoals completed={filter(
+            goals.goals,
+            "completed",
+            () => { toast.success("Эта цель уже выполнена!"); },
+            "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png"
+        )} inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png')} />
         <ModalWindow isModalOpen={isModalOpen} buttonText='Выполнить цель' addNewStatus={addNewStatusDone} closeModal={closeModal} />
     </div>
 }

@@ -37,7 +37,7 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
 
     return (
         <div className={c.points_scale}>
-            <div className={c.level}>{currentLevel}</div>
+            <div className={c.level}>{currentLevel}<div className={c.level_text} >lvl</div></div>
             <div className={c.progress_container}>
                 <div className={c.progress_bar}>
                     <div
@@ -52,7 +52,7 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
                         </div>
                     </div>
                     <div className={c.nextLevel}>
-                        {currentLevel + 1}
+                        {currentLevel + 1} 
                     </div>
                 </div>
             </div>

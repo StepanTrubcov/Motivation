@@ -21,15 +21,15 @@ const BottomNav = () => {
             </Link>
             <Link
                 href='/goals'
-                className={`${c.navItem} ${pathname === '/goals' || activeTab === "menu" ? c.active : ""}`}
-                onClick={() => setActiveTab("menu")}
+                className={`${c.navItem} ${pathname === '/goals' || activeTab === "goals" ? c.active : ""}`}
+                onClick={() => setActiveTab("goals")}
             >
                 <FaBars />
             </Link>
             <Link
                 href='/achievements'
-                className={`${c.navItem} ${pathname === '/achievements' || activeTab === "trophy" ? c.active : ""}`}
-                onClick={() => setActiveTab("trophy")}
+                className={`${c.navItem} ${pathname === '/achievements' || activeTab === "achievements" ? c.active : ""}`}
+                onClick={() => setActiveTab("achievements")}
             >
                 <FaTrophy />
             </Link>

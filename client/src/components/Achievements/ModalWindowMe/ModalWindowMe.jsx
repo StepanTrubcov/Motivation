@@ -38,32 +38,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
   };
 
   const handleOpenImage = () => {
-    if (!imageUrl) {
-      toast.error("Сначала сгенерируйте изображение 😔");
-      return;
-    }
-
-    try {
-      if (tg) {
-        tg.showPopup({
-          title: "📸 Ваша карточка готова!",
-          message: "Откройте изображение в браузере, затем сохраните или поделитесь им.",
-          buttons: [
-            { id: "open", type: "default", text: "Открыть изображение" },
-            { type: "cancel" },
-          ],
-        }, (buttonId) => {
-          if (buttonId === "open") {
-            window.open(imageUrl, "_blank");
-          }
-        });
-      } else {
-        window.open(imageUrl, "_blank");
-      }
-    } catch (err) {
-      console.error("Ошибка при открытии изображения:", err);
-      toast.error("Не удалось открыть изображение 😔");
-    }
+    
   };
 
   return (
@@ -99,12 +74,12 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
               <p className={styles.modalText}>{isModalOpen.description}</p>
             )}
 
-            {/* {imageUrl ? (
+            {imageUrl ? (
               <div className={styles.imageWrapper}>
                 <img className={styles.modalImCopy} src={imageUrl} alt={isModalOpen.title} />
                 <div className={styles.shareContainer}>
                   <button className={styles.shareButton} onClick={handleOpenImage}>
-                    🔗 Открыть изображение
+                   Поделиться
                   </button>
                 </div>
               </div>
@@ -118,7 +93,7 @@ const ModalWindowMe = ({ getMakingPicture, isModalOpen, closeModal, username }) 
                   {isLoading ? "Создание..." : "Сгенерировать карточку"}
                 </button>
               </div>
-            )} */}
+            )}
           </motion.div>
         </motion.div>
       )}
