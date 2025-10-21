@@ -8,13 +8,13 @@ const filter = (goals = [], text, funct = () => { }, img = 'https://assets-globa
         }
     }
     return filteredGoals.map(d => (
-        <div onClick={() => funct(d)} className={c.blok} >
+        <div key={d.id} onClick={() => funct(d)} className={c.blok} >
             <div>
                 <div className={c.title} >{d.title}</div>
                 <div className={c.pts} >{d.points} pts</div>
             </div>
             <div>
-                <img className={c.img} src={img} />
+                <img className={c.img} src={img} alt="button" />
             </div>
         </div>
     ));
