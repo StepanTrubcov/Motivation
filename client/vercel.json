@@ -1,16 +1,19 @@
 {
   "version": 2,
-  "public": false,
-  "github": {
-    "enabled": false
-  },
   "builds": [
     {
-      "src": "package.json",
+      "src": "client/package.json",
       "use": "@vercel/next",
       "config": {
-        "distDir": "client/.next"
+        "distDir": ".next"
       }
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/client/$1"
+    }
+  ],
+  "outputDirectory": "client/.next"
 }
