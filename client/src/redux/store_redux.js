@@ -15,7 +15,6 @@ const store = configureStore({
   },
 });
 
-// Только в браузере добавляем store в window для дебаггинга
 if (typeof window !== 'undefined') {
   window.store = store;
 }

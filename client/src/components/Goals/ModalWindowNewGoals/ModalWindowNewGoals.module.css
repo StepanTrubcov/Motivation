@@ -1,0 +1,257 @@
+.container {
+  position: relative;
+}
+
+.modalBackdrop {
+  position: fixed;
+  right: 8px;
+  top: 0;
+  left: 8px;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalImg {
+  width: 100px;
+  display: block;
+  margin: 0 auto;
+}
+
+.modalContent {
+  background-color: #151515;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 28rem;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #ec0000;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: #000000;
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #00ff1e;
+  text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
+}
+
+.modalText {
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.modalTextInfo {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
+}
+
+.goalsTitle {
+  margin: 5px;
+  font-weight: 500;
+  font-size: 17px;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 5px;
+  background-color: #00ff1e;
+  color: rgb(0, 0, 0);
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+}
+
+.button:hover {
+  background-color: #1f2937;
+  color: #ffffff;
+}
+
+.img {
+  width: 25px;
+  margin-right: 10px;
+}
+
+.text {
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+
+.generatedText {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.previewWrapper {
+  width: 80%;
+  border: solid;
+  color: #ffffff;
+  display: flex;
+  align-items: flex-start;
+  background: #111;
+  padding: 15px;
+  border-radius: 5px;
+  position: relative;
+}
+
+.previewText {
+  overflow: hidden;
+  white-space: pre-wrap;
+  flex: 1;
+  position: relative;
+}
+
+.previewText::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(to top, #111, transparent);
+}
+
+.copyCube {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  background: #00ff84;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.copyCube:hover {
+  background: #00cc6a;
+}
+
+.generatedBox {
+  display: flex;
+}
+
+.copyButton {
+  color: #ffffff;
+  margin-left: 10px;
+  background-color: #151515;
+  border: none;
+}
+
+.generation__text {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.goalForm {
+  margin-top: 20px;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.formInput {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background-color: #1f2937;
+  color: #ffffff;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #00ff1e;
+  box-shadow: 0 0 0 3px rgba(0, 255, 30, 0.2);
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.radioInput {
+  width: 15px;
+  margin-right: 10px;
+}
+
+.radioLabel {
+  color: #ffffff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #00ff1e;
+  color: #000000;
+  font-weight: 700;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #00cc18;
+}
+
+.submitButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.radioContainer{
+  display: flex;
+  margin: 10px;
+}

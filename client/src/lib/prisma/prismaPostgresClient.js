@@ -1,15 +1,11 @@
-import { PrismaClient } from '.prisma/postgres-client';
+import { PrismaClient } from '@prisma/client';
 
-const globalForPrismaPostgres = global;
+const globalForPrisma = global;
 
-export const prismaPostgres = globalForPrismaPostgres.prismaPostgres || new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL,
-    },
-  },
-});
+export const prisma = globalForPrisma.prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
-  globalForPrismaPostgres.prismaPostgres = prismaPostgres;
+  globalForPrisma.prisma = prisma;
 }
+
+export const prismaPostgres = prisma;

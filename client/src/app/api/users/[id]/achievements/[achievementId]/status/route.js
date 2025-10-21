@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma/prismaClient';
+import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
 export async function PUT(request, { params }) {

@@ -1,4 +1,4 @@
-import { prismaPostgres } from '@/lib/prisma/prismaPostgresClient';
+import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
 export async function POST(request, { params }) {
@@ -28,14 +28,19 @@ export async function POST(request, { params }) {
           return NextResponse.json({ error: `Invalid status value: ${goal.status}` }, { status: 400 });
       }
 
+      // Проверяем категорию
+      const validCategories = ['Sport', 'Discipline', 'Self_development', 'Spirituality'];
+      const categoryValue = goal.category && validCategories.includes(goal.category) ? goal.category : null;
+
       const uniqueGoalId = `${userId}_${goal.id}`;
 
-      await prismaPostgres.goal.upsert({
+      await prisma.goal.upsert({
         where: { id: uniqueGoalId },
         update: {
           title: goal.title,
           points: goal.points,
           status: statusValue,
+          category: categoryValue,
           completionDate: goal.completionDate ? new Date(goal.completionDate) : null,
           description: goal.description,
           userId: String(userId),
@@ -47,6 +52,7 @@ export async function POST(request, { params }) {
           title: goal.title,
           points: goal.points,
           status: statusValue,
+          category: categoryValue,
           completionDate: goal.completionDate ? new Date(goal.completionDate) : null,
           description: goal.description,
           userId: String(userId),

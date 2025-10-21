@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') {
   });
 }
 
-const BASE_URL = typeof window !== 'undefined' 
+const BASE_URL = typeof window !== 'undefined'
   ? (process.env.NEXT_PUBLIC_API_URL || '/api')
   : '/api';
 
@@ -21,7 +21,6 @@ export const addProfileApi = async () => {
     return null;
   }
 
-  // Ждём загрузки WebApp SDK
   let waitAttempts = 0;
   while (isWebAppLoading && waitAttempts < 50) {
     await new Promise(resolve => setTimeout(resolve, 100));
@@ -145,99 +144,77 @@ export async function initializeUserGoals(customUserId) {
   console.log('Initializing goals for user:', customUserId);
 
   const goalsArray = [
-    { id: "1", title: "Пробежать 1 км", points: 10, status: "not_started", completionDate: null, description: "Пробегайте по 1 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость.", userId: customUserId, progress: 0 },
-    { id: "2", title: "Читать книгу 20 минут", points: 20, status: "not_started", completionDate: null, description: "Читайте по 20 минут ежедневно в течение 30 дней. Это поможет улучшить внимание и концентрацию.", userId: customUserId, progress: 0 },
-    { id: "3", title: "Пробежать 5 км", points: 10, status: "not_started", completionDate: null, description: "Пробегайте по 5 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость.", userId: customUserId, progress: 0 },
-    { id: "4", title: "Кодить 1 час за ноутбуком", points: 30, status: "not_started", completionDate: null, description: "Занимайтесь программированием по 1 часу ежедневно в течение 30 дней. Это поможет развить дисциплину и навыки.", userId: customUserId, progress: 0 },
-    { id: "5", title: "Сделать 50 приседаний", points: 25, status: "not_started", completionDate: null, description: "Выполняйте по 50 приседаний каждый день на протяжении 30 дней. Это укрепит ноги и ягодицы.", userId: customUserId, progress: 0 },
-    { id: "6", title: "Учить английские слова", points: 20, status: "not_started", completionDate: null, description: "Каждый день изучайте новые английские слова по карточкам в течение 30 дней. Это расширит ваш словарный запас.", userId: customUserId, progress: 0 },
-    {
-      id: "7",
-      title: "Поработать на основной работе",
-      points: 15,
-      status: "not_started",
-      completionDate: null,
-      description: "Посвятите день своей основной работе — выполните важные задачи, завершите начатые дела и проявите ответственность. Это поможет укрепить профессиональные навыки и улучшить результаты.",
-      userId: customUserId,
-      progress: 0
-    },
-    { id: "8", title: "Сделать 20 отжиманий", points: 15, status: "not_started", completionDate: null, description: "Выполняйте по 20 отжиманий каждый день в течение 30 дней. Это укрепит мышцы груди, рук и спины.", userId: customUserId, progress: 0 },
-    {
-      id: "9", title: "Гулять на улице 1  час", points: 10, status: "not_started", completionDate: null, description: "Каждый день гуляйте по 1 часу на улице на протяжении 30 дней.Это улучшит здоровье и настроение.", userId: customUserId, progress: 0
-    },
-    { id: "10", title: "Прогуляться 30 минут", points: 20, status: "not_started", completionDate: null, description: "Ходите на прогулку по 30 минут каждый день в течение 30 дней. Это поможет организму быть в тонусе.", userId: customUserId, progress: 0 },
-    {
-      id: "11", title: "Прочитать 10 страниц ", points: 10, status: "not_started", completionDate: null, description: "Читайте 10 страниц каждый день в течение 30 дней, делая записи и мысли.Это усилит понимание.", userId: customUserId, progress: 0
-    },
-    { id: "12", title: "Сделать растяжку 15 минут", points: 15, status: "not_started", completionDate: null, description: "Делайте растяжку по 15 минут ежедневно на протяжении 30 дней. Это улучшит гибкость и здоровье суставов.", userId: customUserId, progress: 0 },
-    {
-      id: "13",
-      title: "Поработать над стартапом",
-      points: 10,
-      status: "not_started",
-      completionDate: null,
-      description: "Каждый день уделяйте хотя бы час работе над своим стартапом — улучшайте идею, исследуйте рынок, тестируйте решения и продвигайте продукт. Постоянство приведёт к успеху.",
-      userId: customUserId,
-      progress: 0
-    },
-    { id: "14", title: "Пройти 5000 шагов", points: 20, status: "not_started", completionDate: null, description: "Проходите 5000 шагов ежедневно на протяжении 30 дней. Это укрепит организм и поддержит тонус.", userId: customUserId, progress: 0 },
-    { id: "15", title: "Протереть пыль дома", points: 20, status: "not_started", completionDate: null, description: "Протирайте пыль каждый день в течение 30 дней. Это улучшит чистоту и создаст уют в доме.", userId: customUserId, progress: 0 },
-    { id: "16", title: 'Облиться холодной водой', points: 15, status: "not_started", completionDate: null, description: "Закаляйтесь ежедневно в течение 30 дней. Это укрепит здоровье и повысит сопротивляемость организма.", userId: customUserId, progress: 0 },
-    { id: "17", title: "Поговорить с другом по видеосвязи", points: 10, status: "not_started", completionDate: null, description: "Общайтесь с другом по видеосвязи каждый день в течение 30 дней. Это улучшит настроение и укрепит отношения.", userId: customUserId, progress: 0 },
-    { id: "18", title: "Утренняя зарядка 10 минут", points: 15, status: "not_started", completionDate: null, description: "Делайте утреннюю зарядку по 10 минут ежедневно на протяжении 30 дней. Это придаст энергии на день.", userId: customUserId, progress: 0 },
-    {
-      id: "19",
-      title: "Провести время с семьёй",
-      points: 25,
-      status: "not_started",
-      completionDate: null,
-      description: "Посвятите 1 час своей семье — пообщайтесь, поиграйте, приготовьте ужин вместе или просто проведите время без телефонов. Это укрепит отношения и подарит ощущение близости.",
-      userId: customUserId,
-      progress: 0
-    },
-    { id: "20", title: "Нарисовать рисунок на бумаге", points: 15, status: "not_started", completionDate: null, description: "Рисуйте каждый день на протяжении 30 дней. Это поможет развить креативность и снять стресс.", userId: customUserId, progress: 0 },
-    { id: "21", title: "Пройти 10 000 шагов", points: 40, status: "not_started", completionDate: null, description: "Проходите по 10 000 шагов ежедневно в течение 30 дней. Это поможет держать организм в форме.", userId: customUserId, progress: 0 },
-    { id: "22", title: "Сделать 100 приседаний", points: 50, status: "not_started", completionDate: null, description: "Выполняйте по 100 приседаний ежедневно на протяжении 30 дней. Это укрепит мышцы и повысит выносливость.", userId: customUserId, progress: 0 },
-    { id: "23", title: "1 час без телефона", points: 20, status: "not_started", completionDate: null, description: "Ежедневно откладывайте телефон на 1 час в течение 30 дней. Это поможет сосредоточиться.", userId: customUserId, progress: 0 },
-    { id: "24", title: "Смотреть обучающее видео", points: 15, status: "not_started", completionDate: null, description: "Смотрите обучающее видео каждый день в течение 30 дней. Это расширит ваши знания.", userId: customUserId, progress: 0 },
-    { id: "25", title: "Сделать планку 1 минуту", points: 20, status: "not_started", completionDate: null, description: "Держите планку 1 минуту ежедневно в течение 30 дней. Это укрепит мышцы кора и спины.", userId: customUserId, progress: 0 },
-    { id: "26", title: "Сделать планку 2 минуты", points: 30, status: "not_started", completionDate: null, description: "Ежедневно держите планку 2 минуты на протяжении 30 дней. Это развивает силу и выносливость.", userId: customUserId, progress: 0 },
-    { id: "27", title: "Съесть фрукт", points: 10, status: "not_started", completionDate: null, description: "Ешьте хотя бы один фрукт каждый день в течение 30 дней. Это добавит витаминов и энергии.", userId: customUserId, progress: 0 },
-    { id: "28", title: "Погулять на свежем воздухе", points: 20, status: "not_started", completionDate: null, description: "Ежедневно выходите на прогулку на свежем воздухе в течение 30 дней. Это полезно для здоровья и психики.", userId: customUserId, progress: 0 },
-    { id: "29", title: "Прочитать 50 страниц книги", points: 30, status: "not_started", completionDate: null, description: "Читайте по 50 страниц ежедневно в течение 30 дней. Это позволит освоить новые книги.", userId: customUserId, progress: 0 },
-    { id: "30", title: "Поблагодарить 5 человек вслух", points: 20, status: "not_started", completionDate: null, description: "Выражайте благодарность 5 людям ежедневно в течение 30 дней. Это поднимет настроение и укрепит отношения.", userId: customUserId, progress: 0 },
-    { id: "31", title: "Посмотреть документальный фильм", points: 25, status: "not_started", completionDate: null, description: "Смотрите документальные фильмы каждый день в течение 30 дней. Это расширит кругозор.", userId: customUserId, progress: 0 },
-    { id: "32", title: "Сделать растяжку 5 минут", points: 10, status: "not_started", completionDate: null, description: "Делайте растяжку по 5 минут каждый день в течение 30 дней. Это улучшит гибкость и самочувствие.", userId: customUserId, progress: 0 },
-    { id: "33", title: "Тренироваться 40 минут", points: 40, status: "not_started", completionDate: null, description: "Занимайтесь тренировкой по 40 минут каждый день в течение 30 дней. Это укрепит организм и даст энергию.", userId: customUserId, progress: 0 },
-    { id: "34", title: "Выучить 20 английских слов", points: 40, status: "not_started", completionDate: null, description: "Учите по 20 английских слов каждый день на протяжении 30 дней. Это значительно расширит словарный запас.", userId: customUserId, progress: 0 },
-    { id: "35", title: "Лечь спать до 23:00", points: 25, status: "not_started", completionDate: null, description: "Ложитесь спать до 23:00 каждый день в течение 30 дней. Это улучшит режим сна.", userId: customUserId, progress: 0 },
-    { id: "36", title: "Рано проснуться", points: 20, status: "not_started", completionDate: null, description: "Старайтесь просыпаться рано каждый день в течение 30 дней. Это наладит биоритмы.", userId: customUserId, progress: 0 },
-    { id: "37", title: "Сделать 200 прыжков на скакалке", points: 30, status: "not_started", completionDate: null, description: "Ежедневно делайте по 200 прыжков на скакалке в течение 30 дней. Это поможет сжечь калории и развить выносливость.", userId: customUserId, progress: 0 },
-    { id: "38", title: "Работать 2 часа за компьютером без отвлечений", points: 50, status: "not_started", completionDate: null, description: "Ежедневно работайте 2 часа за компьютером без отвлечений в течение 30 дней. Это улучшит концентрацию.", userId: customUserId, progress: 0 },
-    { id: "39", title: "Сделать уборку стола", points: 15, status: "not_started", completionDate: null, description: "Наводите порядок на столе каждый день в течение 30 дней. Это поможет сохранять организованность.", userId: customUserId, progress: 0 },
-    { id: "40", title: "Попробовать новое блюдо", points: 20, status: "not_started", completionDate: null, description: "Пробуйте новое блюдо каждый день в течение 30 дней. Это разнообразит рацион и сделает питание интересным.", userId: customUserId, progress: 0 },
-    { id: "41", title: "Сходить в библиотеку", points: 15, status: "not_started", completionDate: null, description: "Посещайте библиотеку или берите книги каждый день в течение 30 дней. Это создаст привычку читать.", userId: customUserId, progress: 0 },
-    { id: "42", title: "Сделать 30 приседаний", points: 15, status: "not_started", completionDate: null, description: "Выполняйте 30 приседаний каждый день в течение 30 дней. Это укрепит мышцы ног.", userId: customUserId, progress: 0 },
-    { id: "43", title: "Играть на музыкальном инструменте 15 минут", points: 20, status: "not_started", completionDate: null, description: "Играйте на музыкальном инструменте каждый день по 15 минут в течение 30 дней. Это улучшит музыкальные навыки.", userId: customUserId, progress: 0 },
-    { id: "44", title: "Сделать дыхательные упражнения стоя", points: 10, status: "not_started", completionDate: null, description: "Ежедневно выполняйте дыхательные упражнения стоя в течение 30 дней. Это улучшит здоровье дыхательной системы.", userId: customUserId, progress: 0 },
-    { id: "45", title: "2 часа без телефона", points: 30, status: "not_started", completionDate: null, description: "Откладывайте телефон на 2 часа каждый день в течение 30 дней. Это освободит время для важных дел.", userId: customUserId, progress: 0 },
-    { id: "46", title: "Пробежать 3 км", points: 30, status: "not_started", completionDate: null, description: "Бегайте по 3 км ежедневно в течение 30 дней. Это поможет развить выносливость и здоровье.", userId: customUserId, progress: 0 },
-    { id: "47", title: "Прочитать статью о саморазвитии", points: 10, status: "not_started", completionDate: null, description: "Читайте статьи о саморазвитии каждый день в течение 30 дней. Это поможет стать лучше.", userId: customUserId, progress: 0 },
-    { id: "48", title: "Составить план на месяц", points: 50, status: "not_started", completionDate: null, description: "Ежедневно составляйте и корректируйте план на месяц в течение 30 дней. Это улучшит продуктивность.", userId: customUserId, progress: 0 },
-    { id: "49", title: "Сделать 15 минут йоги", points: 20, status: "not_started", completionDate: null, description: "Занимайтесь йогой по 15 минут ежедневно на протяжении 30 дней. Это укрепит тело и ум.", userId: customUserId, progress: 0 },
-    { id: "50", title: "Приготовить здоровый завтрак", points: 25, status: "not_started", completionDate: null, description: "Готовьте здоровый завтрак каждый день в течение 30 дней. Это придаст энергии и улучшит самочувствие.", userId: customUserId, progress: 0 }
+    // === SPORT ===
+    { id: "1", title: "Пробежать 1 км", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Пробегайте по 1 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость.", userId: customUserId, progress: 0 },
+    { id: "3", title: "Пробежать 5 км", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Пробегайте по 5 км несколько раз в неделю. Это укрепит сердце и мышцы.", userId: customUserId, progress: 0 },
+    { id: "5", title: "Сделать 50 приседаний", points: 25, status: "not_started", category: "Sport", completionDate: null, description: "Ежедневно делайте по 50 приседаний для укрепления ног и ягодиц.", userId: customUserId, progress: 0 },
+    { id: "8", title: "Сделать 20 отжиманий", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Отжимайтесь ежедневно для укрепления мышц груди и рук.", userId: customUserId, progress: 0 },
+    { id: "14", title: "Пройти 5000 шагов", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Проходите 5000 шагов ежедневно. Это поддержит здоровье и тонус.", userId: customUserId, progress: 0 },
+    { id: "18", title: "Утренняя зарядка 10 минут", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Делайте утреннюю зарядку для энергии на день.", userId: customUserId, progress: 0 },
+    { id: "25", title: "Сделать планку 1 минуту", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Держите планку по 1 минуте ежедневно. Это укрепит мышцы кора.", userId: customUserId, progress: 0 },
+    { id: "49", title: "Сделать 15 минут йоги", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Практикуйте йогу ежедневно для гибкости и спокойствия.", userId: customUserId, progress: 0 },
+    { id: "51", title: "Пройти пешком на работу", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Замените транспорт пешей прогулкой — заряд бодрости на день.", userId: customUserId, progress: 0 },
+    { id: "52", title: "Покататься на велосипеде 30 минут", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Катайтесь на велосипеде для здоровья и удовольствия.", userId: customUserId, progress: 0 },
+    { id: "61", title: "Сделать растяжку 10 минут", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Растягивайтесь ежедневно для гибкости и здоровья суставов.", userId: customUserId, progress: 0 },
+    { id: "62", title: "Сделать 200 прыжков на скакалке", points: 25, status: "not_started", category: "Sport", completionDate: null, description: "Прыжки на скакалке улучшают координацию и кардио.", userId: customUserId, progress: 0 },
+    { id: "63", title: "Погулять 30 минут на свежем воздухе", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Прогулка помогает снять стресс и улучшает настроение.", userId: customUserId, progress: 0 },
+    { id: "64", title: "Сделать разминку перед началом дня", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Небольшая разминка активирует мышцы и улучшает кровообращение.", userId: customUserId, progress: 0 },
+    { id: "65", title: "Сделать растяжку после сна", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Мягко разомните тело после сна для энергии и гибкости.", userId: customUserId, progress: 0 },
+
+    // === DISCIPLINE ===
+    { id: "4", title: "Кодить 1 час за ноутбуком", points: 30, status: "not_started", category: "Discipline", completionDate: null, description: "Программируйте ежедневно для развития дисциплины и навыков.", userId: customUserId, progress: 0 },
+    { id: "16", title: "Облиться холодной водой", points: 15, status: "not_started", category: "Discipline", completionDate: null, description: "Закаляйтесь холодной водой для укрепления духа и тела.", userId: customUserId, progress: 0 },
+    { id: "35", title: "Лечь спать до 23:00", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Соблюдайте режим сна для восстановления энергии.", userId: customUserId, progress: 0 },
+    { id: "36", title: "Рано проснуться", points: 20, status: "not_started", category: "Discipline", completionDate: null, description: "Начинайте день рано — для продуктивности и спокойствия.", userId: customUserId, progress: 0 },
+    { id: "45", title: "2 часа без телефона", points: 30, status: "not_started", category: "Discipline", completionDate: null, description: "Отложите телефон, чтобы сосредоточиться на важных делах.", userId: customUserId, progress: 0 },
+    { id: "54", title: "Составить распорядок дня", points: 20, status: "not_started", category: "Discipline", completionDate: null, description: "Распланируйте свой день и следуйте плану.", userId: customUserId, progress: 0 },
+    { id: "66", title: "Убрать рабочее место", points: 10, status: "not_started", category: "Discipline", completionDate: null, description: "Поддерживайте порядок на столе — это помогает концентрации.", userId: customUserId, progress: 0 },
+    { id: "68", title: "Провести день без сладкого", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Контролируйте свои привычки и укрепляйте дисциплину.", userId: customUserId, progress: 0 },
+    { id: "69", title: "Поработать 2 часа без отвлечений", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Сосредоточьтесь на задаче и не переключайтесь.", userId: customUserId, progress: 0 },
+    { id: "70", title: "Проснуться без телефона в руках", points: 15, status: "not_started", category: "Discipline", completionDate: null, description: "Начните утро без гаджетов для чистого фокуса.", userId: customUserId, progress: 0 },
+
+    // === SELF_DEVELOPMENT ===
+    { id: "2", title: "Читать книгу 20 минут", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Читайте ежедневно для развития мышления и внимания.", userId: customUserId, progress: 0 },
+    { id: "6", title: "Учить английский", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Учите новые английские слова ежедневно.", userId: customUserId, progress: 0 },
+    { id: "13", title: "Поработать над стартапом", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Развивайте свои идеи и продвигайте личные проекты.", userId: customUserId, progress: 0 },
+    { id: "24", title: "Смотреть обучающее видео", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Смотрите обучающие материалы для роста.", userId: customUserId, progress: 0 },
+    { id: "34", title: "Выучить 20 английских слов", points: 40, status: "not_started", category: "Self_development", completionDate: null, description: "Пополняйте словарный запас каждый день.", userId: customUserId, progress: 0 },
+    { id: "47", title: "Прочитать статью о саморазвитии", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Читайте статьи о личностном росте ежедневно.", userId: customUserId, progress: 0 },
+    { id: "55", title: "Прослушать подкаст о личностном росте", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Слушайте полезные подкасты о саморазвитии.", userId: customUserId, progress: 0 },
+    { id: "71", title: "Посмотреть документальный фильм", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Расширяйте кругозор, изучая новые темы.", userId: customUserId, progress: 0 },
+    { id: "72", title: "Записать 3 идеи для улучшения жизни", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Ежедневно фиксируйте идеи и наблюдения.", userId: customUserId, progress: 0 },
+    { id: "73", title: "Вести дневник благодарности", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Каждый вечер записывайте 3 вещи, за которые благодарны.", userId: customUserId, progress: 0 },
+    { id: "74", title: "Научиться новому навыку 30 минут", points: 25, status: "not_started", category: "Self_development", completionDate: null, description: "Ежедневно осваивайте хоть что-то новое.", userId: customUserId, progress: 0 },
+    { id: "75", title: "Придумать цель на завтра", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Планируйте следующий день заранее для ясности и фокуса.", userId: customUserId, progress: 0 },
+
+    // === SPIRITUALITY === (оставлены как у тебя)
+    { id: "57", title: "Прочитать одну главу Евангелия", points: 20, status: "not_started", category: "Spirituality", completionDate: null, description: "Читайте ежедневно одну главу Евангелия для укрепления веры.", userId: customUserId, progress: 0 },
+    { id: "58", title: "Помолиться утром и вечером", points: 15, status: "not_started", category: "Spirituality", completionDate: null, description: "Начинайте и завершайте день молитвой и благодарностью.", userId: customUserId, progress: 0 },
+    { id: "60", title: "Прочитать молитву перед сном", points: 10, status: "not_started", category: "Spirituality", completionDate: null, description: "Завершайте день молитвой, осмысливая прожитое.", userId: customUserId, progress: 0 },
   ];
+
 
   try {
     const existingGoals = await getAllGoals(customUserId);
-    if (existingGoals.length === goalsArray.length) {
-      console.log(`У пользователя ${customUserId} уже есть все ${existingGoals.length} целей. Пропускаем инициализацию.`);
-      console.log(existingGoals)
+    const existingGoalIds = existingGoals.map(g => g.id.split('_')[1]).sort();
+    const newGoalIds = goalsArray.map(g => g.id).sort();
+    const goalsMatch = existingGoalIds.length === newGoalIds.length &&
+      existingGoalIds.every((id, index) => id === newGoalIds[index]);
+
+    if (goalsMatch) {
+      console.log(`✅ У пользователя ${customUserId} уже есть все ${existingGoals.length} целей. Пропускаем инициализацию.`);
       return false;
     }
+
+    console.log(`📤 Отправка ${goalsArray.length} целей на сервер...`);
+    const response = await axios.post(`${BASE_URL}/initialize-goals/${customUserId}`, {
+      goalsArray
+    });
+
+    console.log('✅ Цели успешно инициализированы:', response.data);
     return true;
   } catch (error) {
-    console.error("Ошибка инициализации целей:", error);
+    console.error("❌ Ошибка инициализации целей:", error);
     throw error;
   }
 }
@@ -480,4 +457,22 @@ export async function makingPicture(isModalOpen, username) {
     username: username || "user",
   });
   return response
+}
+
+export async function addCustomGoal(userId, title, category) {
+  if (!userId || !title || !category) {
+    throw new Error("userId, title, and category are required");
+  }
+
+  try {
+    const response = await axios.post(`${BASE_URL}/custom-goals`, {
+      userId,
+      title,
+      category
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка добавления пользовательской цели:", error);
+    throw error;
+  }
 }

@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import Goals from "./Goals";
 import { connect } from "react-redux";
 import filter from "../../utils/Filter/filter";
-import { addStatusNew, addGoals, addStatus } from '../../redux/goals_reducer';
+import { addStatusNew, addGoals, addStatus, NewGoals } from '../../redux/goals_reducer';
 import { toast } from "react-hot-toast";
 import styles from "./Goals.module.css";
 import ModalWindow from "../../utils/ModalWindow/ModalWindow";
 import { setPoints } from "../../redux/profile_reducer";
 import { addCalendarDataNew } from "../../redux/calendar_reducer";
 
-const GoalsConteiner = ({ profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew }) => {
+const GoalsConteiner = ({ NewGoals, profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [isModalOpenDone, setIsModalOpenDone] = useState(null);
@@ -68,6 +68,12 @@ const GoalsConteiner = ({ profile, goals, userId, addStatusNew, addGoals, addSta
         }
     };
 
+    const All_goals = goals.goals.filter(goal => goal.status === "not_started");
+
+    const goalsSport = All_goals.filter(goal => goal.category === "Sport");
+    const goalsDiscipline = All_goals.filter(goal => goal.category === "Discipline");
+    const goalsSpirituality = All_goals.filter(goal => goal.category === "Spirituality");
+    const goalsSelfDevelopment = All_goals.filter(goal => goal.category === "Self_development");
     return (
         <div className={styles.container}>
             <Goals
@@ -77,8 +83,13 @@ const GoalsConteiner = ({ profile, goals, userId, addStatusNew, addGoals, addSta
                     () => { toast.success("Эта цель уже выполнена!"); },
                     "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png"
                 )}
-                inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png' )}
-                available={filter(goals.goals, "not_started", Modal)}
+                inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png')}
+                sportGoals={filter(goalsSport, "not_started", Modal)}
+                disciplineGoals={filter(goalsDiscipline, "not_started", Modal)}
+                spiritualityGoals={filter(goalsSpirituality, "not_started", Modal)}
+                selfDevelopmentGoals={filter(goalsSelfDevelopment, "not_started", Modal)}
+                userId={userId}
+                NewGoals={NewGoals}
             />
             <ModalWindow
                 isModalOpen={isModalOpen}
@@ -102,4 +113,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile?.id,
 });
 
-export default connect(mapStateToProps, { addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew })(GoalsConteiner);
+export default connect(mapStateToProps, { NewGoals, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew })(GoalsConteiner);

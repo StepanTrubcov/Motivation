@@ -1,4 +1,4 @@
-import { getAllGoals, getAllStatus, checkGoalCompletion } from '@/lib/api/Api';
+import { getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal } from '@/lib/api/Api';
 
 const SET_GOALS = 'goals/SET_GOALS';
 
@@ -41,6 +41,14 @@ export const addStatus = (userId) => async (dispatch) => {
         if (response.length != 0) {
             dispatch(setGoals(response))
         }
+    })
+}
+
+export const NewGoals = (userId, title, goalCategories, resetForm, closeModal) => async (dispatch) => {
+    await addCustomGoal(userId, title, goalCategories).then(response => {
+        dispatch(addGoals(userId))
+        resetForm()
+        closeModal()
     })
 }
 

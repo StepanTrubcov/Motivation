@@ -1,4 +1,4 @@
-import { prismaPostgres } from '@/lib/prisma/prismaPostgresClient';
+import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
 export async function PUT(request, { params }) {
@@ -10,7 +10,7 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: 'newStatus is required' }, { status: 400 });
     }
 
-    const goal = await prismaPostgres.goal.findFirst({ 
+    const goal = await prisma.goal.findFirst({ 
       where: { id: String(goalId), userId: String(userId) } 
     });
 
@@ -31,7 +31,7 @@ export async function PUT(request, { params }) {
         return NextResponse.json({ error: 'Invalid status value' }, { status: 400 });
     }
 
-    const updatedGoal = await prismaPostgres.goal.update({
+    const updatedGoal = await prisma.goal.update({
       where: { id: String(goalId) },
       data: {
         status: statusValue,

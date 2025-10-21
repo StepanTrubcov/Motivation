@@ -7,7 +7,7 @@ import styles from "./ModalWindowGeneration.module.css";
 import gpt from '../../../../img/gpt.gif'
 import { toast } from "react-hot-toast";
 
-const ModalWindowGeneration = ({ telegramId, yesterdayReport, addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
+const ModalWindowGeneration = ({ telegramId, yesterdayReport = [], addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
     const [loading, setLoading] = useState(false);
     const [generatedText, setGeneratedText] = useState('');
     const [error, setError] = useState("");
@@ -119,7 +119,7 @@ const ModalWindowGeneration = ({ telegramId, yesterdayReport, addTextGenerationD
                             )}
                         {yesterdayReport[0] && (<div>
                             <div className={styles.generation__text}>
-                                Вчерашний отчёт
+                                Прошлый отчёт
                             </div>
                             <div className={styles.generatedBox}>
                                 <div onClick={() => setIsModalOpenText(yesterdayReport[0].text)} className={styles.previewWrapper}>

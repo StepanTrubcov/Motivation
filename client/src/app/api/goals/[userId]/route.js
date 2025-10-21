@@ -1,10 +1,10 @@
-import { prismaPostgres } from '@/lib/prisma/prismaPostgresClient';
+import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
 export async function GET(request, { params }) {
   try {
     const { userId } = await params;
-    const goals = await prismaPostgres.goal.findMany({ 
+    const goals = await prisma.goal.findMany({ 
       where: { userId: String(userId) } 
     });
     return NextResponse.json(goals);

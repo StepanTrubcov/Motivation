@@ -1,5 +1,9 @@
-.name {
-  text-align: center;
+.nameContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 20px;
   font-size: 30px;
   font-weight: 600;
   margin-top: 15px;
@@ -7,12 +11,41 @@
   color: white;
 }
 
-.container{
+.centeredText {
+  position:relative;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.button {
+  font-size: 20px;
+  color: #111;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  border: none;
+  background-color: #00ff1e;
+  margin-left: auto;
+  z-index: 1;
+}
+
+.container {
   margin-bottom: 70px;
 }
 
-/* Контейнер вкладок */
 .navigator {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  background: #111;
+  border-radius: 12px;
+  padding: 6px;
+  overflow: hidden;
+}
+
+.navigatorSection {
+  margin-top: 10px;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -60,4 +93,34 @@
 
 .navigator.tab-2 .navHighlight {
   transform: translateX(210%);
+}
+
+.navHighlightSection {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  width: calc(100% / 4 - 15px);
+  border-radius: 20px;
+  background: rgba(103, 103, 103, 0.15);
+  transition: transform 0.7s ease;
+  z-index: 1;
+}
+
+.navigatorSection.tab-0 .navHighlightSection {
+  transform: translateX(0%);
+}
+
+.navigatorSection.tab-1 .navHighlightSection {
+  transform: translateX(87%);
+  width: 85px;
+}
+
+.navigatorSection.tab-2 .navHighlightSection {
+  transform: translateX(188%);
+  width: 85px;
+}
+
+.navigatorSection.tab-3 .navHighlightSection {
+  transform: translateX(245%);
+  width: 100px;
 }

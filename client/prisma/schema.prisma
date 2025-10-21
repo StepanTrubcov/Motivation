@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DIRECT_DATABASE_URL")
+}
+
+enum GoalStatus {
+  not_started
+  in_progress
+  completed
+}
+
+enum GoalCategory {
+  Sport
+  Discipline
+  Self_development
+  Spirituality
+}
+
+model User {
+  id               String        @id @default(cuid())
+  telegramId       String        @unique
+  firstName        String?
+  username         String?
+  photoUrl         String?
+  pts              Int           @default(0)
+  completedDates   String[]      @default([])
+  achievements     Achievement[] 
+  registrationDate DateTime?     @default(now())
+  yesterdayReport  Json?         // Текстовое поле для вчерашнего отчёта
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+}
+
+model Achievement {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  requirement String
+  status      String
+  image       String
+  points      Int
+  type        String?
+  goalIds     String[] @default([])
+  target      Int?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
+
+model Goal {
+  id             String        @id @default(cuid())
+  title          String
+  points         Int
+  status         GoalStatus    @default(not_started)
+  category       GoalCategory? // Категория цели: Sport, Discipline, Self_development, Spirituality
+  progress       Int           @default(0) 
+  completionDate DateTime?
+  description    String
+  userId         String
+  startDate      DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @default(now()) @updatedAt
+}

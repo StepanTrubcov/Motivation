@@ -8,7 +8,6 @@ const LoadingScreen = ({ title }) => {
   const [name, setName] = useState("Воин дисциплины");
 
   useEffect(() => {
-    // Только на клиенте загружаем WebApp
     if (typeof window !== 'undefined') {
       import('@twa-dev/sdk').then((module) => {
         const WebApp = module.default;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomNav } from '@/context/BottomNavContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
@@ -17,6 +17,9 @@ const DataInitializer = ({ children }) => {
     const goals = useSelector((state) => state.goals.goals);
     const assignments = useSelector((state) => state.assignments.assignments);
 
+    // Флаг для отслеживания инициализации данных генерации текста
+    const isTextDataInitialized = useRef(false);
+
     useEffect(() => {
         dispatch(addProfile());
     }, [dispatch]);
@@ -28,20 +31,19 @@ const DataInitializer = ({ children }) => {
         }
     }, [user, ThereAreUsers, dispatch]);
 
-
     useEffect(() => {
-        if (ThereAreUsers) {
-
-            const goalsDone = goals.filter(g => g.status === "completed")
-            const goalsInProgress = goals.filter(g => g.status === "in_progress")
-            const telegramId = user.telegramId
-            const loading = false
-
-            dispatch(addTextGenerationData(telegramId, goalsDone, goalsInProgress, null, null, loading));
-
+        if (ThereAreUsers && user && goals.length > 0 && !isTextDataInitialized.current) {
+            const goalsDone = goals.filter(g => g.status === "completed");
+            const goalsInProgress = goals.filter(g => g.status === "in_progress");
+            const telegramId = user.telegramId;
+            const loading = false;
+            if (goalsDone.length > 0 || goalsInProgress.length > 0) {
+                dispatch(addTextGenerationData(telegramId, goalsDone, goalsInProgress, null, null, loading));
+            }
+            isTextDataInitialized.current = true;
+            console.log('✅ Данные генерации текста инициализированы один раз');
         }
-    }, [goals,]);
-
+    }, [ThereAreUsers, user, goals, dispatch]);
 
     useEffect(() => {
         if (user && assignments.length === 0) {
