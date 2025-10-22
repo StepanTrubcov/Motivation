@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy } from "lucide-react";
-import axios from "axios";
 import styles from "./ModalWindowGeneration.module.css";
 import gpt from '../../../../img/gpt.gif'
 import { toast } from "react-hot-toast";
@@ -99,11 +98,8 @@ const ModalWindowGeneration = ({ telegramId, yesterdayReport = [], addTextGenera
                                         disabled={loading}
                                     >
                                         {loading ? (
-                                            <div className={styles.text}> <img
-                                                className={styles.img}
-                                                src={gpt}
-                                                alt="generate"
-                                            /> Генерация...</div>
+                                            <div className={styles.text}>
+                                                Генерация...</div>
                                         ) : (
                                             <div className={styles.text}>
                                                 <img

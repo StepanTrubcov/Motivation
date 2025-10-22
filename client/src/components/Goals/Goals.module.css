@@ -107,20 +107,20 @@
 }
 
 .navigatorSection.tab-0 .navHighlightSection {
-  transform: translateX(0%);
+  transform: translateX(5%);
 }
 
 .navigatorSection.tab-1 .navHighlightSection {
-  transform: translateX(87%);
+  transform: translateX(107%);
   width: 85px;
 }
 
 .navigatorSection.tab-2 .navHighlightSection {
-  transform: translateX(188%);
+  transform: translateX(213%);
   width: 85px;
 }
 
 .navigatorSection.tab-3 .navHighlightSection {
-  transform: translateX(245%);
+  transform: translateX(268%);
   width: 100px;
 }

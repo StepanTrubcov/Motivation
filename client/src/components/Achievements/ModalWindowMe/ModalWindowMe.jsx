@@ -10,7 +10,7 @@ const ModalWindowMe = ({
   isModalOpen,
   closeModal,
   username,
-  uploadTempUrl, 
+  uploadTempUrl,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState(null);
@@ -24,9 +24,10 @@ const ModalWindowMe = ({
     setImageDataUrl(null);
 
     try {
+      console.log(isModalOpen, username)
       const res = await getMakingPicture(isModalOpen, username);
       const dataUrl = res?.data?.url;
-
+      console.log(res?.data)
       if (!dataUrl) throw new Error("Пустой ответ от сервера");
 
       setImageDataUrl(dataUrl);
