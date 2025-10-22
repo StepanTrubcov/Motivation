@@ -1,9 +1,7 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/client/$1"
-    }
-  ]
+  "builds": [
+    { "src": "next.config.js", "use": "@vercel/next" }
+  ],
+  "framework": "nextjs"
 }
