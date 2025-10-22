@@ -10,12 +10,17 @@ import './globals.css';
 export const metadata = {
   title: 'Motivation App - Достигай целей каждый день',
   description: 'Приложение для отслеживания целей, достижений и прогресса',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
         <script src="https://telegram.org/js/telegram-web-app.js" async />
       </head>
       <body suppressHydrationWarning>
