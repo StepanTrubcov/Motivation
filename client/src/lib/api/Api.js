@@ -427,6 +427,7 @@ export async function achievementNewStatus(achievement, userId) {
 
 export async function generateAchievementShare(achievement, user) {
   try {
+    console.log('Generating share image for achievement:', achievement);
     const response = await axios.post(`${BASE_URL}/achievement/share`, {
       title: achievement.title,
       description: achievement.description,
@@ -434,10 +435,15 @@ export async function generateAchievementShare(achievement, user) {
       username: user.username || user.first_name || "Пользователь"
     });
 
-    if (response.data.success) {
+    console.log('Received response from share API:', response);
+
+    // Проверяем, что ответ существует и имеет правильный формат
+    if (response && response.data && response.data.success) {
+      console.log('Returning share URL:', response.data.url);
       return response.data.url;
     } else {
-      throw new Error(response.data.message || "Ошибка генерации изображения");
+      console.error('Invalid response format from share API:', response);
+      throw new Error(response?.data?.message || "Некорректный ответ от сервера");
     }
   } catch (error) {
     console.error("Ошибка share-карточки:", error);
@@ -448,6 +454,7 @@ export async function generateAchievementShare(achievement, user) {
 
 export async function makingPicture(isModalOpen, username) {
   try {
+    console.log('Generating image for modal:', isModalOpen);
     const response = await axios.post(`${BASE_URL}/achievement/share`, {
       title: isModalOpen.title,
       description: isModalOpen.description,
@@ -455,10 +462,15 @@ export async function makingPicture(isModalOpen, username) {
       username: username || "user",
     });
     
-    if (response.data.success) {
+    console.log('Received response from share API:', response);
+    
+    // Проверяем, что ответ существует и имеет правильный формат
+    if (response && response.data && response.data.success) {
+      console.log('Returning share URL:', response.data.url);
       return response.data.url;
     } else {
-      throw new Error(response.data.message || "Ошибка генерации изображения");
+      console.error('Invalid response format from share API:', response);
+      throw new Error(response?.data?.message || "Некорректный ответ от сервера");
     }
   } catch (error) {
     console.error("Ошибка генерации изображения:", error);

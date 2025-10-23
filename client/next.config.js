@@ -27,19 +27,19 @@ const nextConfig = {
   },
   
   async rewrites() {
-    // Don't rewrite API calls in production as they'll go directly to Vercel serverless functions
-    if (process.env.NODE_ENV === 'production') {
-      return [];
+    // In development, proxy API calls to the backend
+    if (process.env.NODE_ENV === 'development') {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      return [
+        {
+          source: '/api/:path*',
+          destination: `${apiUrl}/:path*`,
+        },
+      ];
     }
     
-    // In development, proxy API calls to the backend
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${apiUrl}/:path*`,
-      },
-    ];
+    // In production, don't rewrite API calls as they'll go directly to Next.js API routes
+    return [];
   },
 };
 
