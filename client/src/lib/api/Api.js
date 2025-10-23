@@ -443,7 +443,7 @@ export async function generateAchievementShare(achievement, user) {
   } catch (error) {
     console.error("Ошибка share-карточки:", error);
     // Возвращаем заглушку в случае ошибки
-    return "https://via.placeholder.com/1200x630/0b0b0b/ffffff?text=Достижение";
+    return `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodeURIComponent(achievement.title)}`;
   }
 }
 
@@ -464,7 +464,7 @@ export async function makingPicture(isModalOpen, username) {
   } catch (error) {
     console.error("Ошибка генерации изображения:", error);
     // Возвращаем заглушку в случае ошибки
-    return "https://via.placeholder.com/1200x630/0b0b0b/ffffff?text=Достижение";
+    return `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodeURIComponent(isModalOpen.title)}`;
   }
 }
 
