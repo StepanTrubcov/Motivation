@@ -430,7 +430,6 @@ export async function generateAchievementShare(achievement, user) {
     const response = await axios.post(`${BASE_URL}/achievement/share`, {
       title: achievement.title,
       description: achievement.description,
-      image: achievement.image,
       points: achievement.points,
       username: user.username || user.first_name || "Пользователь"
     });
