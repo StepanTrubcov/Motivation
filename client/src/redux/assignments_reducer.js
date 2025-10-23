@@ -43,12 +43,12 @@ export const getAchievementsNewStatus = (achievement, userId) => async (dispatch
 }
 
 export const getMakingPicture = (isModalOpen, username) => async (dispatch) => {
-   const url = await makingPicture(isModalOpen, username);
+   const imageUrl = await makingPicture(isModalOpen, username);
    
    // Return an object that mimics the axios response format expected by the component
    return {
      data: {
-       url: url
+       url: imageUrl
      }
    };
 }

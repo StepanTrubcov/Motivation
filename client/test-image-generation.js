@@ -12,6 +12,7 @@ async function testImageGeneration() {
       username: "testuser"
     };
     
+    // Тест локально
     const response = await axios.post('http://localhost:3000/api/achievement/share', testData);
     
     if (response.data.success) {
