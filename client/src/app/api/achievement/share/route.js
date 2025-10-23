@@ -1,15 +1,26 @@
 import { NextResponse } from 'next/server';
-import { createCanvas, registerFont } from 'canvas';
 import { join } from 'path';
 
-// Регистрируем шрифты
+let canvasModule;
 try {
-  const fontsDir = join(process.cwd(), 'public', 'fonts');
-  registerFont(join(fontsDir, 'Inter-Bold.ttf'), { family: 'Inter', weight: 'bold' });
-  registerFont(join(fontsDir, 'Inter-Regular.ttf'), { family: 'Inter', weight: 'normal' });
-  console.log('✅ Шрифты успешно зарегистрированы');
+  canvasModule = require('canvas');
+  console.log('✅ Canvas module loaded successfully');
 } catch (error) {
-  console.error('❌ Ошибка регистрации шрифтов:', error);
+  console.warn('⚠️ Canvas module not available:', error.message);
+  canvasModule = null;
+}
+
+// Если canvas доступен, регистрируем шрифты
+if (canvasModule) {
+  try {
+    const { registerFont } = canvasModule;
+    const fontsDir = join(process.cwd(), 'public', 'fonts');
+    registerFont(join(fontsDir, 'Inter-Bold.ttf'), { family: 'Inter', weight: 'bold' });
+    registerFont(join(fontsDir, 'Inter-Regular.ttf'), { family: 'Inter', weight: 'normal' });
+    console.log('✅ Fonts registered successfully');
+  } catch (error) {
+    console.error('❌ Error registering fonts:', error);
+  }
 }
 
 export async function POST(request) {
@@ -20,6 +31,15 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
+    // Если canvas не доступен, возвращаем ошибку
+    if (!canvasModule) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Сервис генерации изображений временно недоступен' 
+      }, { status: 503 });
+    }
+
+    const { createCanvas } = canvasModule;
     const width = 1200;
     const height = 630;
     const canvas = createCanvas(width, height);

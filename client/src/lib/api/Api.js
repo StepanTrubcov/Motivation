@@ -438,11 +438,12 @@ export async function generateAchievementShare(achievement, user) {
     if (response.data.success) {
       return response.data.url;
     } else {
-      throw new Error("Ошибка генерации изображения");
+      throw new Error(response.data.message || "Ошибка генерации изображения");
     }
   } catch (error) {
     console.error("Ошибка share-карточки:", error);
-    throw error;
+    // Возвращаем заглушку в случае ошибки
+    return "https://via.placeholder.com/1200x630/0b0b0b/ffffff?text=Достижение";
   }
 }
 
@@ -462,7 +463,8 @@ export async function makingPicture(isModalOpen, username) {
     }
   } catch (error) {
     console.error("Ошибка генерации изображения:", error);
-    throw error;
+    // Возвращаем заглушку в случае ошибки
+    return "https://via.placeholder.com/1200x630/0b0b0b/ffffff?text=Достижение";
   }
 }
 
