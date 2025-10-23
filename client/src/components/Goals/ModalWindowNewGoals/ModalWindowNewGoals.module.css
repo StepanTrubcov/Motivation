@@ -255,3 +255,8 @@
   display: flex;
   margin: 10px;
 }
+
+.radioWrapper{
+  display: flex;
+  margin: 5px;
+}

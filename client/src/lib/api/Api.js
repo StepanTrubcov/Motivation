@@ -196,13 +196,10 @@ export async function initializeUserGoals(customUserId) {
 
   try {
     const existingGoals = await getAllGoals(customUserId);
-    const existingGoalIds = existingGoals.map(g => g.id.split('_')[1]).sort();
-    const newGoalIds = goalsArray.map(g => g.id).sort();
-    const goalsMatch = existingGoalIds.length === newGoalIds.length &&
-      existingGoalIds.every((id, index) => id === newGoalIds[index]);
-
-    if (goalsMatch) {
-      console.log(`✅ У пользователя ${customUserId} уже есть все ${existingGoals.length} целей. Пропускаем инициализацию.`);
+    
+    // Проверяем, есть ли уже цели у пользователя
+    if (existingGoals && existingGoals.length > 0) {
+      console.log(`✅ У пользователя ${customUserId} уже есть ${existingGoals.length} целей. Пропускаем инициализацию.`);
       return false;
     }
 
@@ -450,13 +447,23 @@ export async function generateAchievementShare(achievement, user) {
 }
 
 export async function makingPicture(isModalOpen, username) {
-  const response = await axios.post(`${BASE_URL}/achievement/share`, {
-    title: isModalOpen.title,
-    description: isModalOpen.description,
-    points: isModalOpen.points || 0,
-    username: username || "user",
-  });
-  return response
+  try {
+    const response = await axios.post(`${BASE_URL}/achievement/share`, {
+      title: isModalOpen.title,
+      description: isModalOpen.description,
+      points: isModalOpen.points || 0,
+      username: username || "user",
+    });
+    
+    if (response.data.success) {
+      return response.data.url;
+    } else {
+      throw new Error(response.data.message || "Ошибка генерации изображения");
+    }
+  } catch (error) {
+    console.error("Ошибка генерации изображения:", error);
+    throw error;
+  }
 }
 
 export async function addCustomGoal(userId, title, category) {

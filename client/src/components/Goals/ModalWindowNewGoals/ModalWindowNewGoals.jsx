@@ -97,17 +97,20 @@ const ModalWindowNewGoals = ({ NewGoals, isModalOpen, closeModal, userId }) => {
                                         <div className={styles.radioGroup}>
                                             {goalCategories.map((category) => (
                                                 <React.Fragment key={category.id}>
-                                                    <Field
-                                                        type="radio"
-                                                        id={category.id}
-                                                        name="category"
-                                                        value={category.id}
-                                                        className={styles.radioInput}
-                                                    />
-                                                    <label htmlFor={category.id} className={styles.radioLabel}>
-                                                        {category.name}
-                                                    </label>
+                                                    <div className={styles.radioWrapper}>
+                                                        <Field
+                                                            type="radio"
+                                                            id={category.id}
+                                                            name="category"
+                                                            value={category.id}
+                                                            className={styles.radioInput}
+                                                        />
+                                                        <label htmlFor={category.id} className={styles.radioLabel}>
+                                                            {category.name}
+                                                        </label>
+                                                    </div>
                                                 </React.Fragment>
+
                                             ))}
                                         </div>
                                         <ErrorMessage name="category" component="div" className={styles.errorMessage} />

@@ -1,6 +1,7 @@
 import { getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal } from '@/lib/api/Api';
 
 const SET_GOALS = 'goals/SET_GOALS';
+const UPDATE_GOAL_STATUS = 'goals/UPDATE_GOAL_STATUS';
 
 const initial = {
     goals: [],
@@ -11,6 +12,13 @@ const GoalsReducer = (state = initial, action) => {
     switch (action.type) {
         case SET_GOALS:
             return { ...state, goals: action.goals, ThereAreUsers: true };
+        case UPDATE_GOAL_STATUS:
+            return {
+                ...state,
+                goals: state.goals.map(goal =>
+                    goal.id === action.goalId ? { ...goal, status: action.status } : goal
+                )
+            };
         default:
             return state;
     }
@@ -21,35 +29,56 @@ const setGoals = (goals) => ({
     goals,
 });
 
+// Новый action для обновления статуса конкретной цели
+const updateGoalStatus = (goalId, status) => ({
+    type: UPDATE_GOAL_STATUS,
+    goalId,
+    status
+});
 
 export const addGoals = (userId) => async (dispatch) => {
-    await getAllGoals(userId).then(response => {
-        if (response.length != 0) {
-            dispatch(setGoals(response))
+    try {
+        const response = await getAllGoals(userId);
+        if (response && response.length !== 0) {
+            dispatch(setGoals(response));
         }
-    })
-}
+    } catch (error) {
+        console.error("Ошибка загрузки целей:", error);
+    }
+};
 
 export const addStatusNew = (goalId, userId, newStatus) => async (dispatch) => {
-    await getAllStatus(userId, goalId, newStatus,).then(response => {
-        dispatch(addGoals(userId))
-    })
-}
+    try {
+        await getAllStatus(userId, goalId, newStatus);
+        // Обновляем только конкретную цель, а не все цели
+        dispatch(updateGoalStatus(goalId, newStatus));
+    } catch (error) {
+        console.error(`Ошибка обновления статуса цели ${goalId}:`, error);
+        // В случае ошибки перезагружаем все цели
+        dispatch(addGoals(userId));
+    }
+};
 
 export const addStatus = (userId) => async (dispatch) => {
-    await checkGoalCompletion(userId).then(response => {
-        if (response.length != 0) {
-            dispatch(setGoals(response))
+    try {
+        const response = await checkGoalCompletion(userId);
+        if (response && response.length !== 0) {
+            dispatch(setGoals(response));
         }
-    })
-}
+    } catch (error) {
+        console.error("Ошибка проверки завершения целей:", error);
+    }
+};
 
 export const NewGoals = (userId, title, goalCategories, resetForm, closeModal) => async (dispatch) => {
-    await addCustomGoal(userId, title, goalCategories).then(response => {
-        dispatch(addGoals(userId))
-        resetForm()
-        closeModal()
-    })
-}
+    try {
+        await addCustomGoal(userId, title, goalCategories);
+        dispatch(addGoals(userId));
+        resetForm();
+        closeModal();
+    } catch (error) {
+        console.error("Ошибка добавления новой цели:", error);
+    }
+};
 
 export default GoalsReducer;
