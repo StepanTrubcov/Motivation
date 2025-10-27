@@ -11,17 +11,31 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
-    try {
-      // Используем Vercel OG для генерации изображения
-      const imageResponse = await generateImageWithOG({
-        title,
-        description, 
-        points: points || 0,
-        username: username || 'user'
-      });
+    // Генерируем изображение с помощью @vercel/og
+    const imageResponse = await generateImageWithOG({
+      title,
+      description,
+      points: points || 0,
+      username: username || 'user'
+    });
 
-      // Конвертируем в base64
-      const arrayBuffer = await imageResponse.arrayBuffer();
+    // Конвертируем в base64
+    const arrayBuffer = await imageResponse.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString('base64');
+    const dataUrl = `data:image/png;base64,${base64}`;
+
+    return NextResponse.json({
+      success: true,
+      url: dataUrl,
+    });
+
+  } catch (error) {
+    console.error('❌ Ошибка генерации share-картинки:', error);
+
+    // В случае ошибки пробуем сгенерировать простую картинку без сложного форматирования
+    try {
+      const simpleImage = await generateSimpleImage(title);
+      const arrayBuffer = await simpleImage.arrayBuffer();
       const base64 = Buffer.from(arrayBuffer).toString('base64');
       const dataUrl = `data:image/png;base64,${base64}`;
 
@@ -29,24 +43,14 @@ export async function POST(request) {
         success: true,
         url: dataUrl,
       });
-    } catch (ogError) {
-      console.error('OG Image error:', ogError);
-      // При ошибке OG возвращаем placeholder изображение
-      const encodedTitle = encodeURIComponent(title);
-      const placeholderUrl = `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodedTitle}`;
-      
+    } catch (fallbackError) {
+      console.error('❌ Fallback тоже не сработал:', fallbackError);
       return NextResponse.json({
-        success: true,
-        url: placeholderUrl,
-      });
+        success: false,
+        message: 'Ошибка генерации изображения',
+        url: null,
+      }, { status: 500 });
     }
-  } catch (error) {
-    console.error('❌ Ошибка генерации share-картинки:', error);
-    return NextResponse.json({
-      success: false,
-      message: 'Ошибка генерации изображения',
-      url: null,
-    }, { status: 500 });
   }
 }
 
@@ -59,24 +63,6 @@ async function generateImageWithOG({ title, description, points, username }) {
     '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
   ];
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
-  // Обрабатываем переносы текста для описания
-  const lines = [];
-  const words = description.split(' ');
-  let currentLine = '';
-  
-  for (const word of words) {
-    const testLine = currentLine ? `${currentLine} ${word}` : word;
-    if (testLine.length > 50) { // Примерное ограничение по длине
-      lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
-    }
-  }
-  if (currentLine) {
-    lines.push(currentLine);
-  }
 
   return new ImageResponse(
     (
@@ -125,11 +111,10 @@ async function generateImageWithOG({ title, description, points, username }) {
             fontSize: 34,
             marginBottom: 40,
             lineHeight: 1.4,
+            maxWidth: 1040,
           }}
         >
-          {lines.map((line, index) => (
-            <div key={index}>{line}</div>
-          ))}
+          {description}
         </div>
 
         {/* Points */}
@@ -153,9 +138,55 @@ async function generateImageWithOG({ title, description, points, username }) {
             position: 'absolute',
             bottom: 60,
             left: 80,
+            maxWidth: 1000,
           }}
         >
           {randomQuote}
+        </div>
+      </div>
+    ),
+    {
+      width: 1200,
+      height: 630,
+    }
+  );
+}
+
+// Простая резервная генерация если основная не сработает
+async function generateSimpleImage(title) {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          height: '100%',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#0b0b0b',
+          color: '#ffffff',
+          padding: 80,
+          fontFamily: 'Arial',
+        }}
+      >
+        <div
+          style={{
+            fontSize: 80,
+            fontWeight: 'bold',
+            marginBottom: 40,
+            textAlign: 'center',
+          }}
+        >
+          {title}
+        </div> 
+        <div
+          style={{
+            fontSize: 40,
+            color: '#00ff99',
+          }}
+        >
+          ✨ Ты молодец! 👍
         </div>
       </div>
     ),
