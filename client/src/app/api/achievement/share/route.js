@@ -87,7 +87,6 @@ export async function POST(request) {
       return generateSimpleSVG(title, description, points, username);
     } catch (canvasError) {
       console.error('Canvas error:', canvasError);
-      // Всегда возвращаем SVG fallback
       return generateSimpleSVG(title, description, points, username);
     }
   } catch (error) {

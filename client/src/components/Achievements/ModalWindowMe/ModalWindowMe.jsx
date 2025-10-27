@@ -43,55 +43,29 @@ const ModalWindowMe = ({
   const handleOpenImage = async () => {
     if (!imageDataUrl) return toast.error("Сначала сгенерируйте карточку");
 
-    try {
-      if (tg && typeof tg.showStoryEditor === "function") {
+    // Пробуем показать редактор историй, если доступен
+    if (tg && typeof tg.showStoryEditor === "function") {
+      try {
         const blob = await (await fetch(imageDataUrl)).blob();
-
         await tg.showStoryEditor({
           files: [blob],
           caption: `${isModalOpen.title}\n${isModalOpen.description || ""}`,
         });
-
         toast.success("Открыл редактор истории Telegram 🎉");
         return;
+      } catch (err) {
+        console.warn("showStoryEditor недоступен или ошибка:", err);
+        // Продолжаем к fallback
       }
-    } catch (err) {
-      console.warn("showStoryEditor недоступен или ошибка:", err);
     }
 
-    try {
-      let publicUrl = imageDataUrl;
-
-      if (uploadTempUrl && imageDataUrl.startsWith("data:")) {
-        const uploadRes = await fetch(uploadTempUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ imageBase64: imageDataUrl }),
-        });
-
-        const json = await uploadRes.json();
-        if (json?.url) publicUrl = json.url;
-      }
-
-      const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
-        publicUrl
-      )}&text=${encodeURIComponent(
-        `${isModalOpen.title}\n${isModalOpen.description || ""}`
-      )}`;
-      if (tg && typeof tg.openTelegramLink === "function") {
-        tg.openTelegramLink(shareUrl);
-      } else {
-        window.open(shareUrl, "_blank");
-      }
-
-      toast.success("Открыл Telegram для публикации 🎉");
-      return;
-    } catch (err) {
-      console.warn("Ошибка при Telegram share:", err);
-    }
+    // Fallback: открываем изображение в новой вкладке
     try {
       window.open(imageDataUrl, "_blank");
-      toast("Открыл изображение. Удерживайте, чтобы сохранить 📸");
+      toast(
+        "Открыл изображение. Сохраните его (удержав пальцем) и загрузите в историю Telegram вручную 📸",
+        { duration: 5000 }
+      );
     } catch (err) {
       console.error("Ошибка открытия:", err);
       toast.error("Не удалось открыть изображение 😔");
