@@ -12,9 +12,9 @@ export async function POST(request) {
     }
 
     // Генерируем изображение с помощью @vercel/og
-    const imageResponse = await generateImageWithOG({
+    const imageResponse = await generateAchievementImage({
       title,
-      description,
+      description, 
       points: points || 0,
       username: username || 'user'
     });
@@ -31,30 +31,15 @@ export async function POST(request) {
 
   } catch (error) {
     console.error('❌ Ошибка генерации share-картинки:', error);
-
-    // В случае ошибки пробуем сгенерировать простую картинку без сложного форматирования
-    try {
-      const simpleImage = await generateSimpleImage(title);
-      const arrayBuffer = await simpleImage.arrayBuffer();
-      const base64 = Buffer.from(arrayBuffer).toString('base64');
-      const dataUrl = `data:image/png;base64,${base64}`;
-
-      return NextResponse.json({
-        success: true,
-        url: dataUrl,
-      });
-    } catch (fallbackError) {
-      console.error('❌ Fallback тоже не сработал:', fallbackError);
-      return NextResponse.json({
-        success: false,
-        message: 'Ошибка генерации изображения',
-        url: null,
-      }, { status: 500 });
-    }
+    return NextResponse.json({
+      success: false,
+      message: 'Ошибка генерации изображения',
+      url: null,
+    }, { status: 500 });
   }
 }
 
-async function generateImageWithOG({ title, description, points, username }) {
+async function generateAchievementImage({ title, description, points, username }) {
   const quotes = [
     '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
     '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
@@ -73,10 +58,12 @@ async function generateImageWithOG({ title, description, points, username }) {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           backgroundColor: '#0b0b0b',
           padding: 80,
+          paddingTop: 100,
           fontFamily: 'Arial',
+          position: 'relative',
         }}
       >
         {/* Username */}
@@ -109,9 +96,9 @@ async function generateImageWithOG({ title, description, points, username }) {
           style={{
             color: '#ffffff',
             fontSize: 34,
-            marginBottom: 40,
             lineHeight: 1.4,
-            maxWidth: 1040,
+            marginBottom: 40,
+            maxWidth: 1000,
           }}
         >
           {description}
@@ -124,6 +111,7 @@ async function generateImageWithOG({ title, description, points, username }) {
             fontSize: 40,
             fontWeight: 'bold',
             marginTop: 20,
+            marginBottom: 60,
           }}
         >
           +{points} очков
@@ -142,51 +130,6 @@ async function generateImageWithOG({ title, description, points, username }) {
           }}
         >
           {randomQuote}
-        </div>
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-    }
-  );
-}
-
-// Простая резервная генерация если основная не сработает
-async function generateSimpleImage(title) {
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#0b0b0b',
-          color: '#ffffff',
-          padding: 80,
-          fontFamily: 'Arial',
-        }}
-      >
-        <div
-          style={{
-            fontSize: 80,
-            fontWeight: 'bold',
-            marginBottom: 40,
-            textAlign: 'center',
-          }}
-        >
-          {title}
-        </div> 
-        <div
-          style={{
-            fontSize: 40,
-            color: '#00ff99',
-          }}
-        >
-          ✨ Ты молодец! 👍
         </div>
       </div>
     ),
