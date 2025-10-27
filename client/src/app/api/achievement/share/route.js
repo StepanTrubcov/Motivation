@@ -27,7 +27,7 @@ export async function POST(request) {
 
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 80px sans-serif';
-      
+
       // Ограничиваем длину заголовка
       const shortTitle = title.length > 30 ? title.substring(0, 30) + '...' : title;
       ctx.fillText(shortTitle, 80, 200);
@@ -36,12 +36,12 @@ export async function POST(request) {
       ctx.font = '34px sans-serif';
       ctx.fillStyle = '#ffffff';
       const shortDesc = description.length > 100 ? description.substring(0, 100) + '...' : description;
-      
+
       // Простой перенос строк
       const lines = [];
       let currentLine = '';
       const words = shortDesc.split(' ');
-      
+
       for (const word of words) {
         const testLine = currentLine + word + ' ';
         if (testLine.length > 40) { // Примерное ограничение по символам
@@ -52,7 +52,7 @@ export async function POST(request) {
         }
       }
       lines.push(currentLine);
-      
+
       // Рисуем линии описания
       let y = 270;
       for (const line of lines.slice(0, 3)) { // Максимум 3 строки
@@ -76,7 +76,7 @@ export async function POST(request) {
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
       ctx.font = 'italic 30px sans-serif';
       ctx.fillStyle = '#9b9b9b';
-      
+
       // Обрезаем длинную цитату
       const shortQuote = randomQuote.length > 60 ? randomQuote.substring(0, 60) + '...' : randomQuote;
       ctx.fillText(shortQuote, 80, height - 60);
@@ -84,10 +84,7 @@ export async function POST(request) {
       const buffer = canvas.toBuffer('image/png');
       const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
 
-      return NextResponse.json({
-        success: true,
-        url: base64,
-      });
+      return generateSimpleSVG(title, description, points, username);
     } catch (canvasError) {
       console.error('Canvas error:', canvasError);
       // Всегда возвращаем SVG fallback
