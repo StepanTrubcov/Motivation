@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import { ImageResponse } from '@vercel/og';
-
-export const runtime = 'edge';
+import { createCanvas } from '@napi-rs/canvas';
 
 export async function POST(request) {
   try {
@@ -11,24 +9,80 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
-    // Генерируем изображение с помощью @vercel/og
-    const imageResponse = await generateAchievementImage({
-      title,
-      description, 
-      points: points || 0,
-      username: username || 'user'
-    });
+    try {
+      const width = 1200;
+      const height = 630;
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
 
-    // Конвертируем в base64
-    const arrayBuffer = await imageResponse.arrayBuffer();
-    const base64 = Buffer.from(arrayBuffer).toString('base64');
-    const dataUrl = `data:image/png;base64,${base64}`;
+      // Ваш существующий код отрисовки...
+      ctx.fillStyle = '#0b0b0b';
+      ctx.fillRect(0, 0, width, height);
 
-    return NextResponse.json({
-      success: true,
-      url: dataUrl,
-    });
+      ctx.fillStyle = '#00ff99';
+      ctx.font = 'bold 48px Arial';
+      ctx.textAlign = 'left';
+      ctx.fillText(`@${username || 'user'}`, 80, 100);
 
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 80px Arial';
+      ctx.fillText(title, 80, 200);
+
+      ctx.font = '34px Arial';
+      ctx.fillStyle = '#ffffff';
+      const maxWidth = width - 160;
+      const words = description.split(' ');
+      let line = '';
+      let y = 270;
+      for (const word of words) {
+        const testLine = line + word + ' ';
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth) {
+          ctx.fillText(line.trim(), 80, y);
+          line = word + ' ';
+          y += 45;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line.trim(), 80, y);
+
+      // === Очки ===
+      ctx.fillStyle = '#00ff99';
+      ctx.font = 'bold 40px Arial';
+      ctx.fillText(`+${points || 0} очков`, 80, y + 70);
+
+      // === Цитаты ===
+      const quotes = [
+        '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
+        '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
+        '«Дисциплина сильнее мотивации ⚡️»',
+        '«Начни сейчас. Идеального момента не будет ⏳»',
+        '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      ctx.font = 'italic 30px Arial';
+      ctx.fillStyle = '#9b9b9b';
+      ctx.fillText(randomQuote, 80, height - 60);
+
+      // Генерация Base64
+      const buffer = canvas.toBuffer('image/png');
+      const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
+
+      return NextResponse.json({
+        success: true,
+        url: base64,
+      });
+    } catch (canvasError) {
+      console.error('Canvas error:', canvasError);
+      const encodedTitle = encodeURIComponent(title);
+      const placeholderUrl = `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodedTitle}`;
+
+      return NextResponse.json({
+        success: true,
+        url: placeholderUrl,
+      });
+    }
   } catch (error) {
     console.error('❌ Ошибка генерации share-картинки:', error);
     return NextResponse.json({
@@ -37,105 +91,4 @@ export async function POST(request) {
       url: null,
     }, { status: 500 });
   }
-}
-
-async function generateAchievementImage({ title, description, points, username }) {
-  const quotes = [
-    '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
-    '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
-    '«Дисциплина сильнее мотивации ⚡️»',
-    '«Начни сейчас. Идеального момента не будет ⏳»',
-    '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
-  ];
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: '100%',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          backgroundColor: '#0b0b0b',
-          padding: 80,
-          paddingTop: 100,
-          fontFamily: 'Arial',
-          position: 'relative',
-        }}
-      >
-        {/* Username */}
-        <div
-          style={{
-            color: '#00ff99',
-            fontSize: 48,
-            fontWeight: 'bold',
-            marginBottom: 40,
-          }}
-        >
-          @{username}
-        </div>
-
-        {/* Title */}
-        <div
-          style={{
-            color: '#ffffff',
-            fontSize: 80,
-            fontWeight: 'bold',
-            marginBottom: 40,
-            lineHeight: 1.1,
-          }}
-        >
-          {title}
-        </div>
-
-        {/* Description */}
-        <div
-          style={{
-            color: '#ffffff',
-            fontSize: 34,
-            lineHeight: 1.4,
-            marginBottom: 40,
-            maxWidth: 1000,
-          }}
-        >
-          {description}
-        </div>
-
-        {/* Points */}
-        <div
-          style={{
-            color: '#00ff99',
-            fontSize: 40,
-            fontWeight: 'bold',
-            marginTop: 20,
-            marginBottom: 60,
-          }}
-        >
-          +{points} очков
-        </div>
-
-        {/* Quote */}
-        <div
-          style={{
-            color: '#9b9b9b',
-            fontSize: 30,
-            fontStyle: 'italic',
-            position: 'absolute',
-            bottom: 60,
-            left: 80,
-            maxWidth: 1000,
-          }}
-        >
-          {randomQuote}
-        </div>
-      </div>
-    ),
-    {
-      width: 1200,
-      height: 630,
-    }
-  );
 }

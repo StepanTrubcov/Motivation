@@ -2,7 +2,9 @@
 const nextConfig = {
   // Fix for multiple lockfiles issue
   outputFileTracingRoot: __dirname,
-  
+  experimental: {
+    serverComponentsExternalPackages: ['@napi-rs/canvas'],
+  },
   images: {
     domains: ['t.me', 'i.postimg.cc', 'via.placeholder.com'],
     remotePatterns: [
@@ -12,7 +14,7 @@ const nextConfig = {
       },
     ],
   },
-  
+
   webpack: (config) => {
     // Добавляем поддержку шрифтов
     config.module.rules.push({
@@ -22,10 +24,10 @@ const nextConfig = {
         filename: 'static/fonts/[hash][ext][query]'
       }
     });
-    
+
     return config;
   },
-  
+
   async rewrites() {
     // In development, proxy API calls to the backend
     if (process.env.NODE_ENV === 'development') {
@@ -37,7 +39,7 @@ const nextConfig = {
         },
       ];
     }
-    
+
     // In production, don't rewrite API calls as they'll go directly to Next.js API routes
     return [];
   },
