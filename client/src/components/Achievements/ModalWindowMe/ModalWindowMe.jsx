@@ -28,6 +28,11 @@ React.useEffect(() => {
 
 console.log("Has showStoryEditor:", typeof tg?.showStoryEditor);
 
+console.log("Telegram WebApp object:", tg);
+console.log("Telegram version:", tg?.version);
+console.log("Platform:", tg?.platform);
+console.log("Has showStoryEditor:", typeof tg?.showStoryEditor);
+
 
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error("Нет данных для генерации");
@@ -55,16 +60,17 @@ console.log("Has showStoryEditor:", typeof tg?.showStoryEditor);
 const handleOpenImage = async () => {
   if (!imageDataUrl) return toast.error("Сначала сгенерируйте карточку");
 
-  console.log("Telegram object:", tg);
+  const tg = window.Telegram?.WebApp;
   console.log("showStoryEditor available:", typeof tg?.showStoryEditor);
 
-  // Проверяем поддержку API
-  if (tg && typeof tg.showStoryEditor === "function") {
-    try {
-      const response = await fetch(imageDataUrl);
-      const blob = await response.blob();
+  if (!tg) return toast.error("Telegram API не найден. Открой приложение внутри Telegram 📱");
 
-      console.log("Попытка вызвать showStoryEditor...");
+  tg.ready(); // критично важно
+  tg.expand();
+
+  if (typeof tg.showStoryEditor === "function") {
+    try {
+      const blob = await (await fetch(imageDataUrl)).blob();
 
       await tg.showStoryEditor({
         media: [blob],
@@ -75,14 +81,11 @@ const handleOpenImage = async () => {
       return;
     } catch (err) {
       console.error("Ошибка showStoryEditor:", err);
-      toast.error("Ошибка открытия истории 😔");
+      toast.error("Не удалось открыть редактор истории 😔");
     }
   } else {
-    toast(
-      "⚠️ Ваш Telegram не поддерживает истории из Mini App.",
-      { duration: 5000 }
-    );
-    window.open(imageDataUrl, "_blank");
+    console.warn("showStoryEditor отсутствует");
+    toast("⚙️ Telegram ещё не дал доступ к историям. Обнови Telegram и открой Mini App из бота!");
   }
 };
 
