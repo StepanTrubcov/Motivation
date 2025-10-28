@@ -17,6 +17,18 @@ const ModalWindowMe = ({
 
   const tg = typeof window !== "undefined" ? window.Telegram?.WebApp : null;
 
+React.useEffect(() => {
+  console.log("Telegram WebApp object:", tg);
+  if (!tg) {
+    toast.error("❌ Telegram API не найден. Открой Mini App внутри Telegram.");
+  } else {
+    console.log("✅ Telegram API найден:", Object.keys(tg));
+  }
+}, []);
+
+console.log("Has showStoryEditor:", typeof tg?.showStoryEditor);
+
+
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error("Нет данных для генерации");
 
@@ -40,37 +52,40 @@ const ModalWindowMe = ({
     }
   };
 
-  const handleOpenImage = async () => {
-    if (!imageDataUrl) return toast.error("Сначала сгенерируйте карточку");
+const handleOpenImage = async () => {
+  if (!imageDataUrl) return toast.error("Сначала сгенерируйте карточку");
 
-    // Проверяем, доступен ли Telegram WebApp API
-    if (tg && typeof tg.showStoryEditor === "function") {
-      try {
-        // Конвертируем base64 URL в Blob
-        const response = await fetch(imageDataUrl);
-        const blob = await response.blob();
+  console.log("Telegram object:", tg);
+  console.log("showStoryEditor available:", typeof tg?.showStoryEditor);
 
-        // Показываем редактор истории Telegram
-        await tg.showStoryEditor({
-          media: [blob],
-          caption: `${isModalOpen.title}\n${isModalOpen.description || ""}`,
-        });
+  // Проверяем поддержку API
+  if (tg && typeof tg.showStoryEditor === "function") {
+    try {
+      const response = await fetch(imageDataUrl);
+      const blob = await response.blob();
 
-        toast.success("История открыта в Telegram 🎉");
-        return;
-      } catch (err) {
-        console.error("Ошибка showStoryEditor:", err);
-        toast.error("Не удалось открыть редактор истории 😔");
-      }
-    } else {
-      // Fallback: Telegram WebApp недоступен
-      window.open(imageDataUrl, "_blank");
-      toast(
-        "📸 Открыл изображение. Сохраните его и загрузите в историю Telegram вручную.",
-        { duration: 5000 }
-      );
+      console.log("Попытка вызвать showStoryEditor...");
+
+      await tg.showStoryEditor({
+        media: [blob],
+        caption: `${isModalOpen.title}\n${isModalOpen.description || ""}`,
+      });
+
+      toast.success("История открыта в Telegram 🎉");
+      return;
+    } catch (err) {
+      console.error("Ошибка showStoryEditor:", err);
+      toast.error("Ошибка открытия истории 😔");
     }
-  };
+  } else {
+    toast(
+      "⚠️ Ваш Telegram не поддерживает истории из Mini App.",
+      { duration: 5000 }
+    );
+    window.open(imageDataUrl, "_blank");
+  }
+};
+
 
   return (
     <AnimatePresence>
