@@ -42,8 +42,9 @@ const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals
             addCalendarDataNew(profile.telegramId, until)
             setPoints(userId, isModalOpen.points)
             setIsModalOpen(null);
-            toast.success("Цель успешно выполнена!");
             await addStatus(userId);
+            toast.success("Цель успешно выполнена!")
+            addGoals(userId)
         } catch (error) {
             console.error("Ошибка при выполнении цели:", error);
             toast.error("Не удалось выполнить цель. Попробуйте снова.");
@@ -51,13 +52,15 @@ const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals
     };
 
     return <div>
-        <TodaysGoals completed={filter(
-            goals.goals,
-            "completed",
-            () => { toast.success("Эта цель уже выполнена!"); },
-            "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png",
-            false
-        )} inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false)} />
+        <TodaysGoals
+            completed={filter(
+                goals.goals,
+                "completed",
+                () => { toast.success("Эта цель уже выполнена!"); },
+                "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png",
+                false
+            )}
+            inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false)} />
         <ModalWindow isModalOpen={isModalOpen} buttonText='Выполнить цель' addNewStatus={addNewStatusDone} closeModal={closeModal} />
     </div>
 }
