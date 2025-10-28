@@ -16,17 +16,42 @@ const ModalWindowMe = ({
 
   const tg = typeof window !== "undefined" ? window.Telegram?.WebApp : null;
 
-  // Проверка Telegram API
+  // === КРИТИЧНАЯ ПРОВЕРКА: Telegram API + start_param ===
   useEffect(() => {
     if (!tg) {
-      toast.error("❌ Открой Mini App внутри Telegram");
-    } else {
-      tg.ready();
-      tg.expand();
+      console.error("Telegram WebApp не найден");
+      toast.error("Открой Mini App внутри Telegram");
+      return;
     }
+
+    console.log("=== TELEGRAM DEBUG ===");
+    console.log("Version:", tg.version);
+    console.log("Platform:", tg.platform);
+    console.log("start_param:", tg.initDataUnsafe?.start_param);
+    console.log("showStoryEditor:", typeof tg.showStoryEditor);
+    console.log("User:", tg.initDataUnsafe?.user?.id);
+    console.log("======================");
+
+    tg.ready();
+    tg.expand();
+
+    // Проверка: Mini App должен быть запущен с ?startapp=story
+    if (tg.initDataUnsafe?.start_param !== "story") {
+      toast.warn("Запусти Mini App через кнопку бота!");
+    }
+
+    // Принудительная задержка — иногда API грузится медленно
+    const timer = setTimeout(() => {
+      if (typeof tg.showStoryEditor !== "function") {
+        console.warn("showStoryEditor не загрузился");
+        toast("Истории недоступны. Перезапусти из кнопки бота");
+      }
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, [tg]);
 
-  // Генерация картинки
+  // === Генерация картинки ===
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error("Нет данных");
 
@@ -39,31 +64,36 @@ const ModalWindowMe = ({
       if (!dataUrl) throw new Error("Нет картинки");
 
       setImageDataUrl(dataUrl);
-      toast.success("✨ Карточка готова!");
+      toast.success("Карточка готова!");
     } catch (err) {
-      console.error(err);
-      toast.error("Ошибка генерации 😔");
+      console.error("Генерация:", err);
+      toast.error("Ошибка генерации");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Открытие редактора историй
+  // === Открытие редактора историй ===
   const handleShareStory = async () => {
     if (!imageDataUrl) return toast.error("Сначала сгенерируй карточку");
-
     if (!tg) return toast.error("Telegram API не найден");
 
+    // Проверка start_param — ОБЯЗАТЕЛЬНО
+    if (tg.initDataUnsafe?.start_param !== "story") {
+      toast.error("Запусти Mini App через кнопку бота (не по ссылке)!");
+      return;
+    }
+
     if (typeof tg.showStoryEditor !== "function") {
-      toast.error("Обнови Telegram — истории пока недоступны");
+      toast.error("Истории недоступны. Обнови Telegram или перезапусти бота");
       return;
     }
 
     try {
       const response = await fetch(imageDataUrl);
+      if (!response.ok) throw new Error("Ошибка загрузки картинки");
       const blob = await response.blob();
-
-      const file = new File([blob], "story.jpg", { type: "image/jpeg" });
+      const file = new File([blob], "motivation.jpg", { type: "image/jpeg" });
 
       await tg.showStoryEditor({
         media: [file],
@@ -71,11 +101,20 @@ const ModalWindowMe = ({
       });
 
       toast.success("Редактор историй открыт!");
-      closeModal(); // опционально
+      closeModal();
     } catch (err) {
-      console.error("Ошибка showStoryEditor:", err);
-      toast.error("Не удалось открыть историю 😔");
+      console.error("showStoryEditor error:", err);
+      toast.error("Не удалось открыть историю");
     }
+  };
+
+  // === Fallback: скачать и запостить вручную ===
+  const handleDownload = () => {
+    const a = document.createElement("a");
+    a.href = imageDataUrl;
+    a.download = "motivation.jpg";
+    a.click();
+    toast("Скачано! Открой галерею → поделись в истории");
   };
 
   return (
@@ -102,11 +141,7 @@ const ModalWindowMe = ({
             <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
 
             {isModalOpen.image && (
-              <img
-                className={styles.modalImg}
-                src={isModalOpen.image}
-                alt="preview"
-              />
+              <img className={styles.modalImg} src={isModalOpen.image} alt="preview" />
             )}
 
             {isModalOpen.description && (
@@ -120,12 +155,18 @@ const ModalWindowMe = ({
                   src={imageDataUrl}
                   alt="generated"
                 />
-                <button
-                  className={styles.shareButton}
-                  onClick={handleShareStory}
-                >
-                  📤 Поделиться / История
-                </button>
+                <div className={styles.shareContainer}>
+                  <button className={styles.shareButton} onClick={handleShareStory}>
+                    Поделиться / История
+                  </button>
+                  <button
+                    className={styles.shareButton}
+                    onClick={handleDownload}
+                    style={{ marginTop: "8px", fontSize: "14px" }}
+                  >
+                    Скачать и запостить
+                  </button>
+                </div>
               </div>
             ) : (
               <button
@@ -133,7 +174,7 @@ const ModalWindowMe = ({
                 onClick={handleGenerate}
                 disabled={isLoading}
               >
-                {isLoading ? "Создаём..." : "✨ Сгенерировать карточку"}
+                {isLoading ? "Создаём..." : "Сгенерировать карточку"}
               </button>
             )}
           </motion.div>
