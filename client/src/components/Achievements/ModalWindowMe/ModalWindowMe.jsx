@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
-import { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast"; // ← всё ок
 
 const ModalWindowMe = ({
   getMakingPicture,
@@ -16,7 +16,6 @@ const ModalWindowMe = ({
 
   const tg = typeof window !== "undefined" ? window.Telegram?.WebApp : null;
 
-  // === КРИТИЧНАЯ ПРОВЕРКА: Telegram API + start_param ===
   useEffect(() => {
     if (!tg) {
       console.error("Telegram WebApp не найден");
@@ -35,12 +34,11 @@ const ModalWindowMe = ({
     tg.ready();
     tg.expand();
 
-    // Проверка: Mini App должен быть запущен с ?startapp=story
+    // ← ИСПРАВЛЕНО: toast.warn → toast
     if (tg.initDataUnsafe?.start_param !== "story") {
-      toast.warn("Запусти Mini App через кнопку бота!");
+      toast("Запусти Mini App через кнопку бота!", { icon: "Warning" });
     }
 
-    // Принудительная задержка — иногда API грузится медленно
     const timer = setTimeout(() => {
       if (typeof tg.showStoryEditor !== "function") {
         console.warn("showStoryEditor не загрузился");
@@ -51,7 +49,6 @@ const ModalWindowMe = ({
     return () => clearTimeout(timer);
   }, [tg]);
 
-  // === Генерация картинки ===
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error("Нет данных");
 
@@ -73,25 +70,23 @@ const ModalWindowMe = ({
     }
   };
 
-  // === Открытие редактора историй ===
   const handleShareStory = async () => {
     if (!imageDataUrl) return toast.error("Сначала сгенерируй карточку");
     if (!tg) return toast.error("Telegram API не найден");
 
-    // Проверка start_param — ОБЯЗАТЕЛЬНО
     if (tg.initDataUnsafe?.start_param !== "story") {
-      toast.error("Запусти Mini App через кнопку бота (не по ссылке)!");
+      toast.error("Запусти через кнопку бота!");
       return;
     }
 
     if (typeof tg.showStoryEditor !== "function") {
-      toast.error("Истории недоступны. Обнови Telegram или перезапусти бота");
+      toast.error("Истории недоступны. Обнови Telegram");
       return;
     }
 
     try {
       const response = await fetch(imageDataUrl);
-      if (!response.ok) throw new Error("Ошибка загрузки картинки");
+      if (!response.ok) throw new Error("Ошибка загрузки");
       const blob = await response.blob();
       const file = new File([blob], "motivation.jpg", { type: "image/jpeg" });
 
@@ -108,13 +103,12 @@ const ModalWindowMe = ({
     }
   };
 
-  // === Fallback: скачать и запостить вручную ===
   const handleDownload = () => {
     const a = document.createElement("a");
     a.href = imageDataUrl;
     a.download = "motivation.jpg";
     a.click();
-    toast("Скачано! Открой галерею → поделись в истории");
+    toast("Скачано! Открой галерею → поделись");
   };
 
   return (
