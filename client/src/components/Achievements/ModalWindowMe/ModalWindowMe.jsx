@@ -120,13 +120,6 @@ const ModalWindowMe = ({
                   <button className={styles.shareButton} onClick={handleOpenImage}>
                     Поделиться / История
                   </button>
-                  <button
-                    className={styles.shareButton}
-                    onClick={handleDownload}
-                    style={{ marginTop: "8px", fontSize: "14px" }}
-                  >
-                    Скачать
-                  </button>
                 </div>
               </div>
             ) : (
