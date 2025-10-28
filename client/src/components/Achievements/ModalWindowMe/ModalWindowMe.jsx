@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
@@ -10,85 +10,73 @@ const ModalWindowMe = ({
   isModalOpen,
   closeModal,
   username,
-  uploadTempUrl,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState(null);
 
   const tg = typeof window !== "undefined" ? window.Telegram?.WebApp : null;
 
-React.useEffect(() => {
-  console.log("Telegram WebApp object:", tg);
-  if (!tg) {
-    toast.error("❌ Telegram API не найден. Открой Mini App внутри Telegram.");
-  } else {
-    console.log("✅ Telegram API найден:", Object.keys(tg));
-  }
-}, []);
+  // Проверка Telegram API
+  useEffect(() => {
+    if (!tg) {
+      toast.error("❌ Открой Mini App внутри Telegram");
+    } else {
+      tg.ready();
+      tg.expand();
+    }
+  }, [tg]);
 
-console.log("Has showStoryEditor:", typeof tg?.showStoryEditor);
-
-console.log("Telegram WebApp object:", tg);
-console.log("Telegram version:", tg?.version);
-console.log("Platform:", tg?.platform);
-console.log("Has showStoryEditor:", typeof tg?.showStoryEditor);
-
-
+  // Генерация картинки
   const handleGenerate = async () => {
-    if (!isModalOpen?.title) return toast.error("Нет данных для генерации");
+    if (!isModalOpen?.title) return toast.error("Нет данных");
 
     setIsLoading(true);
     setImageDataUrl(null);
 
     try {
-      console.log(isModalOpen, username)
       const res = await getMakingPicture(isModalOpen, username);
       const dataUrl = res?.data?.url;
-      console.log(res?.data)
-      if (!dataUrl) throw new Error("Пустой ответ от сервера");
+      if (!dataUrl) throw new Error("Нет картинки");
 
       setImageDataUrl(dataUrl);
-      toast.success("✨ Картинка готова!");
+      toast.success("✨ Карточка готова!");
     } catch (err) {
-      console.error("Ошибка генерации:", err);
-      toast.error("Ошибка генерации картинки 😔");
+      console.error(err);
+      toast.error("Ошибка генерации 😔");
     } finally {
       setIsLoading(false);
     }
   };
 
-const handleOpenImage = async () => {
-  if (!imageDataUrl) return toast.error("Сначала сгенерируйте карточку");
+  // Открытие редактора историй
+  const handleShareStory = async () => {
+    if (!imageDataUrl) return toast.error("Сначала сгенерируй карточку");
 
-  const tg = window.Telegram?.WebApp;
-  console.log("showStoryEditor available:", typeof tg?.showStoryEditor);
+    if (!tg) return toast.error("Telegram API не найден");
 
-  if (!tg) return toast.error("Telegram API не найден. Открой приложение внутри Telegram 📱");
+    if (typeof tg.showStoryEditor !== "function") {
+      toast.error("Обнови Telegram — истории пока недоступны");
+      return;
+    }
 
-  tg.ready(); // критично важно
-  tg.expand();
-
-  if (typeof tg.showStoryEditor === "function") {
     try {
-      const blob = await (await fetch(imageDataUrl)).blob();
+      const response = await fetch(imageDataUrl);
+      const blob = await response.blob();
+
+      const file = new File([blob], "story.jpg", { type: "image/jpeg" });
 
       await tg.showStoryEditor({
-        media: [blob],
-        caption: `${isModalOpen.title}\n${isModalOpen.description || ""}`,
+        media: [file],
+        text: `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim(),
       });
 
-      toast.success("История открыта в Telegram 🎉");
-      return;
+      toast.success("Редактор историй открыт!");
+      closeModal(); // опционально
     } catch (err) {
       console.error("Ошибка showStoryEditor:", err);
-      toast.error("Не удалось открыть редактор истории 😔");
+      toast.error("Не удалось открыть историю 😔");
     }
-  } else {
-    console.warn("showStoryEditor отсутствует");
-    toast("⚙️ Telegram ещё не дал доступ к историям. Обнови Telegram и открой Mini App из бота!");
-  }
-};
-
+  };
 
   return (
     <AnimatePresence>
@@ -103,16 +91,11 @@ const handleOpenImage = async () => {
           <motion.div
             className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.9 }}
           >
-            <button
-              onClick={closeModal}
-              className={styles.closeButton}
-              aria-label="Закрыть модальное окно"
-            >
+            <button onClick={closeModal} className={styles.closeButton}>
               <X size={20} />
             </button>
 
@@ -122,7 +105,7 @@ const handleOpenImage = async () => {
               <img
                 className={styles.modalImg}
                 src={isModalOpen.image}
-                alt={isModalOpen.title}
+                alt="preview"
               />
             )}
 
@@ -135,24 +118,23 @@ const handleOpenImage = async () => {
                 <img
                   className={styles.modalImCopy}
                   src={imageDataUrl}
-                  alt={isModalOpen.title}
+                  alt="generated"
                 />
-                <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleOpenImage}>
-                    📤 Поделиться / История
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className={styles.shareContainer}>
                 <button
                   className={styles.shareButton}
-                  onClick={handleGenerate}
-                  disabled={isLoading}
+                  onClick={handleShareStory}
                 >
-                  {isLoading ? "Создание..." : "✨ Сгенерировать карточку"}
+                  📤 Поделиться / История
                 </button>
               </div>
+            ) : (
+              <button
+                className={styles.shareButton}
+                onClick={handleGenerate}
+                disabled={isLoading}
+              >
+                {isLoading ? "Создаём..." : "✨ Сгенерировать карточку"}
+              </button>
             )}
           </motion.div>
         </motion.div>
