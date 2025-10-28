@@ -43,32 +43,32 @@ const ModalWindowMe = ({
   const handleOpenImage = async () => {
     if (!imageDataUrl) return toast.error("Сначала сгенерируйте карточку");
 
-    // Пробуем показать редактор историй, если доступен
+    // Проверяем, доступен ли Telegram WebApp API
     if (tg && typeof tg.showStoryEditor === "function") {
       try {
-        const blob = await (await fetch(imageDataUrl)).blob();
+        // Конвертируем base64 URL в Blob
+        const response = await fetch(imageDataUrl);
+        const blob = await response.blob();
+
+        // Показываем редактор истории Telegram
         await tg.showStoryEditor({
-          files: [blob],
+          media: [blob],
           caption: `${isModalOpen.title}\n${isModalOpen.description || ""}`,
         });
-        toast.success("Открыл редактор истории Telegram 🎉");
+
+        toast.success("История открыта в Telegram 🎉");
         return;
       } catch (err) {
-        console.warn("showStoryEditor недоступен или ошибка:", err);
-        // Продолжаем к fallback
+        console.error("Ошибка showStoryEditor:", err);
+        toast.error("Не удалось открыть редактор истории 😔");
       }
-    }
-
-    // Fallback: открываем изображение в новой вкладке
-    try {
+    } else {
+      // Fallback: Telegram WebApp недоступен
       window.open(imageDataUrl, "_blank");
       toast(
-        "Открыл изображение. Сохраните его (удержав пальцем) и загрузите в историю Telegram вручную 📸",
+        "📸 Открыл изображение. Сохраните его и загрузите в историю Telegram вручную.",
         { duration: 5000 }
       );
-    } catch (err) {
-      console.error("Ошибка открытия:", err);
-      toast.error("Не удалось открыть изображение 😔");
     }
   };
 
