@@ -2,13 +2,13 @@
   position: relative;
   height: 100vh;
   width: 100%;
-  background-color: #0b0b0b;
+  background-color: var(--background, #0b0b0b);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
   font-family: "Inter", sans-serif;
-  color: white;
+  color: var(--foreground, white);
   text-align: center;
 }
 
@@ -41,10 +41,11 @@
   line-height: 1.2;
   margin-bottom: 12px;
   text-transform: uppercase;
+  color: var(--foreground, inherit);
 }
 
 .subtitle {
   font-size: 16px;
-  color: #b0b0b0;
+  color: var(--foreground, #b0b0b0);
   letter-spacing: 0.5px;
 }

@@ -22,7 +22,7 @@
 }
 
 .modalContent {
-  background-color: #151515;
+  background-color: var(--background, #151515);
   border-radius: 1rem;
   padding: 1.5rem;
   max-width: 28rem;
@@ -43,7 +43,7 @@
 }
 
 .closeButton:hover {
-  color: #000000;
+  color: var(--foreground, #000000);
 }
 
 .modalTitle {
@@ -56,7 +56,7 @@
 }
 
 .modalText {
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
   margin-bottom: 1.5rem;
 }
 
@@ -65,7 +65,7 @@
   font-weight: 700;
   margin-bottom: 1rem;
   text-align: center;
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
   text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
 }
 
@@ -73,6 +73,7 @@
   margin: 5px;
   font-weight: 500;
   font-size: 17px;
+  color: var(--foreground, inherit);
 }
 
 .button {
@@ -81,7 +82,7 @@
   width: 100%;
   padding: 5px;
   background-color: #00ff1e;
-  color: rgb(0, 0, 0);
+  color: var(--background, rgb(0, 0, 0));
   border-radius: 5px;
   font-weight: 600;
   font-size: 15px;
@@ -92,8 +93,8 @@
 }
 
 .button:hover {
-  background-color: #1f2937;
-  color: #ffffff;
+  background-color: var(--background, #1f2937);
+  color: var(--foreground, #ffffff);
 }
 
 .img {
@@ -104,22 +105,24 @@
 .text {
   display: flex;
   justify-content: center;
-  align-items: center
+  align-items: center;
+  color: var(--foreground, inherit);
 }
 
 .generatedText {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: anywhere;
+  color: var(--foreground, inherit);
 }
 
 .previewWrapper {
   width: 80%;
   border: solid;
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
   display: flex;
   align-items: flex-start;
-  background: #111;
+  background: var(--background, #111);
   padding: 15px;
   border-radius: 5px;
   position: relative;
@@ -130,6 +133,7 @@
   white-space: pre-wrap;
   flex: 1;
   position: relative;
+  color: var(--foreground, inherit);
 }
 
 .previewText::after {
@@ -138,7 +142,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: linear-gradient(to top, #111, transparent);
+  background: linear-gradient(to top, var(--background, #111), transparent);
 }
 
 .copyCube {
@@ -162,15 +166,16 @@
 }
 
 .copyButton {
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
   margin-left: 10px;
-  background-color: #151515;
+  background-color: var(--background, #151515);
   border: none;
 }
 
 .generation__text {
   margin-top: 30px;
   margin-bottom: 10px;
+  color: var(--foreground, inherit);
 }
 
 .goalForm {
@@ -185,7 +190,7 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
 }
 
 .formInput {
@@ -193,8 +198,8 @@
   padding: 12px;
   border-radius: 8px;
   border: 1px solid #374151;
-  background-color: #1f2937;
-  color: #ffffff;
+  background-color: var(--background, #1f2937);
+  color: var(--foreground, #ffffff);
   font-size: 16px;
   box-sizing: border-box;
 }
@@ -216,7 +221,7 @@
 }
 
 .radioLabel {
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
   font-size: 16px;
   display: flex;
   align-items: center;
@@ -227,7 +232,7 @@
   width: 100%;
   padding: 12px;
   background-color: #00ff1e;
-  color: #000000;
+  color: var(--background, #000000);
   font-weight: 700;
   font-size: 16px;
   border: none;

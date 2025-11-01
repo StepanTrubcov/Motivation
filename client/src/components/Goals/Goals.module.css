@@ -8,19 +8,20 @@
   font-weight: 600;
   margin-top: 15px;
   margin-bottom: 16px;
-  color: white;
+  color: var(--foreground, white);
 }
 
 .centeredText {
-  position: relative;
+  position: absolute;
   left: 50%;
   transform: translateX(-50%);
   white-space: nowrap;
+  z-index: 0;
 }
 
 .button {
   font-size: 20px;
-  color: #111;
+  color: var(--background, #111);
   width: 35px;
   height: 35px;
   border-radius: 100%;
@@ -38,7 +39,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background: #111;
+  background: var(--background, #111);
   border-radius: 12px;
   padding: 6px;
   overflow: hidden;
@@ -49,7 +50,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background: #111;
+  background: var(--background, #111);
   border-radius: 12px;
   padding: 6px;
   overflow: hidden;
@@ -59,12 +60,15 @@
   position: relative;
   flex: 1;
   text-align: center;
-  padding: 10px 12px;
+  padding: 10px 0;
   cursor: pointer;
   font-weight: 500;
   color: #aaa;
   z-index: 2;
   transition: color 0.3s, text-shadow 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .active {
@@ -76,53 +80,50 @@
   position: absolute;
   top: 4px;
   bottom: 4px;
-  width: calc(100% / 3 - 8px);
-  border-radius: 20px;
-  background: rgba(103, 103, 103, 0.15);
-  transition: transform 0.7s ease;
-  z-index: 1;
-}
-
-.navigator.tab-0 .navHighlight {
-  transform: translateX(3%);
-}
-
-.navigator.tab-1 .navHighlight {
-  transform: translateX(105%);
-}
-
-.navigator.tab-2 .navHighlight {
-  transform: translateX(210%);
-}
-
-/* .navHighlightSection {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 6px;
-  width: calc(25% - 10px);
+  left: 4px;
+  width: calc((100% - 24px) / 3);
   border-radius: 20px;
   background: rgba(103, 103, 103, 0.15);
   transition: transform 0.3s ease;
   z-index: 1;
-} */
-/* 
+}
+
+.navigator.tab-0 .navHighlight {
+  transform: translateX(0);
+}
+
+.navigator.tab-1 .navHighlight {
+  transform: translateX(calc((100% - 24px) / 3 + 8px));
+}
+
+.navigator.tab-2 .navHighlight {
+  transform: translateX(calc((100% - 24px) / 3 * 2 + 16px));
+}
+
+.navHighlightSection {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 6px;
+  width: calc(25% - 12px);
+  border-radius: 20px;
+  background: rgba(103, 103, 103, 0.15);
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
 .navigatorSection.tab-0 .navHighlightSection {
-  transform: translateX(calc(16px));
-  width: 55px;
+  transform: translateX(0);
 }
 
 .navigatorSection.tab-1 .navHighlightSection {
-  transform: translateX(calc(85px));
-    width: 87px;
+  transform: translateX(calc(25%));
 }
 
 .navigatorSection.tab-2 .navHighlightSection {
-  transform: translateX(calc(175px));
-  width: 85px;
+  transform: translateX(calc(50%));
 }
 
 .navigatorSection.tab-3 .navHighlightSection {
-  transform: translateX(calc(260px));
-  width: 100px;
-} */
+  transform: translateX(calc(75%));
+}

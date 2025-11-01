@@ -29,7 +29,6 @@ const setGoals = (goals) => ({
     goals,
 });
 
-// Новый action для обновления статуса конкретной цели
 const updateGoalStatus = (goalId, status) => ({
     type: UPDATE_GOAL_STATUS,
     goalId,
@@ -50,11 +49,9 @@ export const addGoals = (userId) => async (dispatch) => {
 export const addStatusNew = (goalId, userId, newStatus) => async (dispatch) => {
     try {
         await getAllStatus(userId, goalId, newStatus);
-        // Обновляем только конкретную цель, а не все цели
         dispatch(updateGoalStatus(goalId, newStatus));
     } catch (error) {
         console.error(`Ошибка обновления статуса цели ${goalId}:`, error);
-        // В случае ошибки перезагружаем все цели
         dispatch(addGoals(userId));
     }
 };

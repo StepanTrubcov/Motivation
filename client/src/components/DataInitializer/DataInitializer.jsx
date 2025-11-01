@@ -21,6 +21,27 @@ const DataInitializer = ({ children }) => {
     const isTextDataInitialized = useRef(false);
 
     useEffect(() => {
+        // Инициализация темы Telegram WebApp
+        const initTelegramTheme = () => {
+            if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+                const tg = window.Telegram.WebApp;
+                tg.ready();
+                
+                // Определяем тему Telegram
+                const theme = tg.colorScheme || 'dark';
+                document.body.classList.remove('telegram-light', 'telegram-dark');
+                document.body.classList.add(`telegram-${theme}`);
+                
+                // Слушаем изменения темы
+                tg.onEvent('themeChanged', () => {
+                    const newTheme = tg.colorScheme || 'dark';
+                    document.body.classList.remove('telegram-light', 'telegram-dark');
+                    document.body.classList.add(`telegram-${newTheme}`);
+                });
+            }
+        };
+
+        initTelegramTheme();
         dispatch(addProfile());
     }, [dispatch]);
 

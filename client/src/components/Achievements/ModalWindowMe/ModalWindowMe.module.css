@@ -22,7 +22,7 @@
 }
 
 .modalContent {
-  background-color: #151515;
+  background-color: var(--background, #151515);
   border-radius: 1rem;
   padding: 1.5rem;
   max-width: 28rem;
@@ -43,7 +43,7 @@
 }
 
 .closeButton:hover {
-  color: #000000;
+  color: var(--foreground, #000000);
 }
 
 .modalTitle {
@@ -56,7 +56,7 @@
 }
 
 .modalText {
-  color: #ffffff;
+  color: var(--foreground, #ffffff);
   margin-bottom: 1.5rem;
   text-align: center;
   text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
@@ -66,7 +66,7 @@
   width: 100%;
   padding: 0.75rem;
   background-color: #00ff1e;
-  color: rgb(0, 0, 0);
+  color: var(--background, rgb(0, 0, 0));
   border-radius: 0.75rem;
   font-weight: 600;
   font-size: 15px;
@@ -76,14 +76,14 @@
 }
 
 .actionButton:hover {
-  background-color: #1f2937;
+  background-color: var(--background, #1f2937);
 }
 
 .shareButton {
   width: 100%;
   flex: 1;
-  background-color: #1c1c1c;
-  color: white;
+  background-color: var(--background, #1c1c1c);
+  color: var(--foreground, white);
   border: 1px solid #444;
   border-radius: 12px;
   padding: 10px 16px;
@@ -97,13 +97,13 @@
 }
 
 .shareButton:hover {
-  background-color: #2a2a2a;
+  background-color: var(--background, #2a2a2a);
 }
 
 .shareLink {
   font-size: 12px;
   margin-top: 12px;
-  color: #ccc;
+  color: var(--foreground, #ccc);
   word-break: break-all;
   text-align: center;
 }

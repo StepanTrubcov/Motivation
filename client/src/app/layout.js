@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
         <link rel="manifest" href="/manifest.json" />
         <script src="https://telegram.org/js/telegram-web-app.js" async />
       </head>
-      <body suppressHydrationWarning>
+      <body suppressHydrationWarning className="telegram-dark">
         <ReduxProvider>
           <BottomNavProvider>
             <Toaster position="top-center" reverseOrder={false} />

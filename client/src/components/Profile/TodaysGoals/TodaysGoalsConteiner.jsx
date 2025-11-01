@@ -19,6 +19,7 @@ const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals
         if (userId) {
             addStatus(userId)
             addGoals(userId)
+            console.log(userId)
         }
     }, [userId, addGoals, addStatus]);
 

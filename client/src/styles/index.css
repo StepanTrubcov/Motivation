@@ -6,9 +6,28 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background, #000000);
+  color: var(--foreground, #ffffff);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Темная тема */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--background, #000000);
+    color: var(--foreground, #ffffff);
+  }
+}
+
+/* Светлая тема */
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: var(--background, #ffffff);
+    color: var(--foreground, #000000);
+  }
 }

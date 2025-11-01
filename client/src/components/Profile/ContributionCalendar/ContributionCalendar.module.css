@@ -1,3 +1,4 @@
 .calendar {
     margin-bottom: 70px;
+    background-color: var(--background, transparent);
 }

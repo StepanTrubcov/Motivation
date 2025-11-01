@@ -1,6 +1,6 @@
 .blok {
     margin: 20px 10px;
-    background: #151515;
+    background: var(--background, #151515);
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -8,6 +8,7 @@
     opacity: 0;
     transform: translateY(20px);
     animation: slideFadeIn 0.6s ease forwards;
+    color: var(--foreground, inherit);
 }
 
 .blok:nth-child(1) {
@@ -28,17 +29,14 @@
 .blok:nth-child(6) {
     animation-delay: 0.6s;
 }
-.blok:nth-child(6) {
+.blok:nth-child(7) {
     animation-delay: 0.7s;
 }
-.blok:nth-child(7) {
+.blok:nth-child(8) {
     animation-delay: 0.8s;
 }
-.blok:nth-child(8) {
-    animation-delay: 0.9s;
-}
 .blok:nth-child(9) {
-    animation-delay: 1.0s;
+    animation-delay: 0.9s;
 }
 
 @keyframes slideFadeIn {
@@ -55,6 +53,7 @@
 .title {
     font-weight: 600;
     font-size: 17px;
+    color: var(--foreground, inherit);
 }
 
 .pts {

@@ -1,6 +1,7 @@
 .name{
     font-weight: 500;
     font-size: 20px;
+    color: var(--foreground, aliceblue);
 }
 
 .goals{
@@ -10,9 +11,9 @@
 }
 
 .blok {
-    color: aliceblue;
+    color: var(--foreground, aliceblue);
     margin: 20px 10px;
-    background: #151515;
+    background: var(--background, #151515);
     padding: 20px;
     border-radius: 10px;
     display: flex;

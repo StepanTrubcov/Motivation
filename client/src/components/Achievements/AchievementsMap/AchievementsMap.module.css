@@ -1,6 +1,6 @@
 .blok {
     text-align: center;
-    background-color: #111;
+    background-color: var(--background, #111);
     margin: 8px;
     width: 150px;
     height: 200px;
@@ -61,6 +61,7 @@
     margin: 10px;
     font-size: 15px;
     font-weight: 500;
+    color: var(--foreground, inherit);
 }
 
 .img {
