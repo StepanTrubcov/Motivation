@@ -8,7 +8,7 @@
   font-weight: 600;
   margin-top: 15px;
   margin-bottom: 16px;
-  color: var(--foreground, white);
+  color: white;
 }
 
 .centeredText {
@@ -21,7 +21,7 @@
 
 .button {
   font-size: 20px;
-  color: var(--background, #111);
+  color: #111;
   width: 35px;
   height: 35px;
   border-radius: 100%;
@@ -39,7 +39,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background: var(--background, #111);
+  background: #111;
   border-radius: 12px;
   padding: 6px;
   overflow: hidden;
@@ -50,7 +50,7 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background: var(--background, #111);
+  background: #111;
   border-radius: 12px;
   padding: 6px;
   overflow: hidden;

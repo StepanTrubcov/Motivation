@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 60px;
-    background-color: var(--background, #000000);
+    background-color: #000000;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -24,19 +24,18 @@
     text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
 }
 
-/* Темная тема */
+/* Принудительно устанавливаем темную тему */
 @media (prefers-color-scheme: dark) {
     .navbar {
-        background-color: var(--background, #000000);
+        background-color: #000000;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
 }
 
-/* Светлая тема */
 @media (prefers-color-scheme: light) {
     .navbar {
-        background-color: var(--background, #ffffff);
-        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        background-color: #000000;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
     
     .navItem {
@@ -44,7 +43,7 @@
     }
     
     .navItem.active {
-        color: #006600;
-        text-shadow: 0 0 8px rgba(0, 102, 0, 0.8);
+        color: #00ff1e;
+        text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
     }
 }

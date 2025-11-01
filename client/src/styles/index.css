@@ -6,8 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--background, #000000);
-  color: var(--foreground, #ffffff);
+  background-color: #000000;
+  color: #ffffff;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -16,18 +16,17 @@ code {
     monospace;
 }
 
-/* Темная тема */
+/* Принудительно устанавливаем темную тему */
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: var(--background, #000000);
-    color: var(--foreground, #ffffff);
+    background-color: #000000;
+    color: #ffffff;
   }
 }
 
-/* Светлая тема */
 @media (prefers-color-scheme: light) {
   body {
-    background-color: var(--background, #ffffff);
-    color: var(--foreground, #000000);
+    background-color: #000000;
+    color: #ffffff;
   }
 }

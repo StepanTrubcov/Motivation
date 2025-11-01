@@ -1,8 +1,8 @@
 .App {
   padding: 8px;
   padding-top: 40px;
-  color: var(--foreground, #ffffff);
-  background-color: var(--background, #000000);
+  color: #ffffff;
+  background-color: #000000;
   min-height: 100vh;
   padding-bottom: 60px;
 }
@@ -11,9 +11,9 @@
   font-size: 20px;
   padding-top: 40px;
   min-height: 100vh;
-  background-color: var(--background, #000000);
+  background-color: #000000;
   text-align: center;
-  color: var(--foreground, #ffffff);
+  color: #ffffff;
 }
 
 html, body {
@@ -28,8 +28,8 @@ html, body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--background, #000000), var(--background, #000000));
-  color: var(--foreground, white);
+  background: linear-gradient(135deg, #000000, #000000);
+  color: white;
   padding: 20px;
   text-align: center;
   font-family: "Inter", sans-serif;
@@ -53,7 +53,7 @@ html, body {
 .loading-text {
   font-size: 1rem;
   margin: 8px 0;
-  color: var(--foreground, #cbd5e1);
+  color: #cbd5e1;
 }
 
 .loading-support {
@@ -63,28 +63,27 @@ html, body {
   font-weight: 500;
 }
 
-/* Темная тема */
+/* Принудительно устанавливаем темную тему */
 @media (prefers-color-scheme: dark) {
   .App {
-    background-color: var(--background, #000000);
-    color: var(--foreground, #ffffff);
+    background-color: #000000;
+    color: #ffffff;
   }
   
   .Loading {
-    background-color: var(--background, #000000);
-    color: var(--foreground, #ffffff);
+    background-color: #000000;
+    color: #ffffff;
   }
 }
 
-/* Светлая тема */
 @media (prefers-color-scheme: light) {
   .App {
-    background-color: var(--background, #ffffff);
-    color: var(--foreground, #000000);
+    background-color: #000000;
+    color: #ffffff;
   }
   
   .Loading {
-    background-color: var(--background, #ffffff);
-    color: var(--foreground, #000000);
+    background-color: #000000;
+    color: #ffffff;
   }
 }

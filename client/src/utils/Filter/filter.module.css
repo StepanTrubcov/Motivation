@@ -1,6 +1,6 @@
 .blok {
     margin: 20px 10px;
-    background: var(--background, #151515);
+    background: #151515;
     padding: 20px;
     border-radius: 10px;
     display: flex;
@@ -8,7 +8,6 @@
     opacity: 0;
     transform: translateY(20px);
     animation: slideFadeIn 0.6s ease forwards;
-    color: var(--foreground, inherit);
 }
 
 .blok:nth-child(1) {
@@ -53,7 +52,6 @@
 .title {
     font-weight: 600;
     font-size: 17px;
-    color: var(--foreground, inherit);
 }
 
 .pts {

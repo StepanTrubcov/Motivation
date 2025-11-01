@@ -2,7 +2,7 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    background: var(--background, #111);
+    background: #111;
     border-radius: 12px;
     padding: 6px;
     overflow: hidden;

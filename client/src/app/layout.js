@@ -22,6 +22,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         <script src="https://telegram.org/js/telegram-web-app.js" async />
+        <meta name="color-scheme" content="dark" />
       </head>
       <body suppressHydrationWarning className="telegram-dark">
         <ReduxProvider>

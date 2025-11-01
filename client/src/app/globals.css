@@ -3,11 +3,9 @@
   --foreground: #ededed;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
+/* Принудительно устанавливаем темную тему */
+html, body {
+  color-scheme: dark;
 }
 
 html,
@@ -45,16 +43,27 @@ a {
   color: var(--foreground);
 }
 
-/* Принудительная установка светлой темы для Telegram WebApp */
 .telegram-light body {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
   background: var(--background);
   color: var(--foreground);
 }
 
+/* Отключаем автоматическое переключение тем */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  html {
+    color-scheme: dark;
+  }
+  
+  body {
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }

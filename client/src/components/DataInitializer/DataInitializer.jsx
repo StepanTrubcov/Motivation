@@ -21,22 +21,20 @@ const DataInitializer = ({ children }) => {
     const isTextDataInitialized = useRef(false);
 
     useEffect(() => {
-        // Инициализация темы Telegram WebApp
+        // Принудительная установка темной темы для Telegram WebApp
         const initTelegramTheme = () => {
             if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
                 const tg = window.Telegram.WebApp;
                 tg.ready();
                 
-                // Определяем тему Telegram
-                const theme = tg.colorScheme || 'dark';
+                // Принудительно устанавливаем темную тему
                 document.body.classList.remove('telegram-light', 'telegram-dark');
-                document.body.classList.add(`telegram-${theme}`);
+                document.body.classList.add('telegram-dark');
                 
-                // Слушаем изменения темы
+                // Отключаем автоматическое переключение тем
                 tg.onEvent('themeChanged', () => {
-                    const newTheme = tg.colorScheme || 'dark';
                     document.body.classList.remove('telegram-light', 'telegram-dark');
-                    document.body.classList.add(`telegram-${newTheme}`);
+                    document.body.classList.add('telegram-dark');
                 });
             }
         };
