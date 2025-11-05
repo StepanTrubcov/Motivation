@@ -293,7 +293,7 @@ export async function initializeAchievements(userId) {
       "title": "Книжный марафон",
       "description": "Вы в течение 60 дней читали книги. Эти знания делают вас сильнее и мудрее.",
       "requirement": "Читать минимум 15 страниц на протяжении 60 дней.",
-      "status": "earned",
+      "status": "locked",
       "image": "https://i.postimg.cc/50n5131c/2025-09-10-17-24-51-no-bg-preview-carve-photos.png",
       "points": 150,
       "type": "goal_based",
@@ -309,7 +309,7 @@ export async function initializeAchievements(userId) {
       "image": "https://i.postimg.cc/qBFnLgvG/2025-09-10-17-25-30-no-bg-preview-carve-photos.png",
       "points": 200,
       "type": "goal_based",
-      "goalIds": ["50"],
+      "goalIds": ["68"],
       "target": 60
     },
     {
@@ -442,7 +442,6 @@ export async function generateAchievementShare(achievement, user) {
     }
   } catch (error) {
     console.error("Ошибка share-карточки:", error);
-    // Возвращаем заглушку в случае ошибки
     return `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodeURIComponent(achievement.title)}`;
   }
 }
@@ -456,7 +455,6 @@ export async function makingPicture(isModalOpen, username) {
       username: username || "user",
     });
     
-    // Проверяем, что ответ существует и имеет правильный формат
     if (response && response.data && response.data.success) {
       return response.data.url;
     } else {
@@ -464,7 +462,6 @@ export async function makingPicture(isModalOpen, username) {
     }
   } catch (error) {
     console.error("Ошибка генерации изображения:", error);
-    // Возвращаем заглушку в случае ошибки
     return `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodeURIComponent(isModalOpen.title)}`;
   }
 }

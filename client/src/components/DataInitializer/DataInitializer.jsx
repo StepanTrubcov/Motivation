@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomNav } from '@/context/BottomNavContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
@@ -16,6 +16,7 @@ const DataInitializer = ({ children }) => {
     const ThereAreUsers = useSelector((state) => state.goals.ThereAreUsers);
     const goals = useSelector((state) => state.goals.goals);
     const assignments = useSelector((state) => state.assignments.assignments);
+    const [isUpdatingAchievements, setIsUpdatingAchievements] = useState(false);
 
     // Флаг для отслеживания инициализации данных генерации текста
     const isTextDataInitialized = useRef(false);
@@ -39,9 +40,36 @@ const DataInitializer = ({ children }) => {
             }
         };
 
-        initTelegramTheme();
-        dispatch(addProfile());
-    }, [dispatch]);
+        // Проверяем, выполнялось ли уже обновление достижений
+        const hasUpdated = sessionStorage.getItem('achievementsUpdated');
+        
+        if (!hasUpdated && !isUpdatingAchievements) {
+            setIsUpdatingAchievements(true);
+            
+            // Вызываем API endpoint для обновления достижений
+            fetch('/api/update-achievements', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Результат обновления достижений:', data);
+                sessionStorage.setItem('achievementsUpdated', 'true');
+                setIsUpdatingAchievements(false);
+                initTelegramTheme();
+                dispatch(addProfile());
+            })
+            .catch(error => {
+                console.error('Ошибка при обновлении достижений:', error);
+                sessionStorage.setItem('achievementsUpdated', 'true');
+                setIsUpdatingAchievements(false);
+                initTelegramTheme();
+                dispatch(addProfile());
+            });
+        } else {
+            initTelegramTheme();
+            dispatch(addProfile());
+        }
+    }, [dispatch, isUpdatingAchievements]);
 
     useEffect(() => {
         if (user && !ThereAreUsers) {

@@ -26,7 +26,7 @@ const setAssignments = (assignments) => ({
 export const getAchievementsData = (customUserId) => async (dispatch) => {
     await getAchievements(customUserId).then(response => {
         dispatch(setAssignments(response))
-        
+        console.log(response)
     })
 }
 
