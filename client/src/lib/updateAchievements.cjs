@@ -1,5 +1,7 @@
 // Утилита для обновления достижений у всех пользователей
-import { prisma } from '@/lib/prisma/prismaPostgresClient';
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 // Новые данные о достижениях (обновленные значения из Api.js)
 const updatedAchievements = [
@@ -137,7 +139,7 @@ const ACHIEVEMENTS_VERSION = "v1.0"; // Увеличивайте версию п
 
 let hasRun = false;
 
-export async function updateAllUserAchievements() {
+async function updateAllUserAchievements() {
   // Проверяем, чтобы функция выполнялась только один раз
   if (hasRun) {
     return { success: true, message: 'Функция уже была выполнена ранее' };
@@ -254,7 +256,5 @@ export async function updateAllUserAchievements() {
   }
 }
 
-// Для поддержки CommonJS (в postinstall скрипте)
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { updateAllUserAchievements };
-}
+// Экспортируем функцию для использования в других модулях
+module.exports = { updateAllUserAchievements };
