@@ -1,9 +1,9 @@
 // API endpoint для обновления достижений у всех пользователей
 // Этот endpoint будет вызываться автоматически при запуске приложения
-const { updateAllUserAchievements } = require('@/lib/updateAchievements.cjs');
-const { NextResponse } = require('next/server');
+import { updateAllUserAchievements } from '@/lib/updateAchievements.cjs';
+import { NextResponse } from 'next/server';
 
-async function GET() {
+export async function GET() {
   try {
     const result = await updateAllUserAchievements();
     return NextResponse.json(result);
@@ -17,8 +17,6 @@ async function GET() {
   }
 }
 
-async function POST() {
+export async function POST() {
   return GET();
 }
-
-module.exports = { GET, POST };

@@ -1,5 +1,5 @@
 // Утилита для обновления достижений у всех пользователей
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -135,7 +135,7 @@ const updatedAchievements = [
 ];
 
 // Идентификатор версии достижений (меняйте при каждом обновлении)
-const ACHIEVEMENTS_VERSION = "v1.0"; // Увеличивайте версию при каждом изменении
+// const ACHIEVEMENTS_VERSION = "v1.0"; // Увеличивайте версию при каждом изменении
 
 let hasRun = false;
 
@@ -257,4 +257,4 @@ async function updateAllUserAchievements() {
 }
 
 // Экспортируем функцию для использования в других модулях
-module.exports = { updateAllUserAchievements };
+export { updateAllUserAchievements };

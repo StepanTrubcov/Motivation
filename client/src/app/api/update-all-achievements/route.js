@@ -1,7 +1,7 @@
-const { updateAllUserAchievements } = require('@/lib/updateAchievements.cjs');
-const { NextResponse } = require('next/server');
+import { updateAllUserAchievements } from '@/lib/updateAchievements.cjs';
+import { NextResponse } from 'next/server';
 
-async function POST(request) {
+export async function POST() {
   try {
     const result = await updateAllUserAchievements();
     return NextResponse.json(result);
@@ -14,5 +14,3 @@ async function POST(request) {
     }, { status: 500 });
   }
 }
-
-module.exports = { POST };

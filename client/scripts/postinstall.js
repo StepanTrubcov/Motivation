@@ -1,7 +1,7 @@
 // Скрипт для автоматического обновления достижений при установке/деплое
 // Этот скрипт будет запускаться автоматически при postinstall
 
-const { updateAllUserAchievements } = require('../src/lib/updateAchievements.cjs');
+import { updateAllUserAchievements } from '../src/lib/updateAchievements.cjs';
 
 async function updateAchievements() {
   try {

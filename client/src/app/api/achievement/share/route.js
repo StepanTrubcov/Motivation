@@ -81,8 +81,8 @@ export async function POST(request) {
       const shortQuote = randomQuote.length > 60 ? randomQuote.substring(0, 60) + '...' : randomQuote;
       ctx.fillText(shortQuote, 80, height - 60);
 
-      const buffer = canvas.toBuffer('image/png');
-      const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
+      // const buffer = canvas.toBuffer('image/png');
+      // const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
 
       return generateSimpleSVG(title, description, points, username);
     } catch (canvasError) {
