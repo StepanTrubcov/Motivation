@@ -1,5 +1,4 @@
 import c from './filter.module.css'
-import Image from 'next/image';
 
 const filter = (goals = [], text, funct = () => { }, img = 'https://assets-global.website-files.com/620cd05594501a50fa9b7e10/620cd05594501a7b789b7f06_Button.png', home = true) => {
     const filteredGoals = goals.filter(g => g.status === text);
@@ -15,7 +14,7 @@ const filter = (goals = [], text, funct = () => { }, img = 'https://assets-globa
                 <div className={c.pts} >{d.points} pts</div>
             </div>
             <div>
-                <Image className={c.img} src={img} alt="button" width={20} height={20} />
+                <img className={c.img} src={img} alt="button" />
             </div>
         </div>
     ));

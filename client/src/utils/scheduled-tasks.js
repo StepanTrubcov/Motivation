@@ -2,7 +2,6 @@ import cron from 'node-cron';
 import { weeklyReport } from './WeeklyReport/WeeklyReport.js';
 
 const scheduleTasks = () => {
-  // Задача выполняется ежедневно в 23:59
   cron.schedule('59 23 * * *', async () => {
     console.log('=== Планировщик: Запуск еженедельного отчета ===');
     try {
