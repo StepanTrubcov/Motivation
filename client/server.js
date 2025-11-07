@@ -1,5 +1,9 @@
 const express = require('express');
 const path = require('path');
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
 const app = express();
 
 // Serve static files from the client/.next directory
@@ -11,6 +15,16 @@ app.get('*', (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+
+app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
+  
+  // Удаляем все достижения при запуске сервера
+  try {
+    console.log('Удаляем все достижения для всех пользователей...');
+    const result = await prisma.achievement.deleteMany({});
+    console.log(`Успешно удалено ${result.count} достижений`);
+  } catch (error) {
+    console.error('Ошибка при удалении всех достижений:', error);
+  }
 });

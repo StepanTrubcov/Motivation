@@ -1,4 +1,4 @@
-import { updateAllUserAchievements } from '@/lib/updateAchievements.cjs';
+import { updateAllUserAchievements } from '@/lib/updateAchievements';
 import { NextResponse } from 'next/server';
 
 export async function POST() {
@@ -6,10 +6,10 @@ export async function POST() {
     const result = await updateAllUserAchievements();
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Ошибка при обновлении достижений:', error);
+    console.error('Ошибка при создании достижений:', error);
     return NextResponse.json({ 
       success: false, 
-      error: 'Не удалось обновить достижения для пользователей',
+      error: 'Не удалось создать достижения для пользователей',
       details: error.message 
     }, { status: 500 });
   }

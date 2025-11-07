@@ -265,7 +265,7 @@ export async function initializeAchievements(userId) {
 
   const achievements = [
     {
-      "id": 1,
+      "id": "1",
       "title": "90 дней бега",
       "description": "Вы пробегали по 1 км в течение 90 дней. Это доказательство вашей дисциплины и силы духа.",
       "requirement": "Пробегать минимум 1 км на протяжении 90 дней.",
@@ -277,7 +277,7 @@ export async function initializeAchievements(userId) {
       "target": 90
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Пятёрка выносливости",
       "description": "Вы пробегали по 5 км в течение 60 дней. Ваша настойчивость заслуживает уважения.",
       "requirement": "Пробегать минимум 5 км на протяжении 60 дней.",
@@ -289,7 +289,7 @@ export async function initializeAchievements(userId) {
       "target": 60
     },
     {
-      "id": 3,
+      "id": "3",
       "title": "Книжный марафон",
       "description": "Вы в течение 60 дней читали книги. Эти знания делают вас сильнее и мудрее.",
       "requirement": "Читать минимум 15 страниц на протяжении 60 дней.",
@@ -301,7 +301,7 @@ export async function initializeAchievements(userId) {
       "target": 60
     },
     {
-      "id": 4,
+      "id": "4",
       "title": "Здоровый рацион",
       "description": "Вы придерживались здорового питания 60 дней. Ваше тело скажет вам спасибо!",
       "requirement": "Следовать принципам здорового питания на протяжении 60 дней.",
@@ -313,7 +313,7 @@ export async function initializeAchievements(userId) {
       "target": 60
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Ледяная закалка",
       "description": "Вы закалялись 60 дней. Ваша сила воли закалена, как сталь!",
       "requirement": "Практиковать закаливание (например, холодный душ) на протяжении 60 дней.",
@@ -325,7 +325,7 @@ export async function initializeAchievements(userId) {
       "target": 60
     },
     {
-      "id": 6,
+      "id": "6",
       "title": "Кодерский марафон",
       "description": "Вы кодили по 1 час в течение 60 дней. Ваш код — это искусство!",
       "requirement": "Заниматься программированием минимум 1 час на протяжении 60 дней.",
@@ -337,7 +337,7 @@ export async function initializeAchievements(userId) {
       "target": 60
     },
     {
-      "id": 7,
+      "id": "7",
       "title": "Полгода прогресса",
       "description": "Вы стабильно двигались к своим целям в течение полугода. Это настоящий прорыв!",
       "requirement": "Соблюдать дисциплину в любых активностях приложения в течение 180 дней.",
@@ -348,7 +348,7 @@ export async function initializeAchievements(userId) {
       "target": 180
     },
     {
-      "id": 8,
+      "id": "8",
       "title": "Сила отжиманий",
       "description": "Вы отжимались по 20 раз в течение 60 дней. Ваши мышцы — это мощь!",
       "requirement": "Выполнять минимум 20 отжиманий на протяжении 60 дней.",
@@ -360,7 +360,7 @@ export async function initializeAchievements(userId) {
       "target": 60
     },
     {
-      "id": 9,
+      "id": "9",
       "title": "Ранний старт",
       "description": "Вы вставали не позже 6 утра 90 дней. Ваш день начинается с победы!",
       "requirement": "Вставать не позже 6:00 утра на протяжении 90 дней.",
@@ -372,7 +372,7 @@ export async function initializeAchievements(userId) {
       "target": 90
     },
     {
-      "id": 10,
+      "id": "10",
       "title": "Великий дисциплинатор",
       "description": "Вы пользовались приложением и соблюдали дисциплину целый год. Вы — легенда!",
       "requirement": "Использовать приложение и выполнять задачи дисциплины ежедневно в течение 365 дней.",
@@ -383,7 +383,7 @@ export async function initializeAchievements(userId) {
       "target": 365
     },
     {
-      "id": 11,
+      "id": "11",
       "title": "Красавчик!",
       "description": "Вы начали использовать приложение и сделали первый шаг к своим целям. Ты — красавчик!",
       "requirement": "",
@@ -397,6 +397,7 @@ export async function initializeAchievements(userId) {
     const res = await axios.post(`${BASE_URL}/users/${userId}/achievements`, {
       achievements
     });
+    return res.data;
   } catch (error) {
     console.error("Ошибка при инициализации достижений:", error.response?.data || error.message);
     throw error;
