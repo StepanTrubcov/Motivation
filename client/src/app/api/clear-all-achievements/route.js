@@ -5,7 +5,7 @@ export async function POST() {
   try {
     console.log('Начинаем удаление всех достижений для всех пользователей...');
     
-    // Удаляем все достижения для всех пользователей
+    // 
     const result = await prisma.achievement.deleteMany({});
     
     console.log(`Удалено достижений: ${result.count}`);

@@ -37,7 +37,7 @@ export async function POST(request, { params }) {
     const today = new Date();
     const todayString = today.toDateString();
     const formattedDate = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
-    const finalMessage = [`${formattedDate} #v1 #дд`, goalsList, diaryNote].join('\n\n').trim();
+    const finalMessage = [`${formattedDate} #v1 #дд`, goalsList, diaryNote, "Отчёт сделан с помощью @BotMotivation_TG_bot"].join('\n\n').trim();
 
     const user = await prisma.user.findUnique({ where: { telegramId: String(telegramId) } });
     if (!user) {

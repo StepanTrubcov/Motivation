@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { PrismaClient } = require('@prisma/client');
+const scheduleTasks = require('./src/utils/scheduled-tasks');
 
 const prisma = new PrismaClient();
 
@@ -14,10 +15,13 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '.next', 'index.html'));
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);
+  
+  // Инициализируем планировщик задач
+  scheduleTasks();
   
   // Удаляем все достижения при запуске сервера
   try {
