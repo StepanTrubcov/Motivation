@@ -29,6 +29,7 @@ model User {
   photoUrl         String?
   pts              Int           @default(0)
   completedDates   String[]      @default([])
+  savingGoals  String[]      @default([])
   achievements     Achievement[] 
   registrationDate DateTime?     @default(now())
   yesterdayReport  Json?         // Текстовое поле для вчерашнего отчёта

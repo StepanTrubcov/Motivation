@@ -1,12 +1,7 @@
-import express from 'express';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { PrismaClient } from '@prisma/client';
-import scheduleTasks from './src/utils/scheduled-tasks.js';
-
-// Для использования __dirname в ES модулях
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const express = require('express');
+const path = require('path');
+const { PrismaClient } = require('@prisma/client');
+const scheduleTasks = require('./src/utils/scheduled-tasks');
 
 const prisma = new PrismaClient();
 
@@ -18,7 +13,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '.next', 'index.html'));
 });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 
 app.listen(port, async () => {
   console.log(`Server running on port ${port}`);

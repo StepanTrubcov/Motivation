@@ -1,8 +1,9 @@
-import cron from 'node-cron';
-import { weeklyReport } from './WeeklyReport/WeeklyReport.js';
+const cron = require('node-cron');
+const { weeklyReport } = require('./WeeklyReport/WeeklyReport');
 
 const scheduleTasks = () => {
-  cron.schedule('* * * * *', async () => {
+  // Задача выполняется ежедневно в 23:59
+  cron.schedule('59 23 * * *', async () => {
     console.log('=== Планировщик: Запуск еженедельного отчета ===');
     try {
       const result = await weeklyReport();
@@ -16,4 +17,4 @@ const scheduleTasks = () => {
   console.log('Планировщик задач инициализирован. Еженедельный отчет запланирован на выполнение ежедневно в 23:59.');
 };
 
-export default scheduleTasks;
+module.exports = scheduleTasks;

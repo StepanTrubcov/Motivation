@@ -40,35 +40,9 @@ const DataInitializer = ({ children }) => {
             }
         };
 
-        // Проверяем, выполнялось ли уже обновление достижений
-        const hasUpdated = sessionStorage.getItem('achievementsUpdated');
-        
-        if (!hasUpdated && !isUpdatingAchievements) {
-            setIsUpdatingAchievements(true);
-            
-            // Вызываем API endpoint для обновления достижений
-            fetch('/api/update-achievements', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Результат обновления достижений:', data);
-                sessionStorage.setItem('achievementsUpdated', 'true');
-                setIsUpdatingAchievements(false);
-                initTelegramTheme();
-                dispatch(addProfile());
-            })
-            .catch(error => {
-                console.error('Ошибка при обновлении достижений:', error);
-                sessionStorage.setItem('achievementsUpdated', 'true');
-                setIsUpdatingAchievements(false);
-                initTelegramTheme();
-                dispatch(addProfile());
-            });
-        } else {
-            initTelegramTheme();
-            dispatch(addProfile());
-        }
+        // Убираем проверку обновления достижений
+        initTelegramTheme();
+        dispatch(addProfile());
     }, [dispatch, isUpdatingAchievements]);
 
     useEffect(() => {
