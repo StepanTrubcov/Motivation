@@ -48,7 +48,7 @@ export const addProfile = () => async (dispatch) => {
             } catch (error) {
                 console.error("Ошибка проверки целей пользователя:", error);
                 // В случае ошибки всё равно пытаемся инициализировать
-                initializeUserGoals(response.id).then(response => {
+                initializeUserGoals(response.id).then(() => {
                     if (response) {
                         dispatch(setTheFirstTime(true));
                     }
@@ -59,7 +59,7 @@ export const addProfile = () => async (dispatch) => {
 };
 
 export const setPoints = (customUserId, points) => async (dispatch) => {
-    await addPoints(customUserId, points).then(response => {
+    await addPoints(customUserId, points).then(() => {
         dispatch(addProfile());
     });
 };

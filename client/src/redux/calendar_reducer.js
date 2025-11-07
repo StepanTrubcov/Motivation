@@ -24,13 +24,13 @@ const setCalendarData = (calendarData) => ({
 });
 
 export const addCalendarData = (customUserId) => async (dispatch) => {
-    await getCompletedDates(customUserId).then(response => {
+    await getCompletedDates(customUserId).then(() => {
         dispatch(setCalendarData(response))
     })
 }
 
 export const addCalendarDataNew = (customUserId, date) => async (dispatch) => {
-    await addCompletedDate(customUserId, date).then(response => {
+    await addCompletedDate(customUserId, date).then(() => {
         dispatch(addCalendarData(customUserId))
     })
 }

@@ -1,5 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
+// Убираем неиспользуемый импорт PrismaClient
 const weeklyReport = async () => {
     console.log('Начинаем формирование еженедельного отчета...');
 };
