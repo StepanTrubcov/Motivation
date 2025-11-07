@@ -1,11 +1,11 @@
-const { PrismaClient } = require('@prisma/client');
+import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 const weeklyReport = async () => {
   try {
     console.log('Начинаем формирование еженедельного отчета...');
-    console.log('Запуск ежедельного отчета (тестирование)');
+    console.log('Запуск еженедельного отчета (тестирование)');
     
     // Получаем всех пользователей
     const users = await prisma.user.findMany({
@@ -139,7 +139,7 @@ const getUserSavingGoals = async (userId) => {
   }
 };
 
-module.exports = {
+export {
   weeklyReport,
   updateUserSavingGoal,
   removeUserSavingGoal,
