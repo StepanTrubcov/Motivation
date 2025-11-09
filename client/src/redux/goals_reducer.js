@@ -38,11 +38,10 @@ const updateGoalStatus = (goalId, status) => ({
 export const addGoals = (userId) => async (dispatch) => {
     try {
         const response = await getAllGoals(userId);
-        if (response && response.length !== 0) {
-            dispatch(setGoals(response));
-        }
+        dispatch(setGoals(response || []));
     } catch (error) {
         console.error("Ошибка загрузки целей:", error);
+         dispatch(setGoals([]));
     }
 };
 

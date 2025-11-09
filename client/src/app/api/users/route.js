@@ -3,14 +3,14 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const { telegramId, firstName, username, photoUrl } = await request.json();
-    
-    console.log('Получен запрос на создание/обновление пользователя:', { telegramId, firstName, username, photoUrl });
+    const { telegramId, firstName, username, photoUrl, usersTag } = await request.json();
+
+    console.log('Получен запрос на создание/обновление пользователя:', { telegramId, firstName, username, photoUrl, usersTag });
 
     let user = await prisma.user.findUnique({
       where: { telegramId: String(telegramId) },
     });
-    
+
     console.log('Поиск пользователя в базе данных:', user ? 'Найден' : 'Не найден');
 
     if (user) {
@@ -28,8 +28,8 @@ export async function POST(request) {
             username,
             photoUrl,
             registrationDate: new Date(),
-            // Добавляем значение по умолчанию для savingGoals
-            savingGoals: []
+            savingGoals: [],
+            usersTag,
           },
         });
       } else {
@@ -48,12 +48,12 @@ export async function POST(request) {
           username,
           photoUrl,
           registrationDate: new Date(),
-          // Добавляем значение по умолчанию для savingGoals
-          savingGoals: []
+          savingGoals: [],
+          usersTag,
         },
       });
     }
-    
+
     console.log('Пользователь успешно создан/обновлен:', user);
 
     return NextResponse.json(user);

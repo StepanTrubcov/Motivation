@@ -11,6 +11,9 @@
     "start": "next start",
     "serve": "node server.js",
     "lint": "eslint",
+    "backup": "node scripts/backup-prisma.js",
+    "restore": "node scripts/restore-prisma.js",
+    "list-backups": "node scripts/list-backups.js",
     "postinstall": "npx prisma generate && node scripts/postinstall.js || echo 'Postinstall script failed, but continuing...'"
   },
   "dependencies": {
@@ -22,6 +25,7 @@
     "@vercel/og": "^0.8.5",
     "axios": "^1.11.0",
     "canvas": "^3.2.0",
+    "dotenv": "^17.2.3",
     "express": "^4.18.2",
     "formik": "^2.4.6",
     "framer-motion": "^12.23.12",

@@ -7,6 +7,7 @@ import transformDates from './transformDates'
 const ContributionCalendar = ({ calendarData }) => {
   const [values, setValues] = useState([]);
 
+
   useEffect(() => {
     if (calendarData && calendarData.length > 0) {
       setValues(transformDates(calendarData));

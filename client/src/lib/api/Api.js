@@ -47,6 +47,24 @@ export const addProfileApi = async () => {
     return null;
   }
 
+  const symbols1 = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ];
+
+  const symbols2 = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ];
+
+  const usersTag = await '#' + symbols1[Math.round(0 - 0.5 + Math.random() * (symbols1.length - 0 + 1))] + symbols2[Math.round(0 - 0.5 + Math.random() * (symbols2.length - 0 + 1))] + " " + '#дд'
+
   let attempts = 0;
   const maxAttempts = 3;
 
@@ -56,7 +74,8 @@ export const addProfileApi = async () => {
         telegramId: userData.id,
         firstName: userData.first_name,
         username: userData.username,
-        photoUrl: userData.photo_url
+        photoUrl: userData.photo_url,
+        usersTag: usersTag
       });
 
       console.log("Профиль создан/обновлён:", postResponse.data);
@@ -196,7 +215,7 @@ export async function initializeUserGoals(customUserId) {
 
   try {
     const existingGoals = await getAllGoals(customUserId);
-    
+
     // Проверяем, есть ли уже цели у пользователя
     if (existingGoals && existingGoals.length > 0) {
       console.log(`✅ У пользователя ${customUserId} уже есть ${existingGoals.length} целей. Пропускаем инициализацию.`);
@@ -455,7 +474,7 @@ export async function makingPicture(isModalOpen, username) {
       points: isModalOpen.points || 0,
       username: username || "user",
     });
-    
+
     if (response && response.data && response.data.success) {
       return response.data.url;
     } else {
@@ -482,5 +501,22 @@ export async function addCustomGoal(userId, title, category) {
   } catch (error) {
     console.error("Ошибка добавления пользовательской цели:", error);
     throw error;
+  }
+}
+
+
+export async function addGoalsMonth(userId, goalData, targetDate) {
+
+  try {
+    const pushGoals = await axios.post(`${BASE_URL}/saving-goals`, {
+      userId,
+      goalData,
+      targetDate
+    })
+
+    console.log(pushGoals)
+
+  } catch (error) {
+    console.error("Ошибка добавления целей за месяц:", error);
   }
 }

@@ -1,4 +1,4 @@
-// Убираем неиспользуемый импорт PrismaClient
+
 const weeklyReport = async () => {
     console.log('Начинаем формирование еженедельного отчета...');
 };

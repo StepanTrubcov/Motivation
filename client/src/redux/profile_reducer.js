@@ -1,5 +1,6 @@
 import { addProfileApi, initializeUserGoals, addPoints } from '@/lib/api/Api';
 import { getAllGoals } from '@/lib/api/Api';
+import { addGoals } from './goals_reducer';
 
 const SET_PROFILE = 'profile/SET_PROFILE';
 const THE_FIRST_TIME = 'profile/THE_FIRST_TIME';
@@ -34,22 +35,23 @@ export const addProfile = () => async (dispatch) => {
     await addProfileApi().then(async response => {
         dispatch(setProfile(response));
         
-        // Проверяем, есть ли уже цели у пользователя, прежде чем инициализировать
         if (response && response.id) {
             try {
                 const existingGoals = await getAllGoals(response.id);
-                // Инициализируем цели только если их еще нет
                 if (!existingGoals || existingGoals.length === 0) {
                     const initialized = await initializeUserGoals(response.id);
+                    dispatch(addGoals(response.id));
                     if (initialized) {
                         dispatch(setTheFirstTime(true));
                     }
+                } else {
+                    dispatch(addGoals(response.id));
                 }
             } catch (error) {
                 console.error("Ошибка проверки целей пользователя:", error);
-                // В случае ошибки всё равно пытаемся инициализировать
-                initializeUserGoals(response.id).then(() => {
-                    if (response) {
+                initializeUserGoals(response.id).then((initialized) => {
+                    dispatch(addGoals(response.id));
+                    if (initialized && response) {
                         dispatch(setTheFirstTime(true));
                     }
                 });

@@ -9,8 +9,9 @@ import styles from "./Goals.module.css";
 import ModalWindow from "../../utils/ModalWindow/ModalWindow";
 import { setPoints } from "../../redux/profile_reducer";
 import { addCalendarDataNew } from "../../redux/calendar_reducer";
+import { addGoalsMonth } from "@/lib/api/Api";
 
-const GoalsConteiner = ({ NewGoals, profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew }) => {
+const GoalsConteiner = ({ addGoalsMonth, NewGoals, profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [isModalOpenDone, setIsModalOpenDone] = useState(null);
@@ -47,6 +48,15 @@ const GoalsConteiner = ({ NewGoals, profile, goals, userId, addStatusNew, addGoa
             await addStatusNew(isModalOpen.id, userId, "in_progress");
             toast.success("Цель успешно взята на 30 дней!");
             setIsModalOpen(null);
+
+            const targetDate = new Date().toISOString().slice(0, 10)
+            const goalData = {
+                idGoals: isModalOpen.id,
+                status: isModalOpen.status,
+            }
+
+            await addGoalsMonth(userId, goalData, targetDate)
+
         } catch (error) {
             console.error("Ошибка при взятии цели:", error);
             toast.error("Не удалось взять цель. Попробуйте снова.");
@@ -113,4 +123,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile?.id,
 });
 
-export default connect(mapStateToProps, { NewGoals, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew })(GoalsConteiner);
+export default connect(mapStateToProps, { addGoalsMonth, NewGoals, addStatusNew, addGoals, addStatus, setPoints, addCalendarDataNew })(GoalsConteiner);

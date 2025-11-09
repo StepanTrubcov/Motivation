@@ -16,6 +16,7 @@ const DataInitializer = ({ children }) => {
     const ThereAreUsers = useSelector((state) => state.goals.ThereAreUsers);
     const goals = useSelector((state) => state.goals.goals);
     const assignments = useSelector((state) => state.assignments.assignments);
+    const assignmentsLoaded = useSelector((state) => state.assignments.assignmentsLoaded); // Новое состояние
     const [isUpdatingAchievements, setIsUpdatingAchievements] = useState(false);
 
     // Флаг для отслеживания инициализации данных генерации текста
@@ -53,7 +54,7 @@ const DataInitializer = ({ children }) => {
     }, [user, ThereAreUsers, dispatch]);
 
     useEffect(() => {
-        if (ThereAreUsers && user && goals.length > 0 && !isTextDataInitialized.current) {
+        if (ThereAreUsers && user && !isTextDataInitialized.current) {
             const goalsDone = goals.filter(g => g.status === "completed");
             const goalsInProgress = goals.filter(g => g.status === "in_progress");
             const telegramId = user.telegramId;
@@ -67,18 +68,18 @@ const DataInitializer = ({ children }) => {
     }, [ThereAreUsers, user, goals, dispatch]);
 
     useEffect(() => {
-        if (user && assignments.length === 0) {
+        if (user && !assignmentsLoaded) {
             dispatch(getInitializeAchievementsData(user.id));
         }
-    }, [user, assignments, dispatch]);
+    }, [user, assignmentsLoaded, dispatch]);
 
     useEffect(() => {
-        if (user && ThereAreUsers && assignments.length > 0) {
+        if (user && ThereAreUsers && assignmentsLoaded) {
             setShowBottomNav(true);
         } else {
             setShowBottomNav(false);
         }
-    }, [user, ThereAreUsers, assignments, setShowBottomNav]);
+    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav]);
 
     if (!user) {
         return <LoadingScreen title="Загрузка данных пользователя..." />;
@@ -86,7 +87,7 @@ const DataInitializer = ({ children }) => {
     if (!ThereAreUsers) {
         return <LoadingScreen title="Загрузка целей пользователя..." />;
     }
-    if (assignments.length === 0) {
+    if (!assignmentsLoaded) {
         return <LoadingScreen title="Загрузка достижений пользователя..." />;
     }
 
