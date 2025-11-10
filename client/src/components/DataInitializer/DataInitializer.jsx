@@ -16,10 +16,9 @@ const DataInitializer = ({ children }) => {
     const ThereAreUsers = useSelector((state) => state.goals.ThereAreUsers);
     const goals = useSelector((state) => state.goals.goals);
     const assignments = useSelector((state) => state.assignments.assignments);
-    const assignmentsLoaded = useSelector((state) => state.assignments.assignmentsLoaded); // Новое состояние
+    const assignmentsLoaded = useSelector((state) => state.assignments.assignmentsLoaded);
     const [isUpdatingAchievements, setIsUpdatingAchievements] = useState(false);
-
-    // Флаг для отслеживания инициализации данных генерации текста
+    
     const isTextDataInitialized = useRef(false);
 
     useEffect(() => {
@@ -28,11 +27,11 @@ const DataInitializer = ({ children }) => {
             if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
                 const tg = window.Telegram.WebApp;
                 tg.ready();
-                
+
                 // Принудительно устанавливаем темную тему
                 document.body.classList.remove('telegram-light', 'telegram-dark');
                 document.body.classList.add('telegram-dark');
-                
+
                 // Отключаем автоматическое переключение тем
                 tg.onEvent('themeChanged', () => {
                     document.body.classList.remove('telegram-light', 'telegram-dark');
@@ -60,7 +59,7 @@ const DataInitializer = ({ children }) => {
             const telegramId = user.telegramId;
             const loading = false;
             if (goalsDone.length > 0 || goalsInProgress.length > 0) {
-                dispatch(addTextGenerationData(telegramId, goalsDone, goalsInProgress, null, null, loading));
+                dispatch(addTextGenerationData(user?.usersTag, telegramId, goalsDone, goalsInProgress, null, null, loading));
             }
             isTextDataInitialized.current = true;
             console.log('✅ Данные генерации текста инициализированы один раз');

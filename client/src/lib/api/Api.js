@@ -260,7 +260,7 @@ export async function getCompletedDates(customUserId) {
   }
 }
 
-export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress) => {
+export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, userTag) => {
   try {
     if (!telegramId) {
       console.error("❌ Нет telegramId для отчёта");
@@ -269,6 +269,7 @@ export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress) =>
     const response = await axios.post(`${BASE_URL}/generate-report/${telegramId}`, {
       goalsDone,
       goalsInProgress,
+      userTag,
     });
 
     const { message, success } = response.data;

@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy } from "lucide-react";
 import styles from "./ModalWindowGeneration.module.css";
-import gpt from '../../../../img/gpt.gif'
 import { toast } from "react-hot-toast";
 
-const ModalWindowGeneration = ({ telegramId, yesterdayReport = [], addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
+const ModalWindowGeneration = ({profile, telegramId, yesterdayReport = [], addTextGenerationData, isModalOpen, closeModal, goalsDone = [], goalsInProgress = [], setIsModalOpenText }) => {
     const [loading, setLoading] = useState(false);
     const [generatedText, setGeneratedText] = useState('');
     const [error, setError] = useState("");
@@ -27,10 +26,11 @@ const ModalWindowGeneration = ({ telegramId, yesterdayReport = [], addTextGenera
         setLoading(true);
         setError("");
         setGeneratedText("");
-        await addTextGenerationData(telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading)
+        
+        await addTextGenerationData(profile.usersTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading)
         toast.success("Отчёт за сегодня успешно сохранён! 📝");
     };
-
+    
     const copyToClipboard = async (text) => {
         await navigator.clipboard.writeText(text);
         toast.success("Отчёт скопирован!");

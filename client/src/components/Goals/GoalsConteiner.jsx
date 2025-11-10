@@ -55,7 +55,7 @@ const GoalsConteiner = ({ addGoalsMonth, NewGoals, profile, goals, userId, addSt
                 status: isModalOpen.status,
             }
 
-            await addGoalsMonth(userId, goalData, targetDate)
+            //await addGoalsMonth(userId, goalData, targetDate)
 
         } catch (error) {
             console.error("Ошибка при взятии цели:", error);

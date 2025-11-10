@@ -8,11 +8,12 @@ const GenerationButtonConteiner = (props) => {
     const goalsInProgress = props.goals.filter(g => g.status === "in_progress")
 
     return <div>
-        <GenerationButton yesterdayReport={props.yesterdayReport} telegramId={props.telegramId} addTextGenerationData={props.addTextGenerationData} text={props.text} generationTextYesterday={props.generationTextYesterday} goalsInProgress={goalsInProgress} goalsDone={goalsDone} />
+        <GenerationButton profile={props.profile} yesterdayReport={props.yesterdayReport} telegramId={props.telegramId} addTextGenerationData={props.addTextGenerationData} text={props.text} generationTextYesterday={props.generationTextYesterday} goalsInProgress={goalsInProgress} goalsDone={goalsDone} />
     </div>
 }
 
 const mapStateToProps = (state) => ({
+    profile: state.profile.profile,
     goals: state.goals.goals,
     text: state.generation.generationText,
     nerationIsOver: state.generation.nerationIsOver,

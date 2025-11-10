@@ -6,12 +6,12 @@ import ModalWindowText from "./ModalWindowText/ModalWindowText";
 
 
 
-const GenerationButton = ({ yesterdayReport, telegramId, nerationIsOver, text, addTextGenerationData, goalsDone = [], goalsInProgress = [] }) => {
+const GenerationButton = ({ profile, yesterdayReport, telegramId, nerationIsOver, text, addTextGenerationData, goalsDone = [], goalsInProgress = [] }) => {
 
     const [isModalOpen, setIsModalOpen] = useState(null)
     const [isModalOpenText, setIsModalOpenText] = useState()
 
-    
+
     if (goalsInProgress.length !== 0 || goalsDone.length !== 0) {
         return <div className={c.GenerationButton} >
             <button className={c.button} onClick={() => setIsModalOpen('e')} >
@@ -20,6 +20,7 @@ const GenerationButton = ({ yesterdayReport, telegramId, nerationIsOver, text, a
             </button>
             <div>
                 <ModalWindowGeneration
+                    profile={profile}
                     yesterdayReport={yesterdayReport}
                     telegramId={telegramId}
                     nerationIsOver={nerationIsOver}
