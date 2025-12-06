@@ -1,4 +1,4 @@
-import { getAchievements, initializeAchievements, achievementNewStatus, makingPicture } from "@/lib/api/Api";
+import { getAchievements, initializeAchievements, achievementNewStatus, makingPicture, clearAchievementImages } from "@/lib/api/Api";
 
 const SET_ASSIGNMENTS = 'assignments/SET_ASSIGNMENTS';
 const SET_ASSIGNMENTS_LOADED = 'assignments/SET_ASSIGNMENTS_LOADED';
@@ -58,6 +58,8 @@ export const getAchievementsNewStatus = (achievement, userId) => async (dispatch
 }
 
 export const getMakingPicture = (isModalOpen, username) => async (dispatch) => {
+   // Очищаем папку с изображениями перед созданием нового
+   await clearAchievementImages();
    const imageUrl = await makingPicture(isModalOpen, username);
    return {
      data: {

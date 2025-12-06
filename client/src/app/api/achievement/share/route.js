@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createCanvas } from '@napi-rs/canvas';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request) {
   try {
@@ -81,13 +84,34 @@ export async function POST(request) {
       const shortQuote = randomQuote.length > 60 ? randomQuote.substring(0, 60) + '...' : randomQuote;
       ctx.fillText(shortQuote, 80, height - 60);
 
-      // const buffer = canvas.toBuffer('image/png');
-      // const base64 = `data:image/png;base64,${buffer.toString('base64')}`;
-
-      return generateSimpleSVG(title, description, points, username);
+      // Сохраняем изображение на диск и возвращаем прямую ссылку
+      const buffer = canvas.toBuffer('image/png');
+      const fileId = uuidv4();
+      const fileName = `${fileId}.png`;
+      
+      // Создаем директорию для изображений, если её нет
+      const publicDir = join(process.cwd(), 'public', 'images', 'achievements');
+      try {
+        await mkdir(publicDir, { recursive: true });
+      } catch (err) {
+        console.log('Directory already exists or created');
+      }
+      
+      // Сохраняем файл
+      const filePath = join(publicDir, fileName);
+      await writeFile(filePath, buffer);
+      
+      // Возвращаем прямую ссылку на изображение
+      const publicUrl = `${request.nextUrl.origin}/images/achievements/${fileName}`;
+      
+      return NextResponse.json({
+        success: true,
+        url: publicUrl,
+      });
     } catch (canvasError) {
       console.error('Canvas error:', canvasError);
-      return generateSimpleSVG(title, description, points, username);
+      // fallback to SVG generation
+      return generateSimpleSVG(title, description, points, username, request);
     }
   } catch (error) {
     console.error('❌ Ошибка генерации share-картинки:', error);
@@ -98,7 +122,8 @@ export async function POST(request) {
     }, { status: 500 });
   }
 }
-function generateSimpleSVG(title, description, points, username) {
+
+function generateSimpleSVG(title, description, points, username, request) {
   const quotes = [
     '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
     '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
@@ -166,11 +191,27 @@ function generateSimpleSVG(title, description, points, username) {
     </svg>
   `;
 
-  const base64 = Buffer.from(svg).toString('base64');
-  const dataUrl = `data:image/svg+xml;base64,${base64}`;
-
+  // Сохраняем SVG на диск и возвращаем прямую ссылку
+  const fileId = uuidv4();
+  const fileName = `${fileId}.svg`;
+  
+  // Создаем директорию для изображений, если её нет
+  const publicDir = join(process.cwd(), 'public', 'images', 'achievements');
+  try {
+    mkdir(publicDir, { recursive: true });
+  } catch (err) {
+    console.log('Directory already exists or created');
+  }
+  
+  // Сохраняем файл
+  const filePath = join(publicDir, fileName);
+  writeFile(filePath, svg);
+  
+  // Возвращаем прямую ссылку на изображение
+  const publicUrl = `${request.nextUrl.origin}/images/achievements/${fileName}`;
+  
   return NextResponse.json({
     success: true,
-    url: dataUrl,
+    url: publicUrl,
   });
 }

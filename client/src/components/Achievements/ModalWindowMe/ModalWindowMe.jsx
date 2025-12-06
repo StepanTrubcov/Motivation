@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
+import { clearAchievementImages } from "@/lib/api/Api";
 
 const ModalWindowMe = ({
   getMakingPicture,
@@ -14,14 +15,19 @@ const ModalWindowMe = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState(null);
-  const tgRef = useRef(typeof window !== "undefined" ? window.Telegram?.WebApp : null);
-  const tg = tgRef.current;
+  // храним ref, но будем всегда брать актуальное значение window.Telegram.WebApp перед каждым вызовом
+  const tgRef = useRef(null);
 
   useEffect(() => {
-    if (!tg) {
+    // устанавливаем ссылку на WebApp, если он появился
+    tgRef.current = typeof window !== "undefined" ? window.Telegram?.WebApp ?? null : null;
+
+    if (!tgRef.current) {
       toast.error("Открой Mini App в Telegram");
       return;
     }
+
+    const tg = tgRef.current;
 
     console.log("=== TELEGRAM DEBUG ===");
     console.log("Version:", tg.version);
@@ -32,8 +38,8 @@ const ModalWindowMe = ({
     console.log("======================");
 
     try {
-      tg.ready();
-      tg.expand();
+      if (typeof tg.ready === "function") tg.ready();
+      if (typeof tg.expand === "function") tg.expand();
     } catch (e) {
       console.warn("tg.ready/expand failed", e);
     }
@@ -46,11 +52,15 @@ const ModalWindowMe = ({
     setImageDataUrl(null);
 
     try {
+      // Очищаем папку с изображениями перед созданием нового
+      await clearAchievementImages();
+      
       const res = await getMakingPicture(isModalOpen, username);
-      const dataUrl = res?.data?.url;
-      if (!dataUrl) throw new Error("Нет картинки");
-
-      setImageDataUrl(dataUrl);
+      // Ожидаем, что сервер возвращает прямую HTTP ссылку на изображение
+      const imageUrl = res?.data?.url;
+      if (!imageUrl) throw new Error("Нет ссылки на изображение");
+console.log(imageUrl)
+      setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
       toast.success("Карточка готова!");
     } catch (err) {
       console.error(err);
@@ -71,67 +81,111 @@ const ModalWindowMe = ({
 
   const urlToBlob = async (url) => {
     const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Fetch failed: ${resp.status}`);
     return await resp.blob();
+  };
+
+  // Универсальный попытка-вызвать shareToStory с разными сигнатурами
+  const tryShareToStory = async (tg, mediaUrl, caption) => {
+    // 1) старый/популярный вариант: (mediaUrl, options)
+    if (typeof tg.shareToStory === "function") {
+      try {
+        // сначала пробуем наиболее простой вариант
+        await tg.shareToStory(mediaUrl, { text: caption });
+        return true;
+      } catch (e1) {
+        console.warn("shareToStory(mediaUrl, options) failed:", e1);
+        // затем пробуем объектную сигнатуру
+        try {
+          await tg.shareToStory({ url: mediaUrl, text: caption });
+          return true;
+        } catch (e2) {
+          console.warn("shareToStory({url, text}) failed:", e2);
+          // ещё пробуем background (в некоторых клиентах)
+          try {
+            await tg.shareToStory({ background: mediaUrl, text: caption });
+            return true;
+          } catch (e3) {
+            console.warn("shareToStory({background, text}) failed:", e3);
+            // не удалось
+            return false;
+          }
+        }
+      }
+    }
+    return false;
   };
 
   const handleShare = async () => {
     if (!imageDataUrl) return toast.error("Сгенерируй карточку");
+
+    // всегда берём актуальную ссылку на WebApp
+    const tg = typeof window !== "undefined" ? window.Telegram?.WebApp ?? null : null;
     if (!tg) return toast.error("Telegram API не найден");
+
     try {
-      if (typeof tg.shareToStory === "function") {
-        let mediaUrl = imageDataUrl;
+      let mediaUrl = imageDataUrl;
 
-        if (!isHttpUrl(mediaUrl)) {
-          try {
-            const blob = await urlToBlob(mediaUrl);
-            if (typeof uploadTempUrl === "function") {
-              toast("Подготавливаем картинку для Stories...");
-              mediaUrl = await uploadTempUrl(blob);
-              if (!isHttpUrl(mediaUrl)) {
-                throw new Error("uploadTempUrl не вернул публичную ссылку");
-              }
-            } else {
-              throw new Error("Нет публичной ссылки для shareToStory");
-            }
-          } catch (err) {
-            console.warn("Не удалось получить публичную ссылку для shareToStory:", err);
-            toast("Нельзя автоматически поделиться — картинку нужно сохранить и загрузить вручную");
-            return;
-          }
-        }
-
+      // если у нас не публичная ссылка — нужно загрузить blob куда-то (uploadTempUrl)
+      if (!isHttpUrl(mediaUrl)) {
         try {
-          const caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
-          await tg.shareToStory(mediaUrl, { text: caption });
-          toast.success("Открылось окно Stories!");
-          return;
+          const blob = await urlToBlob(mediaUrl);
+          if (typeof uploadTempUrl === "function") {
+            toast("Подготавливаем картинку для Stories...");
+            const uploaded = await uploadTempUrl(blob);
+            if (!uploaded || !isHttpUrl(uploaded)) {
+              throw new Error("uploadTempUrl не вернул публичную ссылку");
+            }
+            mediaUrl = uploaded;
+          } else {
+            throw new Error("Нет uploadTempUrl для получения публичной ссылки");
+          }
         } catch (err) {
-          console.warn("tg.shareToStory failed:", err);
+          console.warn("Не удалось получить публичную ссылку для shareToStory:", err);
+          toast("Нельзя автоматически поделиться — картинку нужно сохранить и загрузить вручную");
+          return;
         }
       }
 
+      const caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
+
+      // 1) Попытка: tg.shareToStory (несколько сигнатур)
+      const shared = await tryShareToStory(tg, mediaUrl, caption);
+      if (shared) {
+        toast.success("Открылось окно Stories!");
+        return;
+      }
+
+      // 2) Попытка: tg.showStoryEditor (если доступен и умеет принимать File)
       if (typeof tg.showStoryEditor === "function") {
         try {
-          const response = await fetch(imageDataUrl);
-          const blob = await response.blob();
+          // Получаем blob (если mediaUrl — публичный http)
+          const resp = await fetch(mediaUrl);
+          if (!resp.ok) throw new Error("Не удалось скачать изображение для editor");
+          const blob = await resp.blob();
+          // File-конструктор может не существовать в некоторых окружениях, но в браузерах обычно есть
           const file = new File([blob], "achievement.jpg", { type: blob.type || "image/jpeg" });
 
           await tg.showStoryEditor({
             media: [file],
-            text: `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim(),
+            text: caption,
           });
-
           toast.success("История открыта!");
           return;
         } catch (err) {
-          console.error("showStoryEditor error:", err);
+          console.warn("showStoryEditor failed:", err);
+          // fallthrough на скачивание
         }
       }
+
+      // 3) Фолбэк: скачать картинку и подсказать пользователю
       toast("Истории пока недоступны. Скачиваем карточку...");
       const a = document.createElement("a");
       a.href = imageDataUrl;
       a.download = "achievement.jpg";
+      document.body.appendChild(a);
       a.click();
+      a.remove();
       toast.success("Скачано! Открой Telegram → + → История → выбери фото");
     } catch (err) {
       console.error("share error:", err);
@@ -144,7 +198,9 @@ const ModalWindowMe = ({
     const a = document.createElement("a");
     a.href = imageDataUrl;
     a.download = "achievement.jpg";
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     toast("Скачано! Запости вручную");
   };
 
@@ -176,6 +232,13 @@ const ModalWindowMe = ({
                 <div className={styles.shareContainer}>
                   <button className={styles.shareButton} onClick={handleShare}>
                     📤 Поделиться / История
+                  </button>
+                  <button
+                    className={styles.shareButton}
+                    onClick={handleDownload}
+                    style={{ marginLeft: 8 }}
+                  >
+                    ⤓ Скачать
                   </button>
                 </div>
               </div>

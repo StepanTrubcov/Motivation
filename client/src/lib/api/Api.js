@@ -506,6 +506,16 @@ export async function generateAchievementShare(achievement, user) {
   }
 }
 
+export async function clearAchievementImages() {
+  try {
+    const response = await axios.delete(`${BASE_URL}/clear-achievements`);
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка очистки изображений достижений:", error);
+    throw error;
+  }
+}
+
 export async function makingPicture(isModalOpen, username) {
   try {
     const response = await axios.post(`${BASE_URL}/achievement/share`, {
