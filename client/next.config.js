@@ -2,9 +2,7 @@
 const nextConfig = {
   // Fix for multiple lockfiles issue
   outputFileTracingRoot: __dirname,
-  experimental: {
-    serverComponentsExternalPackages: ['@napi-rs/canvas'],
-  },
+  serverExternalPackages: ['@napi-rs/canvas'],
   images: {
     domains: ['t.me', 'i.postimg.cc', 'via.placeholder.com'],
     remotePatterns: [
@@ -14,6 +12,7 @@ const nextConfig = {
       },
     ],
   },
+  turbopack: {},
 
   webpack: (config) => {
     // Добавляем поддержку шрифтов
