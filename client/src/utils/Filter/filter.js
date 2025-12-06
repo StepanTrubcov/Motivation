@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import c from './filter.module.css';
 
-const filter = (
+const Filter = (
     goals = [],
     text,
     funct = () => { },
@@ -93,4 +93,4 @@ const filter = (
     ));
 };
 
-export default filter;
+export default Filter;

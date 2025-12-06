@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import TodaysGoals from "./TodaysGoals";
 import { connect } from "react-redux";
-import filter from "../../../utils/Filter/filter";
+import Filter from "../../../utils/Filter/filter";
 import { addStatusNew, addGoals, addStatus, newStatusSavingGoal, deleteGoalsSaving,checkTimeGoalsSaving } from "../../../redux/goals_reducer";
 import { toast } from "react-hot-toast";
 import ModalWindow from "../../../utils/ModalWindow/ModalWindow";
@@ -125,7 +125,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
 
     return <div>
         <TodaysGoals
-            completed={filter(
+            completed={Filter(
                 goals.goals,
                 "completed",
                 Modal,
@@ -133,7 +133,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 false,
                 addOldStatus
             )}
-            inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus)} />
+            inProgress={Filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus)} />
     </div>
 }
 

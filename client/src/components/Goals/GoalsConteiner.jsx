@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Goals from "./Goals";
 import { connect } from "react-redux";
-import filter from "../../utils/Filter/filter";
+import Filter from "../../utils/Filter/filter";
 import {checkTimeGoalsSaving, addStatusNew, addGoals, addStatus, NewGoals, newSavingGoal, newStatusSavingGoal, deleteGoalsSaving } from '../../redux/goals_reducer';
 import { toast } from "react-hot-toast";
 import styles from "./Goals.module.css";
@@ -156,17 +156,17 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
     return (
         <div className={styles.container}>
             <Goals
-                completed={filter(
+                completed={Filter(
                     goals.goals,
                     "completed",
                     Modal,
                     "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png", true, addOldStatus
                 )}
-                inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', true, addOldStatus)}
-                sportGoals={filter(goalsSport, "not_started", Modal)}
-                disciplineGoals={filter(goalsDiscipline, "not_started", Modal)}
-                spiritualityGoals={filter(goalsSpirituality, "not_started", Modal)}
-                selfDevelopmentGoals={filter(goalsSelfDevelopment, "not_started", Modal)}
+                inProgress={Filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', true, addOldStatus)}
+                sportGoals={Filter(goalsSport, "not_started", Modal)}
+                disciplineGoals={Filter(goalsDiscipline, "not_started", Modal)}
+                spiritualityGoals={Filter(goalsSpirituality, "not_started", Modal)}
+                selfDevelopmentGoals={Filter(goalsSelfDevelopment, "not_started", Modal)}
                 userId={userId}
                 NewGoals={NewGoals}
             />
