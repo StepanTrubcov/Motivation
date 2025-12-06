@@ -1,11 +1,13 @@
-import { getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal } from '@/lib/api/Api';
+import {getUserSavingGoalsWithAutoPeriod, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday } from '@/lib/api/Api';
 
 const SET_GOALS = 'goals/SET_GOALS';
 const UPDATE_GOAL_STATUS = 'goals/UPDATE_GOAL_STATUS';
+const SET_TIME_GOALS_SAVING = 'goals/SET_TIME_GOALS_SAVING'
 
 const initial = {
     goals: [],
     ThereAreUsers: false,
+    timeGoalsSaving: null,
 };
 
 const GoalsReducer = (state = initial, action) => {
@@ -19,6 +21,8 @@ const GoalsReducer = (state = initial, action) => {
                     goal.id === action.goalId ? { ...goal, status: action.status } : goal
                 )
             };
+        case SET_TIME_GOALS_SAVING:
+            return { ...state, timeGoalsSaving: action.timeGoalsSaving };
         default:
             return state;
     }
@@ -27,6 +31,11 @@ const GoalsReducer = (state = initial, action) => {
 const setGoals = (goals) => ({
     type: SET_GOALS,
     goals,
+});
+
+const setTimeGoalsSaving = (timeGoalsSaving) => ({
+    type: SET_TIME_GOALS_SAVING,
+    timeGoalsSaving,
 });
 
 const updateGoalStatus = (goalId, status) => ({
@@ -41,13 +50,14 @@ export const addGoals = (userId) => async (dispatch) => {
         dispatch(setGoals(response || []));
     } catch (error) {
         console.error("Ошибка загрузки целей:", error);
-         dispatch(setGoals([]));
+        dispatch(setGoals([]));
     }
 };
 
-export const addStatusNew = (goalId, userId, newStatus) => async (dispatch) => {
+export const addStatusNew = (goalId, userId, newStatus, selectedOption = null) => async (dispatch) => {
     try {
-        await getAllStatus(userId, goalId, newStatus);
+        console.log('addStatusNew called with:', { goalId, userId, newStatus, selectedOption });
+        await getAllStatus(userId, goalId, newStatus, selectedOption);
         dispatch(updateGoalStatus(goalId, newStatus));
     } catch (error) {
         console.error(`Ошибка обновления статуса цели ${goalId}:`, error);
@@ -76,5 +86,57 @@ export const NewGoals = (userId, title, goalCategories, resetForm, closeModal) =
         console.error("Ошибка добавления новой цели:", error);
     }
 };
+
+export const newSavingGoal = (telegramId, goalData, targetDate, selectedOption) => async (dispatch) => {
+    try {
+        const response = await addSavingGoal(telegramId, goalData, targetDate, selectedOption);
+        console.log('Ответ от addSavingGoal:', response);
+        if (response.success) {
+            console.log('Цель успешно добавлена в savingGoals');
+        } else {
+            console.error('Ошибка при добавлении цели в savingGoals:', response.error);
+        }
+    } catch (e) {
+        console.log(`Ошибка при добавлении цели в массив savingGoal:`, e);
+    }
+};
+
+export const newStatusSavingGoal = (telegramId, date, goalId, newStatus) => async (dispatch) => {
+    try {
+        const response = await updateSavingGoalStatus(telegramId, date, goalId, newStatus);
+        console.log('Ответ от updateSavingGoalStatus:', response);
+        if (response.success) {
+            console.log('Статус цели успешно обновлен в savingGoals');
+        } else {
+            console.error('Ошибка при обновлении статуса цели в savingGoals:', response.error);
+        }
+    } catch (e) {
+        console.log(`Ошибка при изменении статуса у цели в массиве savingGoal:`, e);
+    }
+    return true
+}
+
+export const deleteGoalsSaving = (userId, goalId) => async (dispatch) => {
+    try {
+
+        await removeSavingGoalFromToday(userId, goalId).then(response => {
+            console.log(response)
+        })
+
+    } catch (e) {
+        console.log(`Ошибка при удалении целей из массива savingGoal:`, e);
+    }
+}
+
+export const checkTimeGoalsSaving = (userId) => async (dispatch) => {
+    try {
+        await getUserSavingGoalsWithAutoPeriod(userId).then(response => {
+            console.log(response)
+            dispatch(setTimeGoalsSaving(response.savingGoals))
+        })
+    } catch (e) {
+        console.log(`Ошибка при проверки даты:`, e);
+    }
+}
 
 export default GoalsReducer;

@@ -29,7 +29,7 @@ model User {
   photoUrl         String?
   pts              Int           @default(0)
   completedDates   String[]      @default([])
-  savingGoals      String[]      @default([])
+  savingGoals      Json[]      @default([])
   usersTag         String?
   achievements     Achievement[] 
   registrationDate DateTime?     @default(now())
@@ -66,6 +66,7 @@ model Goal {
   description    String
   userId         String
   startDate      DateTime?
+  selectedOption Int?          // Новое поле для хранения выбранной опции
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @default(now()) @updatedAt
 }

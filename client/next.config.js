@@ -31,7 +31,7 @@ const nextConfig = {
   async rewrites() {
     // In development, proxy API calls to the backend
     if (process.env.NODE_ENV === 'development') {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
       return [
         {
           source: '/api/:path*',

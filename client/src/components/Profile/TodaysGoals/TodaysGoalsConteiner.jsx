@@ -3,52 +3,123 @@ import React, { useState, useEffect } from "react";
 import TodaysGoals from "./TodaysGoals";
 import { connect } from "react-redux";
 import filter from "../../../utils/Filter/filter";
-import { addStatusNew, addGoals, addStatus } from "../../../redux/goals_reducer";
+import { addStatusNew, addGoals, addStatus, newStatusSavingGoal, deleteGoalsSaving,checkTimeGoalsSaving } from "../../../redux/goals_reducer";
 import { toast } from "react-hot-toast";
 import ModalWindow from "../../../utils/ModalWindow/ModalWindow";
-import { setPoints } from "../../../redux/profile_reducer";
-import { addCalendarDataNew } from "../../../redux/calendar_reducer";
+import { setPoints, deletePoints } from "../../../redux/profile_reducer";
 
-const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
-
-    const [isModalOpen, setIsModalOpen] = useState(null);
+const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsSaving, newStatusSavingGoal, profile, addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
 
     const [home, setHome] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (userId) {
             addStatus(userId)
             addGoals(userId)
-            console.log(userId)
         }
     }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
-        setIsModalOpen({
-            title: 'Выполнить цель',
-            description: `Вы уверены, что хотите отметить цель "${goal.title}" как выполненную?`,
-            points: goal.points,
-            id: goal.id
-        });
+        if (goal.status === "in_progress") {
+            const goalData = {
+                points: goal.points,
+                id: goal.id
+            }
+            if (loading) {
+                addNewStatusDone(goalData)
+            }
+        }
+
+        if (goal.status === "completed") {
+            const goalData = {
+                points: goal.points,
+                id: goal.id
+            }
+            if (loading) {
+                addNewStatusInProgress(goalData)
+            }
+        }
+
     };
 
-    const closeModal = () => {
-        setIsModalOpen(null);
-    };
-
-    const addNewStatusDone = async () => {
+    const addNewStatusInProgress = async (goalData) => {
         const until = new Date().toISOString().slice(0, 10);
         try {
-            addStatusNew(isModalOpen.id, userId, "done");
-            addCalendarDataNew(profile.telegramId, until)
-            setPoints(userId, isModalOpen.points)
-            setIsModalOpen(null);
+            setLoading(false)
+            const loadingToast = toast.loading("Отменяем выполнение цели...", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                },
+                icon: <img src="https://chelyabinsk.powertool.ru/bitrix/templates/powertool/img/loadsamovivoz.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+            });
+            await addStatusNew(goalData.id, userId, "in_progress");
+            await deletePoints(userId, goalData.points)
+            await checkTimeGoalsSaving(profile.telegramId)
             await addStatus(userId);
-            toast.success("Цель успешно выполнена!")
+
+            const result = await newStatusSavingGoal(profile.telegramId, until, goalData.id, "in_progress")
+
+            if (result) {
+                setLoading(true)
+            }
+            toast.dismiss(loadingToast);
+            toast.success("Цель успешно перемещена в раздел 'В процессе'!");
+
+        } catch (error) {
+            console.error("Ошибка при изменении статуса цели цели:", error);
+            toast.error("Не удалось переместить цель в раздел 'В процессе'. Попробуйте снова.");
+        }
+    };
+
+    const addNewStatusDone = async (isModalOpen) => {
+        const until = new Date().toISOString().slice(0, 10);
+        try {
+            setLoading(false)
+            const loadingToast = toast.loading("Выполняем цель...", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                },
+                icon: <img src="https://chelyabinsk.powertool.ru/bitrix/templates/powertool/img/loadsamovivoz.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+            });
+            addStatusNew(isModalOpen.id, userId, "done");
+            checkTimeGoalsSaving(profile.telegramId)
+            setPoints(userId, isModalOpen.points)
+            await addStatus(userId);
             addGoals(userId)
+
+            const result = await newStatusSavingGoal(profile.telegramId, until, isModalOpen.id, "completed")
+
+            if (result) {
+                setLoading(true)
+            }
+            toast.dismiss(loadingToast);
+            toast.success("Цель успешно выполнена!")
         } catch (error) {
             console.error("Ошибка при выполнении цели:", error);
             toast.error("Не удалось выполнить цель. Попробуйте снова.");
+        }
+    };
+
+    const addOldStatus = async (goalData) => {
+        try {
+
+            const until = new Date().toISOString().slice(0, 10);
+            if (goalData.status === "completed") {
+                await deletePoints(userId, goalData.points)
+                await checkTimeGoalsSaving(profile.telegramId)
+            }
+
+            await addStatusNew(goalData.id, userId, "not_started");
+            toast.success("Цель успешно убрана!");
+
+            await deleteGoalsSaving(profile.telegramId, goalData.id)
+
+        } catch (error) {
+            console.error("Ошибка при убирании цели:", error);
+            toast.error("Не удалось убрать цель. Попробуйте снова.");
         }
     };
 
@@ -57,12 +128,12 @@ const TodaysGoalsConteiner = ({ profile, addCalendarDataNew, addStatusNew, goals
             completed={filter(
                 goals.goals,
                 "completed",
-                () => { toast.success("Эта цель уже выполнена!"); },
+                Modal,
                 "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png",
-                false
+                false,
+                addOldStatus
             )}
-            inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false)} />
-        <ModalWindow isModalOpen={isModalOpen} buttonText='Выполнить цель' addNewStatus={addNewStatusDone} closeModal={closeModal} />
+            inProgress={filter(goals.goals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus)} />
     </div>
 }
 
@@ -72,4 +143,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile.id,
 })
 
-export default connect(mapStateToProps, { addCalendarDataNew, addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);
+export default connect(mapStateToProps, { checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);

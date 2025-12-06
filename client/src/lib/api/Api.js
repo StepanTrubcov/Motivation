@@ -34,11 +34,11 @@ export const addProfileApi = async () => {
 
   WebApp.ready();
 
-  const userData = WebApp.initDataUnsafe?.user || {
-    id: "2521351",
-    first_name: "Stepan",
-    username: "Stepan",
-    photo_url: "https://t.me/i/userpic/320/oBN9n-AW0sT2iVFeGc17067iUAw_QccFVfwRJFd3WRBg0IiDoe6whGY1zK.svg"
+  const userData = WebApp.initDataUnsafe?.user ||  {
+    id: 123,
+    first_name: 'testBot',
+    username: 'username',
+    photo_url: null,
   };
 
   console.log('userData:', userData);
@@ -122,19 +122,42 @@ export async function addPoints(customUserId, points) {
   }
 }
 
-export async function getAllStatus(customUserId, goalId, newStatus) {
+export async function removePoints(customUserId, points) {
+  try {
+    const response = await axios.delete(`${BASE_URL}/users/${customUserId}/pts/increment`, {
+      data: { amount: points }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка уменьшения очков:", error);
+    throw error;
+  }
+}
+
+export async function getAllStatus(customUserId, goalId, newStatus, selectedOption = null) {
   if (!customUserId || !goalId || !newStatus) {
     console.error(`Invalid parameters: customUserId=${customUserId}, goalId=${goalId}, newStatus=${newStatus}`);
     throw new Error("customUserId, goalId, and newStatus are required");
   }
 
   console.log(`Updating status for goal ${goalId} to ${newStatus} for user ${customUserId}`);
+  console.log(`Selected option:`, selectedOption);
+  
   try {
-    await axios.put(`${BASE_URL}/goals/${customUserId}/${goalId}`, { newStatus });
+    // Передаем selectedOption в API endpoint
+    const requestData = { newStatus };
+    // Передаем selectedOption, даже если он равен 0
+    if (selectedOption !== null && selectedOption !== undefined) {
+      requestData.selectedOption = selectedOption;
+    }
+    
+    console.log('Sending request data:', requestData);
+    
+    await axios.put(`${BASE_URL}/goals/${customUserId}/${goalId}`, requestData);
     console.log(`Статус цели ${goalId} для пользователя ${customUserId} изменён на ${newStatus}`);
 
   } catch (error) {
-    toast.error("Не удалось взять цель. Попробуйте снова.");
+    toast.error("Извините произошла ошибка. Попробуйте снова.");
     console.error(`Ошибка обновления статуса цели ${goalId}:`, error);
     throw error;
   }
@@ -164,52 +187,52 @@ export async function initializeUserGoals(customUserId) {
 
   const goalsArray = [
     // === SPORT ===
-    { id: "1", title: "Пробежать 1 км", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Пробегайте по 1 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость.", userId: customUserId, progress: 0 },
-    { id: "3", title: "Пробежать 5 км", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Пробегайте по 5 км несколько раз в неделю. Это укрепит сердце и мышцы.", userId: customUserId, progress: 0 },
-    { id: "5", title: "Сделать 50 приседаний", points: 25, status: "not_started", category: "Sport", completionDate: null, description: "Ежедневно делайте по 50 приседаний для укрепления ног и ягодиц.", userId: customUserId, progress: 0 },
-    { id: "8", title: "Сделать 20 отжиманий", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Отжимайтесь ежедневно для укрепления мышц груди и рук.", userId: customUserId, progress: 0 },
-    { id: "14", title: "Пройти 5000 шагов", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Проходите 5000 шагов ежедневно. Это поддержит здоровье и тонус.", userId: customUserId, progress: 0 },
-    { id: "18", title: "Утренняя зарядка 10 минут", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Делайте утреннюю зарядку для энергии на день.", userId: customUserId, progress: 0 },
-    { id: "25", title: "Сделать планку 1 минуту", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Держите планку по 1 минуте ежедневно. Это укрепит мышцы кора.", userId: customUserId, progress: 0 },
-    { id: "49", title: "Сделать 15 минут йоги", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Практикуйте йогу ежедневно для гибкости и спокойствия.", userId: customUserId, progress: 0 },
-    { id: "51", title: "Пройти пешком на работу", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Замените транспорт пешей прогулкой — заряд бодрости на день.", userId: customUserId, progress: 0 },
-    { id: "52", title: "Покататься на велосипеде 30 минут", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Катайтесь на велосипеде для здоровья и удовольствия.", userId: customUserId, progress: 0 },
-    { id: "61", title: "Сделать растяжку 10 минут", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Растягивайтесь ежедневно для гибкости и здоровья суставов.", userId: customUserId, progress: 0 },
-    { id: "62", title: "Сделать 200 прыжков на скакалке", points: 25, status: "not_started", category: "Sport", completionDate: null, description: "Прыжки на скакалке улучшают координацию и кардио.", userId: customUserId, progress: 0 },
-    { id: "63", title: "Погулять 30 минут на свежем воздухе", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Прогулка помогает снять стресс и улучшает настроение.", userId: customUserId, progress: 0 },
-    { id: "64", title: "Сделать разминку перед началом дня", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Небольшая разминка активирует мышцы и улучшает кровообращение.", userId: customUserId, progress: 0 },
-    { id: "65", title: "Сделать растяжку после сна", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Мягко разомните тело после сна для энергии и гибкости.", userId: customUserId, progress: 0 },
+    { id: "1", title: "Пробежать 1 км", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Пробегайте по 1 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "3", title: "Пробежать 5 км", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Пробегайте по 5 км несколько раз в неделю. Это укрепит сердце и мышцы.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "5", title: "Сделать 50 приседаний", points: 25, status: "not_started", category: "Sport", completionDate: null, description: "Ежедневно делайте по 50 приседаний для укрепления ног и ягодиц.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "8", title: "Сделать 20 отжиманий", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Отжимайтесь ежедневно для укрепления мышц груди и рук.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "14", title: "Пройти 5000 шагов", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Проходите 5000 шагов ежедневно. Это поддержит здоровье и тонус.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "18", title: "Утренняя зарядка 10 минут", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Делайте утреннюю зарядку для энергии на день.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "25", title: "Сделать планку 1 минуту", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Держите планку по 1 минуте ежедневно. Это укрепит мышцы кора.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "49", title: "Сделать 15 минут йоги", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Практикуйте йогу ежедневно для гибкости и спокойствия.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "51", title: "Пройти пешком на работу", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Замените транспорт пешей прогулкой — заряд бодрости на день.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "52", title: "Покататься на велосипеде 30 минут", points: 20, status: "not_started", category: "Sport", completionDate: null, description: "Катайтесь на велосипеде для здоровья и удовольствия.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "61", title: "Сделать растяжку 10 минут", points: 15, status: "not_started", category: "Sport", completionDate: null, description: "Растягивайтесь ежедневно для гибкости и здоровья суставов.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "62", title: "Сделать 200 прыжков на скакалке", points: 25, status: "not_started", category: "Sport", completionDate: null, description: "Прыжки на скакалке улучшают координацию и кардио.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "63", title: "Погулять 30 минут на свежем воздухе", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Прогулка помогает снять стресс и улучшает настроение.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "64", title: "Сделать разминку перед началом дня", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Небольшая разминка активирует мышцы и улучшает кровообращение.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "65", title: "Сделать растяжку после сна", points: 10, status: "not_started", category: "Sport", completionDate: null, description: "Мягко разомните тело после сна для энергии и гибкости.", userId: customUserId, progress: 1, selectedOption: 0 },
 
     // === DISCIPLINE ===
-    { id: "4", title: "Кодить 1 час за ноутбуком", points: 30, status: "not_started", category: "Discipline", completionDate: null, description: "Программируйте ежедневно для развития дисциплины и навыков.", userId: customUserId, progress: 0 },
-    { id: "16", title: "Облиться холодной водой", points: 15, status: "not_started", category: "Discipline", completionDate: null, description: "Закаляйтесь холодной водой для укрепления духа и тела.", userId: customUserId, progress: 0 },
-    { id: "35", title: "Лечь спать до 23:00", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Соблюдайте режим сна для восстановления энергии.", userId: customUserId, progress: 0 },
-    { id: "36", title: "Рано проснуться", points: 20, status: "not_started", category: "Discipline", completionDate: null, description: "Начинайте день рано — для продуктивности и спокойствия.", userId: customUserId, progress: 0 },
-    { id: "45", title: "2 часа без телефона", points: 30, status: "not_started", category: "Discipline", completionDate: null, description: "Отложите телефон, чтобы сосредоточиться на важных делах.", userId: customUserId, progress: 0 },
-    { id: "54", title: "Составить распорядок дня", points: 20, status: "not_started", category: "Discipline", completionDate: null, description: "Распланируйте свой день и следуйте плану.", userId: customUserId, progress: 0 },
-    { id: "66", title: "Убрать рабочее место", points: 10, status: "not_started", category: "Discipline", completionDate: null, description: "Поддерживайте порядок на столе — это помогает концентрации.", userId: customUserId, progress: 0 },
-    { id: "68", title: "Провести день без сладкого", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Контролируйте свои привычки и укрепляйте дисциплину.", userId: customUserId, progress: 0 },
-    { id: "69", title: "Поработать 2 часа без отвлечений", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Сосредоточьтесь на задаче и не переключайтесь.", userId: customUserId, progress: 0 },
-    { id: "70", title: "Проснуться без телефона в руках", points: 15, status: "not_started", category: "Discipline", completionDate: null, description: "Начните утро без гаджетов для чистого фокуса.", userId: customUserId, progress: 0 },
+    { id: "4", title: "Кодить 1 час за ноутбуком", points: 30, status: "not_started", category: "Discipline", completionDate: null, description: "Программируйте ежедневно для развития дисциплины и навыков.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "16", title: "Облиться холодной водой", points: 15, status: "not_started", category: "Discipline", completionDate: null, description: "Закаляйтесь холодной водой для укрепления духа и тела.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "35", title: "Лечь спать до 23:00", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Соблюдайте режим сна для восстановления энергии.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "36", title: "Рано проснуться", points: 20, status: "not_started", category: "Discipline", completionDate: null, description: "Начинайте день рано — для продуктивности и спокойствия.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "45", title: "2 часа без телефона", points: 30, status: "not_started", category: "Discipline", completionDate: null, description: "Отложите телефон, чтобы сосредоточиться на важных делах.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "54", title: "Составить распорядок дня", points: 20, status: "not_started", category: "Discipline", completionDate: null, description: "Распланируйте свой день и следуйте плану.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "66", title: "Убрать рабочее место", points: 10, status: "not_started", category: "Discipline", completionDate: null, description: "Поддерживайте порядок на столе — это помогает концентрации.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "68", title: "Провести день без сладкого", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Контролируйте свои привычки и укрепляйте дисциплину.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "69", title: "Поработать 2 часа без отвлечений", points: 25, status: "not_started", category: "Discipline", completionDate: null, description: "Сосредоточьтесь на задаче и не переключайтесь.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "70", title: "Проснуться без телефона в руках", points: 15, status: "not_started", category: "Discipline", completionDate: null, description: "Начните утро без гаджетов для чистого фокуса.", userId: customUserId, progress: 1, selectedOption: 0 },
 
     // === SELF_DEVELOPMENT ===
-    { id: "2", title: "Читать книгу 20 минут", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Читайте ежедневно для развития мышления и внимания.", userId: customUserId, progress: 0 },
-    { id: "6", title: "Учить английский", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Учите новые английские слова ежедневно.", userId: customUserId, progress: 0 },
-    { id: "13", title: "Поработать над стартапом", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Развивайте свои идеи и продвигайте личные проекты.", userId: customUserId, progress: 0 },
-    { id: "24", title: "Смотреть обучающее видео", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Смотрите обучающие материалы для роста.", userId: customUserId, progress: 0 },
-    { id: "34", title: "Выучить 20 английских слов", points: 40, status: "not_started", category: "Self_development", completionDate: null, description: "Пополняйте словарный запас каждый день.", userId: customUserId, progress: 0 },
-    { id: "47", title: "Прочитать статью о саморазвитии", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Читайте статьи о личностном росте ежедневно.", userId: customUserId, progress: 0 },
-    { id: "55", title: "Прослушать подкаст о личностном росте", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Слушайте полезные подкасты о саморазвитии.", userId: customUserId, progress: 0 },
-    { id: "71", title: "Посмотреть документальный фильм", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Расширяйте кругозор, изучая новые темы.", userId: customUserId, progress: 0 },
-    { id: "72", title: "Записать 3 идеи для улучшения жизни", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Ежедневно фиксируйте идеи и наблюдения.", userId: customUserId, progress: 0 },
-    { id: "73", title: "Вести дневник благодарности", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Каждый вечер записывайте 3 вещи, за которые благодарны.", userId: customUserId, progress: 0 },
-    { id: "74", title: "Научиться новому навыку 30 минут", points: 25, status: "not_started", category: "Self_development", completionDate: null, description: "Ежедневно осваивайте хоть что-то новое.", userId: customUserId, progress: 0 },
-    { id: "75", title: "Придумать цель на завтра", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Планируйте следующий день заранее для ясности и фокуса.", userId: customUserId, progress: 0 },
+    { id: "2", title: "Читать книгу 20 минут", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Читайте ежедневно для развития мышления и внимания.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "6", title: "Учить английский", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Учите новые английские слова ежедневно.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "13", title: "Поработать над стартапом", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Развивайте свои идеи и продвигайте личные проекты.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "24", title: "Смотреть обучающее видео", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Смотрите обучающие материалы для роста.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "34", title: "Выучить 20 английских слов", points: 40, status: "not_started", category: "Self_development", completionDate: null, description: "Пополняйте словарный запас каждый день.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "47", title: "Прочитать статью о саморазвитии", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Читайте статьи о личностном росте ежедневно.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "55", title: "Прослушать подкаст о личностном росте", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Слушайте полезные подкасты о саморазвитии.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "71", title: "Посмотреть документальный фильм", points: 20, status: "not_started", category: "Self_development", completionDate: null, description: "Расширяйте кругозор, изучая новые темы.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "72", title: "Записать 3 идеи для улучшения жизни", points: 15, status: "not_started", category: "Self_development", completionDate: null, description: "Ежедневно фиксируйте идеи и наблюдения.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "73", title: "Вести дневник благодарности", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Каждый вечер записывайте 3 вещи, за которые благодарны.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "74", title: "Научиться новому навыку 30 минут", points: 25, status: "not_started", category: "Self_development", completionDate: null, description: "Ежедневно осваивайте хоть что-то новое.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "75", title: "Придумать цель на завтра", points: 10, status: "not_started", category: "Self_development", completionDate: null, description: "Планируйте следующий день заранее для ясности и фокуса.", userId: customUserId, progress: 1, selectedOption: 0 },
 
     // === SPIRITUALITY === (оставлены как у тебя)
-    { id: "57", title: "Прочитать одну главу Евангелия", points: 20, status: "not_started", category: "Spirituality", completionDate: null, description: "Читайте ежедневно одну главу Евангелия для укрепления веры.", userId: customUserId, progress: 0 },
-    { id: "58", title: "Помолиться утром и вечером", points: 15, status: "not_started", category: "Spirituality", completionDate: null, description: "Начинайте и завершайте день молитвой и благодарностью.", userId: customUserId, progress: 0 },
-    { id: "60", title: "Прочитать молитву перед сном", points: 10, status: "not_started", category: "Spirituality", completionDate: null, description: "Завершайте день молитвой, осмысливая прожитое.", userId: customUserId, progress: 0 },
+    { id: "57", title: "Прочитать одну главу Евангелия", points: 20, status: "not_started", category: "Spirituality", completionDate: null, description: "Читайте ежедневно одну главу Евангелия для укрепления веры.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "58", title: "Помолиться утром и вечером", points: 15, status: "not_started", category: "Spirituality", completionDate: null, description: "Начинайте и завершайте день молитвой и благодарностью.", userId: customUserId, progress: 1, selectedOption: 0 },
+    { id: "60", title: "Прочитать молитву перед сном", points: 10, status: "not_started", category: "Spirituality", completionDate: null, description: "Завершайте день молитвой, осмысливая прожитое.", userId: customUserId, progress: 1, selectedOption: 0 },
   ];
 
 
@@ -245,6 +268,22 @@ export async function addCompletedDate(customUserId, date) {
     return response.data;
   } catch (error) {
     console.error("Ошибка добавления даты:", error);
+    throw error;
+  }
+}
+
+export async function deleteCompletedDate(customUserId, date) {
+  if (!customUserId || !date) {
+    throw new Error("customUserId и date обязательны");
+  }
+
+  try {
+    const response = await axios.delete(`${BASE_URL}/users/${customUserId}/completed-dates`, {
+      data: { date }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Ошибка удаления даты:", error);
     throw error;
   }
 }
@@ -505,19 +544,156 @@ export async function addCustomGoal(userId, title, category) {
   }
 }
 
-
-export async function addGoalsMonth(userId, goalData, targetDate) {
-
+export async function addSavingGoal(userId, goalData, targetDate = null, selectedOption = null) {
   try {
-    const pushGoals = await axios.post(`${BASE_URL}/saving-goals`, {
+    const response = await axios.post(`${BASE_URL}/saving-goals`, {
       userId,
       goalData,
-      targetDate
-    })
+      targetDate,
+      selectedOption
+    });
 
-    console.log(pushGoals)
+    const userData = response.data.user || {};
+    const savingGoals = userData.savingGoals || [];
 
+    return { success: true, data: { ...userData, savingGoals } };
   } catch (error) {
-    console.error("Ошибка добавления целей за месяц:", error);
+    console.error('Ошибка при добавлении цели:', error);
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+
+}
+
+export async function getUserSavingGoals(userId) {
+  try {
+    const response = await axios.get(`${BASE_URL}/saving-goals`, {
+      params: { userId }
+    });
+
+    const savingGoals = response.data.savingGoals || [];
+    // savingGoals уже массив объектов, не нужно парсить
+
+    return { success: true, savingGoals };
+  } catch (error) {
+    console.error('Ошибка при получении целей:', error);
+    // Добавляем больше информации об ошибке
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function getUserSavingGoalsWithAutoPeriod(userId) {
+  try {
+    const response = await axios.get(`${BASE_URL}/saving-goals`, {
+      params: { userId, autoPeriod: 'true' }
+    });
+
+    const { savingGoals, period, daysPassed } = response.data;
+
+    return { success: true, savingGoals, period, daysPassed };
+  } catch (error) {
+    console.error('Ошибка при получении целей с автоматическим периодом:', error);
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function updateUserSavingGoals(userId, goalsArray) {
+  try {
+    const response = await axios.put(`${BASE_URL}/saving-goals`, {
+      userId,
+      goalsArray
+    });
+
+    // Убедимся, что полученные данные являются объектами
+    const userData = response.data.user || {};
+    // savingGoals уже массив объектов, не нужно парсить
+    const savingGoals = userData.savingGoals || [];
+
+    return { success: true, data: { ...userData, savingGoals } };
+  } catch (error) {
+    console.error('Ошибка при обновлении целей:', error);
+    // Добавляем больше информации об ошибке
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function generateSavingGoalsReport(userId, period, goalsArray) {
+  try {
+    const response = await axios.post(`${BASE_URL}/saving-goals?generateReport=true`, {
+      userId,
+      period,
+      goalsArray
+    });
+
+    const { reportData, reportText } = response.data;
+    // reportData уже содержит структурированные данные, не нужно парсить
+
+    return { success: true, reportData, reportText };
+  } catch (error) {
+    console.error('Ошибка при генерации отчета по целям:', error);
+    // Добавляем больше информации об ошибке
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function updateSavingGoalStatus(userId, date, goalId, newStatus) {
+  try {
+    const response = await axios.put(`${BASE_URL}/saving-goals?type=updateGoalStatus`, {
+      userId,
+      date,
+      goalId,
+      newStatus
+    });
+
+    const userData = response.data.user || {};
+    const savingGoals = userData.savingGoals || [];
+
+    return { success: true, data: { ...userData, savingGoals } };
+  } catch (error) {
+    console.error('Ошибка при обновлении статуса цели:', error);
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function removeUserSavingGoalByIndex(userId, index) {
+  try {
+    const response = await axios.delete(`${BASE_URL}/saving-goals`, {
+      params: { userId, index }
+    });
+
+    // Убедимся, что полученные данные являются объектами
+    const userData = response.data.user || {};
+    // savingGoals уже массив объектов, не нужно парсить
+    const savingGoals = userData.savingGoals || [];
+
+    return { success: true, data: { ...userData, savingGoals } };
+  } catch (error) {
+    console.error('Ошибка при удалении цели:', error);
+    // Добавляем больше информации об ошибке
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
+  }
+}
+
+export async function removeSavingGoalFromToday(userId, goalId) {
+  try {
+    const response = await axios.post(`${BASE_URL}/saving-goals/remove-today`, {
+      userId,
+      goalId
+    });
+
+    const userData = response.data.user || {};
+    const savingGoals = userData.savingGoals || [];
+
+    return { success: true, data: { ...userData, savingGoals } };
+  } catch (error) {
+    console.error('Ошибка при удалении цели с сегодняшней даты:', error);
+    const errorMessage = error.response?.data?.error || error.message || 'Неизвестная ошибка';
+    return { success: false, error: errorMessage };
   }
 }

@@ -4,10 +4,10 @@ import { NextResponse } from 'next/server';
 export async function POST(request, { params }) {
   try {
     const { userId } = await params;
-    
+
     // Получаем все цели пользователя
-    const goals = await prisma.goal.findMany({ 
-      where: { userId: String(userId) } 
+    const goals = await prisma.goal.findMany({
+      where: { userId: String(userId) }
     });
 
     const now = new Date();
@@ -24,21 +24,23 @@ export async function POST(request, { params }) {
       if (goal.status === 'in_progress' && goal.startDate) {
         const startDate = new Date(goal.startDate);
         const daysDiff = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-        
-        // Сбрасываем статус только если прошло больше 30 дней
-        if (daysDiff >= 30) {
+        // Используем значение selectedOption, если оно установлено (включая 0), иначе используем значение по умолчанию 30
+        const selectedOption = (goal.selectedOption !== null && goal.selectedOption !== undefined) ? goal.selectedOption : 30;
+
+        if (daysDiff >= selectedOption) {
           updatedGoal = {
             ...goal,
             status: 'not_started',
             startDate: null,
-            completionDate: null
+            completionDate: null,
+            selectedOption: 0,
           };
           needsUpdate = true;
         }
       }
       else if (goal.status === 'completed' && goal.completionDate) {
         const completionDate = new Date(goal.completionDate);
-        
+
         // Переводим в статус in_progress только если дата завершения была вчера или раньше
         if (completionDate < startOfToday) {
           updatedGoal = {

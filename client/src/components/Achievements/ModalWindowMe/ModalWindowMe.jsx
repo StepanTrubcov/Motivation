@@ -14,10 +14,8 @@ const ModalWindowMe = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState(null);
-
-  const tg = useRef(
-    typeof window !== "undefined" ? window.Telegram?.WebApp : null
-  ).current;
+  const tgRef = useRef(typeof window !== "undefined" ? window.Telegram?.WebApp : null);
+  const tg = tgRef.current;
 
   useEffect(() => {
     if (!tg) {
@@ -29,12 +27,17 @@ const ModalWindowMe = ({
     console.log("Version:", tg.version);
     console.log("Platform:", tg.platform);
     console.log("start_param:", tg.initDataUnsafe?.start_param);
+    console.log("shareToStory:", typeof tg.shareToStory);
     console.log("showStoryEditor:", typeof tg.showStoryEditor);
     console.log("======================");
 
-    tg.ready();
-    tg.expand();
-  }, [tg]);
+    try {
+      tg.ready();
+      tg.expand();
+    } catch (e) {
+      console.warn("tg.ready/expand failed", e);
+    }
+  }, []);
 
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error("Нет данных");
@@ -57,33 +60,87 @@ const ModalWindowMe = ({
     }
   };
 
-  const handleOpenImage = async () => {
+  const isHttpUrl = (url) => {
+    try {
+      const u = new URL(url);
+      return u.protocol === "http:" || u.protocol === "https:";
+    } catch (e) {
+      return false;
+    }
+  };
+
+  const urlToBlob = async (url) => {
+    const resp = await fetch(url);
+    return await resp.blob();
+  };
+
+  const handleShare = async () => {
     if (!imageDataUrl) return toast.error("Сгенерируй карточку");
     if (!tg) return toast.error("Telegram API не найден");
-
-    if (typeof tg.showStoryEditor !== "function") {
-      toast("Истории пока недоступны. Ждём включения от Telegram...");
-      return;
-    }
-
     try {
-      const response = await fetch(imageDataUrl);
-      const blob = await response.blob();
-      const file = new File([blob], "achievement.jpg", { type: "image/jpeg" });
+      if (typeof tg.shareToStory === "function") {
+        let mediaUrl = imageDataUrl;
 
-      await tg.showStoryEditor({
-        media: [file],
-        text: `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim(),
-      });
+        if (!isHttpUrl(mediaUrl)) {
+          try {
+            const blob = await urlToBlob(mediaUrl);
+            if (typeof uploadTempUrl === "function") {
+              toast("Подготавливаем картинку для Stories...");
+              mediaUrl = await uploadTempUrl(blob);
+              if (!isHttpUrl(mediaUrl)) {
+                throw new Error("uploadTempUrl не вернул публичную ссылку");
+              }
+            } else {
+              throw new Error("Нет публичной ссылки для shareToStory");
+            }
+          } catch (err) {
+            console.warn("Не удалось получить публичную ссылку для shareToStory:", err);
+            toast("Нельзя автоматически поделиться — картинку нужно сохранить и загрузить вручную");
+            return;
+          }
+        }
 
-      toast.success("История открыта!");
+        try {
+          const caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
+          await tg.shareToStory(mediaUrl, { text: caption });
+          toast.success("Открылось окно Stories!");
+          return;
+        } catch (err) {
+          console.warn("tg.shareToStory failed:", err);
+        }
+      }
+
+      if (typeof tg.showStoryEditor === "function") {
+        try {
+          const response = await fetch(imageDataUrl);
+          const blob = await response.blob();
+          const file = new File([blob], "achievement.jpg", { type: blob.type || "image/jpeg" });
+
+          await tg.showStoryEditor({
+            media: [file],
+            text: `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim(),
+          });
+
+          toast.success("История открыта!");
+          return;
+        } catch (err) {
+          console.error("showStoryEditor error:", err);
+        }
+      }
+      toast("Истории пока недоступны. Скачиваем карточку...");
+      const a = document.createElement("a");
+      a.href = imageDataUrl;
+      a.download = "achievement.jpg";
+      a.click();
+      toast.success("Скачано! Открой Telegram → + → История → выбери фото");
     } catch (err) {
-      console.error(err);
-      toast.error("Ошибка отправки");
+      console.error("share error:", err);
+      toast.error("Не удалось поделиться в Stories");
     }
   };
 
   const handleDownload = () => {
+    if (!imageDataUrl) return toast.error("Нет картинки");
     const a = document.createElement("a");
     a.href = imageDataUrl;
     a.download = "achievement.jpg";
@@ -117,8 +174,8 @@ const ModalWindowMe = ({
               <div className={styles.imageWrapper}>
                 <img className={styles.modalImCopy} src={imageDataUrl} alt="" />
                 <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleOpenImage}>
-                    Поделиться / История
+                  <button className={styles.shareButton} onClick={handleShare}>
+                    📤 Поделиться / История
                   </button>
                 </div>
               </div>
@@ -128,7 +185,7 @@ const ModalWindowMe = ({
                 onClick={handleGenerate}
                 disabled={isLoading}
               >
-                {isLoading ? "Создаём..." : "Сгенерировать карточку"}
+                {isLoading ? "Создаём..." : "✨ Сгенерировать карточку"}
               </button>
             )}
           </motion.div>

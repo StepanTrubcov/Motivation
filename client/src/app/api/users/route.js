@@ -1,6 +1,30 @@
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
+export async function GET(request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const telegramId = searchParams.get('telegramId');
+
+    if (!telegramId) {
+      return NextResponse.json({ error: 'telegramId is required' }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { telegramId: String(telegramId) },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Ошибка при получении данных пользователя:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(request) {
   try {
     const { telegramId, firstName, username, photoUrl, usersTag } = await request.json();

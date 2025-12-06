@@ -1,4 +1,4 @@
-import { addProfileApi, initializeUserGoals, addPoints } from '@/lib/api/Api';
+import { addProfileApi, initializeUserGoals, addPoints, removePoints } from '@/lib/api/Api';
 import { getAllGoals } from '@/lib/api/Api';
 import { addGoals } from './goals_reducer';
 
@@ -34,7 +34,7 @@ const setProfile = (user) => ({
 export const addProfile = () => async (dispatch) => {
     await addProfileApi().then(async response => {
         dispatch(setProfile(response));
-        
+
         if (response && response.id) {
             try {
                 const existingGoals = await getAllGoals(response.id);
@@ -62,6 +62,12 @@ export const addProfile = () => async (dispatch) => {
 
 export const setPoints = (customUserId, points) => async (dispatch) => {
     await addPoints(customUserId, points).then(() => {
+        dispatch(addProfile());
+    });
+};
+
+export const deletePoints = (customUserId, points) => async (dispatch) => {
+    await removePoints(customUserId, points).then(() => {
         dispatch(addProfile());
     });
 };

@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useBottomNav } from '@/context/BottomNavContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import { addProfile } from '@/redux/profile_reducer';
-import { addGoals, addStatus } from '@/redux/goals_reducer';
+import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
 import { getInitializeAchievementsData } from '@/redux/assignments_reducer';
 import { addTextGenerationData } from '@/redux/generation_reducer';
 
@@ -18,7 +18,7 @@ const DataInitializer = ({ children }) => {
     const assignments = useSelector((state) => state.assignments.assignments);
     const assignmentsLoaded = useSelector((state) => state.assignments.assignmentsLoaded);
     const [isUpdatingAchievements, setIsUpdatingAchievements] = useState(false);
-    
+
     const isTextDataInitialized = useRef(false);
 
     useEffect(() => {
@@ -40,13 +40,13 @@ const DataInitializer = ({ children }) => {
             }
         };
 
-        // Убираем проверку обновления достижений
         initTelegramTheme();
         dispatch(addProfile());
     }, [dispatch, isUpdatingAchievements]);
 
     useEffect(() => {
         if (user && !ThereAreUsers) {
+            dispatch(checkTimeGoalsSaving(user.telegramId));
             dispatch(addGoals(user.id));
             dispatch(addStatus(user.id));
         }

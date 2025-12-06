@@ -65,3 +65,65 @@
     width: 50px;
     margin-left: 10px;
 }
+/* Контейнер */
+.wrapper {
+    position: relative;
+}
+
+/* Popup */
+.popup {
+    position: absolute;
+    right: 0px;
+    top: calc(100% + 8px); /* ниже блока на 8px */
+    transform: scale(0.85);
+    background: #1e1e1e;
+    padding: 10px 16px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    animation: popupShow 0.22s ease forwards;
+    z-index: 30;
+    white-space: nowrap;
+}
+
+/* Треугольник */
+.popup::before {
+    content: "";
+    position: absolute;
+    top: -6px; /* выше чуть-чуть */
+    right: 16px; /* смещён к центру */
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #1e1e1e;
+}
+
+/* Кнопка */
+.deleteBtn {
+    background: #ff3b30;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 500;
+}
+
+.deleteBtn:active {
+    opacity: 0.85;
+}
+
+/* Анимация */
+@keyframes popupShow {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

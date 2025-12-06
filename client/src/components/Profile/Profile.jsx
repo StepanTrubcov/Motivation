@@ -5,6 +5,7 @@ import TodaysGoalsConteiner from "./TodaysGoals/TodaysGoalsConteiner";
 import ContributionCalendarConteiner from "./ContributionCalendar/ContributionCalendarConteiner";
 import GenerationButtonConteiner from "./GenerationButton/GenerationButtonConteiner";
 import QuestionButton from "./ProfileInfo/QuestionButton/QuestionButton";
+import YesterdayConteiner from "./Yesterday/YesterdayConteiner";
 
 const Profile = (props) => {
     return <div>
@@ -13,6 +14,7 @@ const Profile = (props) => {
         <TodaysGoalsConteiner />
         <GenerationButtonConteiner />
         <ContributionCalendarConteiner />
+        <YesterdayConteiner />
     </div>
 }
 

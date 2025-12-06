@@ -7,8 +7,23 @@ const prisma = new PrismaClient();
 
 const app = express();
 
+// Добавляем middleware для парсинга JSON
+app.use(express.json());
+
+// Обслуживаем статические файлы Next.js
 app.use(express.static(path.join(__dirname, '.next')));
 
+// Обрабатываем API маршруты перед остальными маршрутами
+app.use('/api', (req, res, next) => {
+  // Для API маршрутов передаем управление Next.js
+  if (req.path.startsWith('/api')) {
+    next();
+  } else {
+    next();
+  }
+});
+
+// Для всех остальных маршрутов возвращаем index.html (SPA)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '.next', 'index.html'));
 });

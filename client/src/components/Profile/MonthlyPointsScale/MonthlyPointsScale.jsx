@@ -26,15 +26,7 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
     const levelMax = levels[currentLevel];
     const progress = Math.min(((userPoints - levelMin) / (levelMax - levelMin)) * 100, 100);
 
-    const prevLevel = useRef(currentLevel);
-
-    useEffect(() => {
-        if (prevLevel.current !== currentLevel) {
-            toast.success(`Поздравляем! Вы достигли уровня ${currentLevel}! 🎉`);
-            prevLevel.current = currentLevel;
-        }
-    }, [currentLevel]);
-
+    const prevLevel = useRef(currentLevel)
     return (
         <div className={c.points_scale}>
             <div className={c.level}>{currentLevel}<div className={c.level_text} >lvl</div></div>
@@ -52,7 +44,7 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
                         </div>
                     </div>
                     <div className={c.nextLevel}>
-                        {currentLevel + 1} 
+                        {currentLevel + 1}
                     </div>
                 </div>
             </div>
