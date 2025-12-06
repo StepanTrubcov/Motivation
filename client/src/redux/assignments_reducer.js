@@ -58,8 +58,6 @@ export const getAchievementsNewStatus = (achievement, userId) => async (dispatch
 }
 
 export const getMakingPicture = (isModalOpen, username) => async (dispatch) => {
-   // Очищаем папку с изображениями перед созданием нового
-   await clearAchievementImages();
    const imageUrl = await makingPicture(isModalOpen, username);
    return {
      data: {

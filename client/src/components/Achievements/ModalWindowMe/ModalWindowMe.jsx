@@ -52,14 +52,11 @@ const ModalWindowMe = ({
     setImageDataUrl(null);
 
     try {
-      // Очищаем папку с изображениями перед созданием нового
-      await clearAchievementImages();
-      
       const res = await getMakingPicture(isModalOpen, username);
       // Ожидаем, что сервер возвращает прямую HTTP ссылку на изображение
       const imageUrl = res?.data?.url;
       if (!imageUrl) throw new Error("Нет ссылки на изображение");
-console.log(imageUrl)
+      console.log(imageUrl)
       setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
       toast.success("Карточка готова!");
     } catch (err) {
