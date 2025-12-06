@@ -1,6 +1,6 @@
 // API endpoint для обновления достижений у всех пользователей
 // Этот endpoint будет вызываться автоматически при запуске приложения
-import { updateAllUserAchievements } from '@/lib/updateAchievements.cjs';
+import { updateAllUserAchievements } from '@/lib/updateAchievements.mjs';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
