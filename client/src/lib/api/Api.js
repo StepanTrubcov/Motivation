@@ -507,13 +507,9 @@ export async function generateAchievementShare(achievement, user) {
 }
 
 export async function clearAchievementImages() {
-  try {
-    const response = await axios.delete(`${BASE_URL}/clear-achievements`);
-    return response.data;
-  } catch (error) {
-    console.error("Ошибка очистки изображений достижений:", error);
-    throw error;
-  }
+  // Эта функция больше не нужна, так как мы используем Vercel Blob
+  // Vercel Blob сам управляет временем жизни файлов
+  return Promise.resolve();
 }
 
 export async function makingPicture(isModalOpen, username) {

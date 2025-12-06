@@ -56,7 +56,7 @@ const ModalWindowMe = ({
       // Ожидаем, что сервер возвращает прямую HTTP ссылку на изображение
       const imageUrl = res?.data?.url;
       if (!imageUrl) throw new Error("Нет ссылки на изображение");
-      console.log(imageUrl)
+
       setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
       toast.success("Карточка готова!");
     } catch (err) {

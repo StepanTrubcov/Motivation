@@ -22,6 +22,7 @@
     "@prisma/extension-accelerate": "^1.0.0",
     "@reduxjs/toolkit": "^2.8.2",
     "@twa-dev/sdk": "^8.0.2",
+    "@vercel/blob": "^2.0.0",
     "@vercel/og": "^0.8.5",
     "axios": "^1.13.2",
     "canvas": "^3.2.0",
