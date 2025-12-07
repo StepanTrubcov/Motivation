@@ -25,10 +25,11 @@ try {
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const title = searchParams.get('title') || 'Достижение';
-    const description = searchParams.get('description') || 'Описание достижения';
-    const points = searchParams.get('points') || '0';
-    const username = searchParams.get('username') || 'user';
+    // Декодируем URL-кодированные параметры
+    const title = decodeURIComponent(searchParams.get('title') || 'Достижение');
+    const description = decodeURIComponent(searchParams.get('description') || 'Описание достижения');
+    const points = decodeURIComponent(searchParams.get('points') || '0');
+    const username = decodeURIComponent(searchParams.get('username') || 'user');
 
     const width = 1200;
     const height = 630;
