@@ -10,6 +10,7 @@ export async function POST(request) {
 
     // Создаем URL для динамической генерации изображения с правильной кодировкой
     const baseUrl = request.nextUrl.origin;
+    // Кодируем параметры для безопасной передачи в URL
     const imageUrl = `${baseUrl}/api/achievement/image?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&points=${encodeURIComponent(points || 0)}&username=${encodeURIComponent(username || 'user')}`;
 
     return NextResponse.json({
