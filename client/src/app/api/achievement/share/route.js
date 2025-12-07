@@ -8,7 +8,7 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
-    // Создаем URL для динамической генерации изображения
+    // Создаем URL для динамической генерации изображения с правильной кодировкой
     const baseUrl = request.nextUrl.origin;
     const imageUrl = `${baseUrl}/api/achievement/image?title=${encodeURIComponent(title)}&description=${encodeURIComponent(description)}&points=${encodeURIComponent(points || 0)}&username=${encodeURIComponent(username || 'user')}`;
 
