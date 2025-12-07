@@ -14,7 +14,7 @@ const Profile = (props) => {
         <TodaysGoalsConteiner />
         <GenerationButtonConteiner />
         <ContributionCalendarConteiner />
-        <YesterdayConteiner />
+        {/* <YesterdayConteiner /> */}
     </div>
 }
 
