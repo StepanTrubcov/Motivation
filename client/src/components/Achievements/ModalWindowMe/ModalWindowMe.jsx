@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
-import { clearAchievementImages } from "@/lib/api/Api";
 
 const ModalWindowMe = ({
   getMakingPicture,

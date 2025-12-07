@@ -485,7 +485,7 @@ export async function achievementNewStatus(achievement, userId) {
   }
 }
 
-export async function generateAchievementShare(achievement, user) {
+export async function getMakingPicture(achievement, user) {
   try {
     const response = await axios.post(`${BASE_URL}/achievement/share`, {
       title: achievement.title,
@@ -502,7 +502,7 @@ export async function generateAchievementShare(achievement, user) {
     }
   } catch (error) {
     console.error("Ошибка share-карточки:", error);
-    return `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodeURIComponent(achievement.title)}`;
+    return `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(achievement.title)}`;
   }
 }
 
@@ -528,7 +528,8 @@ export async function makingPicture(isModalOpen, username) {
     }
   } catch (error) {
     console.error("Ошибка генерации изображения:", error);
-    return `https://via.placeholder.com/1200x630/0b0b0b/ffffff.png?text=${encodeURIComponent(isModalOpen.title)}`;
+    // Используем более надежный placeholder сервис
+    return `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(isModalOpen.title)}`;
   }
 }
 
