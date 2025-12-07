@@ -1,46 +1,35 @@
 import { NextResponse } from 'next/server';
-import { createCanvas, registerFont } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 import path from 'path';
 
 // Явно указываем, что хотим использовать Node.js runtime
 export const runtime = 'nodejs';
 
-// Регистрируем шрифты Inter (важно: .ttf/.otf, не .woff2)
+// Регистрируем шрифты Inter
 let fontRegistered = false;
 try {
-  const fontsDir = path.join(process.cwd(), 'public', 'fonts');
-  const regularFontPath = path.join(fontsDir, 'Inter-Regular.ttf');
-  const boldFontPath = path.join(fontsDir, 'Inter-Bold.ttf');
-  const italicFontPath = path.join(fontsDir, 'Inter-Italic.ttf');
-
-  // registerFont(path, { family: 'Inter', weight?: '400' })
-  registerFont(regularFontPath, { family: 'Inter', weight: '400' });
-  try { registerFont(boldFontPath, { family: 'Inter', weight: '700' }); } catch (e) {}
-  try { registerFont(italicFontPath, { family: 'Inter', style: 'italic' }); } catch (e) {}
-
+  const regularFontPath = path.join(process.cwd(), 'public', 'fonts', 'Inter-Regular.woff2');
+  const boldFontPath = path.join(process.cwd(), 'public', 'fonts', 'Inter-Bold.woff2');
+  const italicFontPath = path.join(process.cwd(), 'public', 'fonts', 'Inter-Italic.woff2');
+  
+  GlobalFonts.registerFromPath(regularFontPath, 'Inter');
+  GlobalFonts.registerFromPath(boldFontPath, 'Inter-Bold');
+  GlobalFonts.registerFromPath(italicFontPath, 'Inter-Italic');
+  
   fontRegistered = true;
   console.log('Шрифты Inter успешно зарегистрированы');
 } catch (error) {
   console.error('Ошибка при регистрации шрифтов Inter:', error);
 }
 
-// безопасное декодирование параметра (чтобы не декодировать дважды)
-function tryDecode(s) {
-  if (!s) return s;
-  if (s.includes('%')) {
-    try { return decodeURIComponent(s); } catch (e) { return s; }
-  }
-  return s;
-}
-
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    // Используем tryDecode — безопасно для уже декодированных и закодированных строк
-    const title = tryDecode(searchParams.get('title')) || 'Достижение';
-    const description = tryDecode(searchParams.get('description')) || 'Описание достижения';
-    const points = tryDecode(searchParams.get('points')) || '0';
-    const username = tryDecode(searchParams.get('username')) || 'user';
+    // Декодируем URL-кодированные параметры
+    const title = decodeURIComponent(searchParams.get('title') || 'Достижение');
+    const description = decodeURIComponent(searchParams.get('description') || 'Описание достижения');
+    const points = decodeURIComponent(searchParams.get('points') || '0');
+    const username = decodeURIComponent(searchParams.get('username') || 'user');
 
     const width = 1200;
     const height = 630;
@@ -53,25 +42,29 @@ export async function GET(request) {
 
     // Используем зарегистрированные шрифты Inter или fallback
     const fontFamily = fontRegistered ? 'Inter' : 'Arial, sans-serif';
-    // Для bold/italic используем ту же family (Inter), вес/стиль задаём в font строке
+    const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial, sans-serif';
+    const italicFontFamily = fontRegistered ? 'Inter' : 'Arial, sans-serif'; // Используем обычный Inter вместо Italic для согласованности
+    
+    // Имя пользователя
     ctx.fillStyle = '#00ff99';
-    ctx.font = `700 48px ${fontFamily}`;
+    ctx.font = `bold 48px ${fontFamily}`;
     ctx.textAlign = 'left';
     ctx.fillText(`@${username}`, 80, 100);
 
+    // Название достижения (используем тот же шрифт, что и для имени пользователя)
     ctx.fillStyle = '#ffffff';
-    ctx.font = `700 80px ${fontFamily}`;
+    ctx.font = `bold 80px ${fontFamily}`; // Используем обычный жирный шрифт вместо специального bold
 
     // Ограничиваем длину заголовка
     const shortTitle = title.length > 30 ? title.substring(0, 30) + '...' : title;
     ctx.fillText(shortTitle, 80, 200);
 
-    // Описание с ограничением
-    ctx.font = `400 34px ${fontFamily}`;
+    // Описание достижения (используем тот же шрифт)
+    ctx.font = `34px ${fontFamily}`;
     ctx.fillStyle = '#ffffff';
     const shortDesc = description.length > 100 ? description.substring(0, 100) + '...' : description;
 
-    // Простой перенос строк по словам (без измерений, минимальное вмешательство)
+    // Простой перенос строк
     const lines = [];
     let currentLine = '';
     const words = shortDesc.split(' ');
@@ -94,12 +87,12 @@ export async function GET(request) {
       y += 45;
     }
 
-    // Очки
+    // Очки (используем тот же шрифт)
     ctx.fillStyle = '#00ff99';
-    ctx.font = `700 40px ${fontFamily}`;
+    ctx.font = `bold 40px ${fontFamily}`;
     ctx.fillText(`+${points} очков`, 80, y + 30);
 
-    // Цитата
+    // Цитата (используем курсивный шрифт только для цитаты)
     const quotes = [
       '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
       '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
@@ -108,7 +101,7 @@ export async function GET(request) {
       '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
     ];
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    ctx.font = `italic 30px ${fontFamily}`;
+    ctx.font = `italic 30px ${italicFontFamily}`;
     ctx.fillStyle = '#9b9b9b';
 
     // Обрезаем длинную цитату
