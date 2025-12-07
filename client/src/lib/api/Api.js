@@ -485,33 +485,6 @@ export async function achievementNewStatus(achievement, userId) {
   }
 }
 
-export async function getMakingPicture(achievement, user) {
-  try {
-    const response = await axios.post(`${BASE_URL}/achievement/share`, {
-      title: achievement.title,
-      description: achievement.description,
-      points: achievement.points,
-      username: user.username || user.first_name || "Пользователь"
-    });
-
-    // Проверяем, что ответ существует и имеет правильный формат
-    if (response && response.data && response.data.success) {
-      return response.data.url;
-    } else {
-      throw new Error(response?.data?.message || "Некорректный ответ от сервера");
-    }
-  } catch (error) {
-    console.error("Ошибка share-карточки:", error);
-    return `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(achievement.title)}`;
-  }
-}
-
-export async function clearAchievementImages() {
-  // Эта функция больше не нужна, так как мы используем Vercel Blob
-  // Vercel Blob сам управляет временем жизни файлов
-  return Promise.resolve();
-}
-
 export async function makingPicture(isModalOpen, username) {
   try {
     const response = await axios.post(`${BASE_URL}/achievement/share`, {
@@ -531,6 +504,34 @@ export async function makingPicture(isModalOpen, username) {
     // Используем более надежный placeholder сервис
     return `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(isModalOpen.title)}`;
   }
+}
+
+export async function getMakingPicture(achievement, user) {
+  try {
+    const response = await axios.post(`${BASE_URL}/achievement/share`, {
+      title: achievement.title,
+      description: achievement.description,
+      points: achievement.points,
+      username: user.username || user.first_name || "Пользователь"
+    });
+
+    // Проверяем, что ответ существует и имеет правильный формат
+    if (response && response.data && response.data.success) {
+      return response.data.url;
+    } else {
+      throw new Error(response?.data?.message || "Некорректный ответ от сервера");
+    }
+  } catch (error) {
+    console.error("Ошибка share-карточки:", error);
+    // Используем более надежный placeholder сервис
+    return `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(achievement.title)}`;
+  }
+}
+
+export async function clearAchievementImages() {
+  // Эта функция больше не нужна, так как мы используем Vercel Blob
+  // Vercel Blob сам управляет временем жизни файлов
+  return Promise.resolve();
 }
 
 export async function addCustomGoal(userId, title, category) {

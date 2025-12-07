@@ -14,71 +14,34 @@ export async function GET(request) {
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
 
-    // Фон
-    ctx.fillStyle = '#0b0b0b';
+    // Простой черный фон
+    ctx.fillStyle = '#000000';
     ctx.fillRect(0, 0, width, height);
 
-    // Используем только базовые шрифты без регистрации
-    ctx.fillStyle = '#00ff99';
-    ctx.font = 'bold 48px sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(`@${username}`, 80, 100);
+    // Белый прямоугольник для контента
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(40, 40, width - 80, height - 80);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 80px sans-serif';
+    // Зеленый заголовок
+    ctx.fillStyle = '#00AA00';
+    ctx.fillRect(60, 60, width - 120, 100);
 
-    // Ограничиваем длину заголовка
-    const shortTitle = title.length > 30 ? title.substring(0, 30) + '...' : title;
-    ctx.fillText(shortTitle, 80, 200);
+    // Текст с очень простыми параметрами
+    ctx.fillStyle = '#000000';
+    ctx.font = '30px sans-serif';
+    ctx.fillText(`@${username}`, 80, 120);
 
-    // Описание с ограничением
-    ctx.font = '34px sans-serif';
-    ctx.fillStyle = '#ffffff';
-    const shortDesc = description.length > 100 ? description.substring(0, 100) + '...' : description;
+    ctx.fillStyle = '#000000';
+    ctx.font = '40px sans-serif';
+    ctx.fillText(title.substring(0, 30), 80, 200);
 
-    // Простой перенос строк
-    const lines = [];
-    let currentLine = '';
-    const words = shortDesc.split(' ');
+    ctx.fillStyle = '#000000';
+    ctx.font = '24px sans-serif';
+    ctx.fillText(description.substring(0, 60), 80, 260);
 
-    for (const word of words) {
-      const testLine = currentLine + word + ' ';
-      if (testLine.length > 40) { // Примерное ограничение по символам
-        lines.push(currentLine);
-        currentLine = word + ' ';
-      } else {
-        currentLine = testLine;
-      }
-    }
-    lines.push(currentLine);
-
-    // Рисуем линии описания
-    let y = 270;
-    for (const line of lines.slice(0, 3)) { // Максимум 3 строки
-      ctx.fillText(line.trim(), 80, y);
-      y += 45;
-    }
-
-    // Очки
-    ctx.fillStyle = '#00ff99';
-    ctx.font = 'bold 40px sans-serif';
-    ctx.fillText(`+${points} очков`, 80, y + 30);
-
-    // Цитата
-    const quotes = [
-      '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
-      '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
-      '«Дисциплина сильнее мотивации ⚡️»',
-      '«Начни сейчас. Идеального момента не будет ⏳»',
-      '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
-    ];
-    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    ctx.font = 'italic 30px sans-serif';
-    ctx.fillStyle = '#9b9b9b';
-
-    // Обрезаем длинную цитату
-    const shortQuote = randomQuote.length > 60 ? randomQuote.substring(0, 60) + '...' : randomQuote;
-    ctx.fillText(shortQuote, 80, height - 60);
+    ctx.fillStyle = '#00AA00';
+    ctx.font = '30px sans-serif';
+    ctx.fillText(`+${points} очков`, 80, 320);
 
     // Возвращаем изображение как PNG
     const buffer = canvas.toBuffer('image/png');
