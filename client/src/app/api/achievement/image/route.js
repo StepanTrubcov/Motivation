@@ -22,30 +22,65 @@ try {
   console.error('Ошибка при регистрации шрифтов Inter:', error);
 }
 
+/**
+ * Безопасное декодирование строки, которая может быть:
+ * - уже раскодирована,
+ * - закодирована один раз,
+ * - закодирована дважды (или более, но мы ограничиваем итерации).
+ * Также заменяет + на пробел (форма-urlencoded).
+ */
+function safeDecodeMaybeDoubleEncoded(input) {
+  if (!input || typeof input !== 'string') return input;
+  // заменяем + на пробел
+  let s = input.replace(/\+/g, ' ');
+  // пытаемся декодировать, пока видим %-последовательности (до 3 итераций)
+  for (let i = 0; i < 3; i++) {
+    if (/%[0-9A-F]{2}/i.test(s)) {
+      try {
+        const dec = decodeURIComponent(s);
+        if (dec === s) break; // если ничего не изменилось — выходим
+        s = dec;
+      } catch (e) {
+        // decodeURIComponent может кидать на некорректных последовательностях
+        // в этом случае прекращаем попытки
+        break;
+      }
+    } else {
+      break;
+    }
+  }
+  return s;
+}
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    
-    // Получаем параметры и явно декодируем их для обеспечения правильного отображения кириллических символов
-    let title = searchParams.get('title') || 'Достижение';
-    let description = searchParams.get('description') || 'Описание достижения';
-    const points = searchParams.get('points') || '0';
-    const username = searchParams.get('username') || 'user';
-    
-    // Явно декодируем параметры, если они закодированы
-    try {
-      title = decodeURIComponent(title);
-    } catch (e) {
-      // Если декодирование не удалось, оставляем оригинальное значение
-      console.warn('Не удалось декодировать title:', title);
-    }
-    
-    try {
-      description = decodeURIComponent(description);
-    } catch (e) {
-      // Если декодирование не удалось, оставляем оригинальное значение
-      console.warn('Не удалось декодировать description:', description);
-    }
+
+    // --- Логирование для отладки: увидим, в каком виде приходят параметры ---
+    console.log('REQUEST URL:', request.url);
+    console.log('raw title param:', searchParams.get('title'));
+    console.log('raw description param:', searchParams.get('description'));
+    console.log('raw username param:', searchParams.get('username'));
+    console.log('raw points param:', searchParams.get('points'));
+    // -----------------------------------------------------------------------
+
+    // Получаем параметры (не декодируем напрямую)
+    let titleRaw = searchParams.get('title') || 'Достижение';
+    let descriptionRaw = searchParams.get('description') || 'Описание достижения';
+    let pointsRaw = searchParams.get('points') || '0';
+    let usernameRaw = searchParams.get('username') || 'user';
+
+    // Прогоняем через безопасное декодирование
+    const title = safeDecodeMaybeDoubleEncoded(titleRaw);
+    const description = safeDecodeMaybeDoubleEncoded(descriptionRaw);
+    const username = safeDecodeMaybeDoubleEncoded(usernameRaw);
+    const points = safeDecodeMaybeDoubleEncoded(pointsRaw);
+
+    // Дополнительный лог уже после декодирования
+    console.log('decoded title:', title);
+    console.log('decoded description:', description);
+    console.log('decoded username:', username);
+    console.log('decoded points:', points);
 
     const width = 1200;
     const height = 630;
@@ -56,59 +91,61 @@ export async function GET(request) {
     ctx.fillStyle = '#0b0b0b';
     ctx.fillRect(0, 0, width, height);
 
-    // Используем зарегистрированные шрифты Inter или fallback
-    const fontFamily = fontRegistered ? 'Inter' : 'Arial, sans-serif';
-    const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial, sans-serif';
-    const italicFontFamily = fontRegistered ? 'Inter' : 'Arial, sans-serif'; // Используем обычный Inter вместо Italic для согласованности
-    
-    // Имя пользователя
+    // Используем зарегистрированные шрифты или fallback
+    const fontFamily = fontRegistered ? 'Inter' : 'Arial';
+    const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial';
+    const italicFontFamily = fontRegistered ? 'Inter-Italic' : 'Arial';
+
+    // Имя пользователя (зелёным)
     ctx.fillStyle = '#00ff99';
-    ctx.font = `bold 48px ${fontFamily}`;
+    ctx.font = `700 48px "${fontFamily}"`;
     ctx.textAlign = 'left';
     ctx.fillText(`@${username}`, 80, 100);
 
-    // Название достижения (используем тот же шрифт, что и для имени пользователя)
+    // Название достижения
     ctx.fillStyle = '#ffffff';
-    ctx.font = `bold 80px ${fontFamily}`; // Используем обычный жирный шрифт вместо специального bold
+    ctx.font = `700 80px "${boldFontFamily}"`;
 
-    // Ограничиваем длину заголовка
+    // Ограничиваем длину заголовка (в символах) и отображаем
     const shortTitle = title.length > 30 ? title.substring(0, 30) + '...' : title;
     ctx.fillText(shortTitle, 80, 200);
 
-    // Описание достижения (используем тот же шрифт)
-    ctx.font = `34px ${fontFamily}`;
+    // Описание достижения
+    ctx.font = `34px "${fontFamily}"`;
     ctx.fillStyle = '#ffffff';
     const shortDesc = description.length > 100 ? description.substring(0, 100) + '...' : description;
 
-    // Простой перенос строк
+    // Перенос строк по количеству символов — более надёжно рассчитывать ширину текста через measureText,
+    // но для простоты используем символный лимит (при необходимости позже улучшим).
     const lines = [];
     let currentLine = '';
     const words = shortDesc.split(' ');
 
     for (const word of words) {
-      const testLine = currentLine + word + ' ';
-      if (testLine.length > 40) { // Примерное ограничение по символам
-        lines.push(currentLine);
-        currentLine = word + ' ';
+      const testLine = currentLine + (currentLine ? ' ' : '') + word;
+      // сравниваем длину символов строки (упрощённо)
+      if (testLine.length > 40) {
+        if (currentLine) lines.push(currentLine);
+        currentLine = word;
       } else {
         currentLine = testLine;
       }
     }
-    lines.push(currentLine);
+    if (currentLine) lines.push(currentLine);
 
-    // Рисуем линии описания
+    // Рисуем линии описания (макс 3 строки)
     let y = 270;
-    for (const line of lines.slice(0, 3)) { // Максимум 3 строки
+    for (const line of lines.slice(0, 3)) {
       ctx.fillText(line.trim(), 80, y);
       y += 45;
     }
 
-    // Очки (используем тот же шрифт)
+    // Очки
     ctx.fillStyle = '#00ff99';
-    ctx.font = `bold 40px ${fontFamily}`;
+    ctx.font = `700 40px "${boldFontFamily}"`;
     ctx.fillText(`+${points} очков`, 80, y + 30);
 
-    // Цитата (используем курсивный шрифт только для цитаты)
+    // Цитата (случайная)
     const quotes = [
       '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
       '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
@@ -117,16 +154,14 @@ export async function GET(request) {
       '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
     ];
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-    ctx.font = `italic 30px ${italicFontFamily}`;
+    ctx.font = `italic 30px "${italicFontFamily}"`;
     ctx.fillStyle = '#9b9b9b';
-
-    // Обрезаем длинную цитату
     const shortQuote = randomQuote.length > 60 ? randomQuote.substring(0, 60) + '...' : randomQuote;
     ctx.fillText(shortQuote, 80, height - 60);
 
-    // Возвращаем изображение как PNG
+    // Возвращаем PNG
     const buffer = canvas.toBuffer('image/png');
-    
+
     return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'image/png',
