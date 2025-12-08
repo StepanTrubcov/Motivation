@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
+import { generateImage } from "@/lib/api/ImageShare";
 
 const ModalWindowMe = ({
   getMakingPicture,
@@ -51,11 +52,13 @@ const ModalWindowMe = ({
     setImageDataUrl(null);
 
     try {
-      const res = await getMakingPicture(isModalOpen, username);
-      // Ожидаем, что сервер возвращает прямую HTTP ссылку на изображение
-      // getMakingPicture возвращает объект с полем data, содержащим url
-      const imageUrl = res?.url || res?.data?.url;
-      if (!imageUrl) throw new Error("Нет ссылки на изображение");
+      // Используем новую функцию для генерации изображения
+      const imageUrl = await generateImage({
+        title: isModalOpen.title,
+        description: isModalOpen.description,
+        username: username,
+        points: isModalOpen.points || 0
+      });
 
       setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
       toast.success("Карточка готова!");
@@ -147,19 +150,12 @@ const ModalWindowMe = ({
       // Создаем caption с правильной кодировкой для отображения в Telegram
       let caption = "";
       try {
-        // Пытаемся декодировать параметры из URL, если они закодированы
-        const urlObj = new URL(mediaUrl);
-        const titleParam = urlObj.searchParams.get('title');
-        const descParam = urlObj.searchParams.get('description');
-        
-        // Если параметры закодированы, декодируем их
-        const decodedTitle = titleParam ? decodeURIComponent(titleParam) : isModalOpen.title;
-        const decodedDesc = descParam ? decodeURIComponent(descParam) : (isModalOpen.description || "");
-        
-        caption = `${decodedTitle}\n${decodedDesc}`.trim();
+        // Для новых URL с ID мы не можем извлечь параметры из URL
+        // Поэтому используем оригинальные значения из isModalOpen
+        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
       } catch (decodeError) {
-        // Если возникла ошибка при декодировании, используем оригинальные значения
-        console.warn("Ошибка декодирования параметров URL:", decodeError);
+        // Если возникла ошибка, используем оригинальные значения
+        console.warn("Ошибка создания caption:", decodeError);
         caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
       }
 
@@ -178,7 +174,7 @@ const ModalWindowMe = ({
           if (!resp.ok) throw new Error("Не удалось скачать изображение для editor");
           const blob = await resp.blob();
           // File-конструктор может не существовать в некоторых окружениях, но в браузерах обычно есть
-          const file = new File([blob], "achievement.jpg", { type: blob.type || "image/jpeg" });
+          const file = new File([blob], "achievement.png", { type: blob.type || "image/png" });
 
           await tg.showStoryEditor({
             media: [file],
@@ -196,7 +192,7 @@ const ModalWindowMe = ({
       toast("Истории пока недоступны. Скачиваем карточку...");
       const a = document.createElement("a");
       a.href = imageDataUrl;
-      a.download = "achievement.jpg";
+      a.download = "achievement.png";
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -211,7 +207,7 @@ const ModalWindowMe = ({
     if (!imageDataUrl) return toast.error("Нет картинки");
     const a = document.createElement("a");
     a.href = imageDataUrl;
-    a.download = "achievement.jpg";
+    a.download = "achievement.png";
     document.body.appendChild(a);
     a.click();
     a.remove();
