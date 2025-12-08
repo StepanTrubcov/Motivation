@@ -8,16 +8,19 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
-    // Возвращаем данные для генерации изображения через POST запрос
-    // Это предотвратит URL-кодирование параметров
+    // Создаем URL для динамической генерации изображения
+    const baseUrl = request.nextUrl.origin;
+    // Передаем параметры напрямую без дополнительного кодирования
+    // Next.js автоматически кодирует параметры при формировании URL
+    const imageUrl = new URL(`${baseUrl}/api/achievement/image`);
+    imageUrl.searchParams.set('title', title);
+    imageUrl.searchParams.set('description', description);
+    imageUrl.searchParams.set('points', points || 0);
+    imageUrl.searchParams.set('username', username || 'user');
+
     return NextResponse.json({
       success: true,
-      title,
-      description,
-      points: points || 0,
-      username: username || 'user',
-      url: `${request.nextUrl.origin}/api/achievement/image`, // URL для POST запроса
-      method: 'POST'
+      url: imageUrl.toString(),
     });
   } catch (error) {
     console.error('❌ Ошибка генерации share-картинки:', error);

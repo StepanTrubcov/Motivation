@@ -53,37 +53,10 @@ const ModalWindowMe = ({
     try {
       const res = await getMakingPicture(isModalOpen, username);
       // Ожидаем, что сервер возвращает прямую HTTP ссылку на изображение
-      const imageData = res?.data;
-      if (!imageData) throw new Error("Нет данных для генерации изображения");
+      const imageUrl = res?.data?.url;
+      if (!imageUrl) throw new Error("Нет ссылки на изображение");
 
-      // Если сервер вернул URL и метод POST, делаем POST запрос для генерации изображения
-      if (imageData.method === 'POST' && imageData.url) {
-        const imageResponse = await fetch(imageData.url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            title: imageData.title,
-            description: imageData.description,
-            points: imageData.points,
-            username: imageData.username
-          })
-        });
-
-        if (!imageResponse.ok) throw new Error("Ошибка генерации изображения");
-
-        // Создаем blob URL для отображения изображения
-        const blob = await imageResponse.blob();
-        const imageUrl = URL.createObjectURL(blob);
-        setImageDataUrl(imageUrl);
-      } else {
-        // Если сервер вернул прямую ссылку на изображение
-        const imageUrl = imageData.url;
-        if (!imageUrl) throw new Error("Нет ссылки на изображение");
-        setImageDataUrl(imageUrl);
-      }
-
+      setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
       toast.success("Карточка готова!");
     } catch (err) {
       console.error(err);
@@ -92,15 +65,6 @@ const ModalWindowMe = ({
       setIsLoading(false);
     }
   };
-
-  // Добавляем эффект для очистки созданных URL объектов
-  useEffect(() => {
-    return () => {
-      if (imageDataUrl && imageDataUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(imageDataUrl);
-      }
-    };
-  }, [imageDataUrl]);
 
   const isHttpUrl = (url) => {
     try {

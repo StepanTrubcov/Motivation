@@ -22,37 +22,31 @@ try {
   console.error('Ошибка при регистрации шрифтов Inter:', error);
 }
 
-// Добавляем поддержку POST запросов
-export async function POST(request) {
-  try {
-    const { title, description, points, username } = await request.json();
-
-    return await generateImage(title, description, points, username);
-  } catch (error) {
-    console.error('❌ Ошибка генерации изображения:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
-  }
-}
-
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    // Next.js автоматически декодирует параметры из URL
-    const title = searchParams.get('title') || 'Достижение';
-    const description = searchParams.get('description') || 'Описание достижения';
+    
+    // Получаем параметры и явно декодируем их для обеспечения правильного отображения кириллических символов
+    let title = searchParams.get('title') || 'Достижение';
+    let description = searchParams.get('description') || 'Описание достижения';
     const points = searchParams.get('points') || '0';
     const username = searchParams.get('username') || 'user';
+    
+    // Явно декодируем параметры, если они закодированы
+    try {
+      title = decodeURIComponent(title);
+    } catch (e) {
+      // Если декодирование не удалось, оставляем оригинальное значение
+      console.warn('Не удалось декодировать title:', title);
+    }
+    
+    try {
+      description = decodeURIComponent(description);
+    } catch (e) {
+      // Если декодирование не удалось, оставляем оригинальное значение
+      console.warn('Не удалось декодировать description:', description);
+    }
 
-    return await generateImage(title, description, points, username);
-  } catch (error) {
-    console.error('❌ Ошибка генерации изображения:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
-  }
-}
-
-// Выносим общую логику генерации изображения в отдельную функцию
-async function generateImage(title, description, points, username) {
-  try {
     const width = 1200;
     const height = 630;
     const canvas = createCanvas(width, height);
@@ -141,6 +135,6 @@ async function generateImage(title, description, points, username) {
     });
   } catch (error) {
     console.error('❌ Ошибка генерации изображения:', error);
-    throw error;
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
