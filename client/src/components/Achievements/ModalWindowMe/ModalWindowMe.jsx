@@ -143,7 +143,24 @@ const ModalWindowMe = ({
         }
       }
 
-      const caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
+      // Создаем caption с правильной кодировкой для отображения в Telegram
+      let caption = "";
+      try {
+        // Пытаемся декодировать параметры из URL, если они закодированы
+        const urlObj = new URL(mediaUrl);
+        const titleParam = urlObj.searchParams.get('title');
+        const descParam = urlObj.searchParams.get('description');
+        
+        // Если параметры закодированы, декодируем их
+        const decodedTitle = titleParam ? decodeURIComponent(titleParam) : isModalOpen.title;
+        const decodedDesc = descParam ? decodeURIComponent(descParam) : (isModalOpen.description || "");
+        
+        caption = `${decodedTitle}\n${decodedDesc}`.trim();
+      } catch (decodeError) {
+        // Если возникла ошибка при декодировании, используем оригинальные значения
+        console.warn("Ошибка декодирования параметров URL:", decodeError);
+        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
+      }
 
       // 1) Попытка: tg.shareToStory (несколько сигнатур)
       const shared = await tryShareToStory(tg, mediaUrl, caption);
