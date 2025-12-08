@@ -8,19 +8,34 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
-    // Создаем URL для динамической генерации изображения
-    const baseUrl = request.nextUrl.origin;
-    // Передаем параметры напрямую без дополнительного кодирования
-    // Next.js автоматически кодирует параметры при формировании URL
-    const imageUrl = new URL(`${baseUrl}/api/achievement/image`);
-    imageUrl.searchParams.set('title', title);
-    imageUrl.searchParams.set('description', description);
-    imageUrl.searchParams.set('points', points || 0);
-    imageUrl.searchParams.set('username', username || 'user');
+    // Делаем POST запрос к image API для генерации изображения с ID
+    const protocol = (request.headers.get('x-forwarded-proto') || 'https');
+    const host = request.headers.get('host') || 'example.com';
+    const imageUrl = `${protocol}://${host}/api/achievement/image`;
+
+    // Отправляем данные через POST, чтобы избежать URL-кодирования
+    const imageResponse = await fetch(imageUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        points: points || 0,
+        username: username || 'user'
+      })
+    });
+
+    if (!imageResponse.ok) {
+      throw new Error(`Failed to generate image: ${imageResponse.status}`);
+    }
+
+    const imageData = await imageResponse.json();
 
     return NextResponse.json({
       success: true,
-      url: imageUrl.toString(),
+      url: imageData.url, // URL с ID, без параметров в строке запроса
     });
   } catch (error) {
     console.error('❌ Ошибка генерации share-картинки:', error);
