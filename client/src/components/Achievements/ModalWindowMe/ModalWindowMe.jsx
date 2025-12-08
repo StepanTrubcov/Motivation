@@ -152,11 +152,11 @@ const ModalWindowMe = ({
       try {
         // Для новых URL с ID мы не можем извлечь параметры из URL
         // Поэтому используем оригинальные значения из isModalOpen
-        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
+        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}\n @BotMotivation_TG_bot`.trim();
       } catch (decodeError) {
         // Если возникла ошибка, используем оригинальные значения
         console.warn("Ошибка создания caption:", decodeError);
-        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}`.trim();
+        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}\n @BotMotivation_TG_bot`.trim();
       }
 
       // 1) Попытка: tg.shareToStory (несколько сигнатур)
