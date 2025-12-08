@@ -22,6 +22,18 @@ try {
   console.error('Ошибка при регистрации шрифтов Inter:', error);
 }
 
+// Добавляем поддержку POST запросов
+export async function POST(request) {
+  try {
+    const { title, description, points, username } = await request.json();
+
+    return await generateImage(title, description, points, username);
+  } catch (error) {
+    console.error('❌ Ошибка генерации изображения:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
+  }
+}
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -31,6 +43,16 @@ export async function GET(request) {
     const points = searchParams.get('points') || '0';
     const username = searchParams.get('username') || 'user';
 
+    return await generateImage(title, description, points, username);
+  } catch (error) {
+    console.error('❌ Ошибка генерации изображения:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
+  }
+}
+
+// Выносим общую логику генерации изображения в отдельную функцию
+async function generateImage(title, description, points, username) {
+  try {
     const width = 1200;
     const height = 630;
     const canvas = createCanvas(width, height);
@@ -119,6 +141,6 @@ export async function GET(request) {
     });
   } catch (error) {
     console.error('❌ Ошибка генерации изображения:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    throw error;
   }
 }

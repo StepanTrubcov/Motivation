@@ -517,14 +517,17 @@ export async function getMakingPicture(achievement, user) {
 
     // Проверяем, что ответ существует и имеет правильный формат
     if (response && response.data && response.data.success) {
-      return response.data.url;
+      return response.data;
     } else {
       throw new Error(response?.data?.message || "Некорректный ответ от сервера");
     }
   } catch (error) {
     console.error("Ошибка share-карточки:", error);
     // Используем более надежный placeholder сервис
-    return `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(achievement.title)}`;
+    return {
+      success: true,
+      url: `https://placehold.co/1200x630/0b0b0b/ffffff?text=${encodeURIComponent(achievement.title)}`
+    };
   }
 }
 
