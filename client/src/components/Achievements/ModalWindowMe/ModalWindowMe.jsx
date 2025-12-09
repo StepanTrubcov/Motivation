@@ -85,7 +85,6 @@ const ModalWindowMe = ({
     return await resp.blob();
   };
 
-  // Универсальный попытка-вызвать shareToStory с разными сигнатурами
   const tryShareToStory = async (tg, mediaUrl, caption) => {
     // 1) старый/популярный вариант: (mediaUrl, options)
     if (typeof tg.shareToStory === "function") {
@@ -119,7 +118,6 @@ const ModalWindowMe = ({
   const handleShare = async () => {
     if (!imageDataUrl) return toast.error("Сгенерируй карточку");
 
-    // всегда берём актуальную ссылку на WebApp
     const tg = typeof window !== "undefined" ? window.Telegram?.WebApp ?? null : null;
     if (!tg) return toast.error("Telegram API не найден");
 
@@ -202,18 +200,7 @@ const ModalWindowMe = ({
       toast.error("Не удалось поделиться в Stories");
     }
   };
-
-  const handleDownload = () => {
-    if (!imageDataUrl) return toast.error("Нет картинки");
-    const a = document.createElement("a");
-    a.href = imageDataUrl;
-    a.download = "achievement.png";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    toast("Скачано! Запости вручную");
-  };
-
+  
   return (
     <AnimatePresence>
       {isModalOpen && (
@@ -243,13 +230,7 @@ const ModalWindowMe = ({
                   <button className={styles.shareButton} onClick={handleShare}>
                     📤 Поделиться / История
                   </button>
-                  <button
-                    className={styles.shareButton}
-                    onClick={handleDownload}
-                    style={{ marginLeft: 8 }}
-                  >
-                    ⤓ Скачать
-                  </button>
+
                 </div>
               </div>
             ) : (
