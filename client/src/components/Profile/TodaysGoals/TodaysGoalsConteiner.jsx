@@ -52,7 +52,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                     background: '#333',
                     color: '#fff',
                 },
-                icon: <img src="https://chelyabinsk.powertool.ru/bitrix/templates/powertool/img/loadsamovivoz.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
             await addStatusNew(goalData.id, userId, "in_progress");
             await deletePoints(userId, goalData.points)
@@ -92,7 +92,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                     background: '#333',
                     color: '#fff',
                 },
-                icon: <img src="https://chelyabinsk.powertool.ru/bitrix/templates/powertool/img/loadsamovivoz.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
             addStatusNew(isModalOpen.id, userId, "done");
             checkTimeGoalsSaving(profile.telegramId)

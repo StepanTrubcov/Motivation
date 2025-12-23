@@ -34,7 +34,7 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
                 background: '#333',
                 color: '#fff',
             },
-            icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+            icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
         });
 
         await addTextGenerationData(formattedDate, profile.usersTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading)

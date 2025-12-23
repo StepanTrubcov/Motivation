@@ -40,7 +40,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     background: '#333',
                     color: '#fff',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
 
             await checkTimeGoalsSaving(profile.telegramId)
@@ -79,7 +79,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     background: '#333',
                     color: '#fff',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
 
             await deletePoints(userId, isModalOpen.points)
@@ -154,7 +154,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     background: '#333',
                     color: '#fff',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
 
             const goalsDone = goalsForSelectedDate.filter(g => g.status === 'completed');
