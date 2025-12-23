@@ -52,7 +52,6 @@ const ModalWindowMe = ({
     setImageDataUrl(null);
 
     try {
-      // Используем новую функцию для генерации изображения
       const imageUrl = await generateImage({
         title: isModalOpen.title,
         description: isModalOpen.description,
@@ -61,10 +60,20 @@ const ModalWindowMe = ({
       });
 
       setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
-      toast.success("Карточка готова!");
+      toast.success("Карточка готова!", {
+        style: {
+          background: '#333',
+          color: '#fff',
+        }
+      });
     } catch (err) {
       console.error(err);
-      toast.error("Ошибка генерации");
+      toast.error("Ошибка генерации", {
+        style: {
+          background: '#333',
+          color: '#fff',
+        }
+      });
     } finally {
       setIsLoading(false);
     }
@@ -119,7 +128,12 @@ const ModalWindowMe = ({
     if (!imageDataUrl) return toast.error("Сгенерируй карточку");
 
     const tg = typeof window !== "undefined" ? window.Telegram?.WebApp ?? null : null;
-    if (!tg) return toast.error("Telegram API не найден");
+    if (!tg) return toast.error("Telegram API не найден", {
+      style: {
+        background: '#333',
+        color: '#fff',
+      }
+    });
 
     try {
       let mediaUrl = imageDataUrl;
@@ -160,7 +174,12 @@ const ModalWindowMe = ({
       // 1) Попытка: tg.shareToStory (несколько сигнатур)
       const shared = await tryShareToStory(tg, mediaUrl, caption);
       if (shared) {
-        toast.success("Открылось окно Stories!");
+        toast.success("Открылось окно Stories!", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
         return;
       }
 
@@ -178,7 +197,12 @@ const ModalWindowMe = ({
             media: [file],
             text: caption,
           });
-          toast.success("История открыта!");
+          toast.success("История открыта!", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
           return;
         } catch (err) {
           console.warn("showStoryEditor failed:", err);
@@ -194,13 +218,23 @@ const ModalWindowMe = ({
       document.body.appendChild(a);
       a.click();
       a.remove();
-      toast.success("Скачано! Открой Telegram → + → История → выбери фото");
+      toast.success("Скачано! Открой Telegram → + → История → выбери фото", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
     } catch (err) {
       console.error("share error:", err);
-      toast.error("Не удалось поделиться в Stories");
+      toast.error("Не удалось поделиться в Stories", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
     }
   };
-  
+
   return (
     <AnimatePresence>
       {isModalOpen && (

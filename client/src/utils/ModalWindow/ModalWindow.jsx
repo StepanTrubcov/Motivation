@@ -52,8 +52,7 @@ const ModalWindow = ({ isModalOpen, addNewStatus, closeModal }) => {
                     <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
                     {isModalOpen.image && (<img className={styles.modalImg} src={isModalOpen.image} />)}
                     <p className={styles.modalText}>{isModalOpen.description}</p>
-
-                    <div className={styles.radioGroup}>
+                    {isModalOpen.achievement && <div></div> || <div><div className={styles.radioGroup}>
                         {number.map((item) => (
                             <label key={item.id} className={styles.radioLabel}>
                                 <input
@@ -70,13 +69,13 @@ const ModalWindow = ({ isModalOpen, addNewStatus, closeModal }) => {
                         ))}
                     </div>
 
-                    <button
-                        onClick={handleAddStatus}
-                        className={styles.actionButton}
-                        disabled={selectedOption === null}
-                    >
-                        Взять цель на {number[selectedOption]?.name}
-                    </button>
+                        <button
+                            onClick={handleAddStatus}
+                            className={styles.actionButton}
+                            disabled={selectedOption === null}
+                        >
+                            Взять цель на {number[selectedOption]?.name}
+                        </button></div>}
                 </motion.div>
             </motion.div>
         )}

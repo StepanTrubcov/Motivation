@@ -1,15 +1,26 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Yesterday from "./Yesterday";
 import { connect } from "react-redux";
+import { addStatus, addStatusNew, checkTimeGoalsSaving, newStatusSavingGoal } from "@/redux/goals_reducer";
+import { deletePoints, setPoints } from "@/redux/profile_reducer";
+import { addTextGenerationData } from "@/redux/generation_reducer";
 
 const YesterdayConteiner = (props) => {
+
     const [date, setDate] = useState(null);
+    const [savingGoals, setSavingGoals] = useState(null);
+    
+    useEffect(() => {
+        checkTimeGoalsSaving(props.profile.telegramId);
+    }, [props.timeGoalsSaving])
 
     const goalsForSelectedDate = useMemo(() => {
-        if (!date || !props.timeGoalsSaving || !props.goals) {
+        const goalsData = savingGoals || props.timeGoalsSaving;
+
+        if (!date || !goalsData || !props.goals) {
             return [];
         }
-        const dateEntry = props.timeGoalsSaving.find(entry => entry.date === date);
+        const dateEntry = goalsData.find(entry => entry.date === date);
 
         if (!dateEntry || !dateEntry.goalData) {
             return [];
@@ -28,16 +39,16 @@ const YesterdayConteiner = (props) => {
         }).filter(Boolean);
 
         return resultGoals;
-    }, [date, props.timeGoalsSaving, props.goals]);
+    }, [date, savingGoals, props.timeGoalsSaving, props.goals]);
 
-    console.log('Goals for selected date:', goalsForSelectedDate);
-
-    return <Yesterday setDate={setDate} goalsForSelectedDate={goalsForSelectedDate} />
+    return <Yesterday addTextGenerationData={props.addTextGenerationData} setDisplay={props.setDisplay} deletePoints={props.deletePoints} setSavingGoals={setSavingGoals} newStatusSavingGoal={props.newStatusSavingGoal} profile={props.profile} userId={props.userId} addStatus={props.addStatus} setPoints={props.setPoints} checkTimeGoalsSaving={props.checkTimeGoalsSaving} setDate={setDate} goalsForSelectedDate={goalsForSelectedDate} addStatusNew={props.addStatusNew} />
 }
 
 const mapStateToProps = (state) => ({
     timeGoalsSaving: state.goals.timeGoalsSaving,
+    userId: state.profile.profile.id,
+    profile: state.profile.profile,
     goals: state.goals.goals
 })
 
-export default connect(mapStateToProps, {})(YesterdayConteiner);
+export default connect(mapStateToProps, {addTextGenerationData, deletePoints, newStatusSavingGoal, addStatusNew, checkTimeGoalsSaving, setPoints, addStatus })(YesterdayConteiner);

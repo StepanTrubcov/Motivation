@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MonthlyPointsScale from "./MonthlyPointsScale/MonthlyPointsScale";
 import ProfileInfoConteiner from "./ProfileInfo/ProfileInfoConteiner";
 import TodaysGoalsConteiner from "./TodaysGoals/TodaysGoalsConteiner";
@@ -8,13 +8,19 @@ import QuestionButton from "./ProfileInfo/QuestionButton/QuestionButton";
 import YesterdayConteiner from "./Yesterday/YesterdayConteiner";
 
 const Profile = (props) => {
+
+    const [display, setDisplay] = useState(true)
+
     return <div>
-        <MonthlyPointsScale userPoints={props.pts} />
-        <ProfileInfoConteiner />
-        <TodaysGoalsConteiner />
-        <GenerationButtonConteiner />
-        <ContributionCalendarConteiner />
-        {/* <YesterdayConteiner /> */}
+        {display && <div>
+            <MonthlyPointsScale userPoints={props.pts} />
+            <ProfileInfoConteiner />
+            <TodaysGoalsConteiner />
+            <GenerationButtonConteiner />
+            <ContributionCalendarConteiner />
+        </div>
+        }
+        <YesterdayConteiner setDisplay={setDisplay} />
     </div>
 }
 

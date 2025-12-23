@@ -7,7 +7,6 @@ import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import { addProfile } from '@/redux/profile_reducer';
 import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
 import { getInitializeAchievementsData } from '@/redux/assignments_reducer';
-import { addTextGenerationData } from '@/redux/generation_reducer';
 
 const DataInitializer = ({ children }) => {
     const dispatch = useDispatch();
@@ -51,20 +50,6 @@ const DataInitializer = ({ children }) => {
             dispatch(addStatus(user.id));
         }
     }, [user, ThereAreUsers, dispatch]);
-
-    useEffect(() => {
-        if (ThereAreUsers && user && !isTextDataInitialized.current) {
-            const goalsDone = goals.filter(g => g.status === "completed");
-            const goalsInProgress = goals.filter(g => g.status === "in_progress");
-            const telegramId = user.telegramId;
-            const loading = false;
-            if (goalsDone.length > 0 || goalsInProgress.length > 0) {
-                dispatch(addTextGenerationData(user?.usersTag, telegramId, goalsDone, goalsInProgress, null, null, loading));
-            }
-            isTextDataInitialized.current = true;
-            console.log('✅ Данные генерации текста инициализированы один раз');
-        }
-    }, [ThereAreUsers, user, goals, dispatch]);
 
     useEffect(() => {
         if (user && !assignmentsLoaded) {

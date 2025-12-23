@@ -9,7 +9,7 @@ import { toast } from "react-hot-toast";
 import { setPoints } from "../../redux/profile_reducer";
 import { checkAll } from "../../utils/checkAll/checkAll";
 
-const AchievementsConteiner = ({getMakingPicture, assignments = [], goals = [], userId, user, getAchievementsNewStatus, setPoints }) => {
+const AchievementsConteiner = ({ getMakingPicture, assignments = [], goals = [], userId, user, getAchievementsNewStatus, setPoints }) => {
     const triggeredRef = useRef(new Set());
 
     const userRegistrationStub = new Date(Date.now() - 100 * 24 * 60 * 60 * 1000);
@@ -17,7 +17,12 @@ const AchievementsConteiner = ({getMakingPicture, assignments = [], goals = [], 
     const newStatusAssignment = (achievement, userId) => {
         getAchievementsNewStatus(achievement, userId)
         setPoints(userId, achievement.points)
-        toast.success(`Вы получили новое достижение!`);
+        toast.success(`Вы получили новое достижение!`, {
+            style: {
+                background: '#333',
+                color: '#fff',
+            }
+        });
     };
 
     useEffect(() => {

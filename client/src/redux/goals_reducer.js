@@ -1,4 +1,4 @@
-import {getUserSavingGoalsWithAutoPeriod, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday } from '@/lib/api/Api';
+import { getUserSavingGoalsWithAutoPeriod, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday } from '@/lib/api/Api';
 
 const SET_GOALS = 'goals/SET_GOALS';
 const UPDATE_GOAL_STATUS = 'goals/UPDATE_GOAL_STATUS';
@@ -110,10 +110,10 @@ export const newStatusSavingGoal = (telegramId, date, goalId, newStatus) => asyn
         } else {
             console.error('Ошибка при обновлении статуса цели в savingGoals:', response.error);
         }
+        return response
     } catch (e) {
         console.log(`Ошибка при изменении статуса у цели в массиве savingGoal:`, e);
     }
-    return true
 }
 
 export const deleteGoalsSaving = (userId, goalId) => async (dispatch) => {
@@ -131,7 +131,6 @@ export const deleteGoalsSaving = (userId, goalId) => async (dispatch) => {
 export const checkTimeGoalsSaving = (userId) => async (dispatch) => {
     try {
         await getUserSavingGoalsWithAutoPeriod(userId).then(response => {
-            console.log(response)
             dispatch(setTimeGoalsSaving(response.savingGoals))
         })
     } catch (e) {

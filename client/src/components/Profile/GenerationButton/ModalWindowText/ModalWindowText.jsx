@@ -3,8 +3,21 @@ import styles from './ModalWindowText.module.css'
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Copy } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
+
+    const copyToClipboard = async (text) => {
+        await navigator.clipboard.writeText(text);
+        toast.success("Отчёт скопирован!", {
+            style: {
+                background: '#333',
+                color: '#fff',
+            }
+        });
+        closeModalText()
+    };
+
     return (
         <AnimatePresence>
             {isModalOpenText && (
@@ -32,8 +45,17 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                             <X size={24} />
                         </button>
                         <pre className={styles.previewText}>
-                            { isModalOpenText}
+                            {isModalOpenText}
                         </pre>
+                        <div className={styles.copyButtonIsModalBlok}>
+                            <button
+                                className={styles.copyButtonIsModal}
+                                onClick={() => copyToClipboard(isModalOpenText)}
+                                aria-label="Копировать отчёт"
+                            >
+                                Скопировать
+                            </button>
+                        </div>
                     </motion.div>
                 </motion.div>
             )}

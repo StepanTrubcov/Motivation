@@ -3,7 +3,6 @@ import GenerationButton from "./GenerationButton";
 import { connect } from "react-redux";
 import { addTextGenerationData } from "../../../redux/generation_reducer";
 import toast from "react-hot-toast";
-import BigReport from "./BigReport/BigReport";
 
 const GenerationButtonConteiner = (props) => {
     const goalsDone = props.goals.filter(g => g.status === "completed")
@@ -12,7 +11,6 @@ const GenerationButtonConteiner = (props) => {
 
     return <div>
         <GenerationButton profile={props.profile} yesterdayReport={props.yesterdayReport} telegramId={props.telegramId} addTextGenerationData={props.addTextGenerationData} text={props.text} generationTextYesterday={props.generationTextYesterday} goalsInProgress={goalsInProgress} goalsDone={goalsDone} />
-        {/* <BigReport goals={props.goals} timeSavingGoals={props.timeSavingGoals} /> */}
     </div>
 }
 

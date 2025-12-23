@@ -28,7 +28,6 @@ model User {
   username         String?
   photoUrl         String?
   pts              Int           @default(0)
-  completedDates   String[]      @default([])
   savingGoals      Json[]      @default([])
   usersTag         String?
   achievements     Achievement[] 

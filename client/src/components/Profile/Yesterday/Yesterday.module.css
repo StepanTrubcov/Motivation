@@ -1,20 +1,367 @@
-.Yesterday {
-    color: aliceblue;
+.wrapper {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 80px;
+    margin: 15px 0 80px 0;
+    gap: 30px;
 }
 
-.name {
-    margin-left: 20px;
+.label {
     font-size: 18px;
+    color: hsl(0, 0%, 100%);
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 255, 0, 0.15);
+}
+
+.arrowBtn {
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 12px;
+
+    background: #2f2f2f;
+
+    color: #cfcfcf;
+    font-size: 22px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.05);
+}
+
+.arrowBtn:active {
+    background: #3d3d3d;
+    color: #8fff7a;
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.35);
+}
+
+.home {
+    margin-bottom: 30px;
+}
+
+.text {
+    text-align: center;
+    padding: 20px;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.blok {
+    margin: 20px 10px;
+    background: #151515;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideFadeIn 0.6s ease forwards;
+}
+
+.blok:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.blok:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.blok:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.blok:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.blok:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.blok:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.blok:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.blok:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+.blok:nth-child(9) {
+    animation-delay: 0.9s;
+}
+
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.title {
+    font-weight: 600;
+    font-size: 17px;
+}
+
+.pts {
+    margin-top: 10px;
+    font-size: 15px;
+    color: #00ff1e;
+    text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
+}
+
+.img {
+    width: 50px;
+    margin-left: 10px;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.popup {
+    position: absolute;
+    right: 0px;
+    top: calc(100% + 8px);
+    /* ниже блока на 8px */
+    transform: scale(0.85);
+    background: #1e1e1e;
+    padding: 10px 16px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    animation: popupShow 0.22s ease forwards;
+    z-index: 30;
+    white-space: nowrap;
+}
+
+.popup::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: 16px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #1e1e1e;
+}
+
+.deleteBtn {
+    background: #ff3b30;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
     font-weight: 500;
-    margin-right: 20px;
+}
+
+.deleteBtn:active {
+    opacity: 0.85;
+}
+
+@keyframes popupShow {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.GenerationButton {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .button {
+    display: flex;
+    justify-content: center;
+    width: 94%;
     padding: 5px;
+    background-color: #00ff1e;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+}
+
+.imgButton {
+    width: 25px;
+    margin-right: 10px;
+}
+
+.textButton {
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.generatedBox {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.generatedText {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+.previewWrapper {
+    font-size: 15px;
+    width: 80%;
+    border: solid;
+    color: #ffffff;
+    display: flex;
+    align-items: flex-start;
+    background: #111;
+    padding: 15px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.previewText {
+    overflow: hidden;
+    white-space: pre-wrap;
+    flex: 1;
+    position: relative;
+}
+
+.previewText::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(to top, #111, transparent);
+}
+
+.copyCube {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+    background: #00ff84;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.copyCube:hover {
+    background: #00cc6a;
+}
+
+
+.generatedBox {
+    display: flex;
+}
+
+.copyButton {
+    color: #ffffff;
+    margin-left: 10px;
+    background-color: #000000;
+    border: none;
+}
+
+.generation__text {
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+
+.modalBackdrop {
+    position: fixed;
+    right: 8px;
+    top: 0;
+    left: 8px;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modalImg {
+    width: 100px;
+    display: block;
+    margin: 0 auto;
+}
+
+.modalContent {
+    background-color: #151515;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    max-width: 28rem;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.closeButton {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: none;
+    border: none;
+    color: #ec0000;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.closeButton:hover {
+    color: #000000;
+}
+
+.copyButtonIsModalBlok {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.copyButtonIsModal {
+    text-align: center;
+    font-size: 15px;
+    width: 50%;
+    border: 1px solid;
+    color: #ffffff;
+    display: flex;
+    align-items: flex-start;
+    background: #111;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
 }

@@ -34,7 +34,7 @@ export const addProfileApi = async () => {
 
   WebApp.ready();
 
-  const userData = WebApp.initDataUnsafe?.user ||  {
+  const userData = WebApp.initDataUnsafe?.user || {
     id: 123,
     first_name: 'testBot',
     username: 'username',
@@ -142,7 +142,7 @@ export async function getAllStatus(customUserId, goalId, newStatus, selectedOpti
 
   console.log(`Updating status for goal ${goalId} to ${newStatus} for user ${customUserId}`);
   console.log(`Selected option:`, selectedOption);
-  
+
   try {
     // Передаем selectedOption в API endpoint
     const requestData = { newStatus };
@@ -150,14 +150,19 @@ export async function getAllStatus(customUserId, goalId, newStatus, selectedOpti
     if (selectedOption !== null && selectedOption !== undefined) {
       requestData.selectedOption = selectedOption;
     }
-    
+
     console.log('Sending request data:', requestData);
-    
+
     await axios.put(`${BASE_URL}/goals/${customUserId}/${goalId}`, requestData);
     console.log(`Статус цели ${goalId} для пользователя ${customUserId} изменён на ${newStatus}`);
 
   } catch (error) {
-    toast.error("Извините произошла ошибка. Попробуйте снова.");
+    toast.error("Извините произошла ошибка. Попробуйте снова.", {
+      style: {
+        background: '#333',
+        color: '#fff',
+      }
+    });
     console.error(`Ошибка обновления статуса цели ${goalId}:`, error);
     throw error;
   }
@@ -299,7 +304,7 @@ export async function getCompletedDates(customUserId) {
   }
 }
 
-export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, userTag) => {
+export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, userTag, formattedDate) => {
   try {
     if (!telegramId) {
       console.error("❌ Нет telegramId для отчёта");
@@ -309,6 +314,7 @@ export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, us
       goalsDone,
       goalsInProgress,
       userTag,
+      formattedDate,
     });
 
     const { message, success } = response.data;
@@ -316,7 +322,12 @@ export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, us
     return message;
   } catch (err) {
     console.error("❌ Ошибка при генерации отчёта:", err);
-    toast.error("Произошла ошибка при создании отчёта");
+    toast.error("Произошла ошибка при создании отчёта", {
+      style: {
+        background: '#333',
+        color: '#fff',
+      }
+    });
   }
 };
 

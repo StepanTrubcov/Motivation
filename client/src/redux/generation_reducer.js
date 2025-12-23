@@ -29,8 +29,8 @@ const setTextData = (generationText) => ({
 });
 
 
-export const addTextGenerationData = (userTag,telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, loading = true) => async (dispatch) => {
-    await getGeneraleText(telegramId, goalsDone, goalsInProgress, userTag).then(response => {
+export const addTextGenerationData = (formattedDate, userTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, loading = true) => async (dispatch) => {
+    await getGeneraleText(telegramId, goalsDone, goalsInProgress, userTag, formattedDate).then(response => {
         if (loading) {
             dispatch(setTextData(response))
             setGeneratedText(response)

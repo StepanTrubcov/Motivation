@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request, { params }) {
   try {
     const { telegramId } = await params;
-    const { goalsDone = [], goalsInProgress = [], userTag } = await request.json();
+    const { goalsDone = [], goalsInProgress = [], userTag, formattedDate } = await request.json();
 
     if (!Array.isArray(goalsDone) || !Array.isArray(goalsInProgress)) {
       return NextResponse.json({ error: "Нужны массивы goalsDone и goalsInProgress" }, { status: 400 });
@@ -36,7 +36,7 @@ export async function POST(request, { params }) {
 
     const today = new Date();
     const todayString = today.toDateString();
-    const formattedDate = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+    
     const finalMessage = [`${formattedDate} ${userTag}`, goalsList, diaryNote, "Отчёт сделан с помощью @BotMotivation_TG_bot"].join('\n\n').trim();
 
     const user = await prisma.user.findUnique({ where: { telegramId: String(telegramId) } });

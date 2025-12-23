@@ -65,11 +65,21 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 setLoading(true)
             }
             toast.dismiss(loadingToast);
-            toast.success("Цель успешно перемещена в раздел 'В процессе'!");
+            toast.success("Цель успешно перемещена в раздел 'В процессе'!", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
 
         } catch (error) {
             console.error("Ошибка при изменении статуса цели цели:", error);
-            toast.error("Не удалось переместить цель в раздел 'В процессе'. Попробуйте снова.");
+            toast.error("Не удалось переместить цель в раздел 'В процессе'. Попробуйте снова.", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
         }
     };
 
@@ -96,10 +106,20 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 setLoading(true)
             }
             toast.dismiss(loadingToast);
-            toast.success("Цель успешно выполнена!")
+            toast.success("Цель успешно выполнена!", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            })
         } catch (error) {
             console.error("Ошибка при выполнении цели:", error);
-            toast.error("Не удалось выполнить цель. Попробуйте снова.");
+            toast.error("Не удалось выполнить цель. Попробуйте снова.", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
         }
     };
 
@@ -113,13 +133,23 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
             }
 
             await addStatusNew(goalData.id, userId, "not_started");
-            toast.success("Цель успешно убрана!");
+            toast.success("Цель успешно убрана!", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
 
             await deleteGoalsSaving(profile.telegramId, goalData.id)
 
         } catch (error) {
             console.error("Ошибка при убирании цели:", error);
-            toast.error("Не удалось убрать цель. Попробуйте снова.");
+            toast.error("Не удалось убрать цель. Попробуйте снова.", {
+                style: {
+                    background: '#333',
+                    color: '#fff',
+                }
+            });
         }
     };
 
