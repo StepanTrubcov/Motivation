@@ -77,8 +77,6 @@ function roundedRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-/** Генерация PNG (вынесена в функцию) */
-/** Генерация PNG */
 async function generateImageBuffer({
   title,
   points = '0',
@@ -96,7 +94,7 @@ async function generateImageBuffer({
   let height = Math.round(1100 * cardScale);
 
   // Для улучшения качества рендерим в 4x разрешении (увеличил dpiScale для большей чёткости)
-  const dpiScale = 4;
+  const dpiScale = 5;
   const renderWidth = cardWidth * dpiScale;
   const renderHeight = height * dpiScale;
 
@@ -166,7 +164,7 @@ async function generateImageBuffer({
 
   // ===== КАРТОЧКА: POINTS =====
   cardCtx.save();
-  cardCtx.font = `600 ${Math.round(66 * cardScale)}px "${boldFontFamily}"`;
+  cardCtx.font = `500 ${Math.round(66 * cardScale)}px "${boldFontFamily}"`;
   cardCtx.textAlign = 'center';
   cardCtx.textBaseline = 'middle';
 

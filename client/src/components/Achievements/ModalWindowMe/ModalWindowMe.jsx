@@ -102,35 +102,26 @@ const ModalWindowMe = ({
   };
 
   const tryShareToStory = async (tg, mediaUrl, caption) => {
-    // 1) старый/популярный вариант: (mediaUrl, options)
-    if (typeof tg.shareToStory === "function") {
-      try {
-        // сначала пробуем наиболее простой вариант
-        await tg.shareToStory(mediaUrl, { text: caption });
-        return true;
-      } catch (e1) {
-        console.warn("shareToStory(mediaUrl, options) failed:", e1);
-        // затем пробуем объектную сигнатуру
-        try {
-          await tg.shareToStory({ url: mediaUrl, text: caption });
-          return true;
-        } catch (e2) {
-          console.warn("shareToStory({url, text}) failed:", e2);
-          // ещё пробуем background (в некоторых клиентах)
-          try {
-            await tg.shareToStory({ background: mediaUrl, text: caption });
-            return true;
-          } catch (e3) {
-            console.warn("shareToStory({background, text}) failed:", e3);
-            // не удалось
-            return false;
-          }
-        }
-      }
-    }
-    return false;
-  };
+    if (typeof tg.shareToStory !== "function") return false;
 
+    const payload = {
+      media_url: mediaUrl,
+      text: caption,
+      link: {
+        url: "https://t.me/BotMotivation_TG_bot",
+        name: "Дневные достижения"
+      }
+    };
+
+    try {
+      await tg.shareToStory(payload);
+      return true;
+    } catch (e) {
+      console.warn("shareToStory failed:", e);
+      return false;
+    }
+  };
+  
   const handleShare = async () => {
     if (!imageDataUrl) return toast.error("Сгенерируй карточку");
 
@@ -249,8 +240,6 @@ const ModalWindowMe = ({
       setIsLoading(false)
     }
   }
-
-  console.log(imageDataUrl)
 
   return (
     <AnimatePresence>
