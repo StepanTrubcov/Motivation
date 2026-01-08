@@ -169,13 +169,10 @@ const ModalWindowMe = ({
       // Создаем caption с правильной кодировкой для отображения в Telegram
       let caption = "";
       try {
-        // Для новых URL с ID мы не можем извлечь параметры из URL
-        // Поэтому используем оригинальные значения из isModalOpen
-        caption = `Вы тоже можете получить такую ачивку\n https://t.me/BotMotivation_TG_bot \n Переходи в бота выполняй свои цели и получай ачивки `.trim();
+        caption = `Вы тоже можете получить такую ачивку\nhttps://t.me/BotMotivation_TG_bot \nПереходи в бота выполняй свои цели и получай ачивки `.trim();
       } catch (decodeError) {
-        // Если возникла ошибка, используем оригинальные значения
         console.warn("Ошибка создания caption:", decodeError);
-        caption = `Вы тоже можете получить такую ачивку\n https://t.me/BotMotivation_TG_bot \n Переходи в бота выполняй свои цели и получай ачивки `.trim();
+        caption = `Вы тоже можете получить такую ачивку\nhttps://t.me/BotMotivation_TG_bot \nПереходи в бота выполняй свои цели и получай ачивки `.trim();
       }
 
       // 1) Попытка: tg.shareToStory (несколько сигнатур)
@@ -252,6 +249,8 @@ const ModalWindowMe = ({
       setIsLoading(false)
     }
   }
+
+  console.log(imageDataUrl)
 
   return (
     <AnimatePresence>

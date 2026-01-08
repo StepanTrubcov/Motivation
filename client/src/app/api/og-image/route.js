@@ -86,136 +86,162 @@ async function generateImageBuffer({
   img,
   rarityClass = 'common',
 }) {
-  const width = 720;
-  const padding = 28;
-  const radius = 100;
-  let height = 1100; // Начальная оценка, потом ресайз
+  const baseWidth = 720;
+  const cardScale = 0.5; // Увеличиваем масштаб карточки для лучшего качества (было слишком мало)
+  const cardWidth = Math.round(baseWidth * cardScale);
 
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext('2d');
+  const padding = Math.round(28 * cardScale);
+  const radius = Math.round(100 * cardScale);
+
+  let height = Math.round(1100 * cardScale);
+
+  // Создаём канвас для карточки в высоком разрешении (x2 для Retina/HD)
+  const dpiScale = 2;
+  const renderWidth = cardWidth * dpiScale;
+  const renderHeight = height * dpiScale;
+
+  const cardCanvas = createCanvas(renderWidth, renderHeight);
+  const cardCtx = cardCanvas.getContext('2d');
+
+  // Масштабируем контекст, чтобы все координаты оставались как при обычном размере
+  cardCtx.scale(dpiScale, dpiScale);
 
   const rarity = RARITY_COLORS[rarityClass] || RARITY_COLORS.common;
 
-  const fontFamily = fontRegistered ? 'Inter' : 'Arial';
   const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial';
 
-  // ===== ФОН =====
-  ctx.fillStyle = '#050505';
-  ctx.fillRect(0, 0, width, height);
-
-  // ===== ВНУТРЕННИЙ БЛОК (без clip пока, чтобы не мешать ресайзу) =====
+  // ===== КАРТОЧКА: Внутренний фон =====
   const cardX = padding;
   const cardY = padding;
-  const cardW = width - padding * 2;
-  const cardH = height - padding * 2; // Временная, не используется для clip
+  const cardW = cardWidth - padding * 2;
 
-  // Рисуем внутренний фон с закруглением (clip применим позже, если нужно)
-  ctx.save();
-  roundedRect(ctx, cardX, cardY, cardW, cardH, radius);
-  ctx.clip();
-  ctx.fillStyle = '#0b0b0b';
-  ctx.fillRect(cardX, cardY, cardW, cardH);
-  ctx.restore();
+  cardCtx.save();
+  roundedRect(cardCtx, cardX, cardY, cardW, height - padding * 2, radius);
+  cardCtx.clip();
+  cardCtx.fillStyle = '#0b0b0b';
+  cardCtx.fillRect(cardX, cardY, cardW, height - padding * 2);
+  cardCtx.restore();
 
-  let currentY = cardY; // Начинаем с верха для изображения
+  let currentY = cardY;
 
-  // ===== ИЗОБРАЖЕНИЕ (на всю ширину блока, от верхней рамки) =====
-  let imgBottomY = currentY;
-
+  // ===== КАРТОЧКА: ИЗОБРАЖЕНИЕ =====
   if (img) {
     const image = await loadImage(img);
-    const imgW = cardW; // Полная ширина блока
+    const imgW = cardW;
     const ratio = image.height / image.width;
     const imgH = imgW * ratio;
 
     const imgX = cardX;
     const imgY = cardY;
 
-    ctx.save();
-    roundedRect(ctx, imgX, imgY, imgW, imgH, radius); // Тот же radius, чтобы сливалось с блоком
-    ctx.clip();
-    ctx.drawImage(image, imgX, imgY, imgW, imgH);
-    ctx.restore();
+    cardCtx.save();
+    roundedRect(cardCtx, imgX, imgY, imgW, imgH, radius);
+    cardCtx.clip();
+    cardCtx.drawImage(image, imgX, imgY, imgW, imgH);
+    cardCtx.restore();
 
-    imgBottomY = imgY + imgH;
-    currentY = imgBottomY + 60; // Отступ после изображения
+    currentY = imgY + imgH + Math.round(60 * cardScale);
   }
 
-  // ===== ЛЕНТА РЕДКОСТИ — рисуем ПОСЛЕ изображения, чтобы была сверху =====
-  ctx.save();
-  // Позиционируем точку поворота в правый верхний угол (с небольшим отступом)
-  ctx.translate(width - padding - 60, cardY + 80);
-  ctx.rotate(Math.PI / 4); // поворот в другую сторону — из правого верхнего вниз влево
+  // ===== КАРТОЧКА: ЛЕНТА РЕДКОСТИ =====
+  cardCtx.save();
+  cardCtx.translate(cardWidth - padding - Math.round(60 * cardScale), cardY + Math.round(80 * cardScale));
+  cardCtx.rotate(Math.PI / 4);
 
-  // Длинная лента, выходящая за края
-  ctx.fillStyle = rarity.ribbon;
-  ctx.fillRect(-320, -28, 640, 56);
+  cardCtx.fillStyle = rarity.ribbon;
+  cardCtx.fillRect(-Math.round(320 * cardScale), -Math.round(28 * cardScale), Math.round(640 * cardScale), Math.round(56 * cardScale));
 
-  // Текст на ленте
-  ctx.fillStyle = '#ffffff';
-  ctx.font = `700 30px "${boldFontFamily}"`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(rarity.label, 0, 0);
-  ctx.restore();
+  cardCtx.fillStyle = '#ffffff';
+  cardCtx.font = `700 ${Math.round(30 * cardScale)}px "${boldFontFamily}"`;
+  cardCtx.textAlign = 'center';
+  cardCtx.textBaseline = 'middle';
+  cardCtx.fillText(rarity.label, 0, 0);
+  cardCtx.restore();
 
-  // ===== TITLE =====
-  ctx.fillStyle = '#ffffff';
-  ctx.font = `700 52px "${boldFontFamily}"`;
-  ctx.textAlign = 'center';
-  ctx.fillText(title, width / 2, currentY);
-  currentY += 80;
+  // ===== КАРТОЧКА: TITLE =====
+  cardCtx.fillStyle = '#ffffff';
+  cardCtx.font = `700 ${Math.round(52 * cardScale)}px "${boldFontFamily}"`;
+  cardCtx.textAlign = 'center';
+  cardCtx.fillText(title, cardWidth / 2, currentY);
+  currentY += Math.round(80 * cardScale);
 
-  // ===== POINTS (ГРАДИЕНТНОЕ ЖЁЛТОЕ СВЕЧЕНИЕ) =====
-  ctx.save();
-  ctx.font = `700 66px "${boldFontFamily}"`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  // ===== КАРТОЧКА: POINTS =====
+  cardCtx.save();
+  cardCtx.font = `700 ${Math.round(66 * cardScale)}px "${boldFontFamily}"`; // Вернул 700 (было 600 по ошибке)
+  cardCtx.textAlign = 'center';
+  cardCtx.textBaseline = 'middle';
 
   const pointsText = `${points} pts`;
-  const textX = width / 2;
+  const textX = cardWidth / 2;
   const textY = currentY;
 
-  const gradient = ctx.createLinearGradient(textX - 150, textY - 40, textX + 150, textY + 40);
+  const gradient = cardCtx.createLinearGradient(textX - Math.round(150 * cardScale), textY - Math.round(40 * cardScale), textX + Math.round(150 * cardScale), textY + Math.round(40 * cardScale));
   gradient.addColorStop(0, rarity.points);
   gradient.addColorStop(0.5, rarity.points);
   gradient.addColorStop(1, rarity.points);
 
-  ctx.fillStyle = gradient;
-  ctx.strokeStyle = gradient;
-  ctx.lineWidth = 4;
+  cardCtx.fillStyle = gradient;
+  cardCtx.strokeStyle = gradient;
+  cardCtx.lineWidth = Math.round(4 * cardScale);
 
-  ctx.shadowColor = rarity.points;
-  ctx.shadowBlur = 20;
-  ctx.strokeText(pointsText, textX, textY);
-  ctx.fillText(pointsText, textX, textY);
+  cardCtx.shadowColor = rarity.points;
+  cardCtx.shadowBlur = Math.round(20 * cardScale);
+  cardCtx.strokeText(pointsText, textX, textY);
+  cardCtx.fillText(pointsText, textX, textY);
 
-  ctx.shadowBlur = 50;
-  ctx.strokeText(pointsText, textX, textY);
-  ctx.fillText(pointsText, textX, textY);
-  ctx.restore();
+  cardCtx.shadowBlur = Math.round(50 * cardScale);
+  cardCtx.strokeText(pointsText, textX, textY);
+  cardCtx.fillText(pointsText, textX, textY);
+  cardCtx.restore();
 
-  currentY += 100;
+  currentY += Math.round(100 * cardScale);
 
-  // ===== АВТО ВЫСОТА =====
-  const finalHeight = currentY + padding + 20;
+  const cardFinalHeight = currentY + padding + Math.round(20 * cardScale);
 
-  // Создаём финальный канвас нужной высоты
-  const finalCanvas = createCanvas(width, finalHeight);
+  // Ресайз карточки по высоте (в масштабированном виде)
+  const resizedCard = createCanvas(renderWidth, cardFinalHeight * dpiScale);
+  resizedCard.getContext('2d').drawImage(cardCanvas, 0, 0, renderWidth, cardFinalHeight * dpiScale);
+
+  // ===== ЦВЕТНАЯ РАМКА СО СВЕЧЕНИЕМ =====
+  const glowCanvas = createCanvas(renderWidth, cardFinalHeight * dpiScale);
+  const glowCtx = glowCanvas.getContext('2d');
+  glowCtx.drawImage(resizedCard, 0, 0);
+
+  glowCtx.scale(dpiScale, dpiScale);
+  glowCtx.save();
+  glowCtx.strokeStyle = rarity.border;
+  glowCtx.lineWidth = Math.round(10 * cardScale);
+  glowCtx.shadowColor = rarity.glow;
+  glowCtx.shadowBlur = Math.round(50 * cardScale);
+  roundedRect(glowCtx, 0, 0, cardWidth, cardFinalHeight, radius + Math.round(10 * cardScale));
+  glowCtx.stroke();
+  glowCtx.restore();
+
+  // ===== ФИНАЛЬНЫЙ КАНВАС: большая чёрная рамка =====
+  const blackBorderWidth = 80;
+  const finalWidth = cardWidth + 2 * blackBorderWidth;
+  const finalHeight = cardFinalHeight + 2 * blackBorderWidth;
+
+  const finalRenderWidth = finalWidth * dpiScale;
+  const finalRenderHeight = finalHeight * dpiScale;
+
+  const finalCanvas = createCanvas(finalRenderWidth, finalRenderHeight);
   const finalCtx = finalCanvas.getContext('2d');
 
-  // Копируем контент из исходного канваса (верхнюю часть)
-  finalCtx.drawImage(canvas, 0, 0, width, finalHeight, 0, 0, width, finalHeight);
+  // Чёрный фон
+  finalCtx.fillStyle = '#000000';
+  finalCtx.fillRect(0, 0, finalRenderWidth, finalRenderHeight);
 
-  // ===== ВНЕШНЯЯ РАМКА (рисуем на финальном канвасе, чтобы была полная, включая снизу) =====
+  // Большая чёрная рамка (закруглённый фон)
+  finalCtx.scale(dpiScale, dpiScale);
   finalCtx.save();
-  finalCtx.strokeStyle = rarity.border;
-  finalCtx.lineWidth = 10;
-  finalCtx.shadowColor = rarity.glow;
-  finalCtx.shadowBlur = 50;
-  roundedRect(finalCtx, 0, 0, width, finalHeight, radius + 10);
-  finalCtx.stroke();
+  finalCtx.fillStyle = '#000000';
+  roundedRect(finalCtx, 0, 0, finalWidth, finalHeight, radius + blackBorderWidth + Math.round(20 * cardScale));
+  finalCtx.fill();
   finalCtx.restore();
+
+  // Вставляем карточку с цветной рамкой по центру
+  finalCtx.drawImage(glowCanvas, blackBorderWidth * dpiScale, blackBorderWidth * dpiScale);
 
   return finalCanvas.toBuffer('image/png');
 }
