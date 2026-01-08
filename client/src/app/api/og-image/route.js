@@ -87,7 +87,7 @@ async function generateImageBuffer({
   rarityClass = 'common',
 }) {
   const baseWidth = 720;
-  const cardScale = 0.2; // Уменьшаем саму карточку (с изображением, текстом, цветной рамкой)
+  const cardScale = 0.3; // Уменьшаем саму карточку (с изображением, текстом, цветной рамкой)
   const cardWidth = Math.round(baseWidth * cardScale);
 
   const padding = Math.round(28 * cardScale);
@@ -95,9 +95,15 @@ async function generateImageBuffer({
 
   let height = Math.round(1100 * cardScale);
 
-  // Создаём канвас для карточки
-  const cardCanvas = createCanvas(cardWidth, height);
+  // Для улучшения качества рендерим в 2x разрешении
+  const dpiScale = 2;
+  const renderWidth = cardWidth * dpiScale;
+  const renderHeight = height * dpiScale;
+
+  // Создаём канвас для карточки в высоком разрешении
+  const cardCanvas = createCanvas(renderWidth, renderHeight);
   const cardCtx = cardCanvas.getContext('2d');
+  cardCtx.scale(dpiScale, dpiScale); // Масштабируем контекст для координат
 
   const rarity = RARITY_COLORS[rarityClass] || RARITY_COLORS.common;
 
@@ -191,14 +197,22 @@ async function generateImageBuffer({
 
   const cardFinalHeight = currentY + padding + Math.round(20 * cardScale);
 
-  // Ресайз карточки по высоте
-  const resizedCard = createCanvas(cardWidth, cardFinalHeight);
-  resizedCard.getContext('2d').drawImage(cardCanvas, 0, 0);
+  // Ресайз карточки по высоте в высоком разрешении
+  const resizedRenderHeight = cardFinalHeight * dpiScale;
+  const resizedCard = createCanvas(renderWidth, resizedRenderHeight);
+  const resizedCtx = resizedCard.getContext('2d');
+  resizedCtx.drawImage(cardCanvas, 0, 0);
+
+  // Даунсемплинг для финальной карточки (улучшает анти-алиасинг)
+  const downsampledCard = createCanvas(cardWidth, cardFinalHeight);
+  const downCtx = downsampledCard.getContext('2d');
+  downCtx.imageSmoothingQuality = 'high';
+  downCtx.drawImage(resizedCard, 0, 0, cardWidth, cardFinalHeight);
 
   // ===== ЦВЕТНАЯ РАМКА СО СВЕЧЕНИЕМ вокруг карточки =====
   const glowCanvas = createCanvas(cardWidth, cardFinalHeight);
   const glowCtx = glowCanvas.getContext('2d');
-  glowCtx.drawImage(resizedCard, 0, 0);
+  glowCtx.drawImage(downsampledCard, 0, 0);
 
   glowCtx.save();
   glowCtx.strokeStyle = rarity.border;
