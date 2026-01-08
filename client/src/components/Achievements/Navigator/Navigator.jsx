@@ -5,8 +5,8 @@ import c from './Navigator.module.css'
 const Navigator = ({ activeIndex, setActiveTab, activeTab }) => {
     return <div className={`${c.navigator} ${c[`tab-${activeIndex}`]}`}>
         <div className={c.navHighlight}></div>
-        {navigator("Earned", setActiveTab, activeTab, "Заработанные")}
-        {navigator("All", setActiveTab, activeTab, "Все")}
+        {navigator("Earned", setActiveTab, activeTab, "Мои", "active")}
+        {navigator("All", setActiveTab, activeTab, "Все", "active")}
     </div>
 }
 

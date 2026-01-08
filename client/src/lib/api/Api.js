@@ -543,8 +543,6 @@ export async function getMakingPicture(achievement, user) {
 }
 
 export async function clearAchievementImages() {
-  // Эта функция больше не нужна, так как мы используем Vercel Blob
-  // Vercel Blob сам управляет временем жизни файлов
   return Promise.resolve();
 }
 

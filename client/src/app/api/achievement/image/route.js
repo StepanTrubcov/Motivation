@@ -37,106 +37,76 @@ export function cleanupExpired() {
 }
 
 /** Генерация PNG (вынесена в функцию) */
-function generateImageBuffer({ title, description, points = '0', username = 'user' }) {
-  const width = 1200;
-  const height = 630;
+async function generateImageBuffer({
+  title,
+  points = '0',
+  username = 'user',
+  img,
+  rarityClass = 'common',
+}) {
+  const width = 630;
+  const height = 1200;
   const canvas = createCanvas(width, height);
   const ctx = canvas.getContext('2d');
 
-  // Фон
+  const rarity = RARITY_COLORS[rarityClass] || RARITY_COLORS.common;
+
+  // ===== ФОН =====
   ctx.fillStyle = '#0b0b0b';
   ctx.fillRect(0, 0, width, height);
 
+  // ===== СВЕЧЕНИЕ =====
+  ctx.shadowColor = rarity.glow;
+  ctx.shadowBlur = 40;
+
+  // ===== ОСНОВНАЯ КАРТИНКА =====
+  if (img) {
+    const image = await loadImage(img);
+    ctx.drawImage(image, 40, 140, width - 80, 700);
+  }
+
+  ctx.shadowBlur = 0;
+
   const fontFamily = fontRegistered ? 'Inter' : 'Arial';
   const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial';
-  const italicFontFamily = fontRegistered ? 'Inter-Italic' : 'Arial';
 
-  // username
-  ctx.fillStyle = '#00ff99';
-  ctx.font = `700 48px "${fontFamily}"`;
-  ctx.textAlign = 'left';
-  ctx.fillText(`@${username}`, 80, 100);
+  // ===== USERNAME =====
+  ctx.fillStyle = rarity.text;
+  ctx.font = `700 42px "${fontFamily}"`;
+  ctx.fillText(`@${username}`, 60, 70);
 
-  // title
+  // ===== TITLE =====
   ctx.fillStyle = '#ffffff';
-  ctx.font = `700 80px "${boldFontFamily}"`;
-  const shortTitle = (title || 'Достижение').length > 30 ? title.substring(0, 30) + '...' : (title || 'Достижение');
-  ctx.fillText(shortTitle, 80, 200);
+  ctx.font = `700 56px "${boldFontFamily}"`;
+  ctx.textAlign = 'center';
+  ctx.fillText(title, width / 2, 900);
 
-  // description (wrap)
-  ctx.font = `34px "${fontFamily}"`;
-  ctx.fillStyle = '#ffffff';
-  const shortDesc = (description || 'Описание достижения').length > 100 ? description.substring(0, 100) + '...' : (description || 'Описание достижения');
-
-  // Простой перенос слов по символам (можно улучшить с measureText)
-  const lines = [];
-  let currentLine = '';
-  const words = shortDesc.split(' ');
-  for (const word of words) {
-    const testLine = currentLine ? (currentLine + ' ' + word) : word;
-    if (testLine.length > 40) {
-      if (currentLine) lines.push(currentLine);
-      currentLine = word;
-    } else {
-      currentLine = testLine;
-    }
-  }
-  if (currentLine) lines.push(currentLine);
-
-  let y = 270;
-  for (const line of lines.slice(0, 3)) {
-    ctx.fillText(line.trim(), 80, y);
-    y += 45;
-  }
-
-  // points
-  ctx.fillStyle = '#00ff99';
-  ctx.font = `700 40px "${boldFontFamily}"`;
-  ctx.fillText(`+${points} очков`, 80, y + 30);
-
-  // quote
-  const quotes = [
-    '«Ты не обязан быть лучшим — просто будь лучше, чем вчера 💫»',
-    '«Маленькие шаги каждый день ведут к большим результатам 🌱»',
-    '«Дисциплина сильнее мотивации ⚡️»',
-    '«Начни сейчас. Идеального момента не будет ⏳»',
-    '«Пусть каждый день будет на 1% лучше, чем вчера 🚀»',
-  ];
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-  ctx.font = `italic 30px "${italicFontFamily}"`;
-  ctx.fillStyle = '#9b9b9b';
-  const shortQuote = randomQuote.length > 60 ? randomQuote.substring(0, 60) + '...' : randomQuote;
-  ctx.fillText(shortQuote, 80, height - 60);
+  // ===== POINTS =====
+  ctx.fillStyle = rarity.text;
+  ctx.font = `700 64px "${boldFontFamily}"`;
+  ctx.fillText(`${points} pts`, width / 2, 980);
 
   return canvas.toBuffer('image/png');
 }
 
-/**
- * POST — принять JSON { title, description, username, points }
- * вернёт: { url: '/api/og-image?id=<id>' }
- *
- * GET с ?id=... — отдаёт изображение по id (без title/description в query)
- */
 export async function POST(request) {
   try {
     const body = await request.json();
-    // Ожидаем, что client прислал уже декодированные строки (не percent-encoded)
-    const title = body.title || 'Достижение';
-    const description = body.description || 'Описание достижения';
-    const username = body.username || 'user';
-    const points = body.points || '0';
 
-    const buffer = generateImageBuffer({ title, description, username, points });
+    const buffer = await generateImageBuffer({
+      title: body.title || 'Достижение',
+      points: body.points || '0',
+      username: body.username || 'user',
+      img: body.img,
+      rarityClass: body.rarityClass || 'common',
+    });
 
-    // Сохраняем в памяти (в проде — в S3/redis)
     const id = randomUUID();
     IMAGES.set(id, { buffer, createdAt: Date.now() });
 
-    // Убираем старые элементы асинхронно
     cleanupExpired();
 
-    // Возвращаем чистый URL (без title/description)
-    const protocol = (request.headers.get('x-forwarded-proto') || 'https');
+    const protocol = request.headers.get('x-forwarded-proto') || 'https';
     const host = request.headers.get('host') || 'example.com';
     const url = `${protocol}://${host}/api/og-image?id=${id}`;
 

@@ -61,14 +61,14 @@ export async function createImageAndShare({ title, description, username, points
 }
 
 // Функция для генерации изображения и получения URL
-export async function generateImage({ title, description, username, points }) {
+export async function generateImage({ title, img, points, rarityClass }) {
   try {
     // создаём картинку на сервере; передаём нормальные строки, НЕ encodeURIComponent(...)
     const res = await axios.post(`${BASE_URL}/api/og-image`, {
       title,
-      description,
-      username,
+      img,
       points: String(points ?? 0),
+      rarityClass,
     }, {
       headers: { 'Content-Type': 'application/json' }
     });

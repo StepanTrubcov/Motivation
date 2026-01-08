@@ -15,11 +15,9 @@ const ModalWindowMe = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState(null);
-  // храним ref, но будем всегда брать актуальное значение window.Telegram.WebApp перед каждым вызовом
   const tgRef = useRef(null);
 
   useEffect(() => {
-    // устанавливаем ссылку на WebApp, если он появился
     tgRef.current = typeof window !== "undefined" ? window.Telegram?.WebApp ?? null : null;
 
     if (!tgRef.current) {
@@ -45,6 +43,15 @@ const ModalWindowMe = ({
     }
   }, []);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      setIsLoading(true)
+      handleGenerate()
+    }
+  }, [isModalOpen])
+
+  const rarityClass = isModalOpen?.active;
+
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error("Нет данных");
 
@@ -54,9 +61,9 @@ const ModalWindowMe = ({
     try {
       const imageUrl = await generateImage({
         title: isModalOpen.title,
-        description: isModalOpen.description,
-        username: username,
-        points: isModalOpen.points || 0
+        img: isModalOpen.img,
+        points: isModalOpen.points || 0,
+        rarityClass: rarityClass,
       });
 
       setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
@@ -164,22 +171,22 @@ const ModalWindowMe = ({
       try {
         // Для новых URL с ID мы не можем извлечь параметры из URL
         // Поэтому используем оригинальные значения из isModalOpen
-        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}\n @BotMotivation_TG_bot`.trim();
+        caption = `Вы тоже можете получить такую ачивку\n https://t.me/BotMotivation_TG_bot \n Переходи в бота выполняй свои цели и получай ачивки `.trim();
       } catch (decodeError) {
         // Если возникла ошибка, используем оригинальные значения
         console.warn("Ошибка создания caption:", decodeError);
-        caption = `${isModalOpen.title}\n${isModalOpen.description || ""}\n @BotMotivation_TG_bot`.trim();
+        caption = `Вы тоже можете получить такую ачивку\n https://t.me/BotMotivation_TG_bot \n Переходи в бота выполняй свои цели и получай ачивки `.trim();
       }
 
       // 1) Попытка: tg.shareToStory (несколько сигнатур)
       const shared = await tryShareToStory(tg, mediaUrl, caption);
       if (shared) {
         toast.success("Открылось окно Stories!", {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                }
-            });
+          style: {
+            background: '#333',
+            color: '#fff',
+          }
+        });
         return;
       }
 
@@ -198,11 +205,11 @@ const ModalWindowMe = ({
             text: caption,
           });
           toast.success("История открыта!", {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                }
-            });
+            style: {
+              background: '#333',
+              color: '#fff',
+            }
+          });
           return;
         } catch (err) {
           console.warn("showStoryEditor failed:", err);
@@ -211,7 +218,12 @@ const ModalWindowMe = ({
       }
 
       // 3) Фолбэк: скачать картинку и подсказать пользователю
-      toast("Истории пока недоступны. Скачиваем карточку...");
+      toast("Истории пока недоступны. Скачиваем карточку...", {
+        style: {
+          background: '#333',
+          color: '#fff',
+        }
+      });
       const a = document.createElement("a");
       a.href = imageDataUrl;
       a.download = "achievement.png";
@@ -219,21 +231,27 @@ const ModalWindowMe = ({
       a.click();
       a.remove();
       toast.success("Скачано! Открой Telegram → + → История → выбери фото", {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                }
-            });
+        style: {
+          background: '#333',
+          color: '#fff',
+        }
+      });
     } catch (err) {
       console.error("share error:", err);
       toast.error("Не удалось поделиться в Stories", {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                }
-            });
+        style: {
+          background: '#333',
+          color: '#fff',
+        }
+      });
     }
   };
+
+  if (imageDataUrl) {
+    if (isLoading) {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <AnimatePresence>
@@ -243,39 +261,52 @@ const ModalWindowMe = ({
             className={styles.modalContent}
             onClick={(e) => e.stopPropagation()}
           >
-            <button onClick={closeModal} className={styles.closeButton}>
-              <X size={20} />
+
+            <button
+              onClick={closeModal}
+              className={styles.closeButton}
+            >
+              <X size={24} />
             </button>
 
-            <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
+            <div
+              className={`${styles.card} ${styles[rarityClass]}`}
+            >
+              <div className={styles.cardInner}>
+                <div className={styles.imageWrapper}>
+                  <img
+                    className={styles.img}
+                    src={isModalOpen?.gif}
+                    alt={isModalOpen?.title}
+                  />
+                </div>
 
-            {isModalOpen.image && (
-              <img className={styles.modalImg} src={isModalOpen.image} alt="" />
-            )}
+                <div className={styles.ribbon}>
+                  {rarityClass === "common" && <span>Обычная</span> || rarityClass === "rare" && <span>Редкая</span> || <span>Легендарная</span>}
+                </div>
 
-            {isModalOpen.description && (
-              <p className={styles.modalText}>{isModalOpen.description}</p>
-            )}
+                <div className={styles.title}>
+                  {isModalOpen?.title}
+                </div>
 
-            {imageDataUrl ? (
-              <div className={styles.imageWrapper}>
-                <img className={styles.modalImCopy} src={imageDataUrl} alt="" />
-                <div className={styles.shareContainer}>
-                  <button className={styles.shareButton} onClick={handleShare}>
-                    📤 Поделиться / История
-                  </button>
-
+                <div className={styles.points}>
+                  {isModalOpen?.points} pts
                 </div>
               </div>
-            ) : (
-              <button
-                className={styles.shareButton}
-                onClick={handleGenerate}
-                disabled={isLoading}
-              >
-                {isLoading ? "Создаём..." : "✨ Сгенерировать карточку"}
-              </button>
-            )}
+            </div>
+            <button
+              className={`${styles.howToGet} ${styles[rarityClass]} `}
+              onClick={handleShare}
+              disabled={isLoading}
+            >
+              {imageDataUrl === null && <div className={styles.howToGetHeader}>
+                <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized="true" alt="Loading" style={{ width: '18px', height: '18px', marginRight: '10px' }} />
+                Генерируем изображение
+              </div> ||
+                <div className={styles.howToGetHeader} >
+                  📤 Поделиться/История
+                </div>}
+            </button>
           </motion.div>
         </motion.div>
       )}

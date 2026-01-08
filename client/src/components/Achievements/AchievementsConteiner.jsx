@@ -32,7 +32,7 @@ const AchievementsConteiner = ({ getMakingPicture, assignments = [], goals = [],
     }, [assignments, goals, user]);
     return (
         <div>
-            <div className={c.title}>Достижения</div>
+            <div className={c.title}>Ачивки</div>
             <Achievements getMakingPicture={getMakingPicture} username={user.username || user.firstName || "Пользователь"} assignments={assignments} />
         </div>
     );

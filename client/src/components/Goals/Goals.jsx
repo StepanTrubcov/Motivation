@@ -27,19 +27,19 @@ const Goals = ({NewGoals, completed, inProgress, sportGoals, disciplineGoals, sp
         <ModalWindowNewGoals NewGoals={NewGoals} isModalOpen={isModalOpen} closeModal={() => setOpenModal(null)} userId={userId} />
         <div className={`${c.navigator} ${c[`tab-${activeIndex}`]}`}>
             <div className={c.navHighlight}></div>
-            {navigator("Completed", setActiveTab, activeTab, "Завершенные")}
-            {navigator("InProgress", setActiveTab, activeTab, "В процессе")}
-            {navigator("Available", setActiveTab, activeTab, "Доступные")}
+            {navigator("Completed", setActiveTab, activeTab, "Завершенные", "active")}
+            {navigator("InProgress", setActiveTab, activeTab, "В процессе", "active")}
+            {navigator("Available", setActiveTab, activeTab, "Доступные", "active")}
         </div>
         {
             activeTab === "Completed" && completed || activeTab === "InProgress" && inProgress || activeTab === "Available" && <div>
                 <div>
                     <div className={`${c.navigatorSection} ${c[`tab-${activeTabIndex}`]}`}>
                         <div className={c.navHighlightSection}></div>
-                        {navigator("Sport", setActiveTabSection, activeTabSection, "Спорт")}
-                        {navigator("Discipline", setActiveTabSection, activeTabSection, "Дисциплина")}
-                        {navigator("Spirituality", setActiveTabSection, activeTabSection, "Духовность")}
-                        {navigator("Self_development", setActiveTabSection, activeTabSection, "Саморазвитие")}
+                        {navigator("Sport", setActiveTabSection, activeTabSection, "Спорт", "active")}
+                        {navigator("Discipline", setActiveTabSection, activeTabSection, "Дисциплина", "active")}
+                        {navigator("Spirituality", setActiveTabSection, activeTabSection, "Духовность", "active")}
+                        {navigator("Self_development", setActiveTabSection, activeTabSection, "Саморазвитие", "active")}
                     </div>
                 </div>
                 {activeTabSection === "Sport" && sportGoals || activeTabSection === "Discipline" && disciplineGoals || activeTabSection === "Spirituality" && spiritualityGoals || activeTabSection === "Self_development" && selfDevelopmentGoals}
