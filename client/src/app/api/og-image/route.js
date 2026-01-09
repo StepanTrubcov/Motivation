@@ -204,17 +204,23 @@ async function generateImageBuffer({
   downCtx.imageSmoothingQuality = 'high';
   downCtx.drawImage(resizedCard, 0, 0, cardWidth * dpiScale / 2, cardFinalHeight * dpiScale / 2);
 
-  // Цветная рамка со свечением
-  const glowCanvas = createCanvas(downsampledCard.width, downsampledCard.height);
-  const glowCtx = glowCanvas.getContext('2d');
-  glowCtx.drawImage(downsampledCard, 0, 0);
+  // ===== ЦВЕТНАЯ РАМКА СО СВЕЧЕНИЕМ (теперь рисуем на большем канвасе с правильным масштабом) =====
+  const glowRenderWidth = cardWidth * dpiScale / 2;
+  const glowRenderHeight = cardFinalHeight * dpiScale / 2;
 
+  const glowCanvas = createCanvas(glowRenderWidth, glowRenderHeight);
+  const glowCtx = glowCanvas.getContext('2d');
+
+  // Сначала копируем карточку
+  glowCtx.drawImage(downsampledCard, 0, 0, glowRenderWidth, glowRenderHeight);
+
+  // Теперь рисуем свечение и рамку в правильном масштабе
   glowCtx.save();
-  glowCtx.scale(2, 2);
+  glowCtx.scale(dpiScale / 2, dpiScale / 2); // Масштаб для координат как в оригинале
   glowCtx.strokeStyle = rarity.border;
-  glowCtx.lineWidth = Math.round(10 * cardScale) / 2;
+  glowCtx.lineWidth = Math.round(10 * cardScale);
   glowCtx.shadowColor = rarity.glow;
-  glowCtx.shadowBlur = Math.round(50 * cardScale) / 2;
+  glowCtx.shadowBlur = Math.round(50 * cardScale);
   roundedRect(glowCtx, 0, 0, cardWidth, cardFinalHeight, radius + Math.round(10 * cardScale));
   glowCtx.stroke();
   glowCtx.restore();
@@ -233,7 +239,6 @@ async function generateImageBuffer({
   finalCtx.fillStyle = '#000000';
   finalCtx.fillRect(0, 0, finalRenderWidth, finalRenderHeight);
 
-  // Чёрная закруглённая рамка
   finalCtx.save();
   finalCtx.scale(dpiScale / 2, dpiScale / 2);
   finalCtx.fillStyle = '#000000';
@@ -241,8 +246,8 @@ async function generateImageBuffer({
   finalCtx.fill();
   finalCtx.restore();
 
-  // === НОВОЕ: карточка ближе к верху ===
-  const topOffset = 40; // Отступ от верха (в логических единицах). Меньше = выше. 40 — заметно выше центра.
+  // Карточка ближе к верху
+  const topOffset = 40; // Отступ сверху
   const cardXPos = blackBorderWidth;
   const cardYPos = topOffset;
 

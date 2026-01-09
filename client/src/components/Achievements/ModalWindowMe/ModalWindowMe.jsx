@@ -173,6 +173,8 @@ const ModalWindowMe = ({
     }
   };
 
+  console.log(imageDataUrl)
+
   return (
     <AnimatePresence>
       {isModalOpen && (
