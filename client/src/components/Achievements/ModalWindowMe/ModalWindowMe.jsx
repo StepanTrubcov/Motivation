@@ -30,9 +30,7 @@ const ModalWindowMe = ({
     console.log("=== TELEGRAM DEBUG ===");
     console.log("Version:", tg.version);
     console.log("Platform:", tg.platform);
-    console.log("start_param:", tg.initDataUnsafe?.start_param);
     console.log("shareToStory:", typeof tg.shareToStory);
-    console.log("showStoryEditor:", typeof tg.showStoryEditor);
     console.log("======================");
 
     try {
@@ -45,10 +43,10 @@ const ModalWindowMe = ({
 
   useEffect(() => {
     if (isModalOpen) {
-      setIsLoading(true)
-      handleGenerate()
+      setIsLoading(true);
+      handleGenerate();
     }
-  }, [isModalOpen])
+  }, [isModalOpen]);
 
   const rarityClass = isModalOpen?.active;
 
@@ -66,20 +64,14 @@ const ModalWindowMe = ({
         rarityClass: rarityClass,
       });
 
-      setImageDataUrl(imageUrl); // Сохраняем прямую ссылку на изображение
+      setImageDataUrl(imageUrl);
       toast.success("Карточка готова!", {
-        style: {
-          background: '#333',
-          color: '#fff',
-        }
+        style: { background: '#333', color: '#fff' },
       });
     } catch (err) {
       console.error(err);
       toast.error("Ошибка генерации", {
-        style: {
-          background: '#333',
-          color: '#fff',
-        }
+        style: { background: '#333', color: '#fff' },
       });
     } finally {
       setIsLoading(false);
@@ -101,199 +93,126 @@ const ModalWindowMe = ({
     return await resp.blob();
   };
 
-  const tryShareToStory = async (tg, mediaUrl, caption) => {
+  const tryShareToStory = async (tg, mediaUrl) => {
     if (typeof tg.shareToStory !== "function") return false;
 
-    const payload = {
-      media_url: mediaUrl,
+    const caption = `Вы тоже можете получить такую ачивку\nhttps://t.me/BotMotivation_TG_bot \nПереходи в бота выполняй свои цели и получай ачивки`.trim();
+
+    // Параметры для кнопки-ссылки (widget_link)
+    const params = {
       text: caption,
-      link: {
+      widget_link: {
         url: "https://t.me/BotMotivation_TG_bot",
-        name: "Дневные достижения"
-      }
+        name: "Подключись к моему боту", // Текст на кнопке
+      },
     };
 
+    // Пробуем разные сигнатуры
     try {
-      await tg.shareToStory(payload);
+      tg.shareToStory(mediaUrl, params);
       return true;
-    } catch (e) {
-      console.warn("shareToStory failed:", e);
-      return false;
+    } catch (e1) {
+      console.warn("shareToStory(mediaUrl, params) failed:", e1);
+      try {
+        tg.shareToStory({ url: mediaUrl, ...params });
+        return true;
+      } catch (e2) {
+        console.warn("shareToStory({url, ...params}) failed:", e2);
+        // Фолбэк без widget_link (только caption)
+        try {
+          tg.shareToStory(mediaUrl, { text: caption });
+          return true;
+        } catch (e3) {
+          console.warn("shareToStory без widget_link failed:", e3);
+          return false;
+        }
+      }
     }
   };
-  
+
   const handleShare = async () => {
     if (!imageDataUrl) return toast.error("Сгенерируй карточку");
 
-    const tg = typeof window !== "undefined" ? window.Telegram?.WebApp ?? null : null;
-    if (!tg) return toast.error("Telegram API не найден", {
-      style: {
-        background: '#333',
-        color: '#fff',
-      }
-    });
+    const tg = tgRef.current;
+    if (!tg) return toast.error("Telegram API не найден");
 
     try {
       let mediaUrl = imageDataUrl;
 
-      // если у нас не публичная ссылка — нужно загрузить blob куда-то (uploadTempUrl)
       if (!isHttpUrl(mediaUrl)) {
-        try {
-          const blob = await urlToBlob(mediaUrl);
-          if (typeof uploadTempUrl === "function") {
-            toast("Подготавливаем картинку для Stories...");
-            const uploaded = await uploadTempUrl(blob);
-            if (!uploaded || !isHttpUrl(uploaded)) {
-              throw new Error("uploadTempUrl не вернул публичную ссылку");
-            }
-            mediaUrl = uploaded;
-          } else {
-            throw new Error("Нет uploadTempUrl для получения публичной ссылки");
-          }
-        } catch (err) {
-          console.warn("Не удалось получить публичную ссылку для shareToStory:", err);
-          toast("Нельзя автоматически поделиться — картинку нужно сохранить и загрузить вручную");
-          return;
+        if (typeof uploadTempUrl === "function") {
+          toast("Подготавливаем картинку для Stories...");
+          const uploaded = await uploadTempUrl(await urlToBlob(mediaUrl));
+          if (!uploaded || !isHttpUrl(uploaded)) throw new Error("Не удалось загрузить");
+          mediaUrl = uploaded;
+        } else {
+          throw new Error("Нет uploadTempUrl");
         }
       }
 
-      // Создаем caption с правильной кодировкой для отображения в Telegram
-      let caption = "";
-      try {
-        caption = `Вы тоже можете получить такую ачивку\nhttps://t.me/BotMotivation_TG_bot \nПереходи в бота выполняй свои цели и получай ачивки `.trim();
-      } catch (decodeError) {
-        console.warn("Ошибка создания caption:", decodeError);
-        caption = `Вы тоже можете получить такую ачивку\nhttps://t.me/BotMotivation_TG_bot \nПереходи в бота выполняй свои цели и получай ачивки `.trim();
-      }
-
-      // 1) Попытка: tg.shareToStory (несколько сигнатур)
-      const shared = await tryShareToStory(tg, mediaUrl, caption);
+      const shared = await tryShareToStory(tg, mediaUrl);
       if (shared) {
-        toast.success("Открылось окно Stories!", {
-          style: {
-            background: '#333',
-            color: '#fff',
-          }
+        toast.success("Открылось окно Stories с кнопкой!", {
+          style: { background: '#333', color: '#fff' },
         });
         return;
       }
 
-      // 2) Попытка: tg.showStoryEditor (если доступен и умеет принимать File)
-      if (typeof tg.showStoryEditor === "function") {
-        try {
-          // Получаем blob (если mediaUrl — публичный http)
-          const resp = await fetch(mediaUrl);
-          if (!resp.ok) throw new Error("Не удалось скачать изображение для editor");
-          const blob = await resp.blob();
-          // File-конструктор может не существовать в некоторых окружениях, но в браузерах обычно есть
-          const file = new File([blob], "achievement.png", { type: blob.type || "image/png" });
-
-          await tg.showStoryEditor({
-            media: [file],
-            text: caption,
-          });
-          toast.success("История открыта!", {
-            style: {
-              background: '#333',
-              color: '#fff',
-            }
-          });
-          return;
-        } catch (err) {
-          console.warn("showStoryEditor failed:", err);
-          // fallthrough на скачивание
-        }
-      }
-
-      // 3) Фолбэк: скачать картинку и подсказать пользователю
-      toast("Истории пока недоступны. Скачиваем карточку...", {
-        style: {
-          background: '#333',
-          color: '#fff',
-        }
-      });
+      // Фолбэк на скачивание
+      toast("Истории с кнопкой недоступны. Скачиваем...");
       const a = document.createElement("a");
       a.href = imageDataUrl;
       a.download = "achievement.png";
       document.body.appendChild(a);
       a.click();
       a.remove();
-      toast.success("Скачано! Открой Telegram → + → История → выбери фото", {
-        style: {
-          background: '#333',
-          color: '#fff',
-        }
-      });
+      toast.success("Скачано! Добавь в историю вручную и вставь ссылку стикером");
     } catch (err) {
       console.error("share error:", err);
-      toast.error("Не удалось поделиться в Stories", {
-        style: {
-          background: '#333',
-          color: '#fff',
-        }
-      });
+      toast.error("Не удалось поделиться в Stories");
     }
   };
-
-  if (imageDataUrl) {
-    if (isLoading) {
-      setIsLoading(false)
-    }
-  }
 
   return (
     <AnimatePresence>
       {isModalOpen && (
         <motion.div className={styles.modalBackdrop} onClick={closeModal}>
-          <motion.div
-            className={styles.modalContent}
-            onClick={(e) => e.stopPropagation()}
-          >
-
-            <button
-              onClick={closeModal}
-              className={styles.closeButton}
-            >
+          <motion.div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button onClick={closeModal} className={styles.closeButton}>
               <X size={24} />
             </button>
 
-            <div
-              className={`${styles.card} ${styles[rarityClass]}`}
-            >
+            <div className={`${styles.card} ${styles[rarityClass]}`}>
               <div className={styles.cardInner}>
                 <div className={styles.imageWrapper}>
-                  <img
-                    className={styles.img}
-                    src={isModalOpen?.gif}
-                    alt={isModalOpen?.title}
-                  />
+                  <img className={styles.img} src={isModalOpen?.gif} alt={isModalOpen?.title} />
                 </div>
 
                 <div className={styles.ribbon}>
-                  {rarityClass === "common" && <span>Обычная</span> || rarityClass === "rare" && <span>Редкая</span> || <span>Легендарная</span>}
+                  {rarityClass === "common" && <span>Обычная</span>}
+                  {rarityClass === "rare" && <span>Редкая</span>}
+                  {rarityClass !== "common" && rarityClass !== "rare" && <span>Легендарная</span>}
                 </div>
 
-                <div className={styles.title}>
-                  {isModalOpen?.title}
-                </div>
+                <div className={styles.title}>{isModalOpen?.title}</div>
 
-                <div className={styles.points}>
-                  {isModalOpen?.points} pts
-                </div>
+                <div className={styles.points}>{isModalOpen?.points} pts</div>
               </div>
             </div>
+
             <button
-              className={`${styles.howToGet} ${styles[rarityClass]} `}
+              className={`${styles.howToGet} ${styles[rarityClass]}`}
               onClick={handleShare}
               disabled={isLoading}
             >
-              {imageDataUrl === null && <div className={styles.howToGetHeader}>
-                <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized="true" alt="Loading" style={{ width: '18px', height: '18px', marginRight: '10px' }} />
-                Генерируем изображение
-              </div> ||
-                <div className={styles.howToGetHeader} >
-                  📤 Поделиться/История
-                </div>}
+              {imageDataUrl === null ? (
+                <div className={styles.howToGetHeader}>
+                  <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '18px', height: '18px', marginRight: '10px' }} />
+                  Генерируем изображение
+                </div>
+              ) : (
+                <div className={styles.howToGetHeader}>📤 Поделиться/история</div>
+              )}
             </button>
           </motion.div>
         </motion.div>
