@@ -82,7 +82,7 @@ const ModalWindowAchievements = ({ isModalOpen, closeModal }) => {
                                     >
                                         <pre className={styles.previewText}>
                                             {isModalOpen?.requirement}
-                                            • Ачивка сама будет к вам добавлена
+                                            {rarityClass !== 'epic' && '• Ачивка сама будет к вам добавлена'}
                                         </pre>
                                     </motion.div>
                                 )}

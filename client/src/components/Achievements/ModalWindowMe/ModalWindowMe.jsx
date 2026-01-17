@@ -193,7 +193,8 @@ const ModalWindowMe = ({
                 <div className={styles.ribbon}>
                   {rarityClass === "common" && <span>Обычная</span>}
                   {rarityClass === "rare" && <span>Редкая</span>}
-                  {rarityClass !== "common" && rarityClass !== "rare" && <span>Легендарная</span>}
+                  {rarityClass == "legendary" && <span>Легендарная</span>}
+                  {rarityClass == "epic" && <span>Эпическая</span>}
                 </div>
 
                 <div className={styles.title}>{isModalOpen?.title}</div>

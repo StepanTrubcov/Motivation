@@ -9,7 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding-top: 80px;
+  padding-top: 150px;
   z-index: 1000;
 }
 
@@ -51,11 +51,6 @@
   animation: slideFadeIn 0.8s ease forwards;
 }
 
-.card:hover {
-  transform: translateY(-10px) scale(1.05);
-  transition: transform 0.3s ease;
-}
-
 .cardInner {
   position: relative;
   background: linear-gradient(to bottom, #0a1a0a, #000);
@@ -93,6 +88,10 @@
   box-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 50px rgba(255, 200, 0, 0.4);
 }
 
+.epic .ribbon {
+  font-size: 12px;
+  background: linear-gradient(135deg, #FFD84D, #FF4D4D, #9B4DFF);
+}
 
 .ribbon span {
   display: block;
@@ -113,13 +112,33 @@
   background: linear-gradient(135deg, #ff00ff, #ff6600);
 }
 
+.epic {
+  animation: shadowRotate 3s linear infinite;
+}
+
+@keyframes shadowRotate {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px #FFD84D, 0 0 30px #FF4D4D;
+  }
+
+  33% {
+    box-shadow: 0 0 30px #FF4D4D, 0 0 30px #9B4DFF;
+  }
+
+  66% {
+    box-shadow: 0 0 30px #9B4DFF, 0 0 30px #FFD84D;
+  }
+}
+
 /* Свечение рамки по редкости */
 
 .img {
   width: 250px;
 }
 
-.imgS{
+.imgS {
   width: 200px;
   height: 300px;
   margin-bottom: 20px;
@@ -154,6 +173,10 @@
   text-shadow: 0 0 20px #0099ff, 0 0 40px #00ffff;
 }
 
+.epic .points {
+    color: #ff9a4d;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ff2626;
+}
 
 /* ===== HOW TO GET BLOCK ===== */
 
@@ -191,8 +214,4 @@
 .previewText {
   font-size: 13px;
   color: #ffffff;
-}
-
-.imgS{
-  height: 300px;
 }

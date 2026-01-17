@@ -3,14 +3,6 @@ const nextConfig = {
   // Fix for multiple lockfiles issue
   outputFileTracingRoot: __dirname,
   serverExternalPackages: ['@napi-rs/canvas'],
-  
-  // Увеличенные таймауты для обработки большого количества данных
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '10mb',
-    },
-  },
-  
   images: {
     domains: ['t.me', 'i.postimg.cc', 'via.placeholder.com'],
     remotePatterns: [

@@ -42,7 +42,6 @@ model Achievement {
   title       String
   gif         String
   rarity      String
-  description  String?
   requirement String
   status      String
   image       String

@@ -12,7 +12,7 @@ import { checkAll } from "../../utils/checkAll/checkAll";
 const AchievementsConteiner = ({ getMakingPicture, assignments = [], goals = [], userId, user, getAchievementsNewStatus, setPoints }) => {
     const triggeredRef = useRef(new Set());
 
-    const userRegistrationStub = new Date(Date.now() - 100 * 24 * 60 * 60 * 1000);
+    const userRegistrationStub = user?.registrationDate ? new Date(user.registrationDate) : new Date();
 
     const newStatusAssignment = (achievement, userId) => {
         getAchievementsNewStatus(achievement, userId)
@@ -30,6 +30,7 @@ const AchievementsConteiner = ({ getMakingPicture, assignments = [], goals = [],
             checkAll(assignments, triggeredRef, goals, newStatusAssignment, userId, userRegistrationStub);
         }
     }, [assignments, goals, user]);
+
     return (
         <div>
             <div className={c.title}>Ачивки</div>

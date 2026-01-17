@@ -33,3 +33,9 @@
   background: linear-gradient(135deg, #ff00ff, #ff6600);
   border-radius: 10px;
 }
+
+.epic {
+  color: #ffffff;
+  background: linear-gradient(135deg, #FFD84D, #FF4D4D, #9B4DFF);
+  border-radius: 10px;
+}

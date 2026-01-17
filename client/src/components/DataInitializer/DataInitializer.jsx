@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomNav } from '@/context/BottomNavContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
-import { addProfile } from '@/redux/profile_reducer';
+import { addProfile, setPoints } from '@/redux/profile_reducer';
 import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
-import { getInitializeAchievementsData } from '@/redux/assignments_reducer';
+import { getAchievementsNewStatus, getInitializeAchievementsData } from '@/redux/assignments_reducer';
+import { checkAll } from '@/utils/checkAll/checkAll';
+import { toast } from 'react-hot-toast';
 
 const DataInitializer = ({ children }) => {
     const dispatch = useDispatch();
@@ -19,6 +21,7 @@ const DataInitializer = ({ children }) => {
     const [isUpdatingAchievements, setIsUpdatingAchievements] = useState(false);
 
     const isTextDataInitialized = useRef(false);
+    const triggeredRef = useRef(new Set());
 
     useEffect(() => {
         // Принудительная установка темной темы для Telegram WebApp
@@ -60,10 +63,21 @@ const DataInitializer = ({ children }) => {
     useEffect(() => {
         if (user && ThereAreUsers && assignmentsLoaded) {
             setShowBottomNav(true);
+            const newStatusAssignment = (achievement, userId) => {
+                dispatch(getAchievementsNewStatus(achievement, userId))
+                dispatch(setPoints(userId, achievement.points))
+                toast.success(`Вы получили новое достижение!`, {
+                    style: {
+                        background: '#333',
+                        color: '#fff',
+                    }
+                });
+            };
+            checkAll(assignments, triggeredRef, goals, newStatusAssignment, user.id, user.registrationDate);
         } else {
             setShowBottomNav(false);
         }
-    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav]);
+    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav, assignments, goals]);
 
     if (!user) {
         return <LoadingScreen title="Загрузка данных пользователя..." />;

@@ -9,7 +9,7 @@
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 80px;
+    padding-top: 150px;
     z-index: 1000;
 }
 
@@ -51,11 +51,6 @@
     animation: slideFadeIn 0.8s ease forwards;
 }
 
-.card:hover {
-    transform: translateY(-10px) scale(1.05);
-    transition: transform 0.3s ease;
-}
-
 .cardInner {
     position: relative;
     background: linear-gradient(to bottom, #0a1a0a, #000);
@@ -93,13 +88,32 @@
     box-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 50px rgba(255, 200, 0, 0.4);
 }
 
+.epic {
+  animation: shadowRotate 3s linear infinite;
+}
+
+@keyframes shadowRotate {
+
+  0%,
+  100% {
+    box-shadow: 0 0 30px #FFD84D, 0 0 30px #FF4D4D;
+  }
+
+  33% {
+    box-shadow: 0 0 30px #FF4D4D, 0 0 30px #9B4DFF;
+  }
+
+  66% {
+    box-shadow: 0 0 30px #9B4DFF, 0 0 30px #FFD84D;
+  }
+}
+
 
 .ribbon span {
     display: block;
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
 }
 
-/* Цвета лент под редкость */
 .common .ribbon {
     background: linear-gradient(135deg, #00ff41, #00cc33);
 }
@@ -113,7 +127,15 @@
     background: linear-gradient(135deg, #ff00ff, #ff6600);
 }
 
-/* Свечение рамки по редкости */
+.epic .ribbon {
+  font-size: 12px;
+  background: linear-gradient(135deg, #FFD84D, #FF4D4D, #9B4DFF);
+}
+
+.epic .points {
+    color: #ff9a4d;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ff2626;
+}
 
 .img {
     width: 250px;

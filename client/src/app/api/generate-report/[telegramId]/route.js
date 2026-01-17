@@ -39,36 +39,12 @@ export async function POST(request, { params }) {
     
     const finalMessage = [`${formattedDate} ${userTag}`, goalsList, diaryNote, "Отчёт сделан с помощью @BotMotivation_TG_bot"].join('\n\n').trim();
 
-    const user = await prisma.user.findUnique({ where: { telegramId: String(telegramId) } });
-    if (!user) {
-      return NextResponse.json({ error: "Пользователь не найден" }, { status: 404 });
-    }
-
-    let prevReports = Array.isArray(user.yesterdayReport) ? user.yesterdayReport : [];
-    let yesterdayReport = null;
-
-    if (prevReports.length === 2) {
-      const prevSecond = prevReports[1];
-      const prevSecondDate = new Date(prevSecond.date).toDateString();
-      if (prevSecondDate !== todayString) {
-        yesterdayReport = prevSecond;
-      } else {
-        yesterdayReport = prevReports[0] || null;
-      }
-    } else if (prevReports.length === 1) {
-      const prevDate = new Date(prevReports[0].date).toDateString();
-      if (prevDate !== todayString) yesterdayReport = prevReports[0];
-    }
-
-    const todayReport = { text: finalMessage, date: today.toISOString() };
-    const reports = [yesterdayReport, todayReport];
-
-    await prisma.user.update({
-      where: { telegramId: String(telegramId) },
-      data: { yesterdayReport: reports },
+    // Return today's report without saving to database
+    return NextResponse.json({ 
+      message: finalMessage, 
+      success: true, 
+      report: { text: finalMessage, date: today.toISOString() }
     });
-
-    return NextResponse.json({ message: finalMessage, success: true, savedReports: reports });
   } catch (error) {
     console.error('Error in /api/generate-report:', error);
     return NextResponse.json({ error: 'Ошибка при генерации отчёта: ' + error.message }, { status: 500 });

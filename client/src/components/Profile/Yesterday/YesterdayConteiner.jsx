@@ -9,7 +9,7 @@ const YesterdayConteiner = (props) => {
 
     const [date, setDate] = useState(null);
     const [savingGoals, setSavingGoals] = useState(null);
-    
+
     useEffect(() => {
         checkTimeGoalsSaving(props.profile.telegramId);
     }, [props.timeGoalsSaving])
@@ -41,7 +41,12 @@ const YesterdayConteiner = (props) => {
         return resultGoals;
     }, [date, savingGoals, props.timeGoalsSaving, props.goals]);
 
-    return <Yesterday addTextGenerationData={props.addTextGenerationData} setDisplay={props.setDisplay} deletePoints={props.deletePoints} setSavingGoals={setSavingGoals} newStatusSavingGoal={props.newStatusSavingGoal} profile={props.profile} userId={props.userId} addStatus={props.addStatus} setPoints={props.setPoints} checkTimeGoalsSaving={props.checkTimeGoalsSaving} setDate={setDate} goalsForSelectedDate={goalsForSelectedDate} addStatusNew={props.addStatusNew} />
+    console.log(goalsForSelectedDate)
+
+    return <div>
+
+        {goalsForSelectedDate.length !== 0 && <Yesterday addTextGenerationData={props.addTextGenerationData} setDisplay={props.setDisplay} deletePoints={props.deletePoints} setSavingGoals={setSavingGoals} newStatusSavingGoal={props.newStatusSavingGoal} profile={props.profile} userId={props.userId} addStatus={props.addStatus} setPoints={props.setPoints} checkTimeGoalsSaving={props.checkTimeGoalsSaving} setDate={setDate} goalsForSelectedDate={goalsForSelectedDate} addStatusNew={props.addStatusNew} />}
+    </div>
 }
 
 const mapStateToProps = (state) => ({
@@ -51,4 +56,4 @@ const mapStateToProps = (state) => ({
     goals: state.goals.goals
 })
 
-export default connect(mapStateToProps, {addTextGenerationData, deletePoints, newStatusSavingGoal, addStatusNew, checkTimeGoalsSaving, setPoints, addStatus })(YesterdayConteiner);
+export default connect(mapStateToProps, { addTextGenerationData, deletePoints, newStatusSavingGoal, addStatusNew, checkTimeGoalsSaving, setPoints, addStatus })(YesterdayConteiner);

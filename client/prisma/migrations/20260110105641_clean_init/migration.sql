@@ -12,9 +12,9 @@ CREATE TABLE "User" (
     "username" TEXT,
     "photoUrl" TEXT,
     "pts" INTEGER NOT NULL DEFAULT 0,
-    "completedDates" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "savingGoals" JSONB[],
+    "usersTag" TEXT,
     "registrationDate" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
-    "yesterdayReport" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -25,7 +25,8 @@ CREATE TABLE "User" (
 CREATE TABLE "Achievement" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
+    "gif" TEXT NOT NULL,
+    "rarity" TEXT NOT NULL,
     "requirement" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "image" TEXT NOT NULL,
@@ -52,6 +53,7 @@ CREATE TABLE "Goal" (
     "description" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "startDate" TIMESTAMP(3),
+    "selectedOption" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -63,3 +65,6 @@ CREATE UNIQUE INDEX "User_telegramId_key" ON "User"("telegramId");
 
 -- AddForeignKey
 ALTER TABLE "Achievement" ADD CONSTRAINT "Achievement_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Goal" ADD CONSTRAINT "Goal_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

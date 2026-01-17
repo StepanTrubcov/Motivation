@@ -33,6 +33,14 @@ const RARITY_COLORS = {
     label: 'Легендарная',
     points: 'rgba(255,204,51,0.9)',
   },
+  epic: {
+    border: '#ff9a4d',
+    glow: '#ff9a4d',
+    text: '#ffcc33',
+    ribbon: '#ff8f44',
+    label: 'Эпическая',
+    points: '#ff9a4d',
+  },
 };
 
 export const runtime = 'nodejs';
@@ -105,21 +113,21 @@ async function generateImageBuffer({
 
   const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial';
 
-  // ===== Внутренний фон карточки (чёрный) =====
-  const cardX = padding;
-  const cardY = padding;
-  const cardW = cardWidth - padding * 2;
+  // ===== Внутренний фон карточки (чёрный, от края до края) =====
+  const cardX = 0;  // Без внутреннего padding — картинка и фон до самого края
+  const cardY = 0;
+  const cardW = cardWidth;  // Полная ширина
 
   cardCtx.save();
-  roundedRect(cardCtx, cardX, cardY, cardW, height - padding * 2, radius);
+  roundedRect(cardCtx, cardX, cardY, cardW, height, radius);
   cardCtx.clip();
   cardCtx.fillStyle = '#000000';
-  cardCtx.fillRect(cardX, cardY, cardW, height - padding * 2);
+  cardCtx.fillRect(cardX, cardY, cardW, height);
   cardCtx.restore();
 
   let currentY = cardY;
 
-  // ===== Изображение =====
+  // ===== Изображение (от края до края) =====
   if (img) {
     const image = await loadImage(img);
     const imgW = cardW;
@@ -204,19 +212,17 @@ async function generateImageBuffer({
   downCtx.imageSmoothingQuality = 'high';
   downCtx.drawImage(resizedCard, 0, 0, cardWidth * dpiScale / 2, cardFinalHeight * dpiScale / 2);
 
-  // ===== ЦВЕТНАЯ РАМКА СО СВЕЧЕНИЕМ (теперь рисуем на большем канвасе с правильным масштабом) =====
+  // ===== ЦВЕТНАЯ РАМКА СО СВЕЧЕНИЕМ =====
   const glowRenderWidth = cardWidth * dpiScale / 2;
   const glowRenderHeight = cardFinalHeight * dpiScale / 2;
 
   const glowCanvas = createCanvas(glowRenderWidth, glowRenderHeight);
   const glowCtx = glowCanvas.getContext('2d');
 
-  // Сначала копируем карточку
   glowCtx.drawImage(downsampledCard, 0, 0, glowRenderWidth, glowRenderHeight);
 
-  // Теперь рисуем свечение и рамку в правильном масштабе
   glowCtx.save();
-  glowCtx.scale(dpiScale / 2, dpiScale / 2); // Масштаб для координат как в оригинале
+  glowCtx.scale(dpiScale / 2, dpiScale / 2);
   glowCtx.strokeStyle = rarity.border;
   glowCtx.lineWidth = Math.round(10 * cardScale);
   glowCtx.shadowColor = rarity.glow;
@@ -236,9 +242,37 @@ async function generateImageBuffer({
   const finalCanvas = createCanvas(finalRenderWidth, finalRenderHeight);
   const finalCtx = finalCanvas.getContext('2d');
 
+  // Чёрный фон
   finalCtx.fillStyle = '#000000';
   finalCtx.fillRect(0, 0, finalRenderWidth, finalRenderHeight);
 
+  // === Эффект полосок по всему фону (снова добавляем, но без вырезания) ===
+  finalCtx.save();
+  finalCtx.scale(dpiScale / 2, dpiScale / 2);
+
+  finalCtx.globalAlpha = 0.2;
+  finalCtx.strokeStyle = rarity.glow;
+  finalCtx.shadowColor = rarity.glow;
+  finalCtx.shadowBlur = 20;
+
+  const numLines = 50;
+  for (let i = 0; i < numLines; i++) {
+    const startX = Math.random() * finalWidth;
+    const startY = Math.random() * finalHeight;
+    const angle = Math.random() * Math.PI * 2;
+    const length = 150 + Math.random() * 300;
+
+    finalCtx.lineWidth = 2 + Math.random() * 5;
+    finalCtx.beginPath();
+    finalCtx.moveTo(startX, startY);
+    finalCtx.lineTo(startX + Math.cos(angle) * length, startY + Math.sin(angle) * length);
+    finalCtx.stroke();
+  }
+
+  finalCtx.restore();
+  // === Конец эффекта ===
+
+  // Чёрная закруглённая рамка (поверх полосок, но без вырезания — полоски будут видны под карточкой)
   finalCtx.save();
   finalCtx.scale(dpiScale / 2, dpiScale / 2);
   finalCtx.fillStyle = '#000000';
@@ -247,7 +281,7 @@ async function generateImageBuffer({
   finalCtx.restore();
 
   // Карточка ближе к верху
-  const topOffset = 40; // Отступ сверху
+  const topOffset = 40;
   const cardXPos = blackBorderWidth;
   const cardYPos = topOffset;
 

@@ -46,6 +46,9 @@ const AchievementsMap = ({
             case "legendary":
             case "легендарная":
                 return c.legendary;
+            case "epic":
+            case "эпическая":
+                return c.epic;
             default:
                 return c.common;
         }
@@ -62,6 +65,9 @@ const AchievementsMap = ({
             case "legendary":
             case "легендарная":
                 return "Легендарная";
+            case "epic":
+            case "эпическая":
+                return "Эпическая";
             default:
                 return "Обычная";
         }
@@ -95,6 +101,7 @@ const AchievementsMap = ({
                         {navigator("common", setActive, active, "Обычные", active)}
                         {navigator("rare", setActive, active, "Редкие", active)}
                         {navigator("legendary", setActive, active, "Легендарные", active)}
+                        {navigator("epic", setActive, active, "Эпические", active)}
                     </div>
                 </div>
             )}

@@ -1,18 +1,19 @@
-// Утилита для обновления достижений у всех пользователей
-import { PrismaClient } from '@prisma/client';
+#!/usr/bin/env node
 
-const prisma = new PrismaClient();
+// Script to update updateAchievements.mjs with the new achievements data
+import fs from 'fs';
+import path from 'path';
 
-// Новые данные о достижениях (обновленные значения из Api.js)
-const updatedAchievements = [
+// New achievements array from the selected code (same as above)
+const newAchievements = [
   {
     "id": "1",
     "title": "Красавчик!",
     "description": "",
     "rarity": "common",
     "status": "my",
-    "image": "https://i.postimg.cc/269msf3B/image-(1).jpg",
-    "gif": "https://i.postimg.cc/zfr8v0t6/Untitled-kopia-3.gif",
+    "image": 'https://i.postimg.cc/269msf3B/image-(1).jpg',
+    "gif": 'https://i.postimg.cc/zfr8v0t6/Untitled-kopia-3.gif',
     "points": 0
   },
   {
@@ -21,12 +22,10 @@ const updatedAchievements = [
     "gif": "https://i.postimg.cc/0yN7300y/Untitled-kopia-4.gif",
     "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 30 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/MpCkKwQK/899d46fe-fff2-45d0-85c8-1bafc42b7159.png",
+    "image": 'https://i.postimg.cc/MpCkKwQK/899d46fe-fff2-45d0-85c8-1bafc42b7159.png',
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "1"
-    ],
+    "goalIds": ["1"],
     "rarity": "common",
     "target": 30
   },
@@ -36,12 +35,10 @@ const updatedAchievements = [
     "gif": "https://i.postimg.cc/BZV3Hq7c/Untitled-kopia-9.gif",
     "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 30 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/YScT80Q1/image-(2).jpg",
+    "image": 'https://i.postimg.cc/YScT80Q1/image-(2).jpg',
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "2"
-    ],
+    "goalIds": ["2"],
     "rarity": "common",
     "target": 30
   },
@@ -50,13 +47,11 @@ const updatedAchievements = [
     "title": "Кодерский марафон",
     "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 30 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/d0kBmqFQ/image-(1).jpg",
+    "image": 'https://i.postimg.cc/d0kBmqFQ/image-(1).jpg',
     "gif": "https://i.postimg.cc/8cFqt6Xc/Untitled-kopia.gif",
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "4"
-    ],
+    "goalIds": ["4"],
     "rarity": "common",
     "target": 30
   },
@@ -65,15 +60,13 @@ const updatedAchievements = [
     "title": "Здоровый рацион",
     "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 30 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/prdSyFMC/image-(1)-kopia.jpg",
+    "image": 'https://i.postimg.cc/prdSyFMC/image-(1)-kopia.jpg',
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "68"
-    ],
+    "goalIds": ["68"],
     "rarity": "common",
     "target": 30,
-    "gif": "https://i.postimg.cc/cLsNNrr2/Untitled-(3).gif"
+    "gif": "https://i.postimg.cc/cLsNNrr2/Untitled-(3).gif",
   },
   {
     "id": "6",
@@ -84,9 +77,7 @@ const updatedAchievements = [
     "gif": "https://i.postimg.cc/jj1VNcZx/Untitled234.gif",
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "36"
-    ],
+    "goalIds": ["36"],
     "rarity": "common",
     "target": 30
   },
@@ -99,9 +90,7 @@ const updatedAchievements = [
     "image": "https://i.postimg.cc/nLtwB5tT/dddbeae1-1d89-463d-a5e3-91d2b9e6adaa.png",
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "16"
-    ],
+    "goalIds": ["16"],
     "rarity": "common",
     "target": 30
   },
@@ -114,9 +103,7 @@ const updatedAchievements = [
     "image": "https://i.postimg.cc/SN2Z5qSL/image-kopia-2.jpg",
     "points": 250,
     "type": "goal_based",
-    "goalIds": [
-      "8"
-    ],
+    "goalIds": ["8"],
     "rarity": "common",
     "target": 30
   },
@@ -132,18 +119,18 @@ const updatedAchievements = [
     "rarity": "common",
     "target": 30
   },
+  //__________________________________________
+  // Редкие
   {
     "id": "10",
     "title": "60 дней бега",
     "gif": "https://i.postimg.cc/L8RxsWKW/Untitled-(1).gif",
     "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 60 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/HkhH4Tkq/12d6730e-ce3c-4b7e-a7ed-e3728d47a448-kopia.png",
+    "image": 'https://i.postimg.cc/HkhH4Tkq/12d6730e-ce3c-4b7e-a7ed-e3728d47a448-kopia.png',
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "1"
-    ],
+    "goalIds": ["1"],
     "rarity": "rare",
     "target": 60
   },
@@ -153,12 +140,10 @@ const updatedAchievements = [
     "gif": "https://i.postimg.cc/SNbrZPsp/Untitled-(1)-kopia.gif",
     "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 60 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/bNYj7ZGC/image-(3).jpg",
+    "image": 'https://i.postimg.cc/bNYj7ZGC/image-(3).jpg',
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "2"
-    ],
+    "goalIds": ["2"],
     "rarity": "rare",
     "target": 60
   },
@@ -168,12 +153,10 @@ const updatedAchievements = [
     "title": "Кодерский марафон",
     "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 60 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/fWKGfMHc/077e34ab-3f3e-422b-b45e-cc308ec45db5.png",
+    "image": 'https://i.postimg.cc/fWKGfMHc/077e34ab-3f3e-422b-b45e-cc308ec45db5.png',
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "4"
-    ],
+    "goalIds": ["4"],
     "rarity": "rare",
     "target": 60
   },
@@ -183,12 +166,10 @@ const updatedAchievements = [
     "title": "Здоровый рацион",
     "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 60 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/sgBbz7VV/image.jpg",
+    "image": 'https://i.postimg.cc/sgBbz7VV/image.jpg',
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "68"
-    ],
+    "goalIds": ["68"],
     "rarity": "rare",
     "target": 60
   },
@@ -201,9 +182,7 @@ const updatedAchievements = [
     "image": "https://i.postimg.cc/cJwjgWgm/image-(1)-kopia-2.jpg",
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "36"
-    ],
+    "goalIds": ["36"],
     "rarity": "rare",
     "target": 60
   },
@@ -216,9 +195,7 @@ const updatedAchievements = [
     "image": "https://i.postimg.cc/C5P6TLXZ/78478168-36c0-45f4-99c8-366e0baa665c.png",
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "16"
-    ],
+    "goalIds": ["16"],
     "rarity": "rare",
     "target": 60
   },
@@ -231,9 +208,7 @@ const updatedAchievements = [
     "image": "https://i.postimg.cc/yY2vF5zG/image-(1)-kopia-3.jpg",
     "points": 500,
     "type": "goal_based",
-    "goalIds": [
-      "8"
-    ],
+    "goalIds": ["8"],
     "rarity": "rare",
     "target": 60
   },
@@ -249,18 +224,18 @@ const updatedAchievements = [
     "rarity": "rare",
     "target": 180
   },
+  //_________________________________________
+  // Легендарные
   {
     "id": "18",
     "title": "120 дней бега",
     "gif": "https://i.postimg.cc/fTxhF1vn/Untitled-kopia-5.gif",
     "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 120 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/jdWbXLDd/abc30db4-c0ce-4e0a-ac5d-d66933c97033-kopia.png",
+    "image": 'https://i.postimg.cc/jdWbXLDd/abc30db4-c0ce-4e0a-ac5d-d66933c97033-kopia.png',
     "points": 1000,
     "type": "goal_based",
-    "goalIds": [
-      "1"
-    ],
+    "goalIds": ["1"],
     "rarity": "legendary",
     "target": 120
   },
@@ -273,9 +248,7 @@ const updatedAchievements = [
     "points": 1000,
     "gif": "https://i.postimg.cc/XJpbzJsw/Untitled-kopia-8.gif",
     "type": "goal_based",
-    "goalIds": [
-      "16"
-    ],
+    "goalIds": ["16"],
     "rarity": "legendary",
     "target": 120
   },
@@ -284,13 +257,11 @@ const updatedAchievements = [
     "title": "Кодерский марафон",
     "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 90 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/nhngk9R3/2c7f25f1-85f5-49ca-96ef-5f4325f18de5.png",
+    "image": 'https://i.postimg.cc/nhngk9R3/2c7f25f1-85f5-49ca-96ef-5f4325f18de5.png',
     "points": 1000,
     "gif": "https://i.postimg.cc/Qx5XDFhz/Untitled-kopia-2.gif",
     "type": "goal_based",
-    "goalIds": [
-      "4"
-    ],
+    "goalIds": ["4"],
     "rarity": "legendary",
     "target": 120
   },
@@ -303,9 +274,7 @@ const updatedAchievements = [
     "points": 1000,
     "type": "goal_based",
     "gif": "https://i.postimg.cc/x8cWt41D/5.gif",
-    "goalIds": [
-      "8"
-    ],
+    "goalIds": ["8"],
     "rarity": "legendary",
     "target": 120
   },
@@ -315,12 +284,10 @@ const updatedAchievements = [
     "gif": "https://i.postimg.cc/bwD1pHdm/Untitled-(2).gif",
     "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 120 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/KjGn26gL/image-(4).jpg",
+    "image": 'https://i.postimg.cc/KjGn26gL/image-(4).jpg',
     "points": 1000,
     "type": "goal_based",
-    "goalIds": [
-      "2"
-    ],
+    "goalIds": ["2"],
     "rarity": "legendary",
     "target": 120
   },
@@ -330,12 +297,10 @@ const updatedAchievements = [
     "title": "Здоровый рацион",
     "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 120 раз\n",
     "status": "locked",
-    "image": "https://i.postimg.cc/hjrdp23D/image-(5).jpg",
+    "image": 'https://i.postimg.cc/hjrdp23D/image-(5).jpg',
     "points": 1000,
     "type": "goal_based",
-    "goalIds": [
-      "68"
-    ],
+    "goalIds": ["68"],
     "rarity": "legendary",
     "target": 120
   },
@@ -348,9 +313,7 @@ const updatedAchievements = [
     "image": "https://i.postimg.cc/zGgH9zcV/image-(2)-kopia.jpg",
     "points": 1000,
     "type": "goal_based",
-    "goalIds": [
-      "36"
-    ],
+    "goalIds": ["36"],
     "rarity": "legendary",
     "target": 120
   },
@@ -365,130 +328,48 @@ const updatedAchievements = [
     "type": "time_based",
     "rarity": "legendary",
     "target": 365
-  }
-];;
+  },
+];
 
-// Идентификатор версии достижений (меняйте при каждом обновлении)
-// const ACHIEVEMENTS_VERSION = "v1.0"; // Увеличивайте версию при каждом изменении
+// Read the updateAchievements.mjs file
+const updateAchievementsPath = path.join(process.cwd(), 'src', 'lib', 'updateAchievements.mjs');
+let updateAchievementsContent = fs.readFileSync(updateAchievementsPath, 'utf8');
 
-let hasRun = false;
+// Find the updatedAchievements array and replace it
+const updatedAchievementsStartPattern = /const updatedAchievements = \[/;
+const updatedAchievementsEndPattern = /\];/;
 
-async function updateAllUserAchievements() {
-  // Проверяем, чтобы функция выполнялась только один раз
-  if (hasRun) {
-    return { success: true, message: 'Функция уже была выполнена ранее' };
-  }
-  
-  hasRun = true;
-  
-  try {
-    console.log('Начинаем автоматическое обновление достижений для всех пользователей...');
-    
-    // Получаем всех пользователей
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        telegramId: true,
-        firstName: true,
-        username: true
-      }
-    });
-    
-    console.log(`Найдено пользователей: ${users.length}`);
-    
-    let updatedUsersCount = 0;
-    let skippedUsersCount = 0;
-    
-    // Для каждого пользователя проверяем и обновляем достижения при необходимости
-    for (const user of users) {
-      console.log(`Проверяем достижения для пользователя: ${user.username || user.firstName} (${user.telegramId})`);
-      
-      try {
-        // Получаем текущие достижения пользователя
-        const currentUserAchievements = await prisma.achievement.findMany({
-          where: {
-            userId: user.id
-          },
-          select: {
-            id: true,
-            title: true,
-            description: true,
-            points: true
-          }
-        });
-        
-        // Проверяем, нужно ли обновлять достижения
-        let needsUpdate = false;
-        
-        if (currentUserAchievements.length === 0) {
-          // У пользователя нет достижений, нужно создать
-          needsUpdate = true;
-        } else if (currentUserAchievements.length !== updatedAchievements.length) {
-          // Разное количество достижений, нужно обновить
-          needsUpdate = true;
-        } else {
-          // Проверяем конкретные достижения на изменения
-          for (const newAchievement of updatedAchievements) {
-            const existing = currentUserAchievements.find(a => 
-              a.id == newAchievement.id && 
-              a.title === newAchievement.title
-            );
-            
-            if (!existing || existing.points !== newAchievement.points || existing.description !== newAchievement.description) {
-              needsUpdate = true;
-              break;
-            }
-          }
-        }
-        
-        if (needsUpdate) {
-          console.log(`Обновляем достижения для пользователя: ${user.username || user.firstName}`);
-          
-          // Удаляем все существующие достижения пользователя
-          await prisma.achievement.deleteMany({
-            where: {
-              userId: user.id
-            }
-          });
-          
-          // Создаем новые достижения для пользователя
-          const achievementsToCreate = updatedAchievements.map(ach => ({
-            ...ach,
-            userId: user.id
-          }));
-          
-          await prisma.achievement.createMany({
-            data: achievementsToCreate,
-            skipDuplicates: true
-          });
-          
-          console.log(`Достижения для пользователя ${user.username || user.firstName} успешно обновлены`);
-          updatedUsersCount++;
-        } else {
-          console.log(`Достижения для пользователя ${user.username || user.firstName} уже актуальны, пропускаем`);
-          skippedUsersCount++;
-        }
-      } catch (userError) {
-        console.error(`Ошибка при проверке/обновлении достижений для пользователя ${user.username || user.firstName}:`, userError);
-      }
-    }
-    
-    const result = {
-      success: true,
-      message: `Достижения успешно обновлены для ${updatedUsersCount} пользователей, пропущено ${skippedUsersCount} пользователей`
-    };
-    
-    console.log(result.message);
-    return result;
-  } catch (error) {
-    console.error('Ошибка при автоматическом обновлении достижений:', error);
-    return { 
-      success: false, 
-      error: 'Не удалось обновить достижения для пользователей',
-      details: error.message 
-    };
-  }
+const startIndex = updateAchievementsContent.search(updatedAchievementsStartPattern);
+if (startIndex === -1) {
+  console.error('Could not find updatedAchievements array start');
+  process.exit(1);
 }
 
-// Экспортируем функцию для использования в других модулях
-export { updateAllUserAchievements };
+// Find the end of the updatedAchievements array
+let bracketCount = 1;
+let endIndex = startIndex + updateAchievementsContent.substring(startIndex).indexOf('[') + 1;
+let i = endIndex;
+
+while (bracketCount > 0 && i < updateAchievementsContent.length) {
+  if (updateAchievementsContent[i] === '[') bracketCount++;
+  if (updateAchievementsContent[i] === ']') bracketCount--;
+  i++;
+}
+
+if (bracketCount !== 0) {
+  console.error('Could not find updatedAchievements array end');
+  process.exit(1);
+}
+
+endIndex = i;
+
+// Replace the updatedAchievements array
+const newUpdatedAchievementsString = 'const updatedAchievements = ' + JSON.stringify(newAchievements, null, 2) + ';';
+const beforeArray = updateAchievementsContent.substring(0, startIndex);
+const afterArray = updateAchievementsContent.substring(endIndex);
+
+const newUpdateAchievementsContent = beforeArray + newUpdatedAchievementsString + afterArray;
+
+// Write the updated file
+fs.writeFileSync(updateAchievementsPath, newUpdateAchievementsContent);
+console.log('Successfully updated updatedAchievements array in updateAchievements.mjs');

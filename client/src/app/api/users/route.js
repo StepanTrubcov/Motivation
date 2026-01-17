@@ -52,7 +52,6 @@ export async function POST(request) {
             username,
             photoUrl,
             registrationDate: new Date(),
-            savingGoals: [],
             usersTag,
           },
         });
@@ -72,7 +71,6 @@ export async function POST(request) {
           username,
           photoUrl,
           registrationDate: new Date(),
-          savingGoals: [],
           usersTag,
         },
       });
