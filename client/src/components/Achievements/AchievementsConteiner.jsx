@@ -21,6 +21,7 @@ const AchievementsConteiner = ({ getMakingPicture, assignments = [], goals = [],
             style: {
                 background: '#333',
                 color: '#fff',
+                marginTop: '80px',
             }
         });
     };

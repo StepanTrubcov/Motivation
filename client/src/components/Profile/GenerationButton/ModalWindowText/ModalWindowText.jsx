@@ -13,6 +13,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
             style: {
                 background: '#333',
                 color: '#fff',
+                marginTop: '80px',
             }
         });
         closeModalText()

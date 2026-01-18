@@ -51,6 +51,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -69,6 +70,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
 
@@ -78,6 +80,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -91,6 +94,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -110,6 +114,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             })
         } catch (error) {
@@ -118,6 +123,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -137,6 +143,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
 
@@ -148,6 +155,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }

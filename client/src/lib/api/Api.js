@@ -161,6 +161,7 @@ export async function getAllStatus(customUserId, goalId, newStatus, selectedOpti
       style: {
         background: '#333',
         color: '#fff',
+        marginTop: '80px',
       }
     });
     console.error(`Ошибка обновления статуса цели ${goalId}:`, error);
@@ -702,7 +703,7 @@ export async function initializeAchievements(userId) {
       "requirement": "• Эту ачивку получили первые 100\nпользователей бота.\n• Больше эту ачивку получить нельзя! \n",
       "status": "my",
       "image": "https://i.yapx.ru/cnAAZ.jpg",
-      "points": 200,
+      "points": 0,
       "gif": "https://allwebs.ru/images/2026/01/16/13d99a897de68b6dcfc0a1a35d6a2c85.gif",
       "rarity": "epic",
     }, 

@@ -39,6 +39,8 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
+            
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -58,6 +60,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         } catch (error) {
@@ -66,6 +69,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -78,6 +82,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -93,6 +98,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
 
@@ -106,6 +112,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -153,6 +160,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -170,6 +178,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
 
@@ -183,6 +192,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
             style: {
                 background: '#333',
                 color: '#fff',
+                marginTop: '80px',
             },
         });
         setIsModalOpenText(null)

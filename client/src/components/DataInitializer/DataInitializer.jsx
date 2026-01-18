@@ -70,6 +70,7 @@ const DataInitializer = ({ children }) => {
                     style: {
                         background: '#333',
                         color: '#fff',
+                        marginTop: '80px',
                     }
                 });
             };

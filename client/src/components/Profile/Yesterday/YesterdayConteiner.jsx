@@ -6,8 +6,11 @@ import { deletePoints, setPoints } from "@/redux/profile_reducer";
 import { addTextGenerationData } from "@/redux/generation_reducer";
 
 const YesterdayConteiner = (props) => {
+    const dates = new Date();
+    dates.setDate(dates.getDate() - 1);
+    const esterdayDate = dates.toISOString().split('T')[0]
 
-    const [date, setDate] = useState(null);
+    const [date, setDate] = useState(esterdayDate);
     const [savingGoals, setSavingGoals] = useState(null);
 
     useEffect(() => {

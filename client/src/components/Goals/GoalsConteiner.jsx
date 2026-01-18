@@ -55,6 +55,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
             setIsModalOpen(null);
@@ -75,6 +76,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -88,6 +90,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -105,6 +108,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         } catch (error) {
@@ -113,6 +117,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -126,6 +131,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 },
                 icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
@@ -142,6 +148,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
 
@@ -154,6 +161,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }
@@ -171,6 +179,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
             await deleteGoalsSaving(profile.telegramId, goalData.id)
@@ -181,6 +190,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 style: {
                     background: '#333',
                     color: '#fff',
+                    marginTop: '80px',
                 }
             });
         }

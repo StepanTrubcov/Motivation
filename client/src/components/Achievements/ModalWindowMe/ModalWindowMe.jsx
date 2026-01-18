@@ -66,12 +66,15 @@ const ModalWindowMe = ({
 
       setImageDataUrl(imageUrl);
       toast.success("Карточка готова!", {
-        style: { background: '#333', color: '#fff' },
+        style: { background: '#333', color: '#fff', marginTop: '80px', },
       });
     } catch (err) {
       console.error(err);
       toast.error("Ошибка генерации", {
-        style: { background: '#333', color: '#fff' },
+        style: {
+          background: '#333', color: '#fff',
+          marginTop: '80px',
+        },
       });
     } finally {
       setIsLoading(false);
@@ -103,7 +106,7 @@ const ModalWindowMe = ({
       text: caption,
       widget_link: {
         url: "https://t.me/BotMotivation_TG_bot",
-        name: "Подключись к моему боту", // Текст на кнопке
+        name: "Бот «Дневные достижения»", // Текст на кнопке
       },
     };
 
@@ -153,7 +156,7 @@ const ModalWindowMe = ({
       const shared = await tryShareToStory(tg, mediaUrl);
       if (shared) {
         toast.success("Открылось окно Stories с кнопкой!", {
-          style: { background: '#333', color: '#fff' },
+          style: { background: '#333', color: '#fff', marginTop: '80px', },
         });
         return;
       }

@@ -33,6 +33,7 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
             style: {
                 background: '#333',
                 color: '#fff',
+                marginTop: '80px',
             },
             icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
         });
@@ -45,6 +46,7 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
             style: {
                 background: '#333',
                 color: '#fff',
+                marginTop: '80px',
             }
         });
 
