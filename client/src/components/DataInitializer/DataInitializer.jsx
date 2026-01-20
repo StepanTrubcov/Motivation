@@ -30,6 +30,10 @@ const DataInitializer = ({ children }) => {
                 const tg = window.Telegram.WebApp;
                 tg.ready();
 
+                if (!tg.isExpanded) {
+                    tg.expand();
+                }
+
                 // Принудительно устанавливаем темную тему
                 document.body.classList.remove('telegram-light', 'telegram-dark');
                 document.body.classList.add('telegram-dark');
