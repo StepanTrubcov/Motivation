@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 
 // Get bot token and channel from environment variables
 
+const BOT_TOKEN = '8324006318:AAG8C5F7e_qpfXpspPv_be34UC4Qf01FM_4';
+const CHANNEL_ID = '@Motivation_bot_channel';
 
 if (!BOT_TOKEN) {
   console.error('TELEGRAM_BOT_TOKEN is not set in environment variables');
@@ -17,9 +19,6 @@ if (!CHANNEL_ID) {
  * @returns {Promise<boolean>} - True if user is subscribed, false otherwise
  */
 async function isSubscribed(userId) {
-
-  const BOT_TOKEN = '8324006318:AAG8C5F7e_qpfXpspPv_be34UC4Qf01FM_4';
-  const CHANNEL_ID = '@Motivation_bot_channel';
 
   if (!BOT_TOKEN || !CHANNEL_ID) {
     console.error('Bot token or channel ID not configured');
