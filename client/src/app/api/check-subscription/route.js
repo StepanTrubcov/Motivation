@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 // Get bot token and channel from environment variables
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID; // e.g., '@your_channel_username'
+const CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID;
 
 if (!BOT_TOKEN) {
   console.error('TELEGRAM_BOT_TOKEN is not set in environment variables');
