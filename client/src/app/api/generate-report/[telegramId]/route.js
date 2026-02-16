@@ -36,7 +36,7 @@ export async function POST(request, { params }) {
 
     const today = new Date();
 
-    const seriesLine = (series > 0) ? `\n\nСерия: 🔥 ${series} дн.` : '';
+    const seriesLine = (series > 2) ? `\n\nСерия: 🔥 ${series} дн.` : '';
 
     const headerParts = [formattedDate, userTag];
     if (seriesLine) headerParts.push(seriesLine);
