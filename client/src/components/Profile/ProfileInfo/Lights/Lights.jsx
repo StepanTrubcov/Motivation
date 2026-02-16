@@ -18,14 +18,14 @@ const Lights = ({ num, isTodayCompleted }) => {
 
     const grayLightUrl = "https://i.postimg.cc/gJDK9gn6/752049b9-f85f-4d4e-a777-58c12ac42fbd.png";
 
-    const milestones = [2, 9, 10, 30, 60, 100, 120];
+    const milestones = [2, 5, 10, 30, 60, 100, 120];
 
     const milestoneTexts = {
         2: {
             title: "Серия началась!",
             subtitle: "Постарайся её не потерять"
         },
-        9: {
+        5: {
             title: "Ты в ритме 👏",
             subtitle: "Продолжай держать темп"
         },
