@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { X, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingGoals, newStatusSavingGoal, profile, userId, setDate, goalsForSelectedDate, checkTimeGoalsSaving, setPoints, addStatus }) => {
+const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingGoals, newStatusSavingGoal, profile, userId, setDate, goalsForSelectedDate, checkTimeGoalsSaving, setPoints, addStatus, series = 0, isTodayCompleted = false }) => {
 
     const [esterday, setEsterday] = useState(false)
     const [loading, setLoading] = useState(true)
@@ -42,7 +42,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     marginTop: '80px',
             
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
 
             await checkTimeGoalsSaving(profile.telegramId)
@@ -84,7 +84,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     color: '#fff',
                     marginTop: '80px',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
 
             await deletePoints(userId, isModalOpen.points)
@@ -162,15 +162,16 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     color: '#fff',
                     marginTop: '80px',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
             });
 
             const goalsDone = goalsForSelectedDate.filter(g => g.status === 'completed');
 
             const goalsInProgress = goalsForSelectedDate.filter(g => g.status === 'in_progress');
 
+            const seriesForYesterday = isTodayCompleted && series > 0 ? series - 1 : series;
 
-            await addTextGenerationData(formattedDate, profile.usersTag, profile.telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading)
+            await addTextGenerationData(formattedDate, profile.usersTag, profile.telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, true, seriesForYesterday)
 
             toast.dismiss(loadingToast);
 

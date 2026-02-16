@@ -29,13 +29,13 @@ const setTextData = (generationText) => ({
 });
 
 
-export const addTextGenerationData = (formattedDate, userTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, loading = true) => async (dispatch) => {
+export const addTextGenerationData = (formattedDate, userTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, loading = true, series = 0) => async (dispatch) => {
     console.log(userTag)
-    await getGeneraleText(telegramId, goalsDone, goalsInProgress, userTag, formattedDate).then(response => {
+    await getGeneraleText(telegramId, goalsDone, goalsInProgress, userTag, formattedDate, series).then(response => {
         if (loading) {
-            dispatch(setTextData(response))
-            setGeneratedText(response)
-            setLoading(false)
+            dispatch(setTextData(response));
+            setGeneratedText(response);
+            setLoading(false);
         } else if (!loading) {
             dispatch(addProfile())
         }

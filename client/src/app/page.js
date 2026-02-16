@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import ProfileConteiner from '@/components/Profile/ProfileConteiner';
 import { useDispatch } from 'react-redux';
 import { addProfile } from '@/redux/profile_reducer';
-import SubscriptionGate from '@/components/SubscriptionCheck/SubscriptionGate';
 
 export default function HomePage() {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -32,11 +31,6 @@ export default function HomePage() {
   }, [dispatch, isUpdating]);
 
   return (
-    <SubscriptionGate
-      channelId="@Motivation_bot_channel"
-      channelLink="https://t.me/Motivation_bot_channel"
-    >
       <ProfileConteiner />
-    </SubscriptionGate>
   );
 }

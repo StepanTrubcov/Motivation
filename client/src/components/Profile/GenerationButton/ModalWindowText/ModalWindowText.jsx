@@ -6,7 +6,6 @@ import { X, Copy } from "lucide-react";
 import toast from "react-hot-toast";
 
 const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
-
     const copyToClipboard = async (text) => {
         await navigator.clipboard.writeText(text);
         toast.success("Отчёт скопирован!", {
@@ -16,7 +15,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                 marginTop: '80px',
             }
         });
-        closeModalText()
+        closeModalText();
     };
 
     return (

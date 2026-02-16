@@ -305,17 +305,19 @@ export async function getCompletedDates(customUserId) {
   }
 }
 
-export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, userTag, formattedDate) => {
+export const getGeneraleText = async (telegramId, goalsDone, goalsInProgress, userTag, formattedDate, series = 0) => {
   try {
     if (!telegramId) {
       console.error("❌ Нет telegramId для отчёта");
       return;
     }
+
     const response = await axios.post(`${BASE_URL}/generate-report/${telegramId}`, {
       goalsDone,
       goalsInProgress,
       userTag,
       formattedDate,
+      series: series || 0,
     });
 
     const { message, success } = response.data;
@@ -702,7 +704,7 @@ export async function initializeAchievements(userId) {
       "title": "Один из первых",
       "requirement": "• Эту ачивку получили первые 100\nпользователей бота.\n• Больше эту ачивку получить нельзя! \n",
       "status": "my",
-      "image": "https://i.yapx.ru/cnAAZ.jpg",
+      "image": "https://i.postimg.cc/05B1mwDJ/image-(1)-kopia-5.jpg",
       "points": 0,
       "gif": "https://allwebs.ru/images/2026/01/16/13d99a897de68b6dcfc0a1a35d6a2c85.gif",
       "rarity": "epic",

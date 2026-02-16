@@ -818,6 +818,23 @@ export async function CLEAR_ALL_SAVING_GOALS(request) {
   }
 }
 
+// Подсчёт серии дней (подряд с хотя бы одной выполненной целью), как в LightsConteiner
+function computeSeriesFromGoalsArray(goalsArray) {
+  if (!goalsArray || !Array.isArray(goalsArray)) return 0;
+  const todayStr = new Date().toISOString().split('T')[0];
+  const allDates = [...new Set(goalsArray.map(g => g.date).filter(Boolean))];
+  const pastDates = allDates.filter(d => d < todayStr).sort();
+  let num = 0;
+  pastDates.forEach(date => {
+    const hasCompleted = goalsArray.some(g => g.date === date && g.status === 'completed');
+    if (hasCompleted) num += 1;
+    else num = 0;
+  });
+  const todayHasCompleted = goalsArray.some(g => g.date === todayStr && g.status === 'completed');
+  if (todayHasCompleted) num += 1;
+  return num;
+}
+
 // Функция для анализа целей за определенный период
 function analyzeGoalsForPeriod(savingGoals, goalsArray, period) {
   // Для новой структуры данных мы будем использовать все цели из goalsArray
@@ -875,6 +892,7 @@ function analyzeGoalsForPeriod(savingGoals, goalsArray, period) {
 
   // Создаем данные для графика выполнения по дням
   const chartData = createChartData(goalsForPeriod, goalsArray);
+  const series = computeSeriesFromGoalsArray(goalsArray);
 
   return {
     goalStats,
@@ -882,13 +900,14 @@ function analyzeGoalsForPeriod(savingGoals, goalsArray, period) {
     topGoals,
     period,
     daysAnalyzed: goalsForPeriod.length,
-    chartData // Добавляем данные для графика
+    chartData,
+    series
   };
 }
 
 // Функция для генерации текстового отчета
 function generateReportText(reportData, user, period) {
-  const { topGoals, daysAnalyzed, chartData } = reportData;
+  const { topGoals, daysAnalyzed, chartData, series = 0 } = reportData;
 
   // Получаем реальные даты из chartData
   const dates = chartData.dates;
@@ -922,6 +941,9 @@ function generateReportText(reportData, user, period) {
 
   // Формируем текст отчета
   let reportText = `📊 ИТОГ НЕДЕЛИ ${periodText}\n\n`;
+  if (series > 0) {
+    reportText += `Серия: 🔥 ${series} дн.\n\n`;
+  }
   reportText += `🏆 Общий процент выполнения целей: ${overallPercentage}%\n\n`;
   
   reportText += "СТАТИСТИКА ПО ЦЕЛЯМ\n";

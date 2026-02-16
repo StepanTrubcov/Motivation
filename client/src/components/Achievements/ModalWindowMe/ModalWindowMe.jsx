@@ -213,7 +213,7 @@ const ModalWindowMe = ({
             >
               {imageDataUrl === null ? (
                 <div className={styles.howToGetHeader}>
-                  <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized alt="Loading" style={{ width: '18px', height: '18px', marginRight: '10px' }} />
+                  <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '18px', height: '18px', marginRight: '10px' }} />
                   Генерируем изображение
                 </div>
               ) : (

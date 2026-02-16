@@ -107,6 +107,7 @@ export const newStatusSavingGoal = (telegramId, date, goalId, newStatus) => asyn
         console.log('Ответ от updateSavingGoalStatus:', response);
         if (response.success) {
             console.log('Статус цели успешно обновлен в savingGoals');
+           await dispatch(setTimeGoalsSaving(response.data.savingGoals))
         } else {
             console.error('Ошибка при обновлении статуса цели в savingGoals:', response.error);
         }

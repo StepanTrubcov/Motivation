@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request, { params }) {
   try {
     const { telegramId } = await params;
-    const { goalsDone = [], goalsInProgress = [], userTag, formattedDate } = await request.json();
+    const { goalsDone = [], goalsInProgress = [], userTag, formattedDate, series } = await request.json();
 
     if (!Array.isArray(goalsDone) || !Array.isArray(goalsInProgress)) {
       return NextResponse.json({ error: "Нужны массивы goalsDone и goalsInProgress" }, { status: 400 });
@@ -35,14 +35,17 @@ export async function POST(request, { params }) {
       .join('\n\n');
 
     const today = new Date();
-    const todayString = today.toDateString();
-    
-    const finalMessage = [`${formattedDate} ${userTag}`, goalsList, diaryNote, "Отчёт сделан с помощью @BotMotivation_TG_bot"].join('\n\n').trim();
 
-    // Return today's report without saving to database
-    return NextResponse.json({ 
-      message: finalMessage, 
-      success: true, 
+    const seriesLine = (series > 0) ? `\n\nСерия: 🔥 ${series} дн.` : '';
+
+    const headerParts = [formattedDate, userTag];
+    if (seriesLine) headerParts.push(seriesLine);
+    const header = headerParts.join(' ');
+    const finalMessage = [header, goalsList, diaryNote, "Отчёт сделан с помощью @BotMotivation_TG_bot"].join('\n\n').trim();
+
+    return NextResponse.json({
+      message: finalMessage,
+      success: true,
       report: { text: finalMessage, date: today.toISOString() }
     });
   } catch (error) {
