@@ -42,11 +42,16 @@ export const getAchievementsData = (customUserId) => async (dispatch) => {
 
 export const getInitializeAchievementsData = (customUserId) => async (dispatch) => {
     try {
-        await initializeAchievements(customUserId);
-        dispatch(getAchievementsData(customUserId));
+        let achievements = await getAchievements(customUserId);
+        const isEmpty = !Array.isArray(achievements) || achievements.length === 0;
+        if (isEmpty) {
+            await initializeAchievements(customUserId);
+            achievements = await getAchievements(customUserId);
+        }
+        dispatch(setAssignments(Array.isArray(achievements) ? achievements : []));
     } catch (error) {
-        console.error("Ошибка инициализации достижений:", error);
-        // Даже в случае ошибки устанавливаем флаг загрузки
+        console.error("Ошибка загрузки/инициализации достижений:", error);
+        dispatch(setAssignments([]));
         dispatch(setAssignmentsLoaded(true));
     }
 }
