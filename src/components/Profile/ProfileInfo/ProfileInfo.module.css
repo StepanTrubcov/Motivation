@@ -1,0 +1,42 @@
+.ProfileInfo {
+    margin-top: 30px;
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.avatar {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 100%;
+}
+
+.nameLights{
+    display: flex;
+    align-items: center;
+}
+
+.info {
+    margin-left: 30px;
+}
+
+.name {
+    font-weight: 500;
+    font-size: 35px;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    color: var(--foreground, #ffffff);
+    transition: color 0.3s ease;
+}
+
+.glasses {
+    color: var(--accent-green, #00ff1e);
+    text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+    font-weight: 600;
+    font-size: 25px;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.blok {
+    display: flex;
+    justify-content:space-between;
+}

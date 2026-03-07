@@ -1,0 +1,308 @@
+.container {
+  position: relative;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  margin: 0;
+  padding: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* В обучении — модалка выше затемнения оверлея, чтобы обводка блока была видна */
+.modalBackdropTutorial {
+  z-index: 10060;
+}
+
+.light-theme .modalBackdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalImg {
+  width: 100px;
+  display: block;
+  margin: 0 auto;
+}
+
+.modalContent {
+  background-color: var(--card-bg, #151515);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 28rem;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modalContentTutorialDim {
+  overflow: hidden;
+}
+
+/* Затемнение модалки через портал: position fixed в координатах viewport, дырка ровно по блоку выбора дней */
+.tutorialModalDimFixed {
+  position: fixed;
+  z-index: 10061;
+  border-radius: 1rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Затемнение всего окна модалки кроме блока в обводке (дырка по блоку выбора дней) */
+.tutorialModalDimOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Дырка ровно по контуру блока выбора дней (совпадает с .tutorialDurationBlockWrap) */
+.tutorialModalDimHole {
+  position: absolute;
+  background: transparent;
+  border-radius: 14px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+}
+
+.light-theme .tutorialModalDimHole {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
+}
+
+.light-theme .modalContent {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #ec0000;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.closeButton:hover {
+  color: var(--foreground, #000000);
+}
+
+.light-theme .closeButton {
+  color: #ec0000;
+}
+
+.light-theme .closeButton:hover {
+  color: #cc0000;
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--accent-green, #00ff1e);
+  text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+  transition: color 0.3s ease;
+}
+
+.modalText {
+  color: var(--foreground, #ffffff);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+  transition: color 0.3s ease;
+}
+
+.light-theme .modalText {
+  text-shadow: none;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--foreground, #ffffff);
+  font-size: 1rem;
+  position: relative;
+  padding-left: 2rem;
+  transition: color 0.3s ease;
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.radioButton {
+  position: absolute;
+  left: 0;
+  height: 1.25rem;
+  width: 1.25rem;
+  background-color: #374151;
+  border-radius: 50%;
+  transition: all 0.2s;
+  border: 2px solid #4b5563;
+}
+
+.light-theme .radioButton {
+  background-color: #d1d5db;
+  border-color: #9ca3af;
+}
+
+.radioInput:checked ~ .radioButton {
+  background-color: var(--accent-green, #00ff1e);
+  border-color: var(--accent-green, #00ff1e);
+}
+
+.radioButton::after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.radioInput:checked ~ .radioButton::after {
+  display: block;
+}
+
+.radioButton::after {
+  top: 0.25rem;
+  left: 0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: white;
+}
+
+.actionButton {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--accent-green, #00ff1e);
+  color: rgb(0, 0, 0);
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.actionButton:hover {
+  background-color: #1f2937;
+}
+
+.light-theme .actionButton:hover {
+  background-color: #0cc91a;
+}
+
+.actionButton:disabled {
+  background-color: #4b5563;
+  cursor: not-allowed;
+}
+
+.light-theme .actionButton:disabled {
+  background-color: #9ca3af;
+}
+
+/* В обучении — подсветка всего окна цели (обводка по контуру модалки) */
+.tutorialModalFullHighlight {
+  border: 3px solid var(--accent-green, #00ff1e);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 255, 30, 0.15);
+  transition: box-shadow 0.2s;
+}
+
+:global(.light-theme) .tutorialModalFullHighlight {
+  border-color: var(--accent-green, #0a7c1a);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 16px rgba(10, 124, 26, 0.12);
+}
+
+/* Весь блок выбора дней — обводка вокруг опций 30/60/120 с отступом */
+.tutorialDurationBlockWrap {
+  border-radius: 14px;
+  padding: 14px 12px;
+  margin: 0 0 1rem 0;
+  border: 3px solid var(--accent-green, #00ff1e);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 0 20px rgba(0, 255, 30, 0.15);
+  transition: box-shadow 0.2s;
+}
+
+.light-theme .tutorialDurationBlockWrap {
+  border-color: var(--accent-green, #0a7c1a);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 16px rgba(10, 124, 26, 0.12);
+}
+
+.tutorialHighlightBlock {
+  border-radius: 12px;
+  padding: 4px;
+  border: 3px solid var(--accent-green, #00ff1e);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s;
+}
+
+.light-theme .tutorialHighlightBlock {
+  border-color: var(--accent-green, #0a7c1a);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.tutorialHighlightButton {
+  border: 3px solid var(--accent-green, #00ff1e);
+  box-shadow: 0 0 12px rgba(0, 255, 30, 0.35);
+}
+
+.light-theme .tutorialHighlightButton {
+  border-color: var(--accent-green, #0a7c1a);
+  box-shadow: 0 0 12px rgba(10, 124, 26, 0.25);
+}
+
+/* Окно поздравления после взятия первой цели в обучении */
+.congratsBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+  padding: 16px;
+}
+
+.congratsCard {
+  background-color: var(--card-bg, #151515);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  max-width: 20rem;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.light-theme .congratsCard {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.congratsText {
+  color: var(--foreground, #ffffff);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.4;
+}

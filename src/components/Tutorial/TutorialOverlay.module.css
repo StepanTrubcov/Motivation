@@ -1,0 +1,497 @@
+/* z-index выше нижней навигации (9999), чтобы затемнение перекрывало её во время обучения */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+  pointer-events: none;
+}
+
+.backdrop > * {
+  pointer-events: auto;
+}
+
+.dimTop,
+.dimBottom,
+.dimLeft,
+.dimRight {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.65);
+  cursor: default;
+}
+
+.dimTop {
+  top: 0;
+  width: 100vw;
+}
+
+.dimBottom {
+  left: 0;
+  width: 100vw;
+}
+
+.dimLeft {
+  width: 0;
+}
+
+.dimRight {
+  left: 0;
+}
+
+/* Одно затемнение со скруглённой «дырой» — клики проходят только в «дыру» */
+.dimWithHole {
+  position: fixed;
+  border-radius: 16px;
+  background: transparent;
+  cursor: default;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65);
+  z-index: 10049;
+  pointer-events: none;
+}
+
+/* Дырка ровно по блоку выбора дней / кнопке (совпадает с контуром обводки модалки) */
+.dimWithHoleGoalModal {
+  border-radius: 12px;
+}
+
+.dimWithHoleCircle {
+  border-radius: 9999px;
+}
+
+:global(.light-theme) .dimWithHole {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+}
+
+/* При выборе цвета в обучении — оверлей ниже модалки (10002), чтобы окно «Выберите цвет» было поверх и не затемнялось */
+.backdropColorPicker {
+  z-index: 9998;
+}
+
+/* При выборе цвета в обучении — мягче затемнение (если бы показывали), чтобы палитра лучше читалась */
+.backdropColorPicker .dimWithHole {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+}
+
+:global(.light-theme).backdropColorPicker .dimWithHole {
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.25);
+}
+
+/* Прозрачные панели перехватывают клики по затемнённой области, в т.ч. над нижней навигацией */
+.dimClickTop,
+.dimClickBottom,
+.dimClickLeft,
+.dimClickRight {
+  position: fixed;
+  left: 0;
+  right: 0;
+  background: transparent;
+  cursor: default;
+  z-index: 10049;
+}
+
+.dimClickTop {
+  top: 0;
+  width: 100vw;
+}
+
+.dimClickBottom {
+  left: 0;
+  width: 100vw;
+}
+
+.dimClickLeft {
+  width: 0;
+}
+
+.dimClickRight {
+  left: 0;
+}
+
+.dimFull {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  cursor: default;
+}
+
+/* Всегда перекрывает нижнюю навигацию при открытом туториале (ниже подсказок 10002, но внутри backdrop 10050) */
+.dimNavBlocker {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.65);
+  cursor: default;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+:global(.light-theme) .dimNavBlocker {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.highlight {
+  position: fixed;
+  border-radius: 16px;
+  border: 2px solid var(--accent-green, #00ff1e);
+  box-shadow: 0 0 0 4px rgba(0, 255, 30, 0.2);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.highlightCircle {
+  border-radius: 9999px;
+}
+
+.highlightBlock {
+  position: fixed;
+  border-radius: 16px;
+  cursor: default;
+  z-index: 9998;
+}
+
+.tooltipWrap {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 10%;
+  width: min(280px, calc(100vw - 24px));
+  z-index: 10050;
+}
+
+/* z-index выше панелей затемнения (10049), чтобы кнопки «Далее»/«Пропустить» всегда были кликабельны */
+.tooltipWrapCenter {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(280px, calc(100vw - 24px));
+  max-height: calc(100vh - 48px);
+  z-index: 10050;
+}
+
+.tooltipWrapTop {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(280px, calc(100vw - 24px));
+  z-index: 10050;
+}
+
+.tooltipWrapBelow {
+  position: fixed;
+  z-index: 10050;
+}
+
+.tooltipWrapAbove {
+  position: fixed;
+  z-index: 10050;
+  transform: translateY(-100%);
+}
+
+.tooltipWrapAboveAnchor {
+  position: fixed;
+  z-index: 10050;
+  transform: translateY(-100%);
+}
+
+/* Обёртка подсказки в портале — выше модалки выбора цели (10060), чтобы подсказка была видна */
+.tooltipPortalWrap {
+  position: fixed;
+  inset: 0;
+  z-index: 10070;
+  pointer-events: none;
+}
+
+.tooltipPortalWrap > * {
+  pointer-events: auto;
+}
+
+.tooltipWrapAboveInner {
+  position: relative;
+}
+
+.arrowTop,
+.arrowBottom {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+
+.arrowTop {
+  top: -8px;
+  border-bottom: 8px solid #383838;
+  filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.2));
+}
+
+.arrowBottom {
+  bottom: -8px;
+  border-top: 8px solid #383838;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.2));
+}
+
+.tooltipCard {
+  position: relative;
+  z-index: 1;
+  background: #383838;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 10px 14px 12px;
+  width: 280px;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 24px 56px rgba(0, 0, 0, 0.65),
+    0 12px 24px rgba(0, 0, 0, 0.4);
+  isolation: isolate;
+}
+
+.tooltipCardCenter {
+  align-self: center;
+  position: absolute;
+  right: 50%;
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+}
+
+/* Компактное окно для шага «Выберите цель» — меньше текст и тоньше карточка */
+.tooltipCardCompact {
+  padding: 6px 12px 8px;
+}
+
+.tooltipCardCompact .tooltipTitle {
+  font-size: 0.9rem;
+  margin: 0 0 2px 0;
+}
+
+.tooltipCardCompact .stepBadge {
+  margin-bottom: 4px;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+}
+
+.tooltipCardCompact .actions {
+  margin-top: 2px;
+}
+
+/* Окно модалки цели: один текст (цвет как в остальных окнах) + Пропустить */
+.tooltipCardSingleLine {
+  padding: 10px 14px 12px;
+}
+
+.tooltipCardSingleLine .tooltipTitle {
+  margin: 0;
+  color: var(--accent-green, #00ff1e);
+  text-shadow: 0 0 12px var(--accent-green-glow, rgba(0, 255, 42, 0.5));
+}
+
+:global(.light-theme) .tooltipCardSingleLine .tooltipTitle {
+  color: var(--accent-green, #0a7c1a);
+  text-shadow: none;
+}
+
+.stepBadge {
+  display: inline-block;
+  margin-bottom: 6px;
+  padding: 3px 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent-green, #00ff1e);
+  background: var(--accent-green-muted, rgba(0, 255, 30, 0.25));
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+.tooltipTitle {
+  text-align: center;
+  margin: 0 0 4px 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent-green, #00ff1e);
+  text-shadow: 0 0 12px var(--accent-green-glow, rgba(0, 255, 42, 0.5));
+  line-height: 1.3;
+}
+
+.tooltipDesc {
+  margin: 0 0 8px 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #f0f0f0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.btnSkip {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.btnSkip:hover {
+  color: #ccc;
+}
+
+.navGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btnNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-green-muted, rgba(0, 255, 30, 0.4));
+  background: var(--accent-green-muted, rgba(0, 255, 30, 0.25));
+  color: var(--accent-green, #00ff1e);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btnNav:hover {
+  background: var(--accent-green-glow, rgba(0, 255, 42, 0.4));
+  transform: scale(1.05);
+}
+
+.btnPrimary {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent-green, #00ff1e);
+  color: #0a0a0a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btnPrimary:hover {
+  box-shadow: 0 0 16px var(--accent-green-glow, rgba(0, 255, 42, 0.6));
+  transform: scale(1.02);
+}
+
+/* Тёмная тема — окна обучения, контрастно на затемнённом фоне */
+:global(.dark-theme) .tooltipCard {
+  background: #383838;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 24px 56px rgba(0, 0, 0, 0.65),
+    0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+:global(.dark-theme) .tooltipDesc {
+  color: #f0f0f0;
+}
+
+:global(.dark-theme) .btnSkip {
+  color: #999;
+}
+
+:global(.dark-theme) .btnSkip:hover {
+  color: #ccc;
+}
+
+:global(.dark-theme) .arrowTop {
+  border-bottom-color: #383838;
+}
+
+:global(.dark-theme) .arrowBottom {
+  border-top-color: #383838;
+}
+
+/* Светлая тема — окна обучения */
+:global(.light-theme) .dimTop,
+:global(.light-theme) .dimBottom,
+:global(.light-theme) .dimLeft,
+:global(.light-theme) .dimRight,
+:global(.light-theme) .dimFull {
+  background: rgba(0, 0, 0, 0.35);
+}
+
+:global(.light-theme) .tooltipCard {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 24px 56px rgba(0, 0, 0, 0.18),
+    0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
+:global(.light-theme) .tooltipDesc {
+  color: #1a1a1a;
+}
+
+:global(.light-theme) .stepBadge {
+  color: var(--accent-green, #0a7c1a);
+  background: var(--accent-green-muted, rgba(0, 160, 40, 0.12));
+}
+
+:global(.light-theme) .tooltipTitle {
+  color: var(--accent-green, #0a7c1a);
+  text-shadow: none;
+}
+
+:global(.light-theme) .btnSkip {
+  color: #555;
+}
+
+:global(.light-theme) .btnSkip:hover {
+  color: #000;
+}
+
+:global(.light-theme) .btnNav {
+  border-color: var(--accent-green-muted, rgba(0, 160, 40, 0.4));
+  background: var(--accent-green-muted, rgba(0, 160, 40, 0.08));
+  color: var(--accent-green, #0a7c1a);
+}
+
+:global(.light-theme) .btnNav:hover {
+  background: var(--accent-green-muted, rgba(0, 160, 40, 0.25));
+}
+
+:global(.light-theme) .btnPrimary {
+  background: var(--accent-green, #0a7c1a);
+  color: #fff;
+}
+
+:global(.light-theme) .btnPrimary:hover {
+  box-shadow: 0 4px 16px var(--accent-green-glow, rgba(0, 120, 30, 0.35));
+}
+
+:global(.light-theme) .arrowTop {
+  border-bottom-color: #ffffff;
+  filter: drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.08));
+}
+
+:global(.light-theme) .arrowBottom {
+  border-top-color: #ffffff;
+  filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.08));
+}
+
+/* Подсветка блока в светлой теме — цвет акцента, без полос и лишнего свечения */
+:global(.light-theme) .highlight {
+  border-radius: 16px;
+  border: 2px solid var(--accent-green, #0a7c1a);
+  box-shadow: none;
+}

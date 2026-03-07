@@ -1,0 +1,27 @@
+.name{
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.goals{
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 500px;
+}
+
+.blok {
+    color: var(--foreground, aliceblue);
+    margin: 20px 10px;
+    background: var(--card-bg, #151515);
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    animation: slideFadeIn 0.6s ease forwards;
+    box-shadow: var(--shadow, none);
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-theme .blok {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

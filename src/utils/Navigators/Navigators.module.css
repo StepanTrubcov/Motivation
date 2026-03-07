@@ -1,0 +1,42 @@
+.navItem {
+  position: relative;
+  font-size: 12px;
+  flex: 1;
+  text-align: center;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--nav-text, #aaa);
+  z-index: 2;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.active {
+  color: var(--accent-green, #00ff1e);
+  text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.common {
+  color: #ffffff;
+  background: linear-gradient(135deg, #00ff41, #00cc33);
+  border-radius: 10px;
+}
+
+.rare {
+  color: #ffffff;
+  background: linear-gradient(135deg, #00ffff, #0099ff);
+  border-radius: 10px;
+}
+
+.legendary {
+  color: #ffffff;
+  background: linear-gradient(135deg, #ff00ff, #ff6600);
+  border-radius: 10px;
+}
+
+.epic {
+  color: #ffffff;
+  background: linear-gradient(135deg, #FFD84D, #FF4D4D, #9B4DFF);
+  border-radius: 10px;
+}

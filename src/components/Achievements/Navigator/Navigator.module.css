@@ -1,0 +1,58 @@
+.navigator {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    background: var(--card-bg-secondary, #111);
+    border-radius: 12px;
+    padding: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow, none);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-theme .navigator {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navItem {
+    position: relative;
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--nav-text, #aaa);
+    z-index: 2;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.active {
+    color: var(--accent-green, #00ff1e);
+    text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.navHighlight {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    width: calc(100% / 2 - 8px);
+    /* 3 вкладки → ширина 1/3 */
+    border-radius: 20px;
+    background: rgba(103, 103, 103, 0.15);
+    transition: transform 0.7s ease, background-color 0.3s ease;
+    z-index: 1;
+}
+
+.light-theme .navHighlight {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Позиции овала */
+.navigator.tab-0 .navHighlight {
+    transform: translateX(0%);
+}
+
+.navigator.tab-1 .navHighlight {
+    transform: translateX(103%);
+}

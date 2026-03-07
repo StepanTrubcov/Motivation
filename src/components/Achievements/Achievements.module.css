@@ -1,0 +1,9 @@
+.title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  margin-top: 90px;
+  color: var(--foreground, white);
+  transition: color 0.3s ease;
+}

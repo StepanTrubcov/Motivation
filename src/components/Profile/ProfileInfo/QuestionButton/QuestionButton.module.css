@@ -1,0 +1,326 @@
+.settingsButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, opacity 0.2s;
+    border-radius: 8px;
+}
+
+.settingsButton:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+.settingsButtonBlocked {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.settingsIcon {
+    color: var(--foreground, #ffffff);
+    transition: color 0.2s;
+}
+
+.settingsIcon:hover .settingsIcon {
+    color: var(--accent-green, #00ff1e);
+}
+
+.modalBackdrop {
+    position: fixed;
+    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    margin: 0;
+    padding: 16px;
+}
+
+/* Во время туториала модалка поверх оверлея, чтобы можно было нажимать на цвета. Затемнение оверлея в этом шаге не показывается. */
+.modalBackdropTutorial {
+    z-index: 10002;
+}
+
+.light-theme .modalBackdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+    background-color: var(--card-bg, #151515);
+    border-radius: 1rem;
+    padding: 0;
+    max-width: 400px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--accent-green-muted, rgba(0, 255, 30, 0.2));
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.light-theme .modalContent {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    transition: border-color 0.3s ease;
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--foreground, #ffffff);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    color: var(--foreground, #ffffff);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.closeButton:hover {
+    background-color: var(--border-color, rgba(255, 255, 255, 0.1));
+    color: var(--accent-green, #00ff1e);
+}
+
+.settingsList {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: calc(90vh - 80px);
+    overflow-y: auto;
+}
+
+.settingsOption {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: none;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: var(--foreground, #ffffff);
+    text-align: left;
+    transition: background-color 0.2s, transform 0.1s, color 0.3s ease;
+    font-size: 0.9375rem;
+}
+
+.settingsOption:hover {
+    background-color: var(--accent-green-glow, rgba(0, 255, 30, 0.15));
+    transform: translateX(4px);
+}
+
+.settingsOption:active {
+    transform: translateX(4px) scale(0.98);
+}
+
+.settingsOptionBlocked {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.optionIcon {
+    color: var(--accent-green, #00ff1e);
+    flex-shrink: 0;
+    transition: color 0.3s ease;
+}
+
+.optionLabel {
+    font-weight: 500;
+    flex: 1;
+}
+
+.themeToggleContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.themeToggleLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.toggleSwitch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.toggleSwitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #555;
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.toggleSlider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+.toggleSwitch input:checked + .toggleSlider {
+    background-color: var(--accent-green, #00ff1e);
+}
+
+.toggleSwitch input:checked + .toggleSlider:before {
+    transform: translateX(20px);
+}
+
+.toggleSwitch input:focus + .toggleSlider {
+    box-shadow: 0 0 1px var(--accent-green, #00ff1e);
+}
+
+.settingsList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.settingsList::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.settingsList::-webkit-scrollbar-thumb {
+    background: var(--accent-green-muted, rgba(0, 255, 30, 0.3));
+    border-radius: 3px;
+}
+
+.settingsList::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-green-glow, rgba(0, 255, 30, 0.5));
+}
+
+.colorPickerGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.colorOption {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.colorOption:hover {
+    transform: scale(1.1);
+    border-color: var(--foreground, rgba(255, 255, 255, 0.3));
+}
+
+.colorOptionActive {
+    border-color: var(--foreground, #ffffff);
+    border-width: 3px;
+}
+
+.colorCheckmark {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.8));
+}
+
+.languageList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.5rem;
+}
+
+.languageOption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--card-bg-secondary, rgba(255, 255, 255, 0.05));
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--foreground, #ffffff);
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.languageOption:hover {
+    background: var(--card-bg-tertiary, rgba(255, 255, 255, 0.1));
+    transform: translateX(4px);
+}
+
+.languageOptionActive {
+    border-color: var(--accent-green, #00ff1e);
+    background: var(--accent-green-glow, rgba(0, 255, 30, 0.15));
+}
+
+.languageName {
+    flex: 1;
+    text-align: left;
+}
+
+.languageCheckmark {
+    color: var(--accent-green, #00ff1e);
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+}

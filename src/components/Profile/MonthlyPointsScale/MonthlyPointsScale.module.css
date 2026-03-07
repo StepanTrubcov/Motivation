@@ -1,0 +1,104 @@
+.points_scale {  
+  margin-top: 95px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card-bg-tertiary, #212121);
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: var(--shadow, 0 4px 15px rgba(0, 255, 0, 0.1));
+  gap: 25px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-theme .points_scale {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.level_text {
+  font-size: 15px;
+  margin-left: 5px;
+  margin-top: 80%;
+}
+
+.level {
+  display: flex;
+  font-size: 40px;
+  font-weight: bold;
+  color: var(--accent-green, #00ff1e);
+  text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+  width: 30px;
+  text-align: center;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.next {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  width: 90%;
+}
+
+.progress_container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.progress_bar {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  background: var(--card-bg-secondary, #1d1d1d);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.6);
+  transition: background-color 0.3s ease;
+}
+
+.light-theme .progress_bar {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.progress_fill {
+  height: 100%;
+  background: var(--accent-green, #00ff1e);
+  border-radius: 10px;
+  transition: width 0.3s ease-in-out;
+  box-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 106, 0.8));
+}
+
+.points_text {
+  width: 105px;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--foreground, white);
+  transition: color 0.3s ease;
+}
+
+.nextLevel {
+  margin-top: 6px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--accent-green, #00ff1e);
+  text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+  width: 30px;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.points_text_wrapper {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+
+.points_text {
+  text-align: center;
+}
+
+.nextLevel {
+  text-align: right;
+}

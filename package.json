@@ -1,0 +1,55 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "serve": "node server.js",
+    "lint": "eslint",
+    "backup": "node scripts/backup-prisma.js",
+    "restore": "node scripts/restore-prisma.js",
+    "list-backups": "node scripts/list-backups.js",
+    "postinstall": "npx prisma generate && node scripts/postinstall.js || echo 'Postinstall script failed, but continuing...'"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.81",
+    "@prisma/client": "^5.10.2",
+    "@prisma/extension-accelerate": "^1.0.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@twa-dev/sdk": "^8.0.2",
+    "@vercel/blob": "^2.0.0",
+    "@vercel/og": "^0.8.5",
+    "axios": "^1.13.2",
+    "canvas": "^3.2.0",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "formik": "^2.4.6",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.541.0",
+    "next": "16.0.7",
+    "node-cron": "^4.2.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-github-contribution-calendar": "^2.2.0",
+    "react-hot-toast": "^2.6.0",
+    "react-icons": "^5.5.0",
+    "react-redux": "^9.2.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "prisma": "^5.10.2",
+    "typescript": "^5"
+  }
+}
