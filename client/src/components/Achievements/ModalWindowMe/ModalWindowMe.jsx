@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useLanguage } from '@/context/LanguageContext';
+import { useTutorial } from '@/context/TutorialContext';
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
 import { generateImage } from "@/lib/api/ImageShare";
@@ -15,6 +16,8 @@ const ModalWindowMe = ({
   uploadTempUrl,
 }) => {
   const { t } = useLanguage();
+  const { currentStep } = useTutorial();
+  const tutorialBlockButtons = currentStep?.id === 'achievements-earned-modal';
   const [isLoading, setIsLoading] = useState(false);
   const [imageDataUrl, setImageDataUrl] = useState(null);
   const tgRef = useRef(null);
@@ -183,15 +186,21 @@ const ModalWindowMe = ({
   return (
     <AnimatePresence>
       {isModalOpen && (
-        <motion.div className={styles.modalBackdrop} onClick={closeModal}>
-          <motion.div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <button onClick={closeModal} className={styles.closeButton}>
+          <motion.div className={styles.modalBackdrop} onClick={tutorialBlockButtons ? (e) => { e.preventDefault(); e.stopPropagation(); } : closeModal}>
+          <motion.div className={styles.modalContent} onClick={(e) => e.stopPropagation()} data-tutorial-id="achievements-earned-modal">
+            <button
+              type="button"
+              onClick={tutorialBlockButtons ? (e) => { e.preventDefault(); e.stopPropagation(); } : closeModal}
+              className={styles.closeButton}
+              style={tutorialBlockButtons ? { pointerEvents: 'auto', opacity: 0.5, cursor: 'not-allowed' } : undefined}
+              aria-disabled={tutorialBlockButtons}
+            >
               <X size={24} />
             </button>
 
             <div className={`${styles.card} ${styles[rarityClass]}`}>
               <div className={styles.cardInner}>
-                <div className={styles.imageWrapper}>
+                <div className={styles.imageWrapper} data-tutorial-id="achievements-earned-modal-animation">
                   <img className={styles.img} src={isModalOpen?.gif} alt={isModalOpen?.title} />
                 </div>
 
@@ -209,9 +218,12 @@ const ModalWindowMe = ({
             </div>
 
             <button
+              type="button"
               className={`${styles.howToGet} ${styles[rarityClass]}`}
-              onClick={handleShare}
+              onClick={tutorialBlockButtons ? (e) => { e.preventDefault(); e.stopPropagation(); } : handleShare}
               disabled={isLoading}
+              style={tutorialBlockButtons ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
+              aria-disabled={tutorialBlockButtons}
             >
               {imageDataUrl === null ? (
                 <div className={styles.howToGetHeader}>

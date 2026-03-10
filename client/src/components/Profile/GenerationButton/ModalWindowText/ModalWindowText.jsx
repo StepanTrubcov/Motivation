@@ -1,13 +1,15 @@
 'use client';
 import styles from './ModalWindowText.module.css'
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Copy } from "lucide-react";
+import { X } from "lucide-react";
 import { useLanguage } from '@/context/LanguageContext';
+import { useTutorial } from '@/context/TutorialContext';
 import toast from "react-hot-toast";
 
 const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
     const { t } = useLanguage();
+    const { onTutorialActionDone } = useTutorial();
     const copyToClipboard = async (text) => {
         await navigator.clipboard.writeText(text);
         toast.success(t('reportCopied'), {
@@ -18,6 +20,10 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
             }
         });
         closeModalText();
+    };
+    const handleCopyClick = () => {
+        if (onTutorialActionDone) onTutorialActionDone('copy_report');
+        copyToClipboard(isModalOpenText);
     };
 
     return (
@@ -38,6 +44,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                         exit={{ scale: 0.8, opacity: 0 }}
                         transition={{ duration: 0.3 }}
                         onClick={(e) => e.stopPropagation()}
+                        data-tutorial-id="report-modal"
                     >
                         <button
                             onClick={closeModalText}
@@ -52,7 +59,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                         <div className={styles.copyButtonIsModalBlok}>
                             <button
                                 className={styles.copyButtonIsModal}
-                                onClick={() => copyToClipboard(isModalOpenText)}
+                                onClick={handleCopyClick}
                                 aria-label={t('copy')}
                             >
                                 {t('copy')}

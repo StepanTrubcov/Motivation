@@ -1,8 +1,9 @@
 'use client';
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Copy } from "lucide-react";
+import { X } from "lucide-react";
 import { useLanguage } from '@/context/LanguageContext';
+import { useTutorial } from '@/context/TutorialContext';
 import styles from "./ModalWindowNewGoals.module.css";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { addCustomGoal } from '@/lib/api/Api';
@@ -10,6 +11,7 @@ import { addCustomGoal } from '@/lib/api/Api';
 
 const ModalWindowNewGoals = ({ NewGoals, isModalOpen, closeModal, userId }) => {
     const { t } = useLanguage();
+    const { createGoalModalTutorialPhase, setCreateGoalModalTutorialPhase } = useTutorial();
     const goalCategories = [
         { id: 'sport', name: t('sport'), value: 'Sport' },
         { id: 'discipline', name: t('discipline'), value: 'Discipline' },
@@ -52,6 +54,7 @@ const ModalWindowNewGoals = ({ NewGoals, isModalOpen, closeModal, userId }) => {
                         exit={{ scale: 0.8, opacity: 0 }}
                         transition={{ duration: 0.3 }}
                         onClick={(e) => e.stopPropagation()}
+                        data-tutorial-id="goals-create-modal"
                     >
                         <button
                             onClick={closeModal}
@@ -77,7 +80,7 @@ const ModalWindowNewGoals = ({ NewGoals, isModalOpen, closeModal, userId }) => {
                         >
                             {({ isSubmitting }) => (
                                 <Form className={styles.goalForm}>
-                                    <div className={styles.formGroup}>
+                                    <div className={styles.formGroup} data-tutorial-id="goals-create-input">
                                         <label htmlFor="title" className={styles.formLabel}>
                                             {t('goalTitle')}
                                         </label>
@@ -88,18 +91,29 @@ const ModalWindowNewGoals = ({ NewGoals, isModalOpen, closeModal, userId }) => {
                                             placeholder={t('goalTitlePlaceholder')}
                                             className={styles.formInput}
                                             required
+                                            onFocus={() => {
+                                                if (createGoalModalTutorialPhase === 'name') {
+                                                    setCreateGoalModalTutorialPhase?.('category');
+                                                }
+                                            }}
                                         />
                                         <ErrorMessage name="title" component="div" className={styles.errorMessage} />
                                     </div>
 
-                                    <div className={styles.formGroup}>
+                                    <div className={styles.formGroup} data-tutorial-id="goals-create-category">
                                         <label className={styles.formLabel}>
                                             {t('goalCategory')}
                                         </label>
                                         <div className={styles.radioGroup}>
                                             {goalCategories.map((category) => (
                                                 <React.Fragment key={category.id}>
-                                                    <div className={styles.radioWrapper}>
+                                                    <div
+                                                        className={styles.radioWrapper}
+                                                        onClick={() => setCreateGoalModalTutorialPhase?.('button')}
+                                                        role="button"
+                                                        tabIndex={0}
+                                                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setCreateGoalModalTutorialPhase?.('button'); }}
+                                                    >
                                                         <Field
                                                             type="radio"
                                                             id={category.id}
@@ -122,6 +136,7 @@ const ModalWindowNewGoals = ({ NewGoals, isModalOpen, closeModal, userId }) => {
                                         type="submit"
                                         disabled={isSubmitting}
                                         className={styles.submitButton}
+                                        data-tutorial-id="goals-create-submit"
                                     >
                                         {isSubmitting ? t('adding') : t('addGoal')}
                                     </button>

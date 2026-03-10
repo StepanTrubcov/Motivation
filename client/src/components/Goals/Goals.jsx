@@ -8,7 +8,7 @@ import ModalWindowNewGoals from "./ModalWindowNewGoals/ModalWindowNewGoals";
 
 const Goals = ({NewGoals, completed, inProgress, sportGoals, disciplineGoals, spiritualityGoals, selfDevelopmentGoals, userId }) => {
     const { t } = useLanguage();
-    const { isOpen: isTutorialOpen, currentStep, nextStep } = useTutorial();
+    const { isOpen: isTutorialOpen, currentStep, nextStep, setCreateGoalModalTutorialPhase, lastCreatedGoalCategory } = useTutorial();
     const [isModalOpen, setOpenModal] = useState(null);
 
     const tabs = ["Completed", "InProgress", "Available"];
@@ -22,8 +22,14 @@ const Goals = ({NewGoals, completed, inProgress, sportGoals, disciplineGoals, sp
         const step = currentStep.id;
         if (step === 'goals-available' || step === 'goals-take-one' || step === 'goals-choose-category') setActiveTab('Available');
         if (step === 'goals-create') setActiveTab('Available');
-        if (step === 'goals-delete') setActiveTab('InProgress');
-    }, [isTutorialOpen, currentStep?.id]);
+        if (step === 'goals-find-added' || step === 'goals-take-added') {
+            setActiveTab('Available');
+            if (lastCreatedGoalCategory && tabsSections.includes(lastCreatedGoalCategory)) {
+                setActiveTabSection(lastCreatedGoalCategory);
+            }
+        }
+        if (step === 'goals-delete' || step === 'goals-delete-intro') setActiveTab('Completed');
+    }, [isTutorialOpen, currentStep?.id, lastCreatedGoalCategory]);
 
     const handleCategoryClick = (category) => {
         if (isTutorialOpen && currentStep?.id === 'goals-choose-category') {
@@ -39,10 +45,27 @@ const Goals = ({NewGoals, completed, inProgress, sportGoals, disciplineGoals, sp
         <div className={c.nameContainer}>
             <div className={c.centeredText}>{t('goals')}</div>
             {activeTab === "Available" && (
-                <button onClick={() => setOpenModal('q')} className={c.button} data-tutorial-id="goals-create">+</button>
+                <button
+                    onClick={() => {
+                        setOpenModal('q');
+                        if (isTutorialOpen && currentStep?.id === 'goals-create') {
+                            setCreateGoalModalTutorialPhase?.('name');
+                        }
+                    }}
+                    className={c.button}
+                    data-tutorial-id="goals-create"
+                >+</button>
             )}
         </div>
-        <ModalWindowNewGoals NewGoals={NewGoals} isModalOpen={isModalOpen} closeModal={() => setOpenModal(null)} userId={userId} />
+        <ModalWindowNewGoals
+            NewGoals={NewGoals}
+            isModalOpen={isModalOpen}
+            closeModal={() => {
+                setOpenModal(null);
+                setCreateGoalModalTutorialPhase?.(null);
+            }}
+            userId={userId}
+        />
         <div className={`${c.navigator} ${c[`tab-${activeIndex}`]}`}>
             <div className={c.navHighlight}></div>
             {navigator("Completed", setActiveTab, activeTab, t('completed'), "active", "goals-completed")}
@@ -50,7 +73,7 @@ const Goals = ({NewGoals, completed, inProgress, sportGoals, disciplineGoals, sp
             {navigator("Available", setActiveTab, activeTab, t('available'), "active", "goals-available")}
         </div>
         {
-            activeTab === "Completed" && completed || activeTab === "InProgress" && <div data-tutorial-id="goals-delete">{inProgress}</div> || activeTab === "Available" && <div data-tutorial-id="goals-take-one">
+            activeTab === "Completed" && <div data-tutorial-id="goals-delete">{completed}</div> || activeTab === "InProgress" && inProgress || activeTab === "Available" && <div data-tutorial-id="goals-take-one">
                 <div>
                     <div className={`${c.navigatorSection} ${c[`tab-${activeTabIndex}`]}`} data-tutorial-id="goals-choose-category">
                         <div className={c.navHighlightSection}></div>
@@ -60,7 +83,9 @@ const Goals = ({NewGoals, completed, inProgress, sportGoals, disciplineGoals, sp
                         {navigator("Self_development", handleCategoryClick, activeTabSection, t('selfDevelopment'), "active")}
                     </div>
                 </div>
-                {activeTabSection === "Sport" && sportGoals || activeTabSection === "Discipline" && disciplineGoals || activeTabSection === "Spirituality" && spiritualityGoals || activeTabSection === "Self_development" && selfDevelopmentGoals}
+                <div data-tutorial-id="goals-find-added-list">
+                    {activeTabSection === "Sport" && sportGoals || activeTabSection === "Discipline" && disciplineGoals || activeTabSection === "Spirituality" && spiritualityGoals || activeTabSection === "Self_development" && selfDevelopmentGoals}
+                </div>
             </div>
         }
     </div>

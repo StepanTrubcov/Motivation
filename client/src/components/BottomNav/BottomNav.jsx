@@ -4,17 +4,20 @@ import React, { useState } from "react";
 import { FaHome, FaBars, FaTrophy } from "react-icons/fa";
 import c from './BottomNav.module.css';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useTutorial } from '@/context/TutorialContext';
 
 const BottomNav = () => {
     const pathname = usePathname();
+    const router = useRouter();
     const [activeTab, setActiveTab] = useState("home");
-    const { isOpen: isTutorialOpen, currentStep, onTutorialNavigateToGoals, onTutorialNavigateToAchievements } = useTutorial();
+    const { isOpen: isTutorialOpen, currentStep, onTutorialNavigateToHome, onTutorialNavigateToGoals, onTutorialNavigateToAchievements } = useTutorial();
 
-    const handleGoalsClick = () => {
+    const handleGoalsClick = (e) => {
         if (currentStep?.id === 'goals-tab') {
+            e?.preventDefault?.();
             onTutorialNavigateToGoals();
+            router.push('/goals');
         }
         setActiveTab("goals");
     };
@@ -26,7 +29,7 @@ const BottomNav = () => {
         setActiveTab("achievements");
     };
 
-    const isNavRequiredStep = currentStep?.id === 'goals-tab' || currentStep?.id === 'achievements-tab';
+    const isNavRequiredStep = currentStep?.id === 'home-tab' || currentStep?.id === 'goals-tab' || currentStep?.id === 'achievements-tab';
     const blockNav = isTutorialOpen && !isNavRequiredStep;
 
     return (
@@ -36,8 +39,13 @@ const BottomNav = () => {
         >
             <Link
                 href='/profile'
-                className={`${c.navItem} ${pathname === '/profile' || activeTab === "home" ? c.active : ""}`}
-                onClick={(e) => { if (blockNav) { e.preventDefault(); e.stopPropagation(); } else setActiveTab("home"); }}
+                className={`${c.navItem} ${pathname === '/profile' || pathname === '/' || activeTab === "home" ? c.active : ""}`}
+                onClick={(e) => {
+                    if (isTutorialOpen && currentStep?.id !== 'home-tab') { e.preventDefault(); e.stopPropagation(); return; }
+                    if (currentStep?.id === 'home-tab') onTutorialNavigateToHome?.();
+                    setActiveTab("home");
+                }}
+                data-tutorial-id="home-tab"
             >
                 <FaHome />
             </Link>

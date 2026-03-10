@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import c from "./AchievementsMap.module.css";
 import { navigator } from "@/utils/Navigators/Navigators";
 import { useLanguage } from '@/context/LanguageContext';
+import { useTutorial } from '@/context/TutorialContext';
 import { translateAchievements, getAchievementTranslation, achievementsTranslations } from '@/utils/achievementsTranslations';
 import { Check } from "lucide-react";
 
@@ -12,6 +13,7 @@ const AchievementsMap = ({
     setIsModalOpenLocked,
 }) => {
     const { t, language } = useLanguage();
+    const { currentStep, onTutorialActionDone, nextStep } = useTutorial();
     const [active, setActive] = useState("common");
     let rarity = null
 
@@ -59,7 +61,9 @@ const AchievementsMap = ({
 
     const handleModal = (info) => {
         if (!info) return;
-        
+        if (currentStep?.id === 'achievements-earned-choose') {
+            onTutorialActionDone('click_achievement');
+        }
         // Убеждаемся, что используем переведенные данные
         setIsModalOpen({
             active: info.rarity,
@@ -74,7 +78,9 @@ const AchievementsMap = ({
 
     const handleModalLocked = (info) => {
         if (!info) return;
-        
+        if (currentStep?.id === 'achievements-cards') {
+            nextStep();
+        }
         // Убеждаемся, что используем переведенные данные
         setIsModalOpenLocked({
             active: active,
@@ -194,7 +200,7 @@ const AchievementsMap = ({
                     </div>
                 </div>
             )}
-            <div className={c.container} data-tutorial-id="achievements-cards">
+            <div className={c.container} data-tutorial-id={activeTab === 'Earned' ? 'achievements-earned-cards' : 'achievements-cards'}>
                 {achievementRarities && Array.isArray(achievementRarities) && achievementRarities.length > 0 ? (
                     achievementRarities.map((a, index) => {
                         if (!a) return null;

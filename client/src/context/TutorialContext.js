@@ -31,20 +31,32 @@ const GOALS_STEPS = [
   { id: 'goals-take-one', titleKey: 'tutorialStepTakeGoal', descKey: 'tutorialStepTakeGoalDesc', requireAction: 'take_goal', screen: 'goals' },
   { id: 'goals-toast-success', titleKey: 'tutorialStepToastTitle', descKey: 'tutorialStepToastDesc', screen: 'goals' },
   { id: 'goals-create', titleKey: 'tutorialStepCreateGoal', descKey: 'tutorialStepCreateGoalDesc', requireAction: 'create_goal', screen: 'goals' },
+  { id: 'goals-find-added', titleKey: 'tutorialFindAddedGoal', descKey: 'tutorialFindAddedGoalDesc', screen: 'goals' },
+  { id: 'goals-take-added', titleKey: 'tutorialTakeAddedGoal', descKey: 'tutorialTakeAddedGoalDesc', requireAction: 'take_goal', screen: 'goals' },
+  { id: 'home-tab', titleKey: 'tutorialStepHomeTab', descKey: 'tutorialStepHomeTabDesc', requireClick: true, screen: 'goals' },
 ];
 
 const ACHIEVEMENTS_STEPS = [
   { id: 'achievements-intro', titleKey: 'tutorialAchievementsIntroTitle', descKey: 'tutorialAchievementsIntroDesc', screen: 'achievements' },
   { id: 'achievements-earned', titleKey: 'tutorialAchievementsEarnedTitle', descKey: 'tutorialAchievementsEarnedDesc', screen: 'achievements' },
+  { id: 'achievements-earned-choose', titleKey: 'tutorialAchievementsEarnedChooseTitle', descKey: 'tutorialAchievementsEarnedChooseDesc', requireAction: 'click_achievement', screen: 'achievements' },
+  { id: 'achievements-earned-modal', titleKey: 'tutorialAchievementsEarnedModalTitle', descKey: 'tutorialAchievementsEarnedModalDesc', screen: 'achievements' },
   { id: 'achievements-all', titleKey: 'tutorialAchievementsAllTitle', descKey: 'tutorialAchievementsAllDesc', screen: 'achievements' },
   { id: 'achievements-rarities', titleKey: 'tutorialAchievementsRaritiesTitle', descKey: 'tutorialAchievementsRaritiesDesc', screen: 'achievements' },
   { id: 'achievements-cards', titleKey: 'tutorialAchievementsCardsTitle', descKey: 'tutorialAchievementsCardsDesc', screen: 'achievements' },
+  { id: 'achievements-how-to-get', titleKey: 'tutorialAchievementsHowToGetTitle', descKey: 'tutorialAchievementsHowToGetDesc', requireAction: 'click_how_to_get_arrow', screen: 'achievements' },
 ];
 
-/** Шаги между экранами: complete-goal (на главной), achievements-tab, goals-delete (на целях) */
+const TUTORIAL_COMPLETE_STEP = { id: 'tutorial-complete', titleKey: 'tutorialCompleteTitle', descKey: 'tutorialCompleteDesc', screen: 'achievements' };
+
+/** Шаги: report-view (copy) → achievements-tab → … → goals-delete-intro → goals-delete */
 const BRIDGE_STEPS = [
+  { id: 'home-two-goals-intro', titleKey: 'tutorialTwoGoalsIntroTitle', descKey: 'tutorialTwoGoalsIntroDesc', screen: 'home' },
   { id: 'complete-goal', titleKey: 'tutorialStepCompleteGoal', descKey: 'tutorialStepCompleteGoalDesc', requireAction: 'complete_goal', screen: 'home' },
+  { id: 'generate-report', titleKey: 'tutorialGenerateReportTitle', descKey: 'tutorialGenerateReportDesc', requireAction: 'generate_report', screen: 'home' },
+  { id: 'report-view', titleKey: 'tutorialReportViewTitle', descKey: 'tutorialReportViewDesc', requireAction: 'copy_report', screen: 'home' },
   { id: 'achievements-tab', titleKey: 'tutorialStepAchievementsTab', descKey: 'tutorialStepAchievementsTabDesc', requireClick: true, screen: 'home' },
+  { id: 'goals-delete-intro', titleKey: 'tutorialGoalsDeleteIntroTitle', descKey: 'tutorialGoalsDeleteIntroDesc', screen: 'goals' },
   { id: 'goals-delete', titleKey: 'tutorialStepDeleteGoal', descKey: 'tutorialStepDeleteGoalDesc', requireAction: 'delete_goal', screen: 'goals' },
 ];
 
@@ -56,10 +68,15 @@ const buildOnboardingSteps = (hasTodayGoals) => {
   return [
     ...homeSteps,
     ...GOALS_STEPS,
-    BRIDGE_STEPS[0], // complete-goal
-    BRIDGE_STEPS[1], // achievements-tab
+    BRIDGE_STEPS[0], // home-two-goals-intro
+    BRIDGE_STEPS[1], // complete-goal
+    BRIDGE_STEPS[2], // generate-report
+    BRIDGE_STEPS[3], // report-view
+    BRIDGE_STEPS[4], // achievements-tab
     ...ACHIEVEMENTS_STEPS,
-    BRIDGE_STEPS[2], // goals-delete
+    TUTORIAL_COMPLETE_STEP, // обучение окончено + ссылка на бота
+    BRIDGE_STEPS[5], // goals-delete-intro
+    BRIDGE_STEPS[6], // goals-delete
   ];
 };
 
@@ -69,6 +86,16 @@ export const TutorialProvider = ({ children }) => {
   const [isColorPickerOpenForTutorial, setIsColorPickerOpenForTutorial] = useState(false);
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalModalTutorialPhase, setGoalModalTutorialPhase] = useState(null);
+  /** Фазы обучения в модалке «Создать свою цель»: name → category → button */
+  const [createGoalModalTutorialPhase, setCreateGoalModalTutorialPhase] = useState(null);
+  /** Категория цели, созданной в обучении (Sport, Discipline, …) — для шага «найдите цель» */
+  const [lastCreatedGoalCategory, setLastCreatedGoalCategory] = useState(null);
+  /** Шаг complete-goal: сколько целей выполнено в обучении */
+  const [completeGoalsDoneCount, setCompleteGoalsDoneCount] = useState(0);
+  /** Шаг complete-goal: фаза (complete -> undo) */
+  const [completeGoalTutorialPhase, setCompleteGoalTutorialPhase] = useState('complete');
+  /** Шаг achievements-how-to-get: пользователь нажал на стрелку — показываем кнопку «Далее» */
+  const [achievementHowToGetArrowClicked, setAchievementHowToGetArrowClicked] = useState(false);
 
   const goals = useSelector((state) => state.goals?.goals ?? []);
   const hasTodayGoals = useMemo(() => {
@@ -76,12 +103,20 @@ export const TutorialProvider = ({ children }) => {
     return list.some((g) => g.status === 'in_progress' || g.status === 'completed');
   }, [goals]);
 
-  const steps = useMemo(() => buildOnboardingSteps(hasTodayGoals), [hasTodayGoals]);
+  // ВАЖНО: список шагов фиксируем на момент старта обучения, иначе после «первой цели»
+  // (когда появляется today-goals) индексы сдвигаются и туториал "прыгает" назад.
+  const computedSteps = useMemo(() => buildOnboardingSteps(hasTodayGoals), [hasTodayGoals]);
+  const [steps, setSteps] = useState(computedSteps);
+
+  useEffect(() => {
+    if (!isOpen) setSteps(computedSteps);
+  }, [computedSteps, isOpen]);
 
   const startTutorial = useCallback((screenName = 'home') => {
+    setSteps(computedSteps);
     setStepIndex(0);
     setIsOpen(true);
-  }, []);
+  }, [computedSteps]);
 
   const nextStep = useCallback(() => {
     setStepIndex((i) => {
@@ -105,6 +140,7 @@ export const TutorialProvider = ({ children }) => {
   const isLastStep = stepIndex >= steps.length - 1;
   const isSettingsStep = currentStep?.id?.startsWith('settings-');
   const requireSettingsClick = currentStep?.id === 'settings-button';
+  const requireHomeClick = currentStep?.id === 'home-tab';
   const requireGoalsClick = currentStep?.id === 'goals-tab';
   const requireAchievementsClick = currentStep?.id === 'achievements-tab';
   const requireCategoryClick = currentStep?.requireCategoryClick;
@@ -113,14 +149,43 @@ export const TutorialProvider = ({ children }) => {
   const screen = currentStep?.screen || 'home';
 
   const onTutorialActionDone = useCallback((actionId) => {
+    if (currentStep?.id === 'complete-goal') {
+      if (actionId !== 'complete_goal') return;
+      setCompleteGoalsDoneCount((prev) => {
+        const next = prev + 1;
+        if (next >= 2) {
+          setCompleteGoalTutorialPhase('undo');
+        }
+        return next;
+      });
+      return;
+    }
+    if (currentStep?.id === 'achievements-how-to-get' && actionId === 'click_how_to_get_arrow') {
+      setAchievementHowToGetArrowClicked(true);
+      return;
+    }
     if (currentStep?.requireAction !== actionId) return;
     nextStep();
-  }, [currentStep?.requireAction, nextStep]);
+  }, [currentStep?.id, currentStep?.requireAction, nextStep]);
+
+  useEffect(() => {
+    if (currentStep?.id !== 'complete-goal') {
+      setCompleteGoalsDoneCount(0);
+      setCompleteGoalTutorialPhase('complete');
+    }
+  }, [currentStep?.id]);
 
   // Сбрасываем флаг выбора цвета при смене шага
   useEffect(() => {
     if (currentStep?.id !== 'settings-color') {
       setIsColorPickerOpenForTutorial(false);
+    }
+  }, [currentStep?.id]);
+
+  // Сбрасываем флаг «нажал на стрелку» при уходе с шага achievements-how-to-get
+  useEffect(() => {
+    if (currentStep?.id !== 'achievements-how-to-get') {
+      setAchievementHowToGetArrowClicked(false);
     }
   }, [currentStep?.id]);
 
@@ -130,6 +195,11 @@ export const TutorialProvider = ({ children }) => {
       return i;
     });
   }, [steps]);
+
+  const onTutorialNavigateToHome = useCallback(() => {
+    if (currentStep?.id !== 'home-tab') return;
+    setStepIndex((i) => Math.min(i + 1, steps.length - 1));
+  }, [currentStep?.id, steps.length]);
 
   const onTutorialNavigateToGoals = useCallback(() => {
     if (currentStep?.id !== 'goals-tab') return;
@@ -151,12 +221,14 @@ export const TutorialProvider = ({ children }) => {
         isLastStep,
         isSettingsStep,
         requireSettingsClick,
+        requireHomeClick,
         requireGoalsClick,
         requireAchievementsClick,
         requireCategoryClick,
         requireAction,
         screen,
         onTutorialActionDone,
+        onTutorialNavigateToHome,
         onTutorialNavigateToGoals,
         onTutorialNavigateToAchievements,
         isColorPickerOpenForTutorial,
@@ -170,6 +242,13 @@ export const TutorialProvider = ({ children }) => {
         setGoalModalOpen,
         goalModalTutorialPhase,
         setGoalModalTutorialPhase,
+        createGoalModalTutorialPhase,
+        setCreateGoalModalTutorialPhase,
+        lastCreatedGoalCategory,
+        setLastCreatedGoalCategory,
+        completeGoalsDoneCount,
+        completeGoalTutorialPhase,
+        achievementHowToGetArrowClicked,
       }}
     >
       {children}

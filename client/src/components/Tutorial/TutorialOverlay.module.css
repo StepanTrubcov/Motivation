@@ -327,12 +327,39 @@
   color: #f0f0f0;
 }
 
+.tooltipDescSmall {
+  margin: 0 0 8px 0;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: #f0f0f0;
+}
+
+.tooltipDescAccent {
+  color: var(--accent-green, #00ff1e) !important;
+  text-shadow: 0 0 10px var(--accent-green-glow, rgba(0, 255, 42, 0.5));
+  font-weight: 600;
+}
+
+.tutorialBotLink {
+  color: var(--accent-green, #00ff1e);
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.tutorialBotLink:hover {
+  text-shadow: 0 0 10px var(--accent-green-glow, rgba(0, 255, 42, 0.5));
+}
+
 .actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
   margin-top: 0;
+}
+
+.actionsCenter {
+  justify-content: center;
 }
 
 .btnSkip {
@@ -400,7 +427,8 @@
     0 12px 24px rgba(0, 0, 0, 0.4);
 }
 
-:global(.dark-theme) .tooltipDesc {
+:global(.dark-theme) .tooltipDesc,
+:global(.dark-theme) .tooltipDescSmall {
   color: #f0f0f0;
 }
 

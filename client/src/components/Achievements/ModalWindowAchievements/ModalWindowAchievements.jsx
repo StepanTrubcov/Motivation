@@ -2,23 +2,27 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight } from "lucide-react";
 import { useLanguage } from '@/context/LanguageContext';
+import { useTutorial } from '@/context/TutorialContext';
 import styles from './ModalWindowAchievements.module.css';
 
 const ModalWindowAchievements = ({ isModalOpen, closeModal }) => {
     const { t } = useLanguage();
+    const { currentStep, onTutorialActionDone } = useTutorial();
     const [isExpanded, setIsExpanded] = useState(false);
 
     const rarityClass = isModalOpen?.active;
 
     return (
         <AnimatePresence>
-            {isModalOpen && (
+            {isModalOpen && (() => {
+                const tutorialBlockClose = currentStep?.id === 'achievements-how-to-get';
+                return (
                 <motion.div
                     className={styles.modalBackdrop}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    onClick={closeModal}
+                    onClick={tutorialBlockClose ? (e) => { e.preventDefault(); e.stopPropagation(); } : closeModal}
                 >
                     <motion.div
                         className={styles.modalContent}
@@ -26,11 +30,15 @@ const ModalWindowAchievements = ({ isModalOpen, closeModal }) => {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
                         onClick={(e) => e.stopPropagation()}
+                        data-tutorial-id="achievements-how-to-get-modal"
                     >
                         <button
-                            onClick={closeModal}
+                            type="button"
+                            onClick={tutorialBlockClose ? (e) => { e.preventDefault(); e.stopPropagation(); } : closeModal}
                             className={styles.closeButton}
                             aria-label={t('close')}
+                            style={tutorialBlockClose ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
+                            aria-disabled={tutorialBlockClose}
                         >
                             <X size={24} />
                         </button>
@@ -62,7 +70,13 @@ const ModalWindowAchievements = ({ isModalOpen, closeModal }) => {
                         </div>
                         <div
                             className={`${styles.howToGet} ${styles[rarityClass]} `}
-                            onClick={() => setIsExpanded(prev => !prev)}
+                            onClick={() => {
+                                if (currentStep?.id === 'achievements-how-to-get') {
+                                    onTutorialActionDone('click_how_to_get_arrow');
+                                }
+                                setIsExpanded(prev => !prev);
+                            }}
+                            data-tutorial-id="achievements-how-to-get-block"
                         >
                             <div className={styles.howToGetHeader}>
                                 <span>{t('howToGetAchievement')}</span>
@@ -94,7 +108,8 @@ const ModalWindowAchievements = ({ isModalOpen, closeModal }) => {
 
                     </motion.div>
                 </motion.div>
-            )}
+                );
+            })()}
         </AnimatePresence>
     );
 };

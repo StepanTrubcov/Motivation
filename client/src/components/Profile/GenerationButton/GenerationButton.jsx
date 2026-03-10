@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import c from './GenerationButton.module.css'
 import ModalWindowText from "./ModalWindowText/ModalWindowText";
 import { useLanguage } from '@/context/LanguageContext';
+import { useTutorial } from '@/context/TutorialContext';
 import { toast } from "react-hot-toast";
 
 
 const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDone = [], goalsInProgress = [], series = 0 }) => {
     const { language, t } = useLanguage();
+    const { currentStep, onTutorialActionDone } = useTutorial();
     const [loading, setLoading] = useState(false);
     const [generatedText, setGeneratedText] = useState('');
     const [prevGoals, setPrevGoals] = useState({ done: [], inProgress: [] });
@@ -26,6 +28,12 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
             setPrevGoals(currentGoals);
         }
     }, [goalsDone, goalsInProgress, prevGoals]);
+
+    useEffect(() => {
+        if (generatedText && currentStep?.id === 'generate-report') {
+            onTutorialActionDone('generate_report');
+        }
+    }, [generatedText, currentStep?.id, onTutorialActionDone]);
 
     const generation = async () => {
 

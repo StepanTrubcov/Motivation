@@ -80,9 +80,9 @@ const ModalWindow = ({
         if (selectedOption === null) return;
         if (isTutorialGoalModal) {
             const days = number[selectedOption]?.value;
-            addNewStatus(days, { fromTutorial: true });
             onTutorialTakeGoalConfirm?.(days);
             closeModal();
+            addNewStatus(days, { fromTutorial: true });
             return;
         }
         addNewStatus(number[selectedOption]?.value);

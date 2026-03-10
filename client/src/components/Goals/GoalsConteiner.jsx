@@ -14,7 +14,7 @@ import { setPoints, deletePoints } from "../../redux/profile_reducer";
 
 const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, newSavingGoal, NewGoals, profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints }) => {
     const { t, language } = useLanguage();
-    const { onTutorialActionDone, isOpen: isTutorialOpen, currentStep, setGoalModalOpen, setGoalModalTutorialPhase, goalModalTutorialPhase } = useTutorial();
+    const { onTutorialActionDone, isOpen: isTutorialOpen, currentStep, nextStep, setGoalModalOpen, setGoalModalTutorialPhase, goalModalTutorialPhase, setLastCreatedGoalCategory } = useTutorial();
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -45,7 +45,13 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
     const Modal = (goal) => {
         if (goal.status === "not_started") {
             setIsModalOpen(goal);
-            if (isTutorialOpen && currentStep?.id === 'goals-take-one') {
+            if (isTutorialOpen && (currentStep?.id === 'goals-take-one' || currentStep?.id === 'goals-take-added')) {
+                setGoalModalOpen?.(true);
+                setGoalModalTutorialPhase?.('duration');
+            }
+            if (isTutorialOpen && currentStep?.id === 'goals-find-added') {
+                // Переходим на шаг с подсказкой для модалки и включаем подсветку
+                nextStep?.();
                 setGoalModalOpen?.(true);
                 setGoalModalTutorialPhase?.('duration');
             }
@@ -80,16 +86,19 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
 
     const handleNewGoals = useCallback(async (userId, title, category, resetForm, closeModalCb) => {
         await NewGoals(userId, title, category, resetForm, closeModalCb);
+        if (isTutorialOpen && currentStep?.id === 'goals-create') {
+            setLastCreatedGoalCategory?.(category);
+        }
         onTutorialActionDone('create_goal');
-    }, [NewGoals, onTutorialActionDone]);
+    }, [NewGoals, onTutorialActionDone, isTutorialOpen, currentStep?.id, setLastCreatedGoalCategory]);
 
     const addNewStatus = async (selectedOption, options = {}) => {
         const fromTutorial = options.fromTutorial === true;
-        const loadingToastDurationMs = fromTutorial ? 10000 : 0;
+        const loadingToastDurationMs = fromTutorial ? 5000 : 0;
         let loadingToast;
         try {
             loadingToast = toast.loading(t('takingGoal'), {
-                duration: fromTutorial ? 10000 : undefined,
+                duration: fromTutorial ? 5000 : undefined,
                 style: {
                     background: '#333',
                     color: '#fff',
@@ -286,7 +295,7 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
                 isModalOpen={isModalOpen}
                 addNewStatus={addNewStatus}
                 closeModal={closeModal}
-                isTutorialGoalModal={isTutorialOpen && currentStep?.id === 'goals-take-one' && !!isModalOpen}
+                isTutorialGoalModal={isTutorialOpen && (currentStep?.id === 'goals-take-one' || currentStep?.id === 'goals-take-added') && !!isModalOpen}
                 tutorialPhase={goalModalTutorialPhase}
                 onTutorialDurationSelect={handleTutorialDurationSelect}
                 onTutorialTakeGoalConfirm={handleTutorialTakeGoalConfirm}
