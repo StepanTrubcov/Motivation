@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import c from './Yesterday.module.css';
 import { useLanguage } from '@/context/LanguageContext';
 import toast from "react-hot-toast";
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import { X, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -44,7 +45,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     marginTop: '80px',
             
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <LoadingSpinner size={20} />
             });
 
             await checkTimeGoalsSaving(profile.telegramId)
@@ -86,7 +87,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     color: '#fff',
                     marginTop: '80px',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <LoadingSpinner size={20} />
             });
 
             await deletePoints(userId, isModalOpen.points)
@@ -164,7 +165,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     color: '#fff',
                     marginTop: '80px',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <LoadingSpinner size={20} />
             });
 
             const goalsDone = goalsForSelectedDate.filter(g => g.status === 'completed');

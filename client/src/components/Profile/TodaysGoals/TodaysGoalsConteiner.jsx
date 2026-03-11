@@ -8,6 +8,7 @@ import { translateGoals } from '@/utils/goalsTranslations';
 import Filter from "../../../utils/Filter/filter";
 import { addStatusNew, addGoals, addStatus, newStatusSavingGoal, deleteGoalsSaving,checkTimeGoalsSaving } from "../../../redux/goals_reducer";
 import { toast } from "react-hot-toast";
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 import ModalWindow from "../../../utils/ModalWindow/ModalWindow";
 import { setPoints, deletePoints } from "../../../redux/profile_reducer";
 
@@ -74,7 +75,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                     color: '#fff',
                     marginTop: '80px',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <LoadingSpinner size={20} />
             });
             await addStatusNew(goalData.id, userId, "in_progress");
             await deletePoints(userId, goalData.points)
@@ -117,7 +118,7 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                     color: '#fff',
                     marginTop: '80px',
                 },
-                icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
+                icon: <LoadingSpinner size={20} />
             });
             addStatusNew(isModalOpen.id, userId, "done");
             checkTimeGoalsSaving(profile.telegramId)

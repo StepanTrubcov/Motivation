@@ -5,6 +5,7 @@ import ModalWindowText from "./ModalWindowText/ModalWindowText";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { toast } from "react-hot-toast";
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 
 const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDone = [], goalsInProgress = [], series = 0 }) => {
@@ -44,7 +45,7 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
                 color: '#fff',
                 marginTop: '80px',
             },
-            icon: <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '20px', height: '20px' }} />
+            icon: <LoadingSpinner size={20} />
         });
 
         await addTextGenerationData(formattedDate, profile.usersTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, true, series, language)

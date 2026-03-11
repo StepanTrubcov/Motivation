@@ -43,7 +43,7 @@ export default function TutorialOverlay() {
   }, [currentStep?.id]);
 
   const toastStepButtonsLocked = currentStep?.id === 'goals-toast-success' && toastStepLockedUntil !== null;
-  const hidePrevButton = currentStep?.id === 'goals-toast-success' || currentStep?.id === 'today-goals' || currentStep?.id === 'achievements-cards' || currentStep?.id === 'achievements-earned' || currentStep?.id === 'achievements-earned-modal';
+  const hidePrevButton = currentStep?.id === 'goals-toast-success' || currentStep?.id === 'today-goals' || currentStep?.id === 'achievements-cards' || currentStep?.id === 'achievements-earned' || currentStep?.id === 'achievements-earned-modal' || currentStep?.id === 'achievements-all' || currentStep?.id === 'complete-goal';
 
   const effectiveTargetId = currentStep?.id === 'settings-color' && isColorPickerOpenForTutorial
     ? 'settings-color-picker'

@@ -11,6 +11,12 @@
   transition: color 0.3s, text-shadow 0.3s;
 }
 
+.navItemDisabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}
+
 .active {
   color: var(--accent-green, #00ff1e);
   text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));

@@ -7,6 +7,7 @@ import { useTutorial } from '@/context/TutorialContext';
 import styles from "./ModalWindowMe.module.css";
 import { toast } from "react-hot-toast";
 import { generateImage } from "@/lib/api/ImageShare";
+import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
 
 const ModalWindowMe = ({
   getMakingPicture,
@@ -227,7 +228,7 @@ const ModalWindowMe = ({
             >
               {imageDataUrl === null ? (
                 <div className={styles.howToGetHeader}>
-                  <img src="https://media.tenor.com/Pq1cZiuhlEEAAAAi/rajinikanth.gif" unoptimized={true} alt="Loading" style={{ width: '18px', height: '18px', marginRight: '10px' }} />
+                  <LoadingSpinner size={18} style={{ marginRight: '10px' }} />
                   {t('generatingImage')}
                 </div>
               ) : (

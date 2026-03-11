@@ -53,6 +53,17 @@
   .closeButton:hover {
     color: #000000;
   }
+
+  .closeButtonDisabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.35;
+    color: var(--foreground, #888);
+  }
+
+  .closeButton:disabled {
+    pointer-events: none;
+  }
   
   .previewText {
     overflow: hidden;

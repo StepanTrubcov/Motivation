@@ -10,23 +10,9 @@ export default function HomePage() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Принудительная установка темной темы для Telegram WebApp
-    const initTelegramTheme = () => {
-      if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-
-        // Принудительная установка темной темы
-        document.body.classList.remove('telegram-light', 'telegram-dark');
-        document.body.classList.add('telegram-dark');
-
-        tg.onEvent('themeChanged', () => {
-          document.body.classList.remove('telegram-light', 'telegram-dark');
-          document.body.classList.add('telegram-dark');
-        });
-      }
-    };
-    initTelegramTheme();
+    if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+      window.Telegram.WebApp.ready();
+    }
     dispatch(addProfile());
   }, [dispatch, isUpdating]);
 

@@ -1,5 +1,5 @@
 import { ReduxProvider } from '@/redux/provider';
-import { Toaster } from 'react-hot-toast';
+import SingleToastToaster from '@/components/Toast/SingleToastToaster';
 import { BottomNavProvider } from '@/context/BottomNavContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { LanguageProvider } from '@/context/LanguageContext';
@@ -47,6 +47,32 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body suppressHydrationWarning className="telegram-dark">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('app-theme') || 'dark';
+                  var root = document.documentElement;
+                  var body = document.body;
+                  if (theme === 'light') {
+                    root.classList.remove('dark-theme');
+                    root.classList.add('light-theme');
+                    body.classList.remove('telegram-dark');
+                    body.classList.add('telegram-light');
+                    root.style.colorScheme = 'light';
+                  } else {
+                    root.classList.remove('light-theme');
+                    root.classList.add('dark-theme');
+                    body.classList.remove('telegram-light');
+                    body.classList.add('telegram-dark');
+                    root.style.colorScheme = 'dark';
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <LanguageProvider>
           <ThemeProvider>
             <ReduxProvider>
@@ -54,7 +80,7 @@ export default function RootLayout({ children }) {
                 <TutorialRouteSync />
                 <BottomNavProvider>
                   <div data-tutorial-id="toast-messages" style={{ position: 'fixed', top: 0, left: '50%', transform: 'translateX(-50%)', minWidth: 280, minHeight: 80, zIndex: 9999 }} aria-hidden>
-                  <Toaster position="top-center" reverseOrder={false} />
+                  <SingleToastToaster />
                 </div>
                   <DataInitializer>
                     {children}

@@ -9,7 +9,8 @@ import toast from "react-hot-toast";
 
 const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
     const { t } = useLanguage();
-    const { onTutorialActionDone } = useTutorial();
+    const { onTutorialActionDone, currentStep } = useTutorial();
+    const isReportViewStep = currentStep?.id === 'report-view';
     const copyToClipboard = async (text) => {
         await navigator.clipboard.writeText(text);
         toast.success(t('reportCopied'), {
@@ -35,7 +36,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    onClick={closeModalText}
+                    onClick={isReportViewStep ? undefined : closeModalText}
                 >
                     <motion.div
                         className={styles.modalContent}
@@ -47,9 +48,12 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                         data-tutorial-id="report-modal"
                     >
                         <button
-                            onClick={closeModalText}
-                            className={styles.closeButton}
+                            type="button"
+                            onClick={isReportViewStep ? undefined : closeModalText}
+                            className={isReportViewStep ? `${styles.closeButton} ${styles.closeButtonDisabled}` : styles.closeButton}
                             aria-label={t('close')}
+                            disabled={isReportViewStep}
+                            tabIndex={isReportViewStep ? -1 : 0}
                         >
                             <X size={24} />
                         </button>

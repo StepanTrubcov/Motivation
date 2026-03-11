@@ -45,8 +45,10 @@ const Achievements = (props) => {
         setIsModalOpenLocked(null);
     };
 
+    const disableAllTab = isTutorialOpen && ['achievements-earned', 'achievements-earned-choose', 'achievements-earned-modal'].includes(currentStep?.id);
+
     return <div data-tutorial-id="achievements-intro">
-        <Navigator activeIndex={activeIndex} activeTab={activeTab} setActiveTab={setActiveTab} />
+        <Navigator activeIndex={activeIndex} activeTab={activeTab} setActiveTab={setActiveTab} disableAllTab={disableAllTab} />
         <AchievementsMap activeTab={activeTab} setIsModalOpenLocked={setIsModalOpenLocked} setIsModalOpen={setIsModalOpen} achievements={props.assignments} />
         <ModalWindowMe
             getMakingPicture={props.getMakingPicture}

@@ -2,61 +2,49 @@ import React, { useEffect, useState } from "react";
 import Lights from "./Lights";
 import { connect } from "react-redux";
 
-const LightsConteiner = ({ profile, timeGoalsSaving }) => {
+function computeSeries(timeGoalsSaving) {
+    if (!timeGoalsSaving || !Array.isArray(timeGoalsSaving)) return 0;
+    const today = new Date().toISOString().split("T")[0];
+    const pastDays = timeGoalsSaving
+        .filter((item) => item.date < today)
+        .sort((a, b) => a.date.localeCompare(b.date));
+    let num = 0;
+    pastDays.forEach((s) => {
+        const r = (s.goalData || []).filter((g) => g.status === "completed");
+        if (r.length >= 1) num += 1;
+        else num = 0;
+    });
+    const todayDay = timeGoalsSaving.find((item) => item.date === today);
+    if (todayDay && todayDay.goalData) {
+        const r = todayDay.goalData.filter((g) => g.status === "completed");
+        if (r.length > 0) num += 1;
+    }
+    return num;
+}
 
-    const [loading, setLoading] = useState(null)
+function getIsTodayCompleted(timeGoalsSaving) {
+    if (!timeGoalsSaving || !Array.isArray(timeGoalsSaving)) return false;
+    const today = new Date().toISOString().split("T")[0];
+    const todayDay = timeGoalsSaving.find((item) => item.date === today);
+    if (!todayDay || !todayDay.goalData) return false;
+    return todayDay.goalData.some((g) => g.status === "completed");
+}
 
-
+const LightsConteiner = ({ timeGoalsSaving }) => {
     const [num, setNum] = useState(0);
     const [isTodayCompleted, setIsTodayCompleted] = useState(false);
 
-    const today = new Date().toISOString().split("T")[0];
-
     useEffect(() => {
+        const series = computeSeries(timeGoalsSaving);
+        const todayCompleted = getIsTodayCompleted(timeGoalsSaving);
+        setNum(series);
+        setIsTodayCompleted(todayCompleted);
+    }, [timeGoalsSaving]);
 
-        const pastDays = timeGoalsSaving.filter(
-            (item) => item.date < today
-        );
-
-        const todayDay = timeGoalsSaving.filter(
-            (item) => item.date === today
-        );
-
-
-        pastDays.map(s => {
-
-            const r = s.goalData.filter(g => g.status === "completed")
-
-            if (r.length >= 1) { setNum(prev => prev + 1); } else if (r.length === 0) { setNum(0); }
-        })
-
-        todayDay.map(s => {
-
-            const r = s.goalData.filter(g => g.status === "completed")
-
-            if (r.length > 0) {
-                setNum(prev => prev + 1);
-                setIsTodayCompleted(true)
-            }
-
-            if (r.length === 0) {
-                setIsTodayCompleted(false)
-            }
-        })
-
-        setLoading(true)
-
-    }, [timeGoalsSaving, profile])
-
-
-    console.log("Серия дней:", num);
-    if (loading) {
-        return <Lights num={num} isTodayCompleted={isTodayCompleted} />;
-    }
+    return <Lights num={num} isTodayCompleted={isTodayCompleted} />;
 };
 
 const mapStateToProps = (state) => ({
-    profile: state.profile.profile,
     timeGoalsSaving: state.goals.timeGoalsSaving
 });
 

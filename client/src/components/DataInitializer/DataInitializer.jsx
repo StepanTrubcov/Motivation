@@ -26,29 +26,13 @@ const DataInitializer = ({ children }) => {
     const triggeredRef = useRef(new Set());
 
     useEffect(() => {
-        // Принудительная установка темной темы для Telegram WebApp
-        const initTelegramTheme = () => {
-            if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-                const tg = window.Telegram.WebApp;
-                tg.ready();
-
-                if (!tg.isExpanded) {
-                    tg.expand();
-                }
-
-                // Принудительно устанавливаем темную тему
-                document.body.classList.remove('telegram-light', 'telegram-dark');
-                document.body.classList.add('telegram-dark');
-
-                // Отключаем автоматическое переключение тем
-                tg.onEvent('themeChanged', () => {
-                    document.body.classList.remove('telegram-light', 'telegram-dark');
-                    document.body.classList.add('telegram-dark');
-                });
+        if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+            if (!tg.isExpanded) {
+                tg.expand();
             }
-        };
-
-        initTelegramTheme();
+        }
         dispatch(addProfile());
     }, [dispatch, isUpdatingAchievements]);
 
