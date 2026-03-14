@@ -275,6 +275,8 @@ export default function TutorialOverlay() {
         : !!rectForStep && currentStep?.id !== 'calendar' && currentStep?.id !== 'goals-tab' && currentStep?.id !== 'achievements-tab' && currentStep?.id !== 'goals-take-one' && !isColorPickerStep;
   const needsActionLock = requireAction && !(currentStep?.id === 'complete-goal' && completeGoalTutorialPhase === 'undo');
   const hideNavButtons = requireSettingsClick || requireHomeClick || requireGoalsClick || requireAchievementsClick || requireCategoryClick || needsActionLock || currentStep?.id === 'goals-find-added' || (currentStep?.id === 'achievements-how-to-get' && !achievementHowToGetArrowClicked);
+  const hideNavOnlyOnAchievementsEarnedChoose = currentStep?.id === 'achievements-earned-choose';
+  const showNavButtons = !hideNavButtons && !hideNavOnlyOnAchievementsEarnedChoose;
   const showArrowToBlock = !!rectForStep;
 
   const tutorialDescKey = currentStep?.id === 'settings-color' && isColorPickerOpenForTutorial
@@ -410,10 +412,10 @@ export default function TutorialOverlay() {
                   </>
                 )}
                 <div className={styles.actions}>
-                  <button type="button" className={styles.btnSkip} onClick={toastStepButtonsLocked ? undefined : closeTutorial} disabled={toastStepButtonsLocked}>
+                  <button type="button" className={styles.btnSkip} onClick={toastStepButtonsLocked ? undefined : (hideNavOnlyOnAchievementsEarnedChoose && !isLastStep ? nextStep : closeTutorial)} disabled={toastStepButtonsLocked}>
                     {t('tutorialSkip')}
                   </button>
-                  {!hideNavButtons && (
+                  {showNavButtons && (
                     <div className={styles.navGroup}>
                       {stepIndex > 0 && !hidePrevButton && (
                         <button type="button" className={styles.btnNav} onClick={prevStep} aria-label={t('tutorialPrev')}>
@@ -456,10 +458,10 @@ export default function TutorialOverlay() {
                     </>
                   )}
                   <div className={styles.actions}>
-                    <button type="button" className={styles.btnSkip} onClick={closeTutorial}>
+                    <button type="button" className={styles.btnSkip} onClick={hideNavOnlyOnAchievementsEarnedChoose && !isLastStep ? nextStep : closeTutorial}>
                       {t('tutorialSkip')}
                     </button>
-                    {!hideNavButtons && (
+                    {showNavButtons && (
                       <div className={styles.navGroup}>
                         {stepIndex > 0 && !hidePrevButton && (
                           <button type="button" className={styles.btnNav} onClick={prevStep} aria-label={t('tutorialPrev')}>
@@ -506,19 +508,21 @@ export default function TutorialOverlay() {
                 <span className={styles.stepBadge}>{stepIndex + 1} / {steps.length}</span>
                 <p className={`${styles.tooltipDescSmall} ${styles.tooltipDescAccent}`}>{t(currentStep.descKey)}</p>
                 <div className={styles.actions}>
-                  <button type="button" className={styles.btnSkip} onClick={closeTutorial}>
+                  <button type="button" className={styles.btnSkip} onClick={hideNavOnlyOnAchievementsEarnedChoose && !isLastStep ? nextStep : closeTutorial}>
                     {t('tutorialSkip')}
                   </button>
-                  <div className={styles.navGroup}>
-                    {stepIndex > 0 && !hidePrevButton && (
-                      <button type="button" className={styles.btnNav} onClick={prevStep} aria-label={t('tutorialPrev')}>
-                        <ChevronLeft size={20} />
+                  {showNavButtons && (
+                    <div className={styles.navGroup}>
+                      {stepIndex > 0 && !hidePrevButton && (
+                        <button type="button" className={styles.btnNav} onClick={prevStep} aria-label={t('tutorialPrev')}>
+                          <ChevronLeft size={20} />
+                        </button>
+                      )}
+                      <button type="button" className={styles.btnPrimary} onClick={nextStep}>
+                        {isLastStep ? t('tutorialDone') : t('tutorialNext')}
                       </button>
-                    )}
-                    <button type="button" className={styles.btnPrimary} onClick={nextStep}>
-                      {isLastStep ? t('tutorialDone') : t('tutorialNext')}
-                    </button>
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -587,12 +591,15 @@ export default function TutorialOverlay() {
           </>
         )}
 
-        {currentStep && (!rectForStep || currentStep.id === 'goals-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro') && currentStep.id !== 'achievements-earned-modal' && currentStep.id !== 'achievements-how-to-get' && currentStep.id !== 'tutorial-complete' && (
+        {currentStep && (
+          (!rectForStep || currentStep.id === 'goals-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro' || (!rectForStep && (currentStep.id === 'achievements-earned-modal' || currentStep.id === 'achievements-how-to-get')))
+          && currentStep.id !== 'tutorial-complete'
+        ) && (
           <>
             <div className={styles.dimFull} onClick={(e) => e.stopPropagation()} aria-hidden />
             <motion.div
               className={
-                currentStep.id === 'intro' || currentStep.id === 'goals-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro'
+                currentStep.id === 'intro' || currentStep.id === 'goals-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro' || currentStep.id === 'achievements-earned-modal' || currentStep.id === 'achievements-how-to-get'
                   ? styles.tooltipWrapCenter
                   : currentStep.id === 'calendar'
                     ? styles.tooltipWrapTop

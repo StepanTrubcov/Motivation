@@ -99,7 +99,6 @@ const QuestionButton = () => {
             icon: Share2,
             label: t('share'),
             action: () => {
-                console.log('Share clicked');
                 setIsSettingsOpen(false);
             }
         },

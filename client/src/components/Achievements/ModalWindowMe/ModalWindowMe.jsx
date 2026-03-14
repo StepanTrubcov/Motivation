@@ -33,12 +33,6 @@ const ModalWindowMe = ({
 
     const tg = tgRef.current;
 
-    console.log("=== TELEGRAM DEBUG ===");
-    console.log("Version:", tg.version);
-    console.log("Platform:", tg.platform);
-    console.log("shareToStory:", typeof tg.shareToStory);
-    console.log("======================");
-
     try {
       if (typeof tg.ready === "function") tg.ready();
       if (typeof tg.expand === "function") tg.expand();
@@ -181,8 +175,6 @@ const ModalWindowMe = ({
       toast.error(t('shareFailed'));
     }
   };
-
-  console.log(imageDataUrl)
 
   return (
     <AnimatePresence>

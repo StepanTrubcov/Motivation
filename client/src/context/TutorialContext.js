@@ -80,6 +80,30 @@ const buildOnboardingSteps = (hasTodayGoals) => {
   ];
 };
 
+/** Обучение для пользователей с уже существующими целями: только рассказ по блокам, без действий «взять/выполнить/создать/удалить» */
+const buildExplanatorySteps = () => {
+  const introExistingGoals = { id: 'intro', titleKey: 'tutorialIntroTitleExistingGoals', descKey: 'tutorialIntroDescExistingGoals', screen: 'home' };
+  const goalsOverviewOnly = GOALS_STEPS.slice(0, 4); // goals-intro, goals-completed, goals-in-progress, goals-available
+  const achievementsExplanatory = [
+    { id: 'achievements-intro', titleKey: 'tutorialAchievementsIntroTitle', descKey: 'tutorialAchievementsIntroDesc', screen: 'achievements' },
+    { id: 'achievements-earned', titleKey: 'tutorialAchievementsEarnedTitle', descKey: 'tutorialAchievementsEarnedDesc', screen: 'achievements' },
+    { id: 'achievements-earned-choose', titleKey: 'tutorialAchievementsEarnedChooseTitle', descKey: 'tutorialAchievementsEarnedChooseDesc', screen: 'achievements' },
+    { id: 'achievements-earned-modal', titleKey: 'tutorialAchievementsEarnedModalTitle', descKey: 'tutorialAchievementsEarnedModalDesc', screen: 'achievements' },
+    { id: 'achievements-all', titleKey: 'tutorialAchievementsAllTitle', descKey: 'tutorialAchievementsAllDesc', screen: 'achievements' },
+    { id: 'achievements-rarities', titleKey: 'tutorialAchievementsRaritiesTitle', descKey: 'tutorialAchievementsRaritiesDesc', screen: 'achievements' },
+    { id: 'achievements-cards', titleKey: 'tutorialAchievementsCardsTitle', descKey: 'tutorialAchievementsCardsDesc', screen: 'achievements' },
+    { id: 'achievements-how-to-get', titleKey: 'tutorialAchievementsHowToGetTitle', descKey: 'tutorialAchievementsHowToGetDesc', screen: 'achievements' },
+  ];
+  return [
+    introExistingGoals,
+    ...HOME_STEPS_FULL.slice(1), // profile-points … goals-tab (включая requireClick для settings-button и goals-tab)
+    ...goalsOverviewOnly,
+    BRIDGE_STEPS[4], // achievements-tab (requireClick)
+    ...achievementsExplanatory,
+    TUTORIAL_COMPLETE_STEP,
+  ];
+};
+
 export const TutorialProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
@@ -102,10 +126,17 @@ export const TutorialProvider = ({ children }) => {
     const list = Array.isArray(goals) ? goals : [];
     return list.some((g) => g.status === 'in_progress' || g.status === 'completed');
   }, [goals]);
+  const hasExistingGoals = useMemo(() => {
+    const list = Array.isArray(goals) ? goals : [];
+    return list.some((g) => g.status === 'in_progress' || g.status === 'completed');
+  }, [goals]);
 
   // ВАЖНО: список шагов фиксируем на момент старта обучения, иначе после «первой цели»
   // (когда появляется today-goals) индексы сдвигаются и туториал "прыгает" назад.
-  const computedSteps = useMemo(() => buildOnboardingSteps(hasTodayGoals), [hasTodayGoals]);
+  const computedSteps = useMemo(
+    () => (hasExistingGoals ? buildExplanatorySteps() : buildOnboardingSteps(hasTodayGoals)),
+    [hasExistingGoals, hasTodayGoals]
+  );
   const [steps, setSteps] = useState(computedSteps);
 
   useEffect(() => {
@@ -162,6 +193,10 @@ export const TutorialProvider = ({ children }) => {
     }
     if (currentStep?.id === 'achievements-how-to-get' && actionId === 'click_how_to_get_arrow') {
       setAchievementHowToGetArrowClicked(true);
+      return;
+    }
+    if (currentStep?.id === 'achievements-earned-choose' && actionId === 'click_achievement') {
+      nextStep();
       return;
     }
     if (currentStep?.requireAction !== actionId) return;
@@ -249,6 +284,7 @@ export const TutorialProvider = ({ children }) => {
         completeGoalsDoneCount,
         completeGoalTutorialPhase,
         achievementHowToGetArrowClicked,
+        isExplanatoryTutorial: hasExistingGoals,
       }}
     >
       {children}

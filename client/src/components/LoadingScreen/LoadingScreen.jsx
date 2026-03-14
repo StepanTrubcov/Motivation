@@ -59,7 +59,7 @@ const LoadingScreen = ({ title }) => {
       >
         <div className={c.text}>
           <h1 className={c.greeting}>{t('welcome')} {name.toUpperCase()}!</h1>
-          <p className={c.subtitle}>{title || t('loadingGoals')}</p>
+          <p className={c.subtitle}>{title || t('loadingGoalsInProgress')}</p>
         </div>
       </motion.div>
     </div>

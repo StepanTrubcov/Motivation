@@ -56,7 +56,7 @@ const DataInitializer = ({ children }) => {
             const newStatusAssignment = (achievement, userId) => {
                 dispatch(getAchievementsNewStatus(achievement, userId))
                 dispatch(setPoints(userId, achievement.points))
-                toast.success(`Вы получили новое достижение!`, {
+                toast.success(t('newAchievement'), {
                     style: {
                         background: '#333',
                         color: '#fff',
@@ -68,19 +68,19 @@ const DataInitializer = ({ children }) => {
         } else {
             setShowBottomNav(false);
         }
-    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav, assignments, goals]);
+    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav, assignments, goals, t]);
 
     if (!user) {
         return <LoadingScreen title={t('loadingUser')} />;
     }
     if (!ThereAreUsers) {
-        return <LoadingScreen title={t('loadingGoals')} />;
+        return <LoadingScreen title={t('loadingGoalsInProgress')} />;
     }
     if (!assignmentsLoaded) {
         return <LoadingScreen title={t('loadingAchievements')} />;
     }
 
-    return <>{children}</>;
+    return children
 };
 
 export default DataInitializer;

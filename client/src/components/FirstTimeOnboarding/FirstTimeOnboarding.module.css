@@ -1,0 +1,114 @@
+.wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--background, #0b0b0b);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+  color: var(--foreground, white);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 32px;
+  line-height: 1.3;
+}
+
+.languageButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.langButton {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 2px solid var(--accent-green, #00ff1e);
+  background: transparent;
+  color: var(--foreground, white);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.langButton:hover {
+  background: rgba(0, 255, 30, 0.15);
+}
+
+.langButton:active {
+  background: rgba(0, 255, 30, 0.25);
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal {
+  background: var(--background-secondary, #1a1a1a);
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 340px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.modalButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalButton {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.modalButton:active {
+  opacity: 0.9;
+}
+
+.primary {
+  background: var(--accent-green, #00ff1e);
+  color: #000;
+}
+
+.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--foreground, white);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}

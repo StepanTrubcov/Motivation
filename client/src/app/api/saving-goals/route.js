@@ -326,7 +326,7 @@ export async function GET(request) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
-    let savingGoals = user.savingGoals;
+    let savingGoals = Array.isArray(user.savingGoals) ? user.savingGoals : [];
 
     // Если передан параметр autoPeriod, автоматически определяем период
     if (autoPeriod === 'true') {

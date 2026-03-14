@@ -239,34 +239,27 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
         }
     };
 
+    const toastStyle = {
+        style: { background: '#333', color: '#fff', marginTop: '80px' },
+    };
+
     const addOldStatus = async (goalData) => {
+        const loadingToast = toast.loading(t('deletingGoal'), toastStyle);
         try {
             const until = new Date().toISOString().slice(0, 10);
             if (goalData.status === "completed") {
-                await deletePoints(userId, goalData.points)
-                await checkTimeGoalsSaving(profile.telegramId)
+                await deletePoints(userId, goalData.points);
+                await checkTimeGoalsSaving(profile.telegramId);
             }
             await addStatusNew(goalData.id, userId, "not_started");
-            toast.success(t('goalRemoved'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
             await deleteGoalsSaving(profile.telegramId, goalData.id);
-
+            toast.dismiss(loadingToast);
+            toast.success(t('goalRemoved'), toastStyle);
             onTutorialActionDone('delete_goal');
-
         } catch (error) {
+            toast.dismiss(loadingToast);
             console.error(t('goalRemoveError'), error);
-            toast.error(t('goalRemoveErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            toast.error(t('goalRemoveErrorRetry'), toastStyle);
         }
     };
 

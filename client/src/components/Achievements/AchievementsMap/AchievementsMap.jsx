@@ -45,10 +45,6 @@ const AchievementsMap = ({
             }
             
             // Если что-то пошло не так, пробуем перевести еще раз
-            console.warn('Translation result invalid, retrying...', {
-                originalLength: achievements.length,
-                translatedLength: translated?.length
-            });
             const retryTranslated = translateAchievements(achievementsCopy, language);
             return Array.isArray(retryTranslated) && retryTranslated.length === achievements.length 
                 ? retryTranslated 

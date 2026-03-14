@@ -56,7 +56,6 @@ export const addGoals = (userId) => async (dispatch) => {
 
 export const addStatusNew = (goalId, userId, newStatus, selectedOption = null) => async (dispatch) => {
     try {
-        console.log('addStatusNew called with:', { goalId, userId, newStatus, selectedOption });
         await getAllStatus(userId, goalId, newStatus, selectedOption);
         dispatch(updateGoalStatus(goalId, newStatus));
     } catch (error) {
@@ -90,52 +89,48 @@ export const NewGoals = (userId, title, goalCategories, resetForm, closeModal) =
 export const newSavingGoal = (telegramId, goalData, targetDate, selectedOption) => async (dispatch) => {
     try {
         const response = await addSavingGoal(telegramId, goalData, targetDate, selectedOption);
-        console.log('Ответ от addSavingGoal:', response);
-        if (response.success) {
-            console.log('Цель успешно добавлена в savingGoals');
-        } else {
+        if (!response.success) {
             console.error('Ошибка при добавлении цели в savingGoals:', response.error);
         }
     } catch (e) {
-        console.log(`Ошибка при добавлении цели в массив savingGoal:`, e);
+        console.error('Ошибка при добавлении цели в массив savingGoal:', e);
     }
 };
 
 export const newStatusSavingGoal = (telegramId, date, goalId, newStatus) => async (dispatch) => {
     try {
         const response = await updateSavingGoalStatus(telegramId, date, goalId, newStatus);
-        console.log('Ответ от updateSavingGoalStatus:', response);
         if (response.success) {
-            console.log('Статус цели успешно обновлен в savingGoals');
-           await dispatch(setTimeGoalsSaving(response.data.savingGoals))
+            await dispatch(setTimeGoalsSaving(response.data.savingGoals));
         } else {
             console.error('Ошибка при обновлении статуса цели в savingGoals:', response.error);
         }
-        return response
+        return response;
     } catch (e) {
-        console.log(`Ошибка при изменении статуса у цели в массиве savingGoal:`, e);
+        console.error('Ошибка при изменении статуса у цели в массиве savingGoal:', e);
     }
 }
 
 export const deleteGoalsSaving = (userId, goalId) => async (dispatch) => {
     try {
-
-        await removeSavingGoalFromToday(userId, goalId).then(response => {
-            console.log(response)
-        })
-
+        await removeSavingGoalFromToday(userId, goalId);
+        dispatch(checkTimeGoalsSaving(userId));
     } catch (e) {
-        console.log(`Ошибка при удалении целей из массива savingGoal:`, e);
+        console.error('Ошибка при удалении целей из массива savingGoal:', e);
+        throw e;
     }
 }
 
 export const checkTimeGoalsSaving = (userId) => async (dispatch) => {
     try {
-        await getUserSavingGoalsWithAutoPeriod(userId).then(response => {
-            dispatch(setTimeGoalsSaving(response.savingGoals))
-        })
+        const response = await getUserSavingGoalsWithAutoPeriod(userId);
+        const raw = response?.savingGoals;
+        const savingGoals =
+            raw != null && Array.isArray(raw) ? raw : [];
+        dispatch(setTimeGoalsSaving(savingGoals));
     } catch (e) {
-        console.log(`Ошибка при проверки даты:`, e);
+        console.error('Ошибка при проверки даты:', e);
+        dispatch(setTimeGoalsSaving([]));
     }
 }
 

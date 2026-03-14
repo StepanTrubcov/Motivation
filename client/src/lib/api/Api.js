@@ -17,7 +17,6 @@ const BASE_URL = typeof window !== 'undefined'
 
 export const addProfileApi = async () => {
   if (typeof window === 'undefined') {
-    console.log('Running on server, skipping API call');
     return null;
   }
 
@@ -41,7 +40,6 @@ export const addProfileApi = async () => {
     photo_url: null,
   };
 
-  console.log('userData:', userData);
   if (!userData) {
     console.error("Нет данных пользователя от Telegram");
     return null;
@@ -78,7 +76,6 @@ export const addProfileApi = async () => {
         usersTag: usersTag
       });
 
-      console.log("Профиль создан/обновлён:", postResponse.data);
       return postResponse.data;
     } catch (error) {
       attempts++;
@@ -140,9 +137,6 @@ export async function getAllStatus(customUserId, goalId, newStatus, selectedOpti
     throw new Error("customUserId, goalId, and newStatus are required");
   }
 
-  console.log(`Updating status for goal ${goalId} to ${newStatus} for user ${customUserId}`);
-  console.log(`Selected option:`, selectedOption);
-
   try {
     // Передаем selectedOption в API endpoint
     const requestData = { newStatus };
@@ -151,10 +145,7 @@ export async function getAllStatus(customUserId, goalId, newStatus, selectedOpti
       requestData.selectedOption = selectedOption;
     }
 
-    console.log('Sending request data:', requestData);
-
     await axios.put(`${BASE_URL}/goals/${customUserId}/${goalId}`, requestData);
-    console.log(`Статус цели ${goalId} для пользователя ${customUserId} изменён на ${newStatus}`);
 
   } catch (error) {
     toast.error("Извините произошла ошибка. Попробуйте снова.", {
@@ -188,8 +179,6 @@ export async function initializeUserGoals(customUserId) {
     console.error("customUserId is undefined in initializeUserGoals");
     throw new Error("customUserId is required");
   }
-
-  console.log('Initializing goals for user:', customUserId);
 
   const goalsArray = [
     // === SPORT ===
@@ -247,16 +236,13 @@ export async function initializeUserGoals(customUserId) {
 
     // Проверяем, есть ли уже цели у пользователя
     if (existingGoals && existingGoals.length > 0) {
-      console.log(`✅ У пользователя ${customUserId} уже есть ${existingGoals.length} целей. Пропускаем инициализацию.`);
       return false;
     }
 
-    console.log(`📤 Отправка ${goalsArray.length} целей на сервер...`);
     const response = await axios.post(`${BASE_URL}/initialize-goals/${customUserId}`, {
       goalsArray
     });
 
-    console.log('✅ Цели успешно инициализированы:', response.data);
     return true;
   } catch (error) {
     console.error("❌ Ошибка инициализации целей:", error);
