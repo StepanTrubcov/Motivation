@@ -45,7 +45,10 @@ const QuestionButton = () => {
         setIsSettingsOpen(false);
 
         const text = t('shareInviteText');
-        const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
+        // NOTE: Some Telegram clients don't show prefilled message when only `text` is provided.
+        // Passing both `url` and `text` reliably opens the Telegram share chooser.
+        const botUrl = 'https://t.me/BotMotivation_TG_bot';
+        const shareUrl = `https://t.me/share/url?url=${encodeURIComponent(botUrl)}&text=${encodeURIComponent(text)}`;
 
         try {
             // Telegram Mini App (preferred)
@@ -56,13 +59,13 @@ const QuestionButton = () => {
 
             // Browser native share (fallback)
             if (typeof navigator !== 'undefined' && navigator.share) {
-                await navigator.share({ text });
+                await navigator.share({ text, url: botUrl });
                 return;
             }
 
             // Clipboard (fallback)
             if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
-                await navigator.clipboard.writeText(text);
+                await navigator.clipboard.writeText(`${text} ${botUrl}`);
                 toast.success(t('shareCopied'));
                 return;
             }
