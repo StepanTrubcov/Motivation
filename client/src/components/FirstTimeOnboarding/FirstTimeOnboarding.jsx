@@ -10,34 +10,21 @@ const LANGUAGE_DONE_KEY = 'app-first-time-language-done';
 const ONBOARDING_OFFERED_KEY = 'app-onboarding-offered';
 
 export default function FirstTimeOnboarding({ children }) {
-  const timeGoalsSaving = useSelector((state) => state.goals.timeGoalsSaving);
+  const savingGoals = useSelector((state) => state.profile.profile?.savingGoals);
   const { t, changeLanguage } = useLanguage();
   const { startTutorial } = useTutorial();
 
   const isFirstTime = useMemo(
     () =>
-      timeGoalsSaving === null ||
-      (Array.isArray(timeGoalsSaving) && timeGoalsSaving.length === 0),
-    [timeGoalsSaving]
+      savingGoals == null ||
+      (Array.isArray(savingGoals) && savingGoals.length === 0),
+    [savingGoals]
   );
 
   const [step, setStep] = useState('language');
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    setReady(true);
-    if (!isFirstTime) {
-      setStep('done');
-      return;
-    }
-    if (localStorage.getItem(ONBOARDING_OFFERED_KEY)) {
-      setStep('done');
-    } else if (localStorage.getItem(LANGUAGE_DONE_KEY)) {
-      setStep('tutorial-offer');
-    } else {
-      setStep('language');
-    }
+    if (!isFirstTime) setStep('done');
   }, [isFirstTime]);
 
   const handleLanguageSelect = (lang) => {
@@ -63,8 +50,8 @@ export default function FirstTimeOnboarding({ children }) {
     setStep('done');
   };
 
-  const showLanguageModal = isFirstTime && ready && step === 'language';
-  const showTutorialModal = isFirstTime && ready && step === 'tutorial-offer';
+  const showLanguageModal = isFirstTime && step === 'language';
+  const showTutorialModal = isFirstTime && step === 'tutorial-offer';
 
   return (
     <>
@@ -99,15 +86,15 @@ export default function FirstTimeOnboarding({ children }) {
       {showTutorialModal && (
         <div className={c.modalBackdrop} role="dialog" aria-modal="true" aria-labelledby="onboarding-modal-title">
           <div className={c.modal}>
-            <h2 id="onboarding-modal-title" className={c.modalTitle}>
-              {t('onboardingTutorialPrompt')}
-            </h2>
+            <p id="onboarding-modal-title" className={c.modalTitle}>
+              {t('onboardingWelcome')}
+            </p>
             <div className={c.modalButtons}>
               <button type="button" className={`${c.modalButton} ${c.primary}`} onClick={handleTutorialYes}>
-                {t('yes')}
+                {t('onboardingStartTutorial')}
               </button>
               <button type="button" className={`${c.modalButton} ${c.secondary}`} onClick={handleTutorialLater}>
-                {t('later')}
+                {t('onboardingSkip')}
               </button>
             </div>
           </div>

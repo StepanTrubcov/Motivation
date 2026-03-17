@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomNav } from '@/context/BottomNavContext';
 import { useLanguage } from '@/context/LanguageContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
+import FirstTimeOnboarding from '@/components/FirstTimeOnboarding/FirstTimeOnboarding';
 import { addProfile, setPoints } from '@/redux/profile_reducer';
 import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
 import { getAchievementsNewStatus, getInitializeAchievementsData } from '@/redux/assignments_reducer';
@@ -17,13 +18,13 @@ const DataInitializer = ({ children }) => {
     const { t } = useLanguage();
     const user = useSelector((state) => state.profile.profile);
     const ThereAreUsers = useSelector((state) => state.goals.ThereAreUsers);
+    const timeGoalsSaving = useSelector((state) => state.goals.timeGoalsSaving);
     const goals = useSelector((state) => state.goals.goals);
     const assignments = useSelector((state) => state.assignments.assignments);
     const assignmentsLoaded = useSelector((state) => state.assignments.assignmentsLoaded);
-    const [isUpdatingAchievements, setIsUpdatingAchievements] = useState(false);
 
-    const isTextDataInitialized = useRef(false);
     const triggeredRef = useRef(new Set());
+    const lastLoadedTelegramIdRef = useRef(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
@@ -34,11 +35,22 @@ const DataInitializer = ({ children }) => {
             }
         }
         dispatch(addProfile());
-    }, [dispatch, isUpdatingAchievements]);
+    }, [dispatch]);
+
+    useEffect(() => {
+        const telegramId = user?.telegramId;
+        if (!telegramId) return;
+
+        // Загружаем историю выполнений независимо от ThereAreUsers.
+        // Это фиксит гонку при старте, когда goals успевают загрузиться раньше.
+        if (lastLoadedTelegramIdRef.current !== telegramId || !Array.isArray(timeGoalsSaving)) {
+            lastLoadedTelegramIdRef.current = telegramId;
+            dispatch(checkTimeGoalsSaving(telegramId));
+        }
+    }, [user?.telegramId, dispatch, timeGoalsSaving]);
 
     useEffect(() => {
         if (user && !ThereAreUsers) {
-            dispatch(checkTimeGoalsSaving(user.telegramId));
             dispatch(addGoals(user.id));
             dispatch(addStatus(user.id));
         }
@@ -80,7 +92,11 @@ const DataInitializer = ({ children }) => {
         return <LoadingScreen title={t('loadingAchievements')} />;
     }
 
-    return children
+    return (
+        <FirstTimeOnboarding>
+            {children}
+        </FirstTimeOnboarding>
+    );
 };
 
 export default DataInitializer;

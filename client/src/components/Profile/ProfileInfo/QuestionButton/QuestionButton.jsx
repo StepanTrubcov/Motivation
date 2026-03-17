@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Settings, X, HelpCircle, Moon, Share2, Languages, GraduationCap, Palette } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-hot-toast";
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
@@ -38,6 +39,44 @@ const QuestionButton = () => {
             onTutorialOpenSettings();
         }
         setIsSettingsOpen(true);
+    };
+
+    const handleShare = async () => {
+        setIsSettingsOpen(false);
+
+        const text = t('shareInviteText');
+        const shareUrl = `https://t.me/share/url?text=${encodeURIComponent(text)}`;
+
+        try {
+            // Telegram Mini App (preferred)
+            if (typeof window !== 'undefined' && window.Telegram?.WebApp?.openTelegramLink) {
+                window.Telegram.WebApp.openTelegramLink(shareUrl);
+                return;
+            }
+
+            // Browser native share (fallback)
+            if (typeof navigator !== 'undefined' && navigator.share) {
+                await navigator.share({ text });
+                return;
+            }
+
+            // Clipboard (fallback)
+            if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(text);
+                toast.success(t('shareCopied'));
+                return;
+            }
+
+            // Last resort: open share link
+            if (typeof window !== 'undefined') {
+                window.open(shareUrl, '_blank', 'noopener,noreferrer');
+                return;
+            }
+        } catch (e) {
+            console.error('Share failed:', e);
+        }
+
+        toast.error(t('shareGenericFailed'));
     };
 
     const colorOptions = [
@@ -99,7 +138,7 @@ const QuestionButton = () => {
             icon: Share2,
             label: t('share'),
             action: () => {
-                setIsSettingsOpen(false);
+                handleShare();
             }
         },
     ];
@@ -113,7 +152,10 @@ const QuestionButton = () => {
                 aria-disabled={isSettingsBlocked}
                 data-tutorial-id="settings-button"
             >
-                <Settings size={24} className={c.settingsIcon} />
+                <span className={c.settingsButtonInner}>
+                    <Settings size={24} className={c.settingsIcon} />
+                    <span className={c.settingsNewBadge} aria-hidden />
+                </span>
             </button>
 
             <AnimatePresence>

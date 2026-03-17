@@ -1,4 +1,4 @@
-import { getUserSavingGoalsWithAutoPeriod, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday } from '@/lib/api/Api';
+import { getUserSavingGoals, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday } from '@/lib/api/Api';
 
 const SET_GOALS = 'goals/SET_GOALS';
 const UPDATE_GOAL_STATUS = 'goals/UPDATE_GOAL_STATUS';
@@ -123,7 +123,7 @@ export const deleteGoalsSaving = (userId, goalId) => async (dispatch) => {
 
 export const checkTimeGoalsSaving = (userId) => async (dispatch) => {
     try {
-        const response = await getUserSavingGoalsWithAutoPeriod(userId);
+        const response = await getUserSavingGoals(userId);
         const raw = response?.savingGoals;
         const savingGoals =
             raw != null && Array.isArray(raw) ? raw : [];

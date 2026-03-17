@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 const ProfileConteiner = (props) => {
+    console.log(props.profile.profile)
     return <Profile pts={props.profile.profile.pts} />
 }
 
