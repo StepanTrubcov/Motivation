@@ -21,9 +21,15 @@ enum GoalCategory {
   Spirituality
 }
 
+enum UserLanguage {
+  rus
+  ang
+}
+
 model User {
   id               String        @id @default(cuid())
   telegramId       String        @unique
+  language        UserLanguage  @default(rus)
   firstName        String?
   username         String?
   photoUrl         String?

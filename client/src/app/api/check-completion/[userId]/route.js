@@ -1,9 +1,18 @@
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { goalsTranslations } from '@/utils/goalsTranslations';
 
 export async function POST(request, { params }) {
   try {
     const { userId } = await params;
+
+    // Определяем язык интерфейса по настройке пользователя в БД.
+    const user = await prisma.user.findUnique({
+      where: { id: String(userId) },
+      select: { language: true },
+    });
+    const lang = user?.language === 'ang' ? 'en' : 'ru'; // DB: rus/ang -> UI: ru/en
+    const translations = goalsTranslations[lang] || goalsTranslations.ru;
 
     // Получаем все цели пользователя
     const goals = await prisma.goal.findMany({
@@ -75,7 +84,23 @@ export async function POST(request, { params }) {
       });
     }
 
-    return NextResponse.json(updatedGoals);
+    // Переводим только стандартные цели (id вида `${userId}_${goalId}`).
+    const translatedGoals = updatedGoals.map((goal) => {
+      const m = String(goal.id).match(/(\d+)$/);
+      const goalIdSuffix = m?.[1];
+      if (!goalIdSuffix) return goal;
+
+      const tr = translations?.[goalIdSuffix];
+      if (!tr) return goal;
+
+      return {
+        ...goal,
+        title: tr.title ?? goal.title,
+        description: tr.description ?? goal.description,
+      };
+    });
+
+    return NextResponse.json(translatedGoals);
   } catch (error) {
     console.error('Error in /api/check-completion/:userId:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { goalsTranslations } from '@/utils/goalsTranslations';
 
 function create120DaysGoals(initialGoalData, numberOfDays = 120, selectedOption = null) {
   const goals = [];
@@ -227,6 +228,7 @@ export async function POST(request) {
         select: {
           id: true,
           telegramId: true,
+          language: true,
           firstName: true,
           username: true,
           savingGoals: true
@@ -240,12 +242,30 @@ export async function POST(request) {
         }, { status: 404 });
       }
 
+      const lang = user?.language === 'ang' ? 'en' : 'ru'; // DB: rus/ang -> UI: ru/en
+      const translations = goalsTranslations[lang] || goalsTranslations.ru;
+
+      // Переводим goalsArray только для стандартных целей по числовому суффиксу id.
+      const goalsArrayTranslated = lang === 'en'
+        ? (Array.isArray(goalsArray) ? goalsArray.map((g) => {
+          const m = String(g?.id ?? '').match(/(\d+)$/);
+          const goalIdSuffix = m?.[1];
+          const tr = goalIdSuffix ? translations?.[goalIdSuffix] : null;
+          if (!tr) return g;
+          return {
+            ...g,
+            title: tr.title ?? g.title,
+            description: tr.description ?? g.description,
+          };
+        }) : goalsArray)
+        : goalsArray;
+
       // Анализируем цели и генерируем отчет
       // Для новой структуры данных мы передаем goalsArray напрямую, а не user.savingGoals
-      const reportData = analyzeGoalsForPeriod([], goalsArray, period);
+      const reportData = analyzeGoalsForPeriod([], goalsArrayTranslated, period);
 
       // Генерируем текстовый отчет
-      const reportText = generateReportText(reportData, user, period);
+      const reportText = generateReportText(reportData, user, period, lang);
 
       return NextResponse.json({
         success: true,
@@ -726,6 +746,7 @@ export async function GENERATE_REPORT(request) {
       select: {
         id: true,
         telegramId: true,
+        language: true,
         firstName: true,
         username: true,
         savingGoals: true
@@ -739,12 +760,29 @@ export async function GENERATE_REPORT(request) {
       }, { status: 404 });
     }
 
+    const lang = user?.language === 'ang' ? 'en' : 'ru'; // DB: rus/ang -> UI: ru/en
+    const translations = goalsTranslations[lang] || goalsTranslations.ru;
+
+    const goalsArrayTranslated = lang === 'en'
+      ? (Array.isArray(goalsArray) ? goalsArray.map((g) => {
+        const m = String(g?.id ?? '').match(/(\d+)$/);
+        const goalIdSuffix = m?.[1];
+        const tr = goalIdSuffix ? translations?.[goalIdSuffix] : null;
+        if (!tr) return g;
+        return {
+          ...g,
+          title: tr.title ?? g.title,
+          description: tr.description ?? g.description,
+        };
+      }) : goalsArray)
+      : goalsArray;
+
     // Анализируем цели и генерируем отчет
     // Для новой структуры данных мы передаем goalsArray напрямую, а не user.savingGoals
-    const reportData = analyzeGoalsForPeriod([], goalsArray, period);
+    const reportData = analyzeGoalsForPeriod([], goalsArrayTranslated, period);
 
     // Генерируем текстовый отчет
-    const reportText = generateReportText(reportData, user, period);
+    const reportText = generateReportText(reportData, user, period, lang);
 
     return NextResponse.json({
       success: true,
@@ -906,20 +944,23 @@ function analyzeGoalsForPeriod(savingGoals, goalsArray, period) {
 }
 
 // Функция для генерации текстового отчета
-function generateReportText(reportData, user, period) {
+function generateReportText(reportData, user, period, lang = 'ru') {
   const { topGoals, daysAnalyzed, chartData, series = 0 } = reportData;
+
+  const isEn = lang === 'en';
+  const months = isEn
+    ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    : ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
 
   // Получаем реальные даты из chartData
   const dates = chartData.dates;
-  let periodText = `${period} дней`;
+  let periodText = isEn ? `${period} days` : `${period} дней`;
   
   if (dates && dates.length > 0) {
     const startDate = new Date(dates[0]);
     const endDate = new Date(dates[dates.length - 1]);
     
     const formatDateShort = (date) => {
-      const months = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн',
-                     'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
       return `${date.getDate()} ${months[date.getMonth()]}`;
     };
     
@@ -932,7 +973,13 @@ function generateReportText(reportData, user, period) {
   const overallPercentage = totalPossible > 0 ? Math.round((totalCompleted / totalPossible) * 100) : 0;
 
   if (topGoals.length === 0) {
-    return `📊 ИТОГ НЕДЕЛИ ${periodText}
+    return isEn
+      ? `📊 WEEKLY RESULT ${periodText}
+
+🏆 Overall goal completion: 0%
+
+No completed goals in this period.`
+      : `📊 ИТОГ НЕДЕЛИ ${periodText}
 
 🏆 Общий процент выполнения целей: 0%
 
@@ -940,13 +987,19 @@ function generateReportText(reportData, user, period) {
   }
 
   // Формируем текст отчета
-  let reportText = `📊 ИТОГ НЕДЕЛИ ${periodText}\n\n`;
+  let reportText = isEn
+    ? `📊 WEEKLY RESULT ${periodText}\n\n`
+    : `📊 ИТОГ НЕДЕЛИ ${periodText}\n\n`;
   if (series > 0) {
-    reportText += `Серия: 🔥 ${series} дн.\n\n`;
+    reportText += isEn
+      ? `Streak: 🔥 ${series} days\n\n`
+      : `Серия: 🔥 ${series} дн.\n\n`;
   }
-  reportText += `🏆 Общий процент выполнения целей: ${overallPercentage}%\n\n`;
+  reportText += isEn
+    ? `🏆 Overall goal completion: ${overallPercentage}%\n\n`
+    : `🏆 Общий процент выполнения целей: ${overallPercentage}%\n\n`;
   
-  reportText += "СТАТИСТИКА ПО ЦЕЛЯМ\n";
+  reportText += isEn ? "GOAL STATS\n" : "СТАТИСТИКА ПО ЦЕЛЯМ\n";
   const displayedGoals = topGoals.slice(0, 5); // Показываем до 5 целей
   displayedGoals.forEach(goal => {
     reportText += `⭐ ${goal.title} - ${goal.completionPercentage}%\n`;
@@ -974,30 +1027,42 @@ function generateReportText(reportData, user, period) {
     
     if (maxCompletions > 0) {
       const bestDate = new Date(chartData.dates[bestDayIndex]);
-      const weekdays = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
-      bestDay = `${weekdays[bestDate.getDay()]} (${maxCompletions} цели выполнены)`;
+      const weekdays = isEn
+        ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        : ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+      bestDay = isEn
+        ? `${weekdays[bestDate.getDay()]} (${maxCompletions} goals done)`
+        : `${weekdays[bestDate.getDay()]} (${maxCompletions} цели выполнены)`;
     }
   }
 
-  reportText += "\n📈 СТАТИСТИКА ПЕРИОДА\n";
-  reportText += `• Общий прогресс: ${overallPercentage}%\n`;
-  reportText += `• Выполнено: ${totalCompleted} из ${totalPossible} возможных\n`;
-  reportText += `• Активных дней: ${dates ? dates.length : daysAnalyzed} дней\n`;
+  reportText += isEn ? "\n📈 PERIOD STATS\n" : "\n📈 СТАТИСТИКА ПЕРИОДА\n";
+  reportText += isEn
+    ? `• Overall progress: ${overallPercentage}%\n`
+    : `• Общий прогресс: ${overallPercentage}%\n`;
+  reportText += isEn
+    ? `• Completed: ${totalCompleted} of ${totalPossible} possible\n`
+    : `• Выполнено: ${totalCompleted} из ${totalPossible} возможных\n`;
+  reportText += isEn
+    ? `• Active days: ${dates ? dates.length : daysAnalyzed} days\n`
+    : `• Активных дней: ${dates ? dates.length : daysAnalyzed} дней\n`;
   if (bestDay) {
-    reportText += `• Лучший день: ${bestDay}\n\n`;
+    reportText += isEn
+      ? `• Best day: ${bestDay}\n\n`
+      : `• Лучший день: ${bestDay}\n\n`;
   } else {
     reportText += "\n";
   }
   
-  reportText += "\n⭐ Следующая цель: ";
+  reportText += isEn ? "\n⭐ Next goal: " : "\n⭐ Следующая цель: ";
   if (overallPercentage >= 70) {
-    reportText += "Поддерживать высокий уровень выполнения!";
+    reportText += isEn ? "Maintain a high completion rate!" : "Поддерживать высокий уровень выполнения!";
   } else if (overallPercentage >= 50) {
-    reportText += "Достичь 70% выполнения по всем целям!";
+    reportText += isEn ? "Reach 70% completion across all goals!" : "Достичь 70% выполнения по всем целям!";
   } else if (overallPercentage >= 30) {
-    reportText += "Достичь 50% выполнения по всем целям!";
+    reportText += isEn ? "Reach 50% completion across all goals!" : "Достичь 50% выполнения по всем целям!";
   } else {
-    reportText += "Достичь 30% выполнения по всем целям!";
+    reportText += isEn ? "Reach 30% completion across all goals!" : "Достичь 30% выполнения по всем целям!";
   }
 
   return reportText;

@@ -84,3 +84,44 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
   }
 }
+
+export async function PUT(request) {
+  try {
+    const { telegramId, language } = await request.json();
+
+    if (!telegramId) {
+      return NextResponse.json({ error: 'telegramId is required' }, { status: 400 });
+    }
+    if (!language) {
+      return NextResponse.json({ error: 'language is required' }, { status: 400 });
+    }
+
+    const normalized = String(language).toLowerCase();
+    const dbLanguage = normalized === 'ru' || normalized === 'rus' ? 'rus'
+      : normalized === 'en' || normalized === 'ang' ? 'ang'
+      : null;
+
+    if (!dbLanguage) {
+      return NextResponse.json({ error: "language must be one of: 'rus' or 'ang' (or 'ru'/'en')" }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { telegramId: String(telegramId) },
+      select: { id: true, telegramId: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { telegramId: String(telegramId) },
+      data: { language: dbLanguage },
+    });
+
+    return NextResponse.json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error('Ошибка в /api/users (PUT):', error);
+    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
+  }
+}

@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { goalsTranslations } from '@/utils/goalsTranslations';
 
 const reportCopy = {
   ru: {
@@ -38,12 +39,71 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: "Нет целей для отчёта" }, { status: 400 });
     }
 
-    const lang = language === 'en' ? 'en' : 'ru';
+    // Язык берём из БД по telegramId (а не из запроса), чтобы не зависеть от localStorage UI.
+    const user = await prisma.user.findUnique({
+      where: { telegramId: String(telegramId) },
+      select: { language: true },
+    });
+
+    const langFromDb = user?.language === 'ang' ? 'en' : 'ru';
+    const lang = langFromDb || (language === 'en' ? 'en' : 'ru');
     const copy = reportCopy[lang];
+
+    // Дата приходит строкой, сформированной на клиенте (обычно из localStorage).
+    // Для англ. режима переводим русское название месяца в английское.
+    const formattedDateTranslated = (() => {
+      if (lang !== 'en' || !formattedDate) return formattedDate;
+
+      const monthMap = {
+        'января': 'January',
+        'февраля': 'February',
+        'марта': 'March',
+        'апреля': 'April',
+        'мая': 'May',
+        'июня': 'June',
+        'июля': 'July',
+        'августа': 'August',
+        'сентября': 'September',
+        'октября': 'October',
+        'ноября': 'November',
+        'декабря': 'December',
+      };
+
+      const s = String(formattedDate).trim();
+      // Пример: "20 марта"
+      const m = s.match(/^(\d{1,2})\s+([A-Za-zА-Яа-яЁё]+)\s*$/);
+      if (!m) return formattedDate;
+
+      const day = m[1];
+      const monthRu = m[2].toLowerCase().replace('ё', 'е');
+      const monthEn = monthMap[monthRu];
+
+      return monthEn ? `${day} ${monthEn}` : formattedDate;
+    })();
 
     const doneCount = goalsDone.length;
     const totalCount = allGoals.length;
     const ratio = doneCount / totalCount;
+
+    // Если английский, подменяем title/description для стандартных целей.
+    const translations = goalsTranslations[lang] || goalsTranslations.ru;
+    const translateGoal = (goal) => {
+      if (!goal?.id) return goal;
+      const m = String(goal.id).match(/(\d+)$/);
+      const goalIdSuffix = m?.[1];
+      if (!goalIdSuffix) return goal;
+      const tr = translations?.[goalIdSuffix];
+      if (!tr) return goal;
+      return {
+        ...goal,
+        title: tr.title ?? goal.title,
+        description: tr.description ?? goal.description,
+      };
+    };
+
+    const allGoalsTranslated = lang === 'en'
+      ? allGoals.map((g) => translateGoal(g))
+      : allGoals;
 
     let diaryNote = '';
     if (ratio >= 1) diaryNote = copy.diaryAll;
@@ -52,7 +112,7 @@ export async function POST(request, { params }) {
     else if (doneCount > 0) diaryNote = copy.diarySome;
     else diaryNote = copy.diaryNone;
 
-    const goalsList = allGoals
+    const goalsList = allGoalsTranslated
       .map(g => {
         const title = String(g.title || '').replace(/\u00A0/g, ' ').trim();
         const statusIcon = g.status === 'completed' ? '✅' : '☑️';
@@ -64,7 +124,7 @@ export async function POST(request, { params }) {
 
     const seriesLine = (series > 2) ? `\n\n${copy.series} ${series} ${copy.days}` : '';
 
-    const headerParts = [formattedDate, userTag];
+    const headerParts = [formattedDateTranslated, userTag];
     if (seriesLine) headerParts.push(seriesLine);
     const header = headerParts.join(' ');
     const finalMessage = [header, goalsList, diaryNote, copy.footer].join('\n\n').trim();

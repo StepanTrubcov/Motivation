@@ -3,9 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Settings, X, HelpCircle, Moon, Share2, Languages, GraduationCap, Palette } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-hot-toast";
+import { useSelector } from 'react-redux';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
+import { updateUserLanguage } from '@/lib/api/Api';
 import c from './QuestionButton.module.css';
 
 const QuestionButton = () => {
@@ -15,6 +17,7 @@ const QuestionButton = () => {
     const { theme, toggleTheme, accentColor, setAccentColor } = useTheme();
     const { language, changeLanguage, t } = useLanguage();
     const { startTutorial, currentStep, isOpen: isTutorialOpen, onTutorialOpenSettings, isColorPickerOpenForTutorial, setIsColorPickerOpenForTutorial } = useTutorial();
+    const telegramId = useSelector((state) => state.profile.profile?.telegramId);
 
     // Закрываем настройки только когда туториал открыт И мы на шаге, где модалка мешает:
     // — «Кнопка настроек» (нужно показать шестерёнку) или шаги после блока настроек.
@@ -341,6 +344,13 @@ const QuestionButton = () => {
                                         onClick={() => {
                                             changeLanguage(option.code);
                                             setIsLanguagePickerOpen(false);
+
+                                            // Сохраняем выбор языка в БД.
+                                            if (!telegramId) return;
+                                            updateUserLanguage(telegramId, option.code).catch((err) => {
+                                                console.error('Failed to update user language:', err);
+                                                toast.error(t('error'));
+                                            });
                                         }}
                                     >
                                         <span className={c.languageName}>

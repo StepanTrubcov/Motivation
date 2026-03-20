@@ -15,7 +15,7 @@ import { toast } from 'react-hot-toast';
 const DataInitializer = ({ children }) => {
     const dispatch = useDispatch();
     const { setShowBottomNav } = useBottomNav();
-    const { t } = useLanguage();
+    const { t, changeLanguage } = useLanguage();
     const user = useSelector((state) => state.profile.profile);
     const ThereAreUsers = useSelector((state) => state.goals.ThereAreUsers);
     const timeGoalsSaving = useSelector((state) => state.goals.timeGoalsSaving);
@@ -36,6 +36,14 @@ const DataInitializer = ({ children }) => {
         }
         dispatch(addProfile());
     }, [dispatch]);
+
+    // При загрузке приложения выставляем язык интерфейса по значению из БД.
+    // DB: `rus`/`ang` -> UI: `ru`/`en`
+    useEffect(() => {
+        if (!user?.language) return;
+        const targetLang = user.language === 'ang' ? 'en' : 'ru';
+        changeLanguage(targetLang);
+    }, [user?.language, changeLanguage]);
 
     useEffect(() => {
         const telegramId = user?.telegramId;
