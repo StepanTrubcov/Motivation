@@ -96,25 +96,27 @@ export const getGoalTranslation = (goalId, language, field = 'title') => {
 // Функция для перевода всего массива целей
 export const translateGoals = (goals, language) => {
     if (!Array.isArray(goals) || goals.length === 0) return goals || [];
-    
-    // Если язык русский, возвращаем оригинальные данные
-    if (language === 'ru') {
-        return goals;
-    }
-    
+
     return goals.map(goal => {
         if (!goal) return goal;
         
-        // Пробуем разные варианты ID
-        let id = goal.id?.toString();
+        // Пробуем определить ID стандартной цели по хвосту id (например, userId_14 -> 14)
+        const idRaw = goal.id?.toString() || '';
+        let id = idRaw;
+        const tailDigits = idRaw.match(/(\d+)$/)?.[1];
+        if (tailDigits) {
+            id = tailDigits;
+        }
+
         let foundId = null;
         
         // Сначала пробуем найти по ID (формат "1"-"75")
         if (id && /^([1-9]|[1-9][0-9]|7[0-5])$/.test(id)) {
             foundId = id;
         } else {
-            // Если ID не подходит, пробуем найти по оригинальному русскому title
+            // Если ID не подходит, пробуем найти по title в обеих локалях
             const ruTranslations = goalsTranslations.ru;
+            const enTranslations = goalsTranslations.en;
             const originalTitle = goal.title?.trim();
             
             if (originalTitle) {
@@ -126,8 +128,18 @@ export const translateGoals = (goals, language) => {
                         break;
                     }
                 }
+                // Если не нашли в RU, пробуем точное совпадение в EN
+                if (!foundId) {
+                    for (const [key, value] of Object.entries(enTranslations)) {
+                        const enTitle = value.title?.trim();
+                        if (enTitle === originalTitle) {
+                            foundId = key;
+                            break;
+                        }
+                    }
+                }
                 
-                // Если не нашли точное совпадение, пробуем частичное
+                // Если не нашли точное совпадение, пробуем частичное в RU
                 if (!foundId) {
                     for (const [key, value] of Object.entries(ruTranslations)) {
                         const ruTitle = value.title?.trim();
@@ -136,6 +148,21 @@ export const translateGoals = (goals, language) => {
                             originalTitle.includes(ruTitle) ||
                             ruTitle.includes(originalTitle) ||
                             originalTitle.replace(/\s+/g, ' ') === ruTitle.replace(/\s+/g, ' ')
+                        )) {
+                            foundId = key;
+                            break;
+                        }
+                    }
+                }
+                // Если не нашли в RU, пробуем частичное в EN
+                if (!foundId) {
+                    for (const [key, value] of Object.entries(enTranslations)) {
+                        const enTitle = value.title?.trim();
+                        if (enTitle && (
+                            enTitle === originalTitle ||
+                            originalTitle.includes(enTitle) ||
+                            enTitle.includes(originalTitle) ||
+                            originalTitle.replace(/\s+/g, ' ') === enTitle.replace(/\s+/g, ' ')
                         )) {
                             foundId = key;
                             break;

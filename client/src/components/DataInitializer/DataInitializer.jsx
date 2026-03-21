@@ -25,6 +25,7 @@ const DataInitializer = ({ children }) => {
 
     const triggeredRef = useRef(new Set());
     const lastLoadedTelegramIdRef = useRef(null);
+    const lastAppliedDbLanguageRef = useRef(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
@@ -37,13 +38,16 @@ const DataInitializer = ({ children }) => {
         dispatch(addProfile());
     }, [dispatch]);
 
-    // При загрузке приложения выставляем язык интерфейса по значению из БД.
-    // DB: `rus`/`ang` -> UI: `ru`/`en`
+    // Синхронизируем язык интерфейса с БД только когда именно значение в БД изменилось.
+    // Это предотвращает откат UI-языка при локальном переключении до прихода обновленного профиля.
     useEffect(() => {
         if (!user?.language) return;
+        if (lastAppliedDbLanguageRef.current === user.language) return;
+
+        lastAppliedDbLanguageRef.current = user.language;
         const targetLang = user.language === 'ang' ? 'en' : 'ru';
         changeLanguage(targetLang);
-    }, [user?.language, changeLanguage]);
+    }, [user?.language]);
 
     useEffect(() => {
         const telegramId = user?.telegramId;

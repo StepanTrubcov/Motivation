@@ -118,6 +118,17 @@ export const updateUserLanguage = async (telegramId, language) => {
   return response.data;
 };
 
+export const getUserLanguageByTelegramId = async (telegramId) => {
+  const baseTelegramId = telegramId != null ? String(telegramId) : null;
+  if (!baseTelegramId) throw new Error('telegramId is required');
+
+  const response = await axios.get(`${BASE_URL}/users/language`, {
+    params: { telegramId: baseTelegramId },
+  });
+
+  return response.data;
+};
+
 export async function getAllGoals(customUserId) {
   if (!customUserId) {
     console.error("customUserId is undefined");
