@@ -160,7 +160,6 @@ const QuestionButton = () => {
             >
                 <span className={c.settingsButtonInner}>
                     <Settings size={24} className={c.settingsIcon} />
-                    <span className={c.settingsNewBadge} aria-hidden />
                 </span>
             </button>
 
