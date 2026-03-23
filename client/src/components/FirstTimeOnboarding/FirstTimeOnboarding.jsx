@@ -21,19 +21,11 @@ export default function FirstTimeOnboarding({ children }) {
     [savingGoals]
   );
 
-  const [step, setStep] = useState('language');
+  const [step, setStep] = useState('tutorial-offer');
 
   useEffect(() => {
     if (!isFirstTime) setStep('done');
   }, [isFirstTime]);
-
-  const handleLanguageSelect = (lang) => {
-    changeLanguage(lang);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(LANGUAGE_DONE_KEY, '1');
-    }
-    setStep('tutorial-offer');
-  };
 
   const handleTutorialYes = () => {
     if (typeof window !== 'undefined') {
@@ -56,33 +48,6 @@ export default function FirstTimeOnboarding({ children }) {
   return (
     <>
       {children}
-      {showLanguageModal && (
-        <div className={c.modalBackdrop} role="dialog" aria-modal="true" aria-labelledby="onboarding-language-title">
-          <div className={c.modal}>
-            <h2 id="onboarding-language-title" className={c.modalTitle}>
-              {t('chooseLanguage')}
-            </h2>
-            <div className={c.modalButtons}>
-              <button
-                type="button"
-                className={`${c.modalButton} ${c.secondary}`}
-                onClick={() => handleLanguageSelect('ru')}
-                aria-label="Русский"
-              >
-                Русский
-              </button>
-              <button
-                type="button"
-                className={`${c.modalButton} ${c.secondary}`}
-                onClick={() => handleLanguageSelect('en')}
-                aria-label="English"
-              >
-                English
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       {showTutorialModal && (
         <div className={c.modalBackdrop} role="dialog" aria-modal="true" aria-labelledby="onboarding-modal-title">
           <div className={c.modal}>
