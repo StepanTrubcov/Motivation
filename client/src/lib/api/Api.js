@@ -33,7 +33,7 @@ export const addProfileApi = async () => {
 
   WebApp.ready();
 
-  const userData = WebApp.initDataUnsafe?.user || {
+  const userData = {
     id: 123,
     first_name: 'testBot',
     username: 'username',
