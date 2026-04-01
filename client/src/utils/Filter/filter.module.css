@@ -162,6 +162,30 @@
     position: relative;
 }
 
+/* Горизонтальная карусель (напр. цели на сегодня в шторке) */
+.wrapperCarousel {
+    flex: 0 0 auto;
+    width: min(260px, 78vw);
+    max-width: min(260px, 78vw);
+    scroll-snap-align: center;
+}
+
+.blokCarousel {
+    margin: 0;
+    min-height: 104px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.blokCarousel .title {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
 /* Popup */
 .popup {
     position: absolute;

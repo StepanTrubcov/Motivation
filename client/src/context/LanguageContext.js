@@ -30,6 +30,8 @@ const translations = {
         // Профиль
         pts: 'pts',
         todayGoals: 'Цели на сегодня',
+        todayGoalsCompletedOfTotal: '{done} / {total} выполнено',
+        viewTodayGoals: '[ Посмотреть цели ]',
         generate: 'Сгенерировать',
         yesterday: 'Вчера',
         series: 'Серия',
@@ -292,6 +294,8 @@ const translations = {
         // Profile
         pts: 'pts',
         todayGoals: 'Today\'s goals',
+        todayGoalsCompletedOfTotal: '{done} / {total} completed',
+        viewTodayGoals: '[ View goals ]',
         generate: 'Generate',
         yesterday: 'Yesterday',
         series: 'Series',

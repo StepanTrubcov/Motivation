@@ -16,7 +16,7 @@ const ModalWindowMe = ({
   username,
   uploadTempUrl,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { currentStep } = useTutorial();
   const tutorialBlockButtons = currentStep?.id === 'achievements-earned-modal';
   const [isLoading, setIsLoading] = useState(false);
@@ -48,7 +48,7 @@ const ModalWindowMe = ({
     }
   }, [isModalOpen]);
 
-  const rarityClass = isModalOpen?.active;
+  const rarityClass = isModalOpen?.active
 
   const handleGenerate = async () => {
     if (!isModalOpen?.title) return toast.error(t('noData'));
@@ -62,6 +62,7 @@ const ModalWindowMe = ({
         img: isModalOpen.img,
         points: isModalOpen.points || 0,
         rarityClass: rarityClass,
+        language,
       });
 
       setImageDataUrl(imageUrl);
@@ -179,7 +180,7 @@ const ModalWindowMe = ({
   return (
     <AnimatePresence>
       {isModalOpen && (
-          <motion.div className={styles.modalBackdrop} onClick={tutorialBlockButtons ? (e) => { e.preventDefault(); e.stopPropagation(); } : closeModal}>
+        <motion.div className={styles.modalBackdrop} onClick={tutorialBlockButtons ? (e) => { e.preventDefault(); e.stopPropagation(); } : closeModal}>
           <motion.div className={styles.modalContent} onClick={(e) => e.stopPropagation()} data-tutorial-id="achievements-earned-modal">
             <button
               type="button"

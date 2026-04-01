@@ -45,6 +45,8 @@ model User {
 
 model Achievement {
   id          String   @id @default(cuid())
+  /// Стабильный id из шаблона ачивок ("1"…"26") — для идемпотентного upsert без привязки к переводу title
+  templateId  String?
   title       String
   gif         String
   rarity      String
@@ -60,6 +62,8 @@ model Achievement {
   userId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
+
+  @@index([userId, templateId])
 }
 
 model Goal {

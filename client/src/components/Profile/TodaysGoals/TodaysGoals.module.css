@@ -3,10 +3,78 @@
     font-size: 20px;
 }
 
-.goals{
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 500px;
+.summaryCard {
+    margin: 12px 10px 10px;
+    padding: 18px 20px;
+    background: var(--card-bg, #151515);
+    border-radius: 14px;
+    box-shadow: var(--shadow, none);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.light-theme .summaryCard {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.summaryRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.summaryFire {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.summaryProgress {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--foreground, #fff);
+}
+
+.summaryPoints {
+    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--accent-green, #00ff1e);
+    text-shadow: 0 0 10px var(--accent-green-glow, rgba(0, 255, 42, 0.35));
+}
+
+/* Горизонтальная карусель на главном экране профиля (свайп, Telegram Mini App) */
+.carouselWrap {
+    margin: 0 0 16px;
+    min-height: 148px;
+}
+
+.carousel {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    padding: 4px 10px 12px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+    scrollbar-width: thin;
+}
+
+.carousel::-webkit-scrollbar {
+    height: 5px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+}
+
+.light-theme .carousel::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .blok {
@@ -24,4 +92,15 @@
 
 .light-theme .blok {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

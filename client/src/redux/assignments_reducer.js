@@ -52,10 +52,9 @@ export const getInitializeAchievementsData = (customUserId) => async (dispatch) 
 }
 
 export const getAchievementsNewStatus = (achievement, userId) => async (dispatch) => {
-    await achievementNewStatus(achievement, userId).then(response => {
-         dispatch(getAchievementsData(userId))
-    })
-}
+  await achievementNewStatus(achievement, userId);
+  await dispatch(getAchievementsData(userId));
+};
 
 export const getMakingPicture = (isModalOpen, username) => async (dispatch) => {
    const imageUrl = await makingPicture(isModalOpen, username);

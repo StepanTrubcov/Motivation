@@ -12,7 +12,8 @@ const Filter = (
     img = DEFAULT_BUTTON_IMG,
     home = true,
     onDelete = () => { },
-    disabled = false
+    disabled = false,
+    carousel = false
 ) => {
     const { t } = useLanguage();
     const [longPressedId, setLongPressedId] = useState(null);
@@ -59,11 +60,11 @@ const Filter = (
     return filteredGoals.map(d => (
         <div
             key={d.id}
-            className={c.wrapper}
+            className={`${c.wrapper} ${carousel ? c.wrapperCarousel : ''}`}
             ref={(el) => (wrapperRefs.current[d.id] = el)}
         >
             <div
-                className={`${c.blok} ${disabled ? c.blokDisabled : ''}`}
+                className={`${c.blok} ${disabled ? c.blokDisabled : ''} ${carousel ? c.blokCarousel : ''}`}
                 onClick={(e) => {
                     if (disabled) {
                         e.preventDefault();

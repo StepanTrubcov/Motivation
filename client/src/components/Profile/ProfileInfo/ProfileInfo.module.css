@@ -21,9 +21,8 @@
 
 .name {
     font-weight: 500;
-    font-size: 35px;
-    margin-bottom: 5px;
-    margin-right: 10px;
+    font-size: 25px;
+    margin-top: 10px;
     color: var(--foreground, #ffffff);
     transition: color 0.3s ease;
 }
@@ -32,7 +31,7 @@
     color: var(--accent-green, #00ff1e);
     text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
     font-weight: 600;
-    font-size: 25px;
+    font-size: 30px;
     transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 

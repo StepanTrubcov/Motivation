@@ -1,5 +1,5 @@
 .img {
-    width: 20px;
+    width: 30px;
     margin: 5px;
 }
 
@@ -7,20 +7,22 @@
 .Lights {
     display: flex;
     align-items: center;
+    margin-left: 30px;
 }
 
 .text {
     font-weight: 600;
-    font-size: 23px;
+    font-size: 30px;
 }
 
 .orange {
-    color: rgb(255, 153, 0);
+    color: rgb(255, 89, 0);
     text-shadow: 0 0 8px rgb(255, 153, 0);
 }
 
 .grey {
-    color: rgb(102, 102, 102);
+    color: rgb(114, 114, 114);
+    text-shadow:  0 0 8px rgb(122, 122, 122);
 }
 
 .fullscreen {

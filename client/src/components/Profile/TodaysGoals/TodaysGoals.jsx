@@ -1,11 +1,26 @@
+'use client';
 import React from "react";
 import { useLanguage } from '@/context/LanguageContext';
 import c from './TodaysGoals.module.css'
 
-const TodaysGoals = ({ inProgress, completed }) => {
-    const { t, language } = useLanguage();
+const toRows = (node) => {
+    if (node == null) return [];
+    return Array.isArray(node) ? node : [node];
+};
 
-    if (inProgress.length === 0 && completed.length === 0) {
+const TodaysGoals = ({
+    inProgress,
+    completed,
+    completedCount,
+    totalTodayGoals,
+    pointsFromCompletedToday,
+}) => {
+    const { t } = useLanguage();
+
+    const inProgressRows = toRows(inProgress);
+    const completedRows = toRows(completed);
+
+    if (inProgressRows.length === 0 && completedRows.length === 0) {
         return <div data-tutorial-id="today-goals">
             <div className={c.name} >
                 {t('todayGoals')}
@@ -14,15 +29,34 @@ const TodaysGoals = ({ inProgress, completed }) => {
         </div>
     }
 
-    return <div data-tutorial-id="today-goals">
-        <div className={c.name} >
-            {t('todayGoals')}
+    const progressText = t('todayGoalsCompletedOfTotal')
+        .replace('{done}', String(completedCount))
+        .replace('{total}', String(totalTodayGoals));
+
+    const pointsLine = `+${pointsFromCompletedToday} ${t('pts')}`;
+
+    return (
+        <div data-tutorial-id="today-goals">
+            <div className={c.name}>{t('todayGoals')}</div>
+            <div className={c.summaryCard}>
+                <div className={c.summaryRow}>
+                    <span className={c.summaryFire} aria-hidden>🔥</span>
+                    <span className={c.summaryProgress}>{progressText}</span>
+                </div>
+                <div className={c.summaryPoints}>{pointsLine}</div>
+            </div>
+            <div className={c.carouselWrap}>
+                <div
+                    className={c.carousel}
+                    role="list"
+                    aria-label={t('todayGoals')}
+                >
+                    {inProgressRows}
+                    {completedRows}
+                </div>
+            </div>
         </div>
-        <div className={c.goals} >
-            {completed}
-            {inProgress}
-        </div>
-    </div>
+    );
 }
 
 export default TodaysGoals;

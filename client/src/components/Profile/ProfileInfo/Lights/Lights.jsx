@@ -6,16 +6,16 @@ const Lights = ({ num, isTodayCompleted }) => {
     const { t } = useLanguage();
 
     const levelsOfLights = [
-        { url: "https://i.postimg.cc/ncn6QWvg/1-uroven'.png", daysMin: 2, daysMax: 4 },
-        { url: "https://i.postimg.cc/wx5BpSqS/2-uroven'.png", daysMin: 5, daysMax: 8 },
-        { url: "https://i.postimg.cc/7ZhPShgW/3-uroven'.png", daysMin: 9, daysMax: 12 },
-        { url: "https://i.postimg.cc/hjLKKdBP/4-uroven'.png", daysMin: 13, daysMax: 16 },
-        { url: "https://i.postimg.cc/SRVqMbjL/5-uroven'.png", daysMin: 17, daysMax: 22 },
-        { url: "https://i.postimg.cc/XYr3phbR/6-uroven'.png", daysMin: 23, daysMax: 30 },
-        { url: "https://i.postimg.cc/8PFgzyxr/7-uroven'.png", daysMin: 31, daysMax: 45 },
-        { url: "https://i.postimg.cc/DzRB5gBM/8-uroven'.png", daysMin: 46, daysMax: 60 },
-        { url: "https://i.postimg.cc/MZ7db1R4/9-uroven'.png", daysMin: 61, daysMax: 89 },
-        { url: "https://i.postimg.cc/9QnpFb5p/10-uroven'.png", daysMin: 90, daysMax: 120 },
+        { url: "https://i.postimg.cc/KYgdfzYy/2-1-no-bg-preview-(carve-photos).png", daysMin: 2, daysMax: 4 },
+        { url: "https://i.postimg.cc/fybCH2v7/2-2-no-bg-preview-(carve-photos).png", daysMin: 5, daysMax: 8 },
+        { url: "https://i.postimg.cc/KvRQBWjz/2-3-no-bg-preview-(carve-photos).png", daysMin: 9, daysMax: 12 },
+        { url: "https://i.postimg.cc/Sx9rtzcV/2-4-edited-free-(carve-photos).png", daysMin: 13, daysMax: 16 },
+        { url: "https://i.postimg.cc/QCVggBXR/2-5-no-bg-preview-(carve-photos).png", daysMin: 17, daysMax: 22 },
+        { url: "https://i.postimg.cc/wxbQqk2j/2-6-no-bg-preview-(carve-photos).png", daysMin: 23, daysMax: 30 },
+        { url: "https://i.postimg.cc/Jhqj9309/2-7-no-bg-preview-(carve-photos).png", daysMin: 31, daysMax: 45 },
+        { url: "https://i.postimg.cc/NGVRqjsV/2-8-edited-free-(carve-photos).png", daysMin: 46, daysMax: 60 },
+        { url: "https://i.postimg.cc/YSpWf4R3/2-9-no-bg-preview-(carve-photos).png", daysMin: 61, daysMax: 89 },
+        { url: "https://i.postimg.cc/Gts8hvL5/2-10-no-bg-preview-(carve-photos).png", daysMin: 90, daysMax: 120 },
     ];
 
     const grayLightUrl = "https://i.postimg.cc/gJDK9gn6/752049b9-f85f-4d4e-a777-58c12ac42fbd.png";
@@ -72,6 +72,27 @@ const Lights = ({ num, isTodayCompleted }) => {
             (level) => num >= level.daysMin && num <= level.daysMax
         ) || levelsOfLights[levelsOfLights.length - 1];
 
+    const currentLightIndex = Math.max(
+        0,
+        levelsOfLights.findIndex((level) => level === currentLight)
+    );
+
+    const levelNumberStyles = [
+        { color: "#ff6a00", textShadow: "0 0 8px rgba(255, 153, 0, 0.95)" },
+        { color: "#ff8a00", textShadow: "0 0 8px rgba(255, 180, 0, 0.95)" },
+        { color: "#ffb300", textShadow: "0 0 8px rgba(255, 210, 0, 0.95)" },
+        { color: "#ffd000", textShadow: "0 0 10px rgba(255, 235, 59, 0.95)" },
+        { color: " #ffdd00", textShadow: "0 0 10px rgba(255, 247, 4, 0.85)" },
+        { color: " #ffae00", textShadow: "0 0 10px rgba(255, 183, 0, 0.85)" },
+        { color: "rgb(255, 0, 0)", textShadow: "0 0 10px rgba(255, 132, 0, 0.85)" },
+        { color: "rgb(255, 77, 104)", textShadow: "0 0 12px rgba(255, 77, 219, 0.8)" },
+        { color: "rgb(245, 64, 255)", textShadow: "0 0 12px rgba(255, 64, 129, 0.8)" },
+        { color: "rgb(170, 23, 255)", textShadow: "0 0 12px rgba(189, 23, 255, 0.85)" },
+    ];
+
+    const activeNumberStyle =
+        levelNumberStyles[currentLightIndex] || levelNumberStyles[levelNumberStyles.length - 1];
+
     const finalUrl = isTodayCompleted
         ? currentLight.url
         : grayLightUrl;
@@ -82,7 +103,10 @@ const Lights = ({ num, isTodayCompleted }) => {
         <>
             <div className={c.Lights}>
                 <img className={c.img} src={finalUrl} alt={t('seriesFire')} />
-                <div className={`${c.text} ${isTodayCompleted ? c.orange : c.grey}`}>
+                <div
+                    className={`${c.text} ${isTodayCompleted ? c.orange : c.grey}`}
+                    style={isTodayCompleted ? activeNumberStyle : undefined}
+                >
                     {num}
                 </div>
             </div>
@@ -96,7 +120,12 @@ const Lights = ({ num, isTodayCompleted }) => {
                             alt="Fire"
                         />
 
-                        <h1 className={c.number}>{num}</h1>
+                        <h1
+                            className={c.number}
+                            style={isTodayCompleted ? activeNumberStyle : undefined}
+                        >
+                            {num}
+                        </h1>
                         <p className={c.title}>{currentText.title}</p>
                         <p className={c.subtitle}>{currentText.subtitle}</p>
 

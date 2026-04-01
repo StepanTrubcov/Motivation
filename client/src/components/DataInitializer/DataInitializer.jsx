@@ -77,9 +77,9 @@ const DataInitializer = ({ children }) => {
     useEffect(() => {
         if (user && ThereAreUsers && assignmentsLoaded) {
             setShowBottomNav(true);
-            const newStatusAssignment = (achievement, userId) => {
-                dispatch(getAchievementsNewStatus(achievement, userId))
-                dispatch(setPoints(userId, achievement.points))
+            const newStatusAssignment = async (achievement, userId) => {
+                await dispatch(getAchievementsNewStatus(achievement, userId));
+                await dispatch(setPoints(userId, achievement.points));
                 toast.success(t('newAchievement'), {
                     style: {
                         background: '#333',
@@ -88,11 +88,20 @@ const DataInitializer = ({ children }) => {
                     }
                 });
             };
-            checkAll(assignments, triggeredRef, goals, newStatusAssignment, user.id, user.registrationDate);
+            (async () => {
+                await checkAll(
+                    assignments,
+                    triggeredRef,
+                    goals,
+                    newStatusAssignment,
+                    user.id,
+                    user.registrationDate
+                );
+            })();
         } else {
             setShowBottomNav(false);
         }
-    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav, assignments, goals, t]);
+    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav, assignments, goals, t, dispatch]);
 
     if (!user) {
         return <LoadingScreen title={t('loadingUser')} />;

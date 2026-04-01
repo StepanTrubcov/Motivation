@@ -43,6 +43,21 @@ const RARITY_COLORS = {
   },
 };
 
+const RARITY_LABELS = {
+  ru: {
+    common: 'Обычные',
+    rare: 'Редкие',
+    legendary: 'Легендарные',
+    epic: 'Эпические',
+  },
+  en: {
+    common: 'Common',
+    rare: 'Rare',
+    legendary: 'Legendary',
+    epic: 'Epic',
+  },
+};
+
 export const runtime = 'nodejs';
 
 let fontRegistered = false;
@@ -91,7 +106,10 @@ async function generateImageBuffer({
   username = 'user',
   img,
   rarityClass = 'common',
+  language = 'ru',
 }) {
+  const lang = language === 'en' ? 'en' : 'ru';
+
   const baseWidth = 720;
   const cardScale = 0.3;
   const cardWidth = Math.round(baseWidth * cardScale);
@@ -110,6 +128,7 @@ async function generateImageBuffer({
   cardCtx.scale(dpiScale, dpiScale);
 
   const rarity = RARITY_COLORS[rarityClass] || RARITY_COLORS.common;
+  const rarityLabel = RARITY_LABELS[lang]?.[rarityClass] || RARITY_LABELS[lang]?.common || 'Common';
 
   const boldFontFamily = fontRegistered ? 'Inter-Bold' : 'Arial';
 
@@ -158,7 +177,7 @@ async function generateImageBuffer({
   cardCtx.font = `700 ${Math.round(30 * cardScale)}px "${boldFontFamily}"`;
   cardCtx.textAlign = 'center';
   cardCtx.textBaseline = 'middle';
-  cardCtx.fillText(rarity.label, 0, 0);
+  cardCtx.fillText(rarityLabel, 0, 0);
   cardCtx.restore();
 
   // ===== Title =====
@@ -304,6 +323,7 @@ export async function POST(request) {
       username: body.username || 'user',
       img: body.img,
       rarityClass: body.rarityClass || 'common',
+      language: body.language || 'ru',
     });
 
     const id = randomUUID();

@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
-export async function createImageAndShare({ title, description, username, points }) {
+export async function createImageAndShare({ title, description, username, points, language = 'ru' }) {
   try {
     // 1) создаём картинку на сервере; передаём нормальные строки, НЕ encodeURIComponent(...)
     const res = await axios.post(`${BASE_URL}/api/og-image`, {
@@ -10,6 +10,7 @@ export async function createImageAndShare({ title, description, username, points
       description,
       username,
       points: String(points ?? 0),
+      language,
     }, {
       headers: { 'Content-Type': 'application/json' }
     });
@@ -61,7 +62,7 @@ export async function createImageAndShare({ title, description, username, points
 }
 
 // Функция для генерации изображения и получения URL
-export async function generateImage({ title, img, points, rarityClass }) {
+export async function generateImage({ title, img, points, rarityClass, language = 'ru' }) {
   try {
     // создаём картинку на сервере; передаём нормальные строки, НЕ encodeURIComponent(...)
     const res = await axios.post(`${BASE_URL}/api/og-image`, {
@@ -69,6 +70,7 @@ export async function generateImage({ title, img, points, rarityClass }) {
       img,
       points: String(points ?? 0),
       rarityClass,
+      language,
     }, {
       headers: { 'Content-Type': 'application/json' }
     });

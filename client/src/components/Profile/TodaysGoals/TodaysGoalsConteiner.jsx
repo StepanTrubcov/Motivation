@@ -9,7 +9,6 @@ import Filter from "../../../utils/Filter/filter";
 import { addStatusNew, addGoals, addStatus, newStatusSavingGoal, deleteGoalsSaving,checkTimeGoalsSaving } from "../../../redux/goals_reducer";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
-import ModalWindow from "../../../utils/ModalWindow/ModalWindow";
 import { setPoints, deletePoints } from "../../../redux/profile_reducer";
 
 const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsSaving, newStatusSavingGoal, profile, addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
@@ -34,6 +33,21 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
             return goals.goals;
         }
     }, [goals?.goals, language]);
+
+    const inProgressGoals = useMemo(
+        () => translatedGoals.filter((g) => g.status === 'in_progress'),
+        [translatedGoals]
+    );
+    const completedGoalsList = useMemo(
+        () => translatedGoals.filter((g) => g.status === 'completed'),
+        [translatedGoals]
+    );
+    const completedCount = completedGoalsList.length;
+    const totalTodayGoals = inProgressGoals.length + completedGoalsList.length;
+    const pointsFromCompletedToday = completedGoalsList.reduce(
+        (acc, g) => acc + (Number(g.points) || 0),
+        0
+    );
 
     useEffect(() => {
         if (userId) {
@@ -177,6 +191,9 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
 
     return <div data-tutorial-id="complete-goal">
         <TodaysGoals
+            completedCount={completedCount}
+            totalTodayGoals={totalTodayGoals}
+            pointsFromCompletedToday={pointsFromCompletedToday}
             completed={Filter(
                 translatedGoals,
                 "completed",
@@ -184,9 +201,10 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png",
                 false,
                 addOldStatus,
-                isTutorialOpen
+                isTutorialOpen,
+                true
             )}
-            inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus, isTutorialOpen && currentStep?.id !== 'complete-goal')} />
+            inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus, isTutorialOpen && currentStep?.id !== 'complete-goal', true)} />
     </div>
 }
 

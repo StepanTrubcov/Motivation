@@ -1,69 +1,114 @@
-export const checkAll = (assignments, triggeredRef, goals, newStatusAssignment, userId, userRegistrationStub) => {
-    try {
-        const registrationDate = new Date(userRegistrationStub);
+/**
+ * Нормализует ID цели к «базовому» числовому id (как в шаблоне целей: "1", "68").
+ * Поддерживает составные id вида `${userId}_1` или cuid с числовым суффиксом.
+ */
+export function normalizeGoalIdFromGoal(goal) {
+  if (!goal || goal.id == null) return null;
+  const id = String(goal.id);
+  const m = id.match(/(\d+)$/);
+  return m ? m[1] : id;
+}
 
-        if (!Array.isArray(assignments)) {
-            console.error('Assignments is not an array:', assignments);
-            return;
-        }
+function isNumericGoalIdToken(s) {
+  return typeof s === 'string' && /^\d+$/.test(s.trim());
+}
 
-        if (!Array.isArray(goals)) {
-            console.error('Goals is not an array:', goals);
-            return;
-        }
+/**
+ * Цели, относящиеся к achievement.goalIds:
+ * - если токен только цифры — матч по normalizeGoalIdFromGoal(goal)
+ * - иначе — legacy: матч по goal.title (старые данные в БД)
+ */
+function goalsMatchingAchievementGoalIds(goals, goalIds) {
+  if (!Array.isArray(goals) || !Array.isArray(goalIds)) return [];
 
-        assignments.forEach((achievement, index) => {
-            try {
+  return goals.filter((g) => {
+    const norm = normalizeGoalIdFromGoal(g);
+    return goalIds.some((token) => {
+      const t = typeof token === 'string' ? token.trim() : String(token);
+      if (isNumericGoalIdToken(t)) return norm === t;
+      return g.title === t;
+    });
+  });
+}
 
-                const aid = String(achievement.id);
-                if (achievement.status === "my") {
-                    return;
-                }
+/**
+ * Проверка unlock ачивок. newStatusAssignment может быть async — после успеха добавляем id в triggeredRef.
+ */
+export async function checkAll(
+  assignments,
+  triggeredRef,
+  goals,
+  newStatusAssignment,
+  userId,
+  userRegistrationStub
+) {
+  try {
+    const registrationDate = userRegistrationStub ? new Date(userRegistrationStub) : null;
+    const registrationValid =
+      registrationDate && !Number.isNaN(registrationDate.getTime());
 
-                if (triggeredRef.current.has(aid)) {
-                    return;
-                }
-
-                if (achievement.type === "goal_based" && Array.isArray(achievement.goalIds)) {
-                    // Теперь фильтруем по названию целей (title), а не по ID
-                    const related = goals.filter((g) => {
-                        const goalTitle = g.title;
-                        const includes = achievement.goalIds.includes(goalTitle);
-                        return includes;
-                    });
-
-                    if (!Array.isArray(related) || related.length === 0) {
-                        return;
-                    }
-
-                    let progressSum = 0;
-                    related.forEach((goal, goalIndex) => {
-                        const progressValue = Number(goal.progress) || 0;
-                        progressSum += progressValue;
-                    });
-
-                    if (progressSum >= Number(achievement.target || 0)) {
-                        triggeredRef.current.add(aid);
-                        newStatusAssignment(achievement, userId);
-                        return;
-                    }
-                }
-
-                if (achievement.type === "time_based") {
-                    const diffDays = Math.floor((Date.now() - registrationDate.getTime()) / (1000 * 60 * 60 * 24));
-
-                    if (diffDays > Number(achievement.target || 0)) {
-                        triggeredRef.current.add(aid);
-                        newStatusAssignment(achievement, userId);
-                        return;
-                    }
-                }
-            } catch (achievementError) {
-                console.error(`Error processing achievement ${achievement?.title || achievement?.id}:`, achievementError);
-            }
-        });
-
-    } catch (error) {
-        console.error('Error in checkAll function:', error);
+    if (!Array.isArray(assignments)) {
+      console.error('Assignments is not an array:', assignments);
+      return;
     }
-};
+
+    if (!Array.isArray(goals)) {
+      console.error('Goals is not an array:', goals);
+      return;
+    }
+
+    for (const achievement of assignments) {
+      try {
+        const aid = String(achievement.id);
+        if (achievement.status === 'my') continue;
+        if (triggeredRef.current.has(aid)) continue;
+
+        if (achievement.type === 'goal_based' && Array.isArray(achievement.goalIds)) {
+          const related = goalsMatchingAchievementGoalIds(goals, achievement.goalIds);
+
+          if (!related.length) continue;
+
+          let progressSum = 0;
+          related.forEach((goal) => {
+            progressSum += Number(goal.progress) || 0;
+          });
+
+          if (progressSum >= Number(achievement.target || 0)) {
+            try {
+              await newStatusAssignment(achievement, userId);
+              triggeredRef.current.add(aid);
+            } catch (e) {
+              console.error(`Unlock failed for achievement ${aid}:`, e);
+            }
+          }
+          continue;
+        }
+
+        if (achievement.type === 'time_based') {
+          if (!registrationValid) continue;
+
+          const diffDays = Math.floor(
+            (Date.now() - registrationDate.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          const target = Number(achievement.target || 0);
+
+          if (diffDays >= target) {
+            try {
+              await newStatusAssignment(achievement, userId);
+              triggeredRef.current.add(aid);
+            } catch (e) {
+              console.error(`Unlock failed for time_based achievement ${aid}:`, e);
+            }
+          }
+        }
+      } catch (achievementError) {
+        console.error(
+          `Error processing achievement ${achievement?.title || achievement?.id}:`,
+          achievementError
+        );
+      }
+    }
+  } catch (error) {
+    console.error('Error in checkAll function:', error);
+  }
+}

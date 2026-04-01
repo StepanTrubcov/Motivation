@@ -380,7 +380,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Пробежать 1 км"
+        "1"
       ],
       "rarity": "common",
       "target": 30
@@ -395,7 +395,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Читать книгу 20 минут"
+       "2"
       ],
       "rarity": "common",
       "target": 30
@@ -410,7 +410,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Кодить 1 час за ноутбуком"
+        "4"
       ],
       "rarity": "common",
       "target": 30
@@ -424,7 +424,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Провести день без сладкого"
+       "68"
       ],
       "rarity": "common",
       "target": 30,
@@ -440,7 +440,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Рано проснуться"
+       "36"
       ],
       "rarity": "common",
       "target": 30
@@ -455,7 +455,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Облиться холодной водой"
+        "16"
       ],
       "rarity": "common",
       "target": 30
@@ -470,7 +470,7 @@ export async function initializeAchievements(userId) {
       "points": 250,
       "type": "goal_based",
       "goalIds": [
-        "Сделать 20 отжиманий"
+        "8"
       ],
       "rarity": "common",
       "target": 30
@@ -497,7 +497,7 @@ export async function initializeAchievements(userId) {
       "points": 500,
       "type": "goal_based",
       "goalIds": [
-        "Пробежать 1 км"
+        "1"
       ],
       "rarity": "rare",
       "target": 60
@@ -512,7 +512,7 @@ export async function initializeAchievements(userId) {
       "points": 500,
       "type": "goal_based",
       "goalIds": [
-        "Читать книгу 20 минут"
+        "2"
       ],
       "rarity": "rare",
       "target": 60
@@ -527,7 +527,7 @@ export async function initializeAchievements(userId) {
       "points": 500,
       "type": "goal_based",
       "goalIds": [
-        "Кодить 1 час за ноутбуком"
+        "4"
       ],
       "rarity": "rare",
       "target": 60
@@ -542,7 +542,7 @@ export async function initializeAchievements(userId) {
       "points": 500,
       "type": "goal_based",
       "goalIds": [
-        "Провести день без сладкого"
+        "68"
       ],
       "rarity": "rare",
       "target": 60
@@ -556,9 +556,8 @@ export async function initializeAchievements(userId) {
       "image": "https://i.postimg.cc/cJwjgWgm/image-(1)-kopia-2.jpg",
       "points": 500,
       "type": "goal_based",
-      "goalIds": [
-        
-"Рано проснуться"
+      "goalIds": [       
+"36"
       ],
       "rarity": "rare",
       "target": 60
@@ -573,7 +572,7 @@ export async function initializeAchievements(userId) {
       "points": 500,
       "type": "goal_based",
       "goalIds": [
-        "Облиться холодной водой"
+        "16"
       ],
       "rarity": "rare",
       "target": 60
@@ -588,7 +587,7 @@ export async function initializeAchievements(userId) {
       "points": 500,
       "type": "goal_based",
       "goalIds": [
-        "Сделать 20 отжиманий"
+        "8"
       ],
       "rarity": "rare",
       "target": 60
@@ -615,7 +614,7 @@ export async function initializeAchievements(userId) {
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
-        "Пробежать 1 км"
+        "1"
       ],
       "rarity": "legendary",
       "target": 120
@@ -630,7 +629,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/XJpbzJsw/Untitled-kopia-8.gif",
       "type": "goal_based",
       "goalIds": [
-        "Облиться холодной водой"
+        "16"
       ],
       "rarity": "legendary",
       "target": 120
@@ -645,7 +644,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/Qx5XDFhz/Untitled-kopia-2.gif",
       "type": "goal_based",
       "goalIds": [
-        "Кодить 1 час за ноутбуком"
+        "4"
       ],
       "rarity": "legendary",
       "target": 120
@@ -660,7 +659,7 @@ export async function initializeAchievements(userId) {
       "type": "goal_based",
       "gif": "https://i.postimg.cc/x8cWt41D/5.gif",
       "goalIds": [
-        "Сделать 20 отжиманий"
+        "8"
       ],
       "rarity": "legendary",
       "target": 120
@@ -675,7 +674,7 @@ export async function initializeAchievements(userId) {
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
-        "Читать книгу 20 минут"
+        "2"
       ],
       "rarity": "legendary",
       "target": 120
@@ -690,7 +689,7 @@ export async function initializeAchievements(userId) {
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
-        "Провести день без сладкого"
+        "68"
       ],
       "rarity": "legendary",
       "target": 120
@@ -705,7 +704,7 @@ export async function initializeAchievements(userId) {
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
-        "Рано проснуться"
+        "36"
       ],
       "rarity": "legendary",
       "target": 120

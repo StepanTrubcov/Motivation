@@ -1,6 +1,131 @@
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
+function normTitle(t) {
+  return (t || '').trim();
+}
+
+function normalizeTemplateId(value) {
+  if (value == null) return null;
+  const s = String(value).trim();
+  if (!/^([1-9]|1[0-9]|2[0-6])$/.test(s)) return null;
+  return s;
+}
+
+/** Совпадение строки из БД с объектом из шаблона: одно и то же «логическое» достижение (не только title). */
+function sameTitleAndTarget(row, ach) {
+  if (normTitle(row.title) !== normTitle(ach.title)) return false;
+  const rt = row.target != null ? Number(row.target) : null;
+  const at = ach.target != null ? Number(ach.target) : null;
+  return rt === at;
+}
+
+function templateTitleTargetKeyFromAch(ach) {
+  return `${normTitle(ach?.title)}|${ach?.target ?? 'null'}`;
+}
+
+function pickKeepRow(rows) {
+  const my = rows.filter((r) => r.status === 'my');
+  const pool = my.length ? my : rows;
+  return [...pool].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))[0];
+}
+
+/** При одинаковом title+target предпочитаем строку с заполненным templateId (основная запись). */
+function pickKeepRowPreferTemplate(rows) {
+  const withTpl = rows.filter((r) => r.templateId);
+  const pool = withTpl.length ? withTpl : rows;
+  return pickKeepRow(pool);
+}
+
+/**
+ * Убирает дубликаты в БД: сначала по templateId, затем по паре (title + target) по всем строкам,
+ * чтобы слить «основную» строку и дубликат без templateId с тем же смыслом.
+ */
+async function dedupeUserAchievements(userId) {
+  const rows = await prisma.achievement.findMany({ where: { userId } });
+  const idsToDelete = new Set();
+
+  const byTemplate = new Map();
+  for (const r of rows) {
+    if (!r.templateId) continue;
+    const list = byTemplate.get(r.templateId) || [];
+    list.push(r);
+    byTemplate.set(r.templateId, list);
+  }
+  for (const [, list] of byTemplate) {
+    if (list.length <= 1) continue;
+    const keep = pickKeepRow(list);
+    for (const r of list) {
+      if (r.id !== keep.id) idsToDelete.add(r.id);
+    }
+  }
+
+  const remainingAfterTpl = rows.filter((r) => !idsToDelete.has(r.id));
+  const byTitleTarget = new Map();
+  for (const r of remainingAfterTpl) {
+    const key = `${normTitle(r.title)}|${r.target ?? 'null'}`;
+    const list = byTitleTarget.get(key) || [];
+    list.push(r);
+    byTitleTarget.set(key, list);
+  }
+  for (const [, list] of byTitleTarget) {
+    if (list.length <= 1) continue;
+    const keep = pickKeepRowPreferTemplate(list);
+    for (const r of list) {
+      if (r.id !== keep.id) idsToDelete.add(r.id);
+    }
+  }
+
+  if (idsToDelete.size > 0) {
+    await prisma.achievement.deleteMany({
+      where: { userId, id: { in: [...idsToDelete] } },
+    });
+  }
+}
+
+/**
+ * На чтении: один смысловой ключ на карточку — не показываем дубликаты, даже если в БД ещё остались.
+ * Приоритет: строка с templateId, затем status my, затем свежая updatedAt.
+ */
+function rowScore(r) {
+  let s = 0;
+  if (r.templateId) s += 1e9;
+  if (r.status === 'my') s += 1e6;
+  s += new Date(r.updatedAt).getTime() / 1000;
+  return s;
+}
+
+function uniqueAchievementsForClient(rows) {
+  if (!Array.isArray(rows) || rows.length === 0) return rows;
+  const sorted = [...rows].sort((a, b) => rowScore(b) - rowScore(a));
+  const chosen = [];
+  const coveredTpl = new Set();
+  const coveredTitleTarget = new Set();
+
+  for (const r of sorted) {
+    if (!r.templateId) continue;
+    const k = `tpl:${r.templateId}`;
+    if (coveredTpl.has(k)) continue;
+    coveredTpl.add(k);
+    chosen.push(r);
+    coveredTitleTarget.add(`${normTitle(r.title)}|${r.target ?? 'null'}`);
+  }
+  for (const r of sorted) {
+    if (r.templateId) continue;
+    const tt = `${normTitle(r.title)}|${r.target ?? 'null'}`;
+    if (coveredTitleTarget.has(tt)) continue;
+    coveredTitleTarget.add(tt);
+    chosen.push(r);
+  }
+
+  return chosen.sort((a, b) => {
+    const na = a.templateId ? parseInt(a.templateId, 10) : 999;
+    const nb = b.templateId ? parseInt(b.templateId, 10) : 999;
+    if (na !== nb) return na - nb;
+    return normTitle(a.title).localeCompare(normTitle(b.title));
+  });
+}
+
 export async function POST(request, { params }) {
   try {
     const { id: userId } = await params;
@@ -10,24 +135,39 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: 'Achievements must be an array' }, { status: 400 });
     }
 
-    // IMPORTANT:
-    // This endpoint is called on every app start (initializeAchievements).
-    // It must be idempotent and MUST NOT reset already earned achievements.
-    //
-    // Strategy:
-    // - Match existing achievements by (userId + title)
-    // - If exists: update fields but preserve status="my" once earned
-    // - If missing: create with provided status (default "locked")
+    // Строгая инициализация: обрабатываем только шаблонные ачивки templateId 1..26.
+    const incomingByTemplateId = new Map();
+    for (const ach of achievements) {
+      const templateId = normalizeTemplateId(ach?.id);
+      if (!templateId) continue;
+      incomingByTemplateId.set(templateId, ach);
+    }
 
-    const existingAchievements = await prisma.achievement.findMany({ where: { userId } });
-    const existingByTitle = new Map(existingAchievements.map((a) => [a.title, a]));
+    const required = Array.from({ length: 26 }, (_, i) => String(i + 1));
+    const missing = required.filter((id) => !incomingByTemplateId.has(id));
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { error: 'Missing required template achievements', missingTemplateIds: missing },
+        { status: 400 }
+      );
+    }
+
+    await dedupeUserAchievements(userId);
+
+    let existingAchievements = await prisma.achievement.findMany({ where: { userId } });
 
     const results = [];
-    for (const ach of achievements) {
+    for (const templateId of required) {
+      const ach = incomingByTemplateId.get(templateId);
       const title = ach?.title;
       if (!title) continue;
 
-      const existing = existingByTitle.get(title);
+      let existing = null;
+      existing = existingAchievements.find((a) => a.templateId === templateId);
+      if (!existing) {
+        existing = existingAchievements.find((a) => sameTitleAndTarget(a, ach));
+      }
+
       const desiredStatus = ach.status || 'locked';
       const nextStatus = existing?.status === 'my' ? 'my' : desiredStatus;
 
@@ -35,39 +175,59 @@ export async function POST(request, { params }) {
         const updated = await prisma.achievement.update({
           where: { id: existing.id },
           data: {
-            description: ach.description || "",
-            requirement: ach.requirement || "",
+            templateId: templateId || existing.templateId || null,
+            description: ach.description || '',
+            requirement: ach.requirement || '',
             status: nextStatus,
-            image: ach.image || "",
-            gif: ach.gif || "",
+            image: ach.image || '',
+            gif: ach.gif || '',
             points: ach.points || 0,
             type: ach.type || null,
             goalIds: ach.goalIds || [],
-            target: ach.target || null,
-            rarity: ach.rarity || "common",
+            target: ach.target != null ? ach.target : null,
+            rarity: ach.rarity || 'common',
           },
         });
         results.push(updated);
+        const idx = existingAchievements.findIndex((a) => a.id === existing.id);
+        if (idx !== -1) existingAchievements[idx] = updated;
       } else {
         const created = await prisma.achievement.create({
           data: {
             title,
-            description: ach.description || "",
-            requirement: ach.requirement || "",
+            templateId: templateId || null,
+            description: ach.description || '',
+            requirement: ach.requirement || '',
             status: desiredStatus,
-            image: ach.image || "",
-            gif: ach.gif || "",
+            image: ach.image || '',
+            gif: ach.gif || '',
             points: ach.points || 0,
             type: ach.type || null,
             goalIds: ach.goalIds || [],
-            target: ach.target || null,
-            rarity: ach.rarity || "common",
+            target: ach.target != null ? ach.target : null,
+            rarity: ach.rarity || 'common',
             userId,
           },
         });
         results.push(created);
+        existingAchievements.push(created);
       }
     }
+
+    // После строгой синхронизации: удаляем «лишние» строки без templateId,
+    // которые дублируют шаблонные (title+target) и могли остаться от старых багов.
+    const templateTitleTargetKeys = new Set(required.map((id) => templateTitleTargetKeyFromAch(incomingByTemplateId.get(id))));
+    await prisma.achievement.deleteMany({
+      where: {
+        userId,
+        templateId: null,
+        OR: [...templateTitleTargetKeys].map((k) => {
+          const [title, targetRaw] = k.split('|');
+          const target = targetRaw === 'null' ? null : Number(targetRaw);
+          return { title, target };
+        }),
+      },
+    });
 
     return NextResponse.json(results);
   } catch (error) {
@@ -81,10 +241,10 @@ export async function GET(request, { params }) {
     const { id: userId } = await params;
 
     const achievements = await prisma.achievement.findMany({
-      where: { userId }
+      where: { userId },
     });
 
-    return NextResponse.json(achievements);
+    return NextResponse.json(uniqueAchievementsForClient(achievements));
   } catch (error) {
     console.error('Error fetching achievements:', error);
     return NextResponse.json({ error: 'Не удалось получить достижения' }, { status: 500 });
