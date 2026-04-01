@@ -202,9 +202,9 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 false,
                 addOldStatus,
                 isTutorialOpen,
-                true
+                false
             )}
-            inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus, isTutorialOpen && currentStep?.id !== 'complete-goal', true)} />
+            inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus, isTutorialOpen && currentStep?.id !== 'complete-goal', false)} />
     </div>
 }
 
