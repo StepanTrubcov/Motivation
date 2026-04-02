@@ -7,7 +7,7 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 5px;
+    padding: 8px;
     background-color: var(--accent-green, #00ff1e);
     color: rgb(0, 0, 0);
     border-radius: 5px;

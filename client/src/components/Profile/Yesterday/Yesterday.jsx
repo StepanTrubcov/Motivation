@@ -212,8 +212,7 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
                     {map}
                     <div className={c.GenerationButton} >
                         <button className={c.button} onClick={generation} >
-                            <img className={c.imgButton} src="https://cdn-icons-png.flaticon.com/512/11865/11865338.png" />
-                            <div className={c.textButton} > {t('generateReport')}</div>
+                        📊 <div className={c.textButton} > {t('generateReport')}</div>
                         </button>
                     </div>
                     {generatedText &&
