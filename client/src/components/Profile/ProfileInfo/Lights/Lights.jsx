@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from '@/context/LanguageContext';
 import c from "./Lights.module.css";
 
@@ -6,21 +6,21 @@ const Lights = ({ num, isTodayCompleted }) => {
     const { t } = useLanguage();
 
     const levelsOfLights = [
-        { url: "https://i.postimg.cc/KYgdfzYy/2-1-no-bg-preview-(carve-photos).png", daysMin: 2, daysMax: 4 },
-        { url: "https://i.postimg.cc/fybCH2v7/2-2-no-bg-preview-(carve-photos).png", daysMin: 5, daysMax: 8 },
-        { url: "https://i.postimg.cc/KvRQBWjz/2-3-no-bg-preview-(carve-photos).png", daysMin: 9, daysMax: 12 },
-        { url: "https://i.postimg.cc/Sx9rtzcV/2-4-edited-free-(carve-photos).png", daysMin: 13, daysMax: 16 },
-        { url: "https://i.postimg.cc/QCVggBXR/2-5-no-bg-preview-(carve-photos).png", daysMin: 17, daysMax: 22 },
-        { url: "https://i.postimg.cc/wxbQqk2j/2-6-no-bg-preview-(carve-photos).png", daysMin: 23, daysMax: 30 },
-        { url: "https://i.postimg.cc/Jhqj9309/2-7-no-bg-preview-(carve-photos).png", daysMin: 31, daysMax: 45 },
-        { url: "https://i.postimg.cc/NGVRqjsV/2-8-edited-free-(carve-photos).png", daysMin: 46, daysMax: 60 },
-        { url: "https://i.postimg.cc/YSpWf4R3/2-9-no-bg-preview-(carve-photos).png", daysMin: 61, daysMax: 89 },
-        { url: "https://i.postimg.cc/Gts8hvL5/2-10-no-bg-preview-(carve-photos).png", daysMin: 90, daysMax: 120 },
+        { url: "https://i.postimg.cc/KYgdfzYy/2-1-no-bg-preview-(carve-photos).png", daysMin: 2, daysMax: 9 },
+        { url: "https://i.postimg.cc/SRt1ybVn/2-2-no-bg-preview-(carve-photos)-edited-free-(carve-photos).png", daysMin: 10, daysMax: 19 },
+        { url: "https://i.postimg.cc/KvRQBWjz/2-3-no-bg-preview-(carve-photos).png", daysMin: 20, daysMax: 35 },
+        { url: "https://i.postimg.cc/Sx9rtzcV/2-4-edited-free-(carve-photos).png", daysMin: 36, daysMax: 50 },
+        { url: "https://i.postimg.cc/BvB0JtFx/2-5-no-bg-preview-(carve-photos)-edited-free-(carve-photos).png", daysMin: 51, daysMax: 65 },
+        { url: "https://i.postimg.cc/wxbQqk2j/2-6-no-bg-preview-(carve-photos).png", daysMin: 66, daysMax: 80 },
+        { url: "https://i.postimg.cc/Jhqj9309/2-7-no-bg-preview-(carve-photos).png", daysMin: 81, daysMax: 95 },
+        { url: "https://i.postimg.cc/NGVRqjsV/2-8-edited-free-(carve-photos).png", daysMin: 96, daysMax: 110 },
+        { url: "https://i.postimg.cc/YSpWf4R3/2-9-no-bg-preview-(carve-photos).png", daysMin: 111, daysMax: 140 },
+        { url: "https://i.postimg.cc/Gts8hvL5/2-10-no-bg-preview-(carve-photos).png", daysMin: 141, daysMax: 190 },
     ];
 
     const grayLightUrl = "https://i.postimg.cc/gJDK9gn6/752049b9-f85f-4d4e-a777-58c12ac42fbd.png";
 
-    const milestones = [2, 5, 10, 30, 60, 100, 120];
+    const milestones = [2, 5, 10, 30, 60, 100, 120, 150, 180, 210, 240, 270, 300, 330, 365];
 
     const milestoneTexts = {
         2: {
@@ -28,8 +28,8 @@ const Lights = ({ num, isTodayCompleted }) => {
             subtitle: t('milestone2Subtitle')
         },
         5: {
-            title: t('milestone5Title'),
-            subtitle: t('milestone5Subtitle')
+            title: t('milestone4Title'),
+            subtitle: t('milestone4Subtitle')
         },
         10: {
             title: t('milestone10Title'),
@@ -50,12 +50,56 @@ const Lights = ({ num, isTodayCompleted }) => {
         120: {
             title: t('milestone120Title'),
             subtitle: t('milestone120Subtitle')
+        },
+        150: {
+            title: t('milestone150Title'),
+            subtitle: t('milestone150Subtitle')
+        },
+        180: {
+            title: t('milestone180Title'),
+            subtitle: t('milestone180Subtitle')
+        },
+        210: {
+            title: t('milestone210Title'),
+            subtitle: t('milestone210Subtitle')
+        },
+        240: {
+            title: t('milestone240Title'),
+            subtitle: t('milestone240Subtitle')
+        },
+        270: {
+            title: t('milestone270Title'),
+            subtitle: t('milestone270Subtitle')
+        },
+        300: {
+            title: t('milestone300Title'),
+            subtitle: t('milestone300Subtitle')
+        },
+        330: {
+            title: t('milestone330Title'),
+            subtitle: t('milestone330Subtitle')
+        },
+        365: {
+            title: t('milestone365Title'),
+            subtitle: t('milestone365Subtitle')
         }
     };
 
     const [showCongrats, setShowCongrats] = useState(false);
+    const prevNumRef = useRef(num);
 
     useEffect(() => {
+        if (prevNumRef.current >= 2 && num < 2) {
+            try {
+                localStorage.removeItem('shownMilestones');
+            } catch (e) {
+                // localStorage может быть недоступен — не валим UI
+            }
+            setShowCongrats(false);
+            prevNumRef.current = num;
+            return;
+        }
+
         if (milestones.includes(num) && isTodayCompleted) {
             const shownMilestones = JSON.parse(localStorage.getItem('shownMilestones') || '[]');
             if (!shownMilestones.includes(num)) {
@@ -63,9 +107,11 @@ const Lights = ({ num, isTodayCompleted }) => {
                 localStorage.setItem('shownMilestones', JSON.stringify([...shownMilestones, num]));
             }
         }
+
+        prevNumRef.current = num;
     }, [num, isTodayCompleted]);
 
-    if (num < 2) return null;
+    if (num < 2) return <div className={c.Lights}><img className={c.img} src={grayLightUrl} alt={t('seriesFire')} /></div>;
 
     const currentLight =
         levelsOfLights.find(

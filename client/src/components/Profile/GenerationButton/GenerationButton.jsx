@@ -72,11 +72,7 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
                 disabled={loading}
             >
                 <div className={c.text}>
-                    <img
-                        className={c.img}
-                        src="https://cdn-icons-png.flaticon.com/512/11865/11865338.png"
-                        alt="generate"
-                    />
+                📊
                     {t('generate')}
                 </div>
             </button>

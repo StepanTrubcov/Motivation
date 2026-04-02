@@ -4,11 +4,12 @@
   align-items: center;
   justify-content: space-between;
   background: var(--card-bg-tertiary, #212121);
-  border-radius: 14px;
+  border-radius: 8px;
   padding: 10px;
   box-shadow: var(--shadow, 0 4px 15px rgba(0, 255, 0, 0.1));
   gap: 25px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .light-theme .points_scale {

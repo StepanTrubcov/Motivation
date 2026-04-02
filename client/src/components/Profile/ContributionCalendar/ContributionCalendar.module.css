@@ -6,6 +6,7 @@
     box-shadow: var(--shadow, none);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     color: var(--foreground, #ffffff);
+    border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .light-theme .calendar {

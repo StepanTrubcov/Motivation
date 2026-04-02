@@ -1,41 +1,64 @@
 .ProfileInfo {
-    margin-top: 30px;
     display: flex;
-    margin-bottom: 30px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .avatar {
-    max-width: 80px;
-    max-height: 80px;
+    max-width: 70px;
+    max-height: 70px;
     border-radius: 100%;
+    margin: 10px;
 }
 
-.nameLights{
+.nameLights {
     display: flex;
     align-items: center;
 }
 
 .info {
-    margin-left: 30px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .name {
-    font-weight: 500;
-    font-size: 25px;
-    margin-top: 10px;
+    margin-left: 10px;
+    font-weight: 600;
+    font-size: 35px;
     color: var(--foreground, #ffffff);
     transition: color 0.3s ease;
 }
 
+.lights {
+    width: 100%;
+    background: var(--card-bg, #0d1117);
+    border-radius: 8px;
+    padding: 5px;
+    margin-left: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
 .glasses {
+    text-align: center;
+    background: var(--card-bg, #0d1117);
+    width: 100%;
+    border-radius: 8px;
+    padding: 5px;
     color: var(--accent-green, #00ff1e);
     text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
     font-weight: 600;
-    font-size: 30px;
+    font-size: 25px;
     transition: color 0.3s ease, text-shadow 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .blok {
-    display: flex;
-    justify-content:space-between;
+    /* background: var(--card-bg-tertiary, #212121); */
+    /* border-radius: 14px; */
+    /* box-shadow: var(--shadow, none);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; */
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
