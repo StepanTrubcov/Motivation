@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import GitHubCalendar from "react-github-contribution-calendar";
 import { useTheme } from '@/context/ThemeContext';
+import { useLanguage } from '@/context/LanguageContext';
 import c from './ContributionCalendar.module.css';
 
 import transformDates from './transformDates';
@@ -50,15 +51,23 @@ function endOfWeekSaturdayUTC(iso) {
   return isoFromDateUTC(dt);
 }
 
-const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const WEEK_NAMES = ['', 'M', '', 'W', '', 'F', ''];
+const MONTH_NAMES_BY_LANG = {
+  en: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  ru: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+};
+const WEEK_NAMES_BY_LANG = {
+  en: ['', 'M', '', 'W', '', 'F', ''],
+  ru: ['', 'Пн', '', 'Ср', '', 'Пт', ''],
+};
 
-const FireCalendarSvg = ({ valuesMap, until, columns, emptyColor }) => {
+const FireCalendarSvg = ({ valuesMap, until, columns, emptyColor, language }) => {
   const monthLabelHeight = 15;
   const weekLabelWidth = 15;
   const panelSize = 11;
   const panelMargin = 2;
   const bounds = panelSize + panelMargin;
+  const monthNames = MONTH_NAMES_BY_LANG?.[language] || MONTH_NAMES_BY_LANG.en;
+  const weekNames = WEEK_NAMES_BY_LANG?.[language] || WEEK_NAMES_BY_LANG.en;
 
   const lastWeekend = endOfWeekSaturdayUTC(until);
   const startOfGrid = isoAddDays(lastWeekend, -(columns * 7 - 1));
@@ -160,14 +169,14 @@ const FireCalendarSvg = ({ valuesMap, until, columns, emptyColor }) => {
           y={monthLabelHeight - panelSize / 2 - 2}
           textAnchor="middle"
         >
-          {MONTH_NAMES[monthIdx]}
+          {monthNames[monthIdx]}
         </text>
       );
       prevMonth = monthIdx;
     }
   }
 
-  const weekLabels = WEEK_NAMES.map((label, i) => (
+  const weekLabels = weekNames.map((label, i) => (
     <text
       key={`w_${i}`}
       style={{ fontSize: 9, alignmentBaseline: 'central', fill: '#AAA' }}
@@ -212,7 +221,7 @@ function getPanelColorsFromAccent(accentHex, theme) {
   return [empty, mix(0.25), mix(0.5), mix(0.75), accentHex];
 }
 
-const DailyProgressLine = ({ valuesMap, until, daysCount, accentColor, theme }) => {
+const DailyProgressLine = ({ valuesMap, until, daysCount, accentColor, theme, language }) => {
   // Build last N days ending at `until` (inclusive).
   const monthLabelHeight = 12;
   const leftPad = 10;
@@ -280,7 +289,7 @@ const DailyProgressLine = ({ valuesMap, until, daysCount, accentColor, theme }) 
         display: 'block',
         fontFamily: 'Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif',
       }}
-      aria-label="Progress for last 60 days"
+      aria-label={language === 'ru' ? 'Прогресс за последние 60 дней' : 'Progress for last 60 days'}
     >
       {/* subtle grid */}
       <line x1={leftPad} y1={baseY + chartH * 0.25} x2={w - rightPad} y2={baseY + chartH * 0.25} stroke={gridColor} strokeWidth="1" />
@@ -301,6 +310,7 @@ const VARIANT_STORAGE_KEY = 'calendar-variant-index';
 const ContributionCalendar = ({ calendarData }) => {
   const [values, setValues] = useState([]);
   const { theme, accentColor } = useTheme();
+  const { language } = useLanguage();
   const scrollerRef = useRef(null);
   const initialAppliedRef = useRef(false);
   const page2WrapRef = useRef(null);
@@ -318,6 +328,9 @@ const ContributionCalendar = ({ calendarData }) => {
     () => getPanelColorsFromAccent(accentColor, theme),
     [accentColor, theme]
   );
+
+  const monthNames = MONTH_NAMES_BY_LANG?.[language] || MONTH_NAMES_BY_LANG.en;
+  const weekNames = WEEK_NAMES_BY_LANG?.[language] || WEEK_NAMES_BY_LANG.en;
 
   // Match library responsive column count for the SVG variant.
   useEffect(() => {
@@ -377,20 +390,13 @@ const ContributionCalendar = ({ calendarData }) => {
       if (tId) window.clearTimeout(tId);
       tId = window.setTimeout(() => {
         snapNow();
-      }, 140);
+      }, 220);
     };
 
     el.addEventListener('scroll', onScroll, { passive: true });
-    // Force snap immediately when user finishes gesture (more “snappy” UX).
-    el.addEventListener('touchend', snapNow, { passive: true });
-    el.addEventListener('pointerup', snapNow, { passive: true });
-    el.addEventListener('mouseup', snapNow, { passive: true });
     return () => {
       if (tId) window.clearTimeout(tId);
       el.removeEventListener('scroll', onScroll);
-      el.removeEventListener('touchend', snapNow);
-      el.removeEventListener('pointerup', snapNow);
-      el.removeEventListener('mouseup', snapNow);
     };
   }, []);
 
@@ -399,6 +405,8 @@ const ContributionCalendar = ({ calendarData }) => {
       values={values}
       until={until}
       panelColors={panelColors}
+      monthNames={monthNames}
+      weekNames={weekNames}
     />
   );
 
@@ -413,6 +421,7 @@ const ContributionCalendar = ({ calendarData }) => {
               until={until}
               columns={columns}
               emptyColor={panelColors[0]}
+              language={language}
             />
           </div>
         </div>
@@ -423,6 +432,7 @@ const ContributionCalendar = ({ calendarData }) => {
             daysCount={60}
             accentColor={accentColor}
             theme={theme}
+            language={language}
           />
         </div>
       </div>

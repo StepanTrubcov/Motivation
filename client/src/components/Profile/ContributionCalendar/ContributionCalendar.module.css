@@ -38,11 +38,11 @@
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x mandatory;
-    /* без momentum, чтобы snap был максимально резким */
-    -webkit-overflow-scrolling: auto;
+    /* мягкая прокрутка + momentum */
+    -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     gap: 0;
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
     touch-action: pan-x;
 }
 
@@ -53,7 +53,7 @@
 .variantPage {
     flex: 0 0 100%;
     scroll-snap-align: start;
-    scroll-snap-stop: always;
+    scroll-snap-stop: normal;
 }
 
 .dots {
