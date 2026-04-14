@@ -1,7 +1,8 @@
 .calendar {
     margin-bottom: 60px;
-    background: var(--card-bg, #0d1117);
-    padding: 20px;
+    margin-top: 15px;
+    background: var(--card-bg-tertiary, #212121);
+    padding: 5px;
     border-radius: 8px;
     box-shadow: var(--shadow, none);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -29,4 +30,52 @@
 .light-theme .calendar :global(.calendar-day-label) {
     fill: var(--foreground, #000000) !important;
     color: var(--foreground, #000000) !important;
+}
+
+.variantsScroller {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    /* без momentum, чтобы snap был максимально резким */
+    -webkit-overflow-scrolling: auto;
+    overscroll-behavior-x: contain;
+    gap: 0;
+    scroll-behavior: auto;
+    touch-action: pan-x;
+}
+
+.variantsScroller::-webkit-scrollbar {
+    height: 0;
+}
+
+.variantPage {
+    flex: 0 0 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.light-theme .dot {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dotActive {
+    background: var(--accent-green, #00ff1e);
+    box-shadow: 0 0 10px var(--accent-green-glow, rgba(0, 255, 42, 0.35));
 }

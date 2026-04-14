@@ -5,7 +5,7 @@
 
 .summaryCard {
     padding: 18px 10px;
-    background: var(--card-bg, #0d1117);
+    background: var(--card-bg-tertiary, #212121);
     border-radius: 8px;
     box-shadow: var(--shadow, none);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -46,7 +46,7 @@
     margin-top: 10px;
     height: 10px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(86, 86, 86, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.08);
     overflow: hidden;
     position: relative;

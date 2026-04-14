@@ -4,8 +4,27 @@ import c from './ProfileInfo.module.css'
 import QuestionButton from "./QuestionButton/QuestionButton";
 import LightsConteiner from "./Lights/LightsConteiner";
 
+const formatPts = (value, language) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return value ?? '';
+
+    const abs = Math.abs(n);
+    const isRu = language === 'ru';
+    const thousandSuffix = isRu ? 'к' : 'k';
+    const millionSuffix = isRu ? 'м' : 'M';
+
+    const formatOneDecimal = (x) => {
+        const rounded = Math.round(x * 10) / 10;
+        return Number.isInteger(rounded) ? String(rounded) : String(rounded);
+    };
+
+    if (abs >= 1_000_000) return `${formatOneDecimal(n / 1_000_000)}${millionSuffix}`;
+    if (abs >= 1_000) return `${formatOneDecimal(n / 1_000)}${thousandSuffix}`;
+    return String(n);
+};
+
 const ProfileInfo = (props) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     if (!props.user) return null;
 
     const placeholderSrc = useMemo(
@@ -43,6 +62,8 @@ const ProfileInfo = (props) => {
         };
     }, [photoUrl, placeholderSrc]);
 
+    const ptsText = formatPts(props.user.pts, language);
+
     return <div className={c.blok} data-tutorial-id="profile-info">
         <div className={c.ProfileInfo} >
             <div className={c.nameLights} >
@@ -59,7 +80,7 @@ const ProfileInfo = (props) => {
             <QuestionButton />
         </div>
         <div className={c.info} >
-            <div className={c.glasses} data-tutorial-id="profile-points">{props.user.pts} {t('pts')}</div>
+            <div className={c.glasses} data-tutorial-id="profile-points">{ptsText} {t('pts')}</div>
             <div className={c.lights} >
                 <LightsConteiner />    
             </div>
