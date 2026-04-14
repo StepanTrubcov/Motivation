@@ -8,10 +8,54 @@
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     color: var(--foreground, #ffffff);
     border: 1px solid rgba(255, 255, 255, 0.07);
+    position: relative;
 }
 
 .light-theme .calendar {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cornerBadge {
+    position: absolute;
+    top: 120px;
+    right: 330px;
+    z-index: 3;
+    pointer-events: none;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    line-height: 1;
+    color: #fff;
+
+    padding: 4px 7px;
+    border-radius: 999px;
+    background: #ff0000;
+    box-shadow: 0 6px 16px rgba(255, 0, 0, 0.25);
+}
+
+.cornerBadge::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 999px;
+    border: 2px solid rgba(255, 0, 0, 0.55);
+    opacity: 0.0;
+    animation: cornerBadgePulse 1.6s ease-out infinite;
+}
+
+@keyframes cornerBadgePulse {
+    0% {
+        transform: scale(0.92);
+        opacity: 0.0;
+    }
+    30% {
+        opacity: 0.55;
+    }
+    100% {
+        transform: scale(1.12);
+        opacity: 0.0;
+    }
 }
 
 /* Стили для текста календаря (react-github-contribution-calendar) */
