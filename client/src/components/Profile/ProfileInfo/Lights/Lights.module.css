@@ -9,6 +9,126 @@
     justify-content: center;
 }
 
+.LightsButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 4px 6px;
+    margin: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 10px;
+    color: inherit;
+    font: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.LightsButton:focus-visible {
+    outline: 2px solid var(--accent-green, #00ff1e);
+    outline-offset: 2px;
+}
+
+.LightsButton:active {
+    opacity: 0.88;
+}
+
+.streakSheetBackdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 10050;
+    padding: 12px;
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0));
+}
+
+.streakSheet {
+    width: 100%;
+    max-width: 400px;
+    background: var(--card-bg, #151515);
+    color: var(--foreground, #fff);
+    border-radius: 20px 20px 16px 16px;
+    padding: 16px 20px 20px;
+    position: relative;
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.35);
+    animation: streakSheetUp 0.28s ease;
+}
+
+@keyframes streakSheetUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0.5;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.streakSheetClose {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 10px;
+    background: var(--card-bg-secondary, #1e1e1e);
+    color: var(--foreground, #fff);
+    cursor: pointer;
+}
+
+.streakSheetDays {
+    font-size: 56px;
+    font-weight: 800;
+    line-height: 1;
+    text-align: center;
+    margin: 36px 0 8px;
+    letter-spacing: -0.02em;
+}
+
+.streakSheetDaysLabel {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    opacity: 0.75;
+    margin-bottom: 16px;
+}
+
+.streakSheetFireWrap {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+    padding: 8px 0 4px;
+}
+
+.streakSheetFire {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+}
+
+.streakSheetShare {
+    margin-top: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 12px;
+    background: var(--accent-green, #ff6a00);
+    color: #0a0a0a;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 .text {
     font-weight: 600;
     font-size: 30px;
