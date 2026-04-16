@@ -412,9 +412,6 @@ const ContributionCalendar = ({ calendarData }) => {
 
   return (
     <div className={c.calendar} data-tutorial-id="calendar">
-      <div className={c.cornerBadge} aria-hidden>
-        {language === 'ru' ? 'НОВОЕ' : 'NEW'}
-      </div>
       <div ref={scrollerRef} className={c.variantsScroller}>
         <div className={c.variantPage}>{calendarNode}</div>
         <div className={c.variantPage}>
