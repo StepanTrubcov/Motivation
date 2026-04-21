@@ -8,7 +8,7 @@ function normTitle(t) {
 function normalizeTemplateId(value) {
   if (value == null) return null;
   const s = String(value).trim();
-  if (!/^([1-9]|1[0-9]|2[0-6])$/.test(s)) return null;
+  if (!/^([1-9]|1[0-9]|2[0-9]|30)$/.test(s)) return null;
   return s;
 }
 
@@ -143,7 +143,7 @@ export async function POST(request, { params }) {
       incomingByTemplateId.set(templateId, ach);
     }
 
-    const required = Array.from({ length: 26 }, (_, i) => String(i + 1));
+    const required = Array.from({ length: 30 }, (_, i) => String(i + 1));
     const missing = required.filter((id) => !incomingByTemplateId.has(id));
     if (missing.length > 0) {
       return NextResponse.json(
@@ -192,13 +192,20 @@ export async function POST(request, { params }) {
         const idx = existingAchievements.findIndex((a) => a.id === existing.id);
         if (idx !== -1) existingAchievements[idx] = updated;
       } else {
+        // Если раньше у пользователя уже была полученная (my) legacy-ачивка с тем же смыслом,
+        // не даём шаблонной записи “откатиться” в locked — иначе на клиенте она разлочится повторно
+        // и очки начислятся снова.
+        const legacyMy =
+          existingAchievements.find((a) => sameTitleAndTarget(a, ach) && a.status === 'my') ||
+          existingAchievements.find((a) => normTitle(a.title) === normTitle(title) && a.status === 'my');
+
         const created = await prisma.achievement.create({
           data: {
             title,
             templateId: templateId || null,
             description: ach.description || '',
             requirement: ach.requirement || '',
-            status: desiredStatus,
+            status: legacyMy ? 'my' : desiredStatus,
             image: ach.image || '',
             gif: ach.gif || '',
             points: ach.points || 0,

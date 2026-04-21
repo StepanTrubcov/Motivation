@@ -371,6 +371,29 @@ export async function initializeAchievements(userId) {
       "points": 0
     },
     {
+      "id": "28",
+      "title": "Активирован прогресс",
+      "rarity": "common",
+      "status": "locked",
+      "image": "https://i.postimg.cc/L8VcMLD4/8G2Wy.jpg",
+      "gif": "https://i.postimg.cc/WzryYkzf/213.gif",
+      "requirement": "• Достичь 20 уровня\n",
+      "points": 200,
+      "type": "level_based",
+      "target": 20
+    },
+    {
+      "id": "27",
+      "title": "В игре",
+      "gif": "https://i.postimg.cc/fyjPfH7x/Untitled.gif",
+      "requirement": "• Пройти обучение\n",
+      "status": "locked",
+      "image": "https://i.postimg.cc/13RkJZjN/h3p-S8.jpg",
+      "points": 100,
+      "type": "event_based",
+      "rarity": "common",
+    },
+    {
       "id": "2",
       "title": "30 дней бега",
       "gif": "https://i.postimg.cc/0yN7300y/Untitled-kopia-4.gif",
@@ -605,6 +628,18 @@ export async function initializeAchievements(userId) {
       "target": 180
     },
     {
+      "id": "29",
+      "title": "Закалённый системой",
+      "gif": "https://i.postimg.cc/g0nNBZBS/65.gif",
+      "requirement": "• Достичь 50 уровня \n",
+      "status": "locked",
+      "image": "https://i.postimg.cc/4yTPdF4P/Qgo-IX.jpg",
+      "points": 400,
+      "rarity": "rare",
+      "type": "level_based",
+      "target": 50
+    },
+    {
       "id": "18",
       "title": "120 дней бега",
       "gif": "https://i.postimg.cc/fTxhF1vn/Untitled-kopia-5.gif",
@@ -722,6 +757,18 @@ export async function initializeAchievements(userId) {
       "target": 365
     }, 
     {
+      "id": "30",
+      "title": "Создатель системы",
+      "requirement": "• Достичь 100 уровня\n",
+      "status": "locked",
+      "image": "https://i.postimg.cc/dVzywZ0K/z7ob0.jpg",
+      "points": 900,
+      "gif": "https://i.postimg.cc/YCJWMLCF/Untitled-kopia.gif",
+      "type": "level_based",
+      "rarity": "legendary",
+      "target": 100
+    }, 
+    {
       "id": "26",
       "title": "Один из первых",
       "requirement": "• Эту ачивку получили первые 100\nпользователей бота.\n• Больше эту ачивку получить нельзя! \n",
@@ -760,7 +807,7 @@ export async function achievementNewStatus(achievement, userId) {
       `${BASE_URL}/users/${userId}/achievements/${achievement.id}/status`,
       { newStatus: "my" }
     );
-    return response.data
+    return response.data;
   } catch (error) {
     console.error("❌ Error updating achievement:", error.response?.data || error.message);
   }

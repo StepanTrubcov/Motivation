@@ -78,8 +78,11 @@ const DataInitializer = ({ children }) => {
         if (user && ThereAreUsers && assignmentsLoaded) {
             setShowBottomNav(true);
             const newStatusAssignment = async (achievement, userId) => {
-                await dispatch(getAchievementsNewStatus(achievement, userId));
-                await dispatch(setPoints(userId, achievement.points));
+                const res = await dispatch(getAchievementsNewStatus(achievement, userId));
+                // Начисляем очки только если статус реально изменился (страховка от дублей).
+                if (res?.changed) {
+                    await dispatch(setPoints(userId, achievement.points));
+                }
                 toast.success(t('newAchievement'), {
                     style: {
                         background: '#333',
@@ -95,7 +98,8 @@ const DataInitializer = ({ children }) => {
                     goals,
                     newStatusAssignment,
                     user.id,
-                    user.registrationDate
+                    user.registrationDate,
+                    user.pts
                 );
             })();
         } else {

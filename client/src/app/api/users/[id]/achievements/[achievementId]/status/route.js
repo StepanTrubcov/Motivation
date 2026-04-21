@@ -18,12 +18,16 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: 'Achievement not found' }, { status: 404 });
     }
 
+    if (achievement.status === newStatus) {
+      return NextResponse.json({ achievement, changed: false });
+    }
+
     const updated = await prisma.achievement.update({
       where: { id: achievement.id },
       data: { status: newStatus }
     });
 
-    return NextResponse.json(updated);
+    return NextResponse.json({ achievement: updated, changed: true });
   } catch (error) {
     console.error('Error updating achievement status:', error);
     return NextResponse.json({ error: 'Не удалось изменить статус достижения' }, { status: 500 });

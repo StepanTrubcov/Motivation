@@ -1,16 +1,22 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTutorial } from '@/context/TutorialContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTheme } from '@/context/ThemeContext';
 import { ChevronLeft } from 'lucide-react';
 import styles from './TutorialOverlay.module.css';
+import { getAchievementsNewStatus } from '@/redux/assignments_reducer';
+import { setPoints } from '@/redux/profile_reducer';
 
 const TOAST_STEP_LOCK_MS = 5000;
 
 export default function TutorialOverlay() {
+  const dispatch = useDispatch();
+  const userId = useSelector((s) => s?.profile?.profile?.id);
+  const assignments = useSelector((s) => s?.assignments?.assignments ?? []);
   const [mounted, setMounted] = useState(false);
   const [toastStepLockedUntil, setToastStepLockedUntil] = useState(null);
   useEffect(() => setMounted(true), []);
@@ -26,6 +32,44 @@ export default function TutorialOverlay() {
   const [achievementHowToGetModalRect, setAchievementHowToGetModalRect] = useState(null);
 
   const toastStepLockShownRef = React.useRef(false);
+  const tutorialCompleteUnlockingRef = useRef(false);
+
+  const handleTutorialCompleteClose = async () => {
+    // Антидубль: если уже выдавали (или уже в процессе) — просто закрываем.
+    if (tutorialCompleteUnlockingRef.current) {
+      closeTutorial();
+      return;
+    }
+
+    // Выдаём ачивку только на шаге tutorial-complete.
+    if (currentStep?.id !== 'tutorial-complete' || !userId) {
+      closeTutorial();
+      return;
+    }
+
+    const list = Array.isArray(assignments) ? assignments : [];
+    const ach =
+      list.find((a) => String(a?.templateId || '') === '27') ||
+      list.find((a) => String(a?.id || '') === '27') ||
+      list.find((a) => (a?.title || '').trim() === 'В игре');
+
+    // Антидубль: если уже my — ничего не делаем.
+    if (!ach || ach.status === 'my') {
+      closeTutorial();
+      return;
+    }
+
+    tutorialCompleteUnlockingRef.current = true;
+    try {
+      const res = await dispatch(getAchievementsNewStatus(ach, userId));
+      if (res?.changed) {
+        await dispatch(setPoints(userId, Number(ach.points) || 0));
+      }
+    } finally {
+      tutorialCompleteUnlockingRef.current = false;
+      closeTutorial();
+    }
+  };
   useEffect(() => {
     if (!isOpen) toastStepLockShownRef.current = false;
   }, [isOpen]);
@@ -582,7 +626,7 @@ export default function TutorialOverlay() {
                   </a>
                 </p>
                 <div className={`${styles.actions} ${styles.actionsCenter}`}>
-                  <button type="button" className={styles.btnPrimary} onClick={closeTutorial}>
+                  <button type="button" className={styles.btnPrimary} onClick={handleTutorialCompleteClose}>
                     {t('tutorialCompleteClose')}
                   </button>
                 </div>

@@ -40,7 +40,8 @@ export async function checkAll(
   goals,
   newStatusAssignment,
   userId,
-  userRegistrationStub
+  userRegistrationStub,
+  userPts
 ) {
   try {
     const registrationDate = userRegistrationStub ? new Date(userRegistrationStub) : null;
@@ -62,6 +63,21 @@ export async function checkAll(
         const aid = String(achievement.id);
         if (achievement.status === 'my') continue;
         if (triggeredRef.current.has(aid)) continue;
+
+        if (achievement.type === 'level_based') {
+          const { calcLevelFromPts } = await import('@/utils/levels');
+          const lvl = calcLevelFromPts(userPts);
+          const targetLvl = Number(achievement.target || 0);
+          if (targetLvl > 0 && lvl >= targetLvl) {
+            try {
+              await newStatusAssignment(achievement, userId);
+              triggeredRef.current.add(aid);
+            } catch (e) {
+              console.error(`Unlock failed for level_based achievement ${aid}:`, e);
+            }
+          }
+          continue;
+        }
 
         if (achievement.type === 'goal_based' && Array.isArray(achievement.goalIds)) {
           const related = goalsMatchingAchievementGoalIds(goals, achievement.goalIds);
