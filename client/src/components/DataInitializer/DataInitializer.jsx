@@ -8,7 +8,7 @@ import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import FirstTimeOnboarding from '@/components/FirstTimeOnboarding/FirstTimeOnboarding';
 import { addProfile, setPoints } from '@/redux/profile_reducer';
 import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
-import { getAchievementsNewStatus, getInitializeAchievementsData } from '@/redux/assignments_reducer';
+import { getAchievementsData, getAchievementsNewStatus } from '@/redux/assignments_reducer';
 import { checkAll } from '@/utils/checkAll/checkAll';
 import { toast } from 'react-hot-toast';
 
@@ -70,7 +70,7 @@ const DataInitializer = ({ children }) => {
 
     useEffect(() => {
         if (user && !assignmentsLoaded) {
-            dispatch(getInitializeAchievementsData(user.id));
+            dispatch(getAchievementsData(user.id));
         }
     }, [user, assignmentsLoaded, dispatch]);
 
