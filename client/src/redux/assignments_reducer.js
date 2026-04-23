@@ -51,6 +51,35 @@ export const getInitializeAchievementsData = (customUserId) => async (dispatch) 
     }
 }
 
+// Lazy init: сначала GET, и только если пусто — POST initialize и снова GET.
+export const ensureAchievementsInitialized = (userId) => async (dispatch) => {
+  try {
+    const required = Array.from({ length: 30 }, (_, i) => String(i + 1));
+    const first = await getAchievements(userId);
+
+    const firstArr = Array.isArray(first) ? first : [];
+    const tpl = new Set(firstArr.map((a) => String(a?.templateId || '')).filter(Boolean));
+    const missing = required.filter((id) => !tpl.has(id));
+
+    // Если у пользователя уже есть все шаблонные templateId — не трогаем POST вообще.
+    if (missing.length === 0 && firstArr.length > 0) {
+      dispatch(setAssignments(firstArr));
+      return { didInit: false, missingTemplateIds: [] };
+    }
+
+    await initializeAchievements(userId);
+    const second = await getAchievements(userId);
+    const secondArr = Array.isArray(second) ? second : [];
+    dispatch(setAssignments(secondArr));
+    return { didInit: true, missingTemplateIds: missing };
+  } catch (error) {
+    console.error("Ошибка ensureAchievementsInitialized:", error);
+    dispatch(setAssignments([]));
+    // setAssignments выставляет assignmentsLoaded=true
+    return { didInit: false, error: true };
+  }
+};
+
 export const getAchievementsNewStatus = (achievement, userId) => async (dispatch) => {
   const res = await achievementNewStatus(achievement, userId);
   await dispatch(getAchievementsData(userId));

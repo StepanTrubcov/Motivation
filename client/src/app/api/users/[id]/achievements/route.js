@@ -85,12 +85,12 @@ async function dedupeUserAchievements(userId) {
 
 /**
  * На чтении: один смысловой ключ на карточку — не показываем дубликаты, даже если в БД ещё остались.
- * Приоритет: строка с templateId, затем status my, затем свежая updatedAt.
+ * Приоритет: status my, затем строка с templateId, затем свежая updatedAt.
  */
 function rowScore(r) {
   let s = 0;
-  if (r.templateId) s += 1e9;
-  if (r.status === 'my') s += 1e6;
+  if (r.status === 'my') s += 1e9;
+  if (r.templateId) s += 1e6;
   s += new Date(r.updatedAt).getTime() / 1000;
   return s;
 }
@@ -98,26 +98,13 @@ function rowScore(r) {
 function uniqueAchievementsForClient(rows) {
   if (!Array.isArray(rows) || rows.length === 0) return rows;
   const sorted = [...rows].sort((a, b) => rowScore(b) - rowScore(a));
-  const chosen = [];
-  const coveredTpl = new Set();
-  const coveredTitleTarget = new Set();
-
+  const chosenByTitleTarget = new Map();
   for (const r of sorted) {
-    if (!r.templateId) continue;
-    const k = `tpl:${r.templateId}`;
-    if (coveredTpl.has(k)) continue;
-    coveredTpl.add(k);
-    chosen.push(r);
-    coveredTitleTarget.add(`${normTitle(r.title)}|${r.target ?? 'null'}`);
-  }
-  for (const r of sorted) {
-    if (r.templateId) continue;
-    const tt = `${normTitle(r.title)}|${r.target ?? 'null'}`;
-    if (coveredTitleTarget.has(tt)) continue;
-    coveredTitleTarget.add(tt);
-    chosen.push(r);
+    const key = `${normTitle(r.title)}|${r.target ?? 'null'}`;
+    if (!chosenByTitleTarget.has(key)) chosenByTitleTarget.set(key, r);
   }
 
+  const chosen = [...chosenByTitleTarget.values()];
   return chosen.sort((a, b) => {
     const na = a.templateId ? parseInt(a.templateId, 10) : 999;
     const nb = b.templateId ? parseInt(b.templateId, 10) : 999;

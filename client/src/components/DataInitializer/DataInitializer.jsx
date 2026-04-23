@@ -6,9 +6,9 @@ import { useBottomNav } from '@/context/BottomNavContext';
 import { useLanguage } from '@/context/LanguageContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import FirstTimeOnboarding from '@/components/FirstTimeOnboarding/FirstTimeOnboarding';
-import { addProfile, setPoints } from '@/redux/profile_reducer';
+import { addProfile } from '@/redux/profile_reducer';
 import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
-import { getAchievementsData, getAchievementsNewStatus } from '@/redux/assignments_reducer';
+import { ensureAchievementsInitialized, getAchievementsNewStatus } from '@/redux/assignments_reducer';
 import { checkAll } from '@/utils/checkAll/checkAll';
 import { toast } from 'react-hot-toast';
 
@@ -26,6 +26,7 @@ const DataInitializer = ({ children }) => {
     const triggeredRef = useRef(new Set());
     const lastLoadedTelegramIdRef = useRef(null);
     const lastAppliedDbLanguageRef = useRef(null);
+    const lastEnsuredAchievementsUserIdRef = useRef(null);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
@@ -70,7 +71,9 @@ const DataInitializer = ({ children }) => {
 
     useEffect(() => {
         if (user && !assignmentsLoaded) {
-            dispatch(getAchievementsData(user.id));
+            if (lastEnsuredAchievementsUserIdRef.current === user.id) return;
+            lastEnsuredAchievementsUserIdRef.current = user.id;
+            dispatch(ensureAchievementsInitialized(user.id));
         }
     }, [user, assignmentsLoaded, dispatch]);
 
@@ -79,17 +82,17 @@ const DataInitializer = ({ children }) => {
             setShowBottomNav(true);
             const newStatusAssignment = async (achievement, userId) => {
                 const res = await dispatch(getAchievementsNewStatus(achievement, userId));
-                // Начисляем очки только если статус реально изменился (страховка от дублей).
                 if (res?.changed) {
-                    await dispatch(setPoints(userId, achievement.points));
+                    // Очки начисляет сервер (PUT /status). Здесь просто обновим профиль и покажем тост.
+                    await dispatch(addProfile());
+                    toast.success(t('newAchievement'), {
+                        style: {
+                            background: '#333',
+                            color: '#fff',
+                            marginTop: '80px',
+                        }
+                    });
                 }
-                toast.success(t('newAchievement'), {
-                    style: {
-                        background: '#333',
-                        color: '#fff',
-                        marginTop: '80px',
-                    }
-                });
             };
             (async () => {
                 await checkAll(
