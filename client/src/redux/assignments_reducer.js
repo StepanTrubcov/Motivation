@@ -51,7 +51,7 @@ export const getInitializeAchievementsData = (customUserId) => async (dispatch) 
     }
 }
 
-// Lazy init: сначала GET, и только если пусто — POST initialize и снова GET.
+// Lazy init: GET → (если не хватает templateId) POST initialize → GET.
 export const ensureAchievementsInitialized = (userId) => async (dispatch) => {
   try {
     const required = Array.from({ length: 30 }, (_, i) => String(i + 1));
