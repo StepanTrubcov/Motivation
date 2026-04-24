@@ -1,4 +1,8 @@
-// Утилита для обновления достижений у всех пользователей
+// Утилита для обновления (синхронизации) шаблонов достижений у всех пользователей.
+//
+// КРИТИЧНО: нельзя делать deleteMany по userId и пересоздавать все строки.
+// Иначе при каждом деплое/перезапуске будут удаляться полученные (`my`) достижения,
+// после чего клиент разлочит их заново.
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -371,18 +375,9 @@ const updatedAchievements = [
 // Идентификатор версии достижений (меняйте при каждом обновлении)
 // const ACHIEVEMENTS_VERSION = "v1.0"; // Увеличивайте версию при каждом изменении
 
-let hasRun = false;
-
 async function updateAllUserAchievements() {
-  // Проверяем, чтобы функция выполнялась только один раз
-  if (hasRun) {
-    return { success: true, message: 'Функция уже была выполнена ранее' };
-  }
-  
-  hasRun = true;
-  
   try {
-    console.log('Начинаем автоматическое обновление достижений для всех пользователей...');
+    console.log('Начинаем синхронизацию достижений для всех пользователей...');
     
     // Получаем всех пользователей
     const users = await prisma.user.findMany({
@@ -399,75 +394,76 @@ async function updateAllUserAchievements() {
     let updatedUsersCount = 0;
     let skippedUsersCount = 0;
     
-    // Для каждого пользователя проверяем и обновляем достижения при необходимости
+    // Для каждого пользователя: добавляем недостающие и обновляем метаданные,
+    // но НИКОГДА не сбрасываем status и НИКОГДА не удаляем все достижения.
     for (const user of users) {
       console.log(`Проверяем достижения для пользователя: ${user.username || user.firstName} (${user.telegramId})`);
       
       try {
-        // Получаем текущие достижения пользователя
-        const currentUserAchievements = await prisma.achievement.findMany({
-          where: {
-            userId: user.id
-          },
+        const current = await prisma.achievement.findMany({
+          where: { userId: user.id },
           select: {
             id: true,
+            templateId: true,
             title: true,
-            description: true,
-            points: true
-          }
+            target: true,
+            status: true,
+          },
         });
-        
-        // Проверяем, нужно ли обновлять достижения
-        let needsUpdate = false;
-        
-        if (currentUserAchievements.length === 0) {
-          // У пользователя нет достижений, нужно создать
-          needsUpdate = true;
-        } else if (currentUserAchievements.length !== updatedAchievements.length) {
-          // Разное количество достижений, нужно обновить
-          needsUpdate = true;
-        } else {
-          // Проверяем конкретные достижения на изменения
-          for (const newAchievement of updatedAchievements) {
-            const existing = currentUserAchievements.find(a => 
-              a.id == newAchievement.id && 
-              a.title === newAchievement.title
-            );
-            
-            if (!existing || existing.points !== newAchievement.points || existing.description !== newAchievement.description) {
-              needsUpdate = true;
-              break;
-            }
+
+        const byTemplateId = new Map();
+        for (const r of current) {
+          if (!r.templateId) continue;
+          byTemplateId.set(String(r.templateId), r);
+        }
+
+        for (const tpl of updatedAchievements) {
+          const templateId = String(tpl.id);
+          const existing = byTemplateId.get(templateId) || null;
+
+          if (!existing) {
+            // Создаём недостающую шаблонную ачивку
+            await prisma.achievement.create({
+              data: {
+                userId: user.id,
+                templateId,
+                title: tpl.title,
+                description: tpl.description || '',
+                requirement: tpl.requirement || '',
+                status: tpl.status || 'locked',
+                image: tpl.image || '',
+                gif: tpl.gif || '',
+                points: Number(tpl.points) || 0,
+                type: tpl.type || null,
+                goalIds: Array.isArray(tpl.goalIds) ? tpl.goalIds : [],
+                target: tpl.target != null ? Number(tpl.target) : null,
+                rarity: tpl.rarity || 'common',
+              },
+            });
+            updatedUsersCount++;
+            continue;
           }
-        }
-        
-        if (needsUpdate) {
-          console.log(`Обновляем достижения для пользователя: ${user.username || user.firstName}`);
-          
-          // Удаляем все существующие достижения пользователя
-          await prisma.achievement.deleteMany({
-            where: {
-              userId: user.id
-            }
+
+          // Обновляем метаданные, но сохраняем status как есть
+          await prisma.achievement.update({
+            where: { id: existing.id },
+            data: {
+              title: tpl.title,
+              description: tpl.description || '',
+              requirement: tpl.requirement || '',
+              image: tpl.image || '',
+              gif: tpl.gif || '',
+              points: Number(tpl.points) || 0,
+              type: tpl.type || null,
+              goalIds: Array.isArray(tpl.goalIds) ? tpl.goalIds : [],
+              target: tpl.target != null ? Number(tpl.target) : null,
+              rarity: tpl.rarity || 'common',
+              // status НЕ трогаем
+            },
           });
-          
-          // Создаем новые достижения для пользователя
-          const achievementsToCreate = updatedAchievements.map(ach => ({
-            ...ach,
-            userId: user.id
-          }));
-          
-          await prisma.achievement.createMany({
-            data: achievementsToCreate,
-            skipDuplicates: true
-          });
-          
-          console.log(`Достижения для пользователя ${user.username || user.firstName} успешно обновлены`);
-          updatedUsersCount++;
-        } else {
-          console.log(`Достижения для пользователя ${user.username || user.firstName} уже актуальны, пропускаем`);
-          skippedUsersCount++;
         }
+
+        skippedUsersCount++;
       } catch (userError) {
         console.error(`Ошибка при проверке/обновлении достижений для пользователя ${user.username || user.firstName}:`, userError);
       }
@@ -475,7 +471,7 @@ async function updateAllUserAchievements() {
     
     const result = {
       success: true,
-      message: `Достижения успешно обновлены для ${updatedUsersCount} пользователей, пропущено ${skippedUsersCount} пользователей`
+      message: `Достижения синхронизированы. Изменено пользователей: ${updatedUsersCount}, без ошибок: ${skippedUsersCount}`
     };
     
     console.log(result.message);

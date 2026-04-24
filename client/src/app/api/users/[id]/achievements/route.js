@@ -156,7 +156,10 @@ export async function POST(request, { params }) {
       }
 
       const desiredStatus = ach.status || 'locked';
-      const nextStatus = existing?.status === 'my' ? 'my' : desiredStatus;
+      const legacyMyForThis =
+        existingAchievements.find((a) => a.id !== existing?.id && sameTitleAndTarget(a, ach) && a.status === 'my') ||
+        existingAchievements.find((a) => a.id !== existing?.id && normTitle(a.title) === normTitle(title) && a.status === 'my');
+      const nextStatus = existing?.status === 'my' || legacyMyForThis ? 'my' : desiredStatus;
 
       if (existing) {
         const updated = await prisma.achievement.update({
@@ -215,6 +218,8 @@ export async function POST(request, { params }) {
       where: {
         userId,
         templateId: null,
+        // Никогда не удаляем legacy-строки со статусом my
+        status: { not: 'my' },
         OR: [...templateTitleTargetKeys].map((k) => {
           const [title, targetRaw] = k.split('|');
           const target = targetRaw === 'null' ? null : Number(targetRaw);
