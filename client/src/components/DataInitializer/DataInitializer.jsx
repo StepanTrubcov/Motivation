@@ -95,6 +95,7 @@ const DataInitializer = ({ children }) => {
                 }
             };
             (async () => {
+                
                 await checkAll(
                     assignments,
                     triggeredRef,
