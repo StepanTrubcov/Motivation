@@ -29,7 +29,7 @@ enum UserLanguage {
 model User {
   id               String        @id @default(cuid())
   telegramId       String        @unique
-  language        UserLanguage  @default(rus)
+  language         UserLanguage  @default(rus)
   firstName        String?
   username         String?
   photoUrl         String?
@@ -37,7 +37,7 @@ model User {
   savingGoals      Json[]
   usersTag         String?
   goals            Goal[]
-  achievements     Achievement[] 
+  achievements     Achievement[]
   registrationDate DateTime?     @default(now())
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @default(now()) @updatedAt
@@ -50,7 +50,7 @@ model Achievement {
   title       String
   gif         String
   rarity      String
-  description  String?
+  description String?
   requirement String
   status      String
   image       String
@@ -58,11 +58,12 @@ model Achievement {
   type        String?
   goalIds     String[] @default([])
   target      Int?
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade) 
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @default(now()) @updatedAt
 
+  @@unique([userId, templateId])
   @@index([userId, templateId])
 }
 
@@ -72,12 +73,12 @@ model Goal {
   points         Int
   status         GoalStatus    @default(not_started)
   category       GoalCategory? // Категория цели: Sport, Discipline, Self_development, Spirituality
-  progress       Int           @default(0) 
+  progress       Int           @default(0)
   completionDate DateTime?
   description    String
   userId         String
   startDate      DateTime?
-  selectedOption Int?          // Новое поле для хранения выбранной опции
+  selectedOption Int? // Новое поле для хранения выбранной опции
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @default(now()) @updatedAt

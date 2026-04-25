@@ -64,6 +64,29 @@ export async function checkAll(
         if (achievement.status === 'my') continue;
         if (triggeredRef.current.has(aid)) continue;
 
+        if (achievement.type === 'collection_based') {
+          const collectorTemplateId = achievement.templateId ? String(achievement.templateId) : null;
+          const allNonEpicMy = assignments
+            .filter((a) => {
+              if (!a) return false;
+              if (a.rarity === 'epic') return false;
+              if (collectorTemplateId && a.templateId && String(a.templateId) === collectorTemplateId) return false;
+              if (String(a.id) === aid) return false;
+              return true;
+            })
+            .every((a) => a.status === 'my');
+
+          if (allNonEpicMy) {
+            try {
+              await newStatusAssignment(achievement, userId);
+              triggeredRef.current.add(aid);
+            } catch (e) {
+              console.error(`Unlock failed for collection_based achievement ${aid}:`, e);
+            }
+          }
+          continue;
+        }
+
         if (achievement.type === 'level_based') {
           const { calcLevelFromPts } = await import('@/utils/levels');
           const lvl = calcLevelFromPts(userPts);

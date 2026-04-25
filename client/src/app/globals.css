@@ -47,10 +47,10 @@ a {
 .dark-theme,
 .telegram-dark {
   --background: #0a0a0a;
-  --foreground: #ededed;
-  --card-bg: #151515;
-  --card-bg-secondary: #1d1d1d;
-  --card-bg-tertiary: #212121;
+  --foreground: #ededed; 
+  --card-bg: #252525;
+  --card-bg-secondary: #2f2f2f;
+  --card-bg-tertiary: #343434;
   --border-color: rgba(255, 255, 255, 0.1);
   --nav-bg: #000000;
   --nav-border: rgba(255, 255, 255, 0.05);
@@ -69,15 +69,17 @@ a {
 .telegram-light {
   --background: #f5f5f5;
   --foreground: #000000;
-  --card-bg: #b8b8b8;
-  --card-bg-secondary: #b0b0b0;
-  --card-bg-tertiary: #a8a8a8;
-  --border-color: rgba(0, 0, 0, 0.25);
+  /* Lighter cards + softer borders in light theme */
+  --card-bg: #ffffff;
+  --card-bg-secondary: #f3f4f6;
+  --card-bg-tertiary: #eef0f3;
+  --border-color: rgba(0, 0, 0, 0.20);
   --nav-bg: #ffffff;
   --nav-border: rgba(0, 0, 0, 0.1);
   --nav-text: #666;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+  /* Stronger, more visible shadows in light theme */
+  --shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 18px 50px rgb(0, 0, 0, 0.16);
 }
 
 .light-theme body,

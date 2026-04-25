@@ -8,7 +8,7 @@ function normTitle(t) {
 function normalizeTemplateId(value) {
   if (value == null) return null;
   const s = String(value).trim();
-  if (!/^([1-9]|1[0-9]|2[0-9]|30)$/.test(s)) return null;
+  if (!/^([1-9]|1[0-9]|2[0-9]|3[01])$/.test(s)) return null;
   return s;
 }
 
@@ -130,7 +130,7 @@ export async function POST(request, { params }) {
       incomingByTemplateId.set(templateId, ach);
     }
 
-    const required = Array.from({ length: 30 }, (_, i) => String(i + 1));
+    const required = Array.from({ length: 31 }, (_, i) => String(i + 1));
     const missing = required.filter((id) => !incomingByTemplateId.has(id));
     if (missing.length > 0) {
       return NextResponse.json(

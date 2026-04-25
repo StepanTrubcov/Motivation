@@ -394,8 +394,10 @@ async function updateAllUserAchievements() {
     let updatedUsersCount = 0;
     let skippedUsersCount = 0;
     
-    // Для каждого пользователя: добавляем недостающие и обновляем метаданные,
-    // но НИКОГДА не сбрасываем status и НИКОГДА не удаляем все достижения.
+    // Для каждого пользователя:
+    // - удаляем дубли по templateId (если есть хоть одна my — оставляем my)
+    // - добавляем недостающие шаблонные ачивки
+    // - обновляем метаданные, не трогая status
     for (const user of users) {
       console.log(`Проверяем достижения для пользователя: ${user.username || user.firstName} (${user.telegramId})`);
       
@@ -408,11 +410,48 @@ async function updateAllUserAchievements() {
             title: true,
             target: true,
             status: true,
+            updatedAt: true,
           },
         });
 
-        const byTemplateId = new Map();
+        // 1) Repair: убрать дубли по templateId
+        const byTpl = new Map();
         for (const r of current) {
+          if (!r.templateId) continue;
+          const k = String(r.templateId);
+          const list = byTpl.get(k) || [];
+          list.push(r);
+          byTpl.set(k, list);
+        }
+
+        for (const [, list] of byTpl) {
+          if (list.length <= 1) continue;
+          // keep: prefer my, then newest updatedAt
+          const sorted = [...list].sort((a, b) => {
+            const am = a.status === 'my' ? 1 : 0;
+            const bm = b.status === 'my' ? 1 : 0;
+            if (am !== bm) return bm - am;
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+          });
+          const keep = sorted[0];
+          const toDelete = sorted.slice(1).map((r) => r.id);
+          await prisma.achievement.deleteMany({
+            where: { userId: user.id, id: { in: toDelete } },
+          });
+          // если среди дублей была my, а keep оказался locked (не должно, но на всякий) — поднимем
+          if (keep.status !== 'my' && list.some((r) => r.status === 'my')) {
+            await prisma.achievement.update({ where: { id: keep.id }, data: { status: 'my' } });
+          }
+        }
+
+        // перечитываем после удаления дублей, чтобы map был актуальным
+        const currentAfterRepair = await prisma.achievement.findMany({
+          where: { userId: user.id },
+          select: { id: true, templateId: true, status: true },
+        });
+
+        const byTemplateId = new Map();
+        for (const r of currentAfterRepair) {
           if (!r.templateId) continue;
           byTemplateId.set(String(r.templateId), r);
         }

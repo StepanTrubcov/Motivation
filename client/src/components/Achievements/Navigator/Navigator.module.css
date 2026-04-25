@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     background: var(--card-bg-secondary, #111);
-    border-radius: 12px;
+    border-radius: 20px;
     padding: 6px;
     overflow: hidden;
     box-shadow: var(--shadow, none);
@@ -39,9 +39,14 @@
     width: calc(100% / 2 - 8px);
     /* 3 вкладки → ширина 1/3 */
     border-radius: 20px;
-    background: rgba(103, 103, 103, 0.15);
+    background: rgba(215, 215, 215, 0.15);
     transition: transform 0.7s ease, background-color 0.3s ease;
     z-index: 1;
+}
+
+:global(.light-theme) .navHighlight,
+:global(.telegram-light) .navHighlight {
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .light-theme .navHighlight {

@@ -41,7 +41,7 @@
   display: flex;
   justify-content: space-between;
   background: var(--card-bg-secondary, #111);
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 6px;
   overflow: hidden;
   box-shadow: var(--shadow, none);
@@ -58,7 +58,7 @@
   display: flex;
   justify-content: space-between;
   background: var(--card-bg-secondary, #111);
-  border-radius: 12px;
+  border-radius: 20px;
   padding: 6px;
   overflow: hidden;
   box-shadow: var(--shadow, none);
@@ -93,13 +93,18 @@
   bottom: 4px;
   width: calc(100% / 3 - 8px);
   border-radius: 20px;
-  background: rgba(103, 103, 103, 0.15);
+  background: rgba(215, 215, 215, 0.15);
   transition: transform 0.7s ease;
   z-index: 1;
 }
 
+:global(.light-theme) .navHighlight,
+:global(.telegram-light) .navHighlight {
+  background: rgba(0, 0, 0, 0.15);
+}
+
 .navigator.tab-0 .navHighlight {
-  transform: translateX(3%);
+  transform: translateX(0%);
 }
 
 .navigator.tab-1 .navHighlight {

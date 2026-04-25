@@ -1,4 +1,4 @@
-import { addProfileApi, initializeUserGoals, addPoints, removePoints } from '@/lib/api/Api';
+import { addProfileApi, initializeUserGoals, syncUserGoals, TEMPLATE_GOALS_ARRAY, addPoints, removePoints } from '@/lib/api/Api';
 import { getAllGoals } from '@/lib/api/Api';
 import { addGoals } from './goals_reducer';
 
@@ -45,6 +45,30 @@ export const addProfile = () => async (dispatch) => {
                         dispatch(setTheFirstTime(true));
                     }
                 } else {
+                    // Sync template goals: delete removed, add missing, do not touch existing statuses/progress.
+                    try {
+                        const expected = new Set(TEMPLATE_GOALS_ARRAY.map((g) => String(g.id)));
+                        const dbTemplate = new Set(
+                            existingGoals
+                                .map((g) => {
+                                    const id = String(g?.id || '');
+                                    const prefix = `${response.id}_`;
+                                    if (!id.startsWith(prefix)) return null;
+                                    const suffix = id.slice(prefix.length);
+                                    return /^\d+$/.test(suffix) ? suffix : null;
+                                })
+                                .filter(Boolean)
+                        );
+                        let needsSync = false;
+                        for (const id of expected) if (!dbTemplate.has(id)) { needsSync = true; break; }
+                        if (!needsSync) for (const id of dbTemplate) if (!expected.has(id)) { needsSync = true; break; }
+
+                        if (needsSync) {
+                            await syncUserGoals(response.id);
+                        }
+                    } catch (e) {
+                        console.error('Ошибка синхронизации шаблонных целей:', e);
+                    }
                     dispatch(addGoals(response.id));
                 }
             } catch (error) {

@@ -1,19 +1,18 @@
 .calendar {
     margin-bottom: 60px;
     margin-top: 15px;
-    background: var(--card-bg-tertiary, #212121);
+    background: var(--card-bg-tertiary, #343434);
     padding: 5px;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: var(--shadow, none);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     color: var(--foreground, #ffffff);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.07));
     position: relative;
 }
 
-.light-theme .calendar {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+/* Use themed shadow (light/dark) */
+.light-theme .calendar { box-shadow: var(--shadow, none); }
 
 /* Стили для текста календаря (react-github-contribution-calendar) */
 .calendar :global(text),

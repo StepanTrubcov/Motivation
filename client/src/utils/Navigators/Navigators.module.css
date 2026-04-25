@@ -26,23 +26,23 @@
 .common {
   color: #ffffff;
   background: linear-gradient(135deg, #00ff41, #00cc33);
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .rare {
   color: #ffffff;
   background: linear-gradient(135deg, #00ffff, #0099ff);
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .legendary {
   color: #ffffff;
   background: linear-gradient(135deg, #ff00ff, #ff6600);
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .epic {
   color: #ffffff;
   background: linear-gradient(135deg, #FFD84D, #FF4D4D, #9B4DFF);
-  border-radius: 10px;
+  border-radius: 20px;
 }

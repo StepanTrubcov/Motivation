@@ -3,18 +3,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--card-bg-tertiary, #212121);
-  border-radius: 8px;
+  background: var(--card-bg-tertiary, #343434);
+  border-radius: 20px;
   padding: 10px;
   box-shadow: var(--shadow, 0 4px 15px rgba(0, 255, 0, 0.1));
   gap: 25px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.07));
 }
 
-.light-theme .points_scale {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+/* Use themed shadow (light/dark) */
+.light-theme .points_scale { box-shadow: var(--shadow, none); }
 
 .level_text {
   font-size: 15px;
