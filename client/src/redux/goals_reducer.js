@@ -1,4 +1,4 @@
-import { getUserSavingGoals, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday } from '@/lib/api/Api';
+import { getUserSavingGoals, getAllGoals, getAllStatus, checkGoalCompletion, addCustomGoal, addSavingGoal, updateSavingGoalStatus, removeSavingGoalFromToday, appendSavingGoalsDays, resetSavingGoalsStatuses } from '@/lib/api/Api';
 
 const SET_GOALS = 'goals/SET_GOALS';
 const UPDATE_GOAL_STATUS = 'goals/UPDATE_GOAL_STATUS';
@@ -120,6 +120,37 @@ export const deleteGoalsSaving = (userId, goalId) => async (dispatch) => {
         throw e;
     }
 }
+
+export const appendGoalsSavingDays = (userId) => async (dispatch) => {
+    try {
+        const response = await appendSavingGoalsDays(userId);
+        if (response.success) {
+            dispatch(setTimeGoalsSaving(response.data?.savingGoals ?? []));
+        }
+        return response;
+    } catch (e) {
+        console.error('Ошибка при дописывании дней savingGoals:', e);
+        return { success: false, error: e.message };
+    }
+};
+
+export const resetGoalsSavingStatuses = (telegramId) => async (dispatch, getState) => {
+    try {
+        const response = await resetSavingGoalsStatuses(telegramId);
+        if (response.success) {
+            dispatch(setTimeGoalsSaving(response.data?.savingGoals ?? []));
+            const userDbId = getState()?.profile?.profile?.id;
+            if (userDbId) {
+                await dispatch(addGoals(userDbId));
+                await dispatch(addStatus(userDbId));
+            }
+        }
+        return response;
+    } catch (e) {
+        console.error('Ошибка при сбросе статусов savingGoals:', e);
+        return { success: false, error: e.message };
+    }
+};
 
 export const checkTimeGoalsSaving = (userId) => async (dispatch) => {
     try {

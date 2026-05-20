@@ -90,12 +90,184 @@ function removeGoalFromToday(goals, goalId) {
   return removeGoalFromDate(goals, today, goalId);
 }
 
+function getLastDateInSavingGoals(savingGoals) {
+  if (!Array.isArray(savingGoals) || savingGoals.length === 0) return null;
+  let lastDate = null;
+  for (const day of savingGoals) {
+    if (!day?.date) continue;
+    if (!lastDate || day.date > lastDate) lastDate = day.date;
+  }
+  return lastDate;
+}
+
+/** Цели с последнего дня, где goalData не пустой (копируются как есть на новые дни). */
+function getGoalsTemplateFromSavingGoals(savingGoals) {
+  if (!Array.isArray(savingGoals) || savingGoals.length === 0) return [];
+
+  const sorted = [...savingGoals].sort((a, b) => a.date.localeCompare(b.date));
+  for (let i = sorted.length - 1; i >= 0; i--) {
+    const dayGoals = sorted[i]?.goalData;
+    if (!Array.isArray(dayGoals) || dayGoals.length === 0) continue;
+
+    const seen = new Set();
+    return dayGoals
+      .filter((g) => {
+        if (!g?.idGoals || seen.has(g.idGoals)) return false;
+        seen.add(g.idGoals);
+        return true;
+      })
+      .map((g) => ({ ...g }));
+  }
+
+  return [];
+}
+
+function resetSavingGoalsStatuses(savingGoals) {
+  if (!Array.isArray(savingGoals)) return [];
+
+  return savingGoals.map((day) => ({
+    ...day,
+    goalData: (day.goalData || []).map((g) => ({
+      ...g,
+      status: 'not_started',
+    })),
+  }));
+}
+
+/** Дописывает numberOfDays дней сразу после последней даты, историю не трогает. */
+function appendDaysWithGoalTemplate(existingGoals, templateGoalData, numberOfDays = 120) {
+  const base = Array.isArray(existingGoals) ? existingGoals : [];
+  const lastDateStr = getLastDateInSavingGoals(base);
+
+  const start = lastDateStr
+    ? new Date(`${lastDateStr}T12:00:00`)
+    : new Date();
+  if (lastDateStr) {
+    start.setDate(start.getDate() + 1);
+  }
+
+  const appended = [];
+  for (let i = 0; i < numberOfDays; i++) {
+    const date = new Date(start);
+    date.setDate(start.getDate() + i);
+
+    appended.push({
+      date: date.toISOString().split('T')[0],
+      goalData: templateGoalData.map((g) => ({ ...g })),
+    });
+  }
+
+  return [...base, ...appended];
+}
+
+const SAVING_GOALS_APPEND_DAYS = 120;
+
+async function extendSavingGoalsForUser(user) {
+  const oldGoals = Array.isArray(user.savingGoals) ? user.savingGoals : [];
+  const template = getGoalsTemplateFromSavingGoals(oldGoals);
+  const updatedGoals = appendDaysWithGoalTemplate(oldGoals, template, SAVING_GOALS_APPEND_DAYS);
+
+  return prisma.user.update({
+    where: { id: user.id },
+    data: { savingGoals: updatedGoals },
+    select: {
+      id: true,
+      telegramId: true,
+      savingGoals: true,
+    },
+  });
+}
+
+async function resetSavingGoalsStatusesForUser(user) {
+  const oldGoals = Array.isArray(user.savingGoals) ? user.savingGoals : [];
+  const updatedGoals = resetSavingGoalsStatuses(oldGoals);
+
+  await prisma.goal.updateMany({
+    where: { userId: user.id },
+    data: {
+      status: 'not_started',
+      selectedOption: 0,
+      startDate: null,
+      completionDate: null,
+      progress: 0,
+    },
+  });
+
+  return prisma.user.update({
+    where: { id: user.id },
+    data: { savingGoals: updatedGoals },
+    select: {
+      id: true,
+      telegramId: true,
+      savingGoals: true,
+    },
+  });
+}
+
 export async function POST(request) {
   // Получаем параметры из URL
   const url = new URL(request.url);
   const clearAll = url.searchParams.get('clearAll');
   const removeToday = url.searchParams.get('removeToday');
   const generateReport = url.searchParams.get('generateReport');
+  const extend = url.searchParams.get('extend');
+  const resetStatuses = url.searchParams.get('resetStatuses');
+
+  if (extend === 'true') {
+    try {
+      const { userId } = await request.json();
+
+      if (!userId) {
+        return NextResponse.json({ success: false, error: 'userId is required' }, { status: 400 });
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { telegramId: userId },
+      });
+
+      if (!user) {
+        return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+      }
+
+      const updatedUser = await extendSavingGoalsForUser(user);
+
+      return NextResponse.json({
+        success: true,
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error('Ошибка при продлении savingGoals:', error);
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+  }
+
+  if (resetStatuses === 'true') {
+    try {
+      const { userId } = await request.json();
+
+      if (!userId) {
+        return NextResponse.json({ success: false, error: 'userId is required' }, { status: 400 });
+      }
+
+      const user = await prisma.user.findUnique({
+        where: { telegramId: userId },
+      });
+
+      if (!user) {
+        return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+      }
+
+      const updatedUser = await resetSavingGoalsStatusesForUser(user);
+
+      return NextResponse.json({
+        success: true,
+        user: updatedUser,
+      });
+    } catch (error) {
+      console.error('Ошибка при сбросе статусов savingGoals:', error);
+      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    }
+  }
 
   if (removeToday === 'true') {
     try {
