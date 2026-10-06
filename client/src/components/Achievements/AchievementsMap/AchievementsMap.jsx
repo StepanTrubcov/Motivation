@@ -4,6 +4,7 @@ import { navigator } from "@/utils/Navigators/Navigators";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { translateAchievements, getAchievementTranslation, achievementsTranslations } from '@/utils/achievementsTranslations';
+import { resolveAchievementImage } from '@/lib/achievementImages';
 import { Check } from "lucide-react";
 
 const AchievementsMap = ({
@@ -65,7 +66,7 @@ const AchievementsMap = ({
             active: info.rarity,
             title: info.title || '',
             gif: info.gif || '',
-            img: info.image || '',
+            img: resolveAchievementImage(info.image) || '',
             points: info.points || 0,
             rarity: rarity,
             id: info.id,
@@ -83,6 +84,7 @@ const AchievementsMap = ({
             title: info.title || '',
             requirement: info.requirement || '',
             gif: info.gif || '',
+            img: resolveAchievementImage(info.image) || '',
             points: info.points || 0,
             rarity: rarity,
             id: info.id,
@@ -225,7 +227,7 @@ const AchievementsMap = ({
                                 }
                                 <div className={c.cardInner}>
                                     <div className={c.imageWrapper}>
-                                        <img className={c.img} src={a.image} alt={displayTitle} />
+                                        <img className={c.img} src={resolveAchievementImage(a.image)} alt={displayTitle} loading="lazy" decoding="async" />
                                     </div>
                                     <div className={c.ribbon}>
                                         <span>{rarityText}</span>

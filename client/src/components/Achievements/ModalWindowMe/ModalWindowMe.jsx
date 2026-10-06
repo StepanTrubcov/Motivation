@@ -1,4 +1,5 @@
 "use client";
+import AchievementImage from '../AchievementImage';
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
@@ -195,7 +196,7 @@ const ModalWindowMe = ({
             <div className={`${styles.card} ${styles[rarityClass]}`}>
               <div className={styles.cardInner}>
                 <div className={styles.imageWrapper} data-tutorial-id="achievements-earned-modal-animation">
-                  <img className={styles.img} src={isModalOpen?.gif} alt={isModalOpen?.title} />
+                  <AchievementImage className={styles.img} image={isModalOpen?.img} gif={isModalOpen?.gif} alt={isModalOpen?.title} />
                 </div>
 
                 <div className={styles.ribbon}>

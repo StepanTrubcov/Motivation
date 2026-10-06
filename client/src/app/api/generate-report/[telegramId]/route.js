@@ -127,7 +127,7 @@ export async function POST(request, { params }) {
     const headerParts = [formattedDateTranslated, userTag];
     if (seriesLine) headerParts.push(seriesLine);
     const header = headerParts.join(' ');
-    const finalMessage = [header, goalsList, diaryNote, copy.footer].join('\n\n').trim();
+    const finalMessage = [header, goalsList, copy.footer].join('\n\n').trim();
 
     return NextResponse.json({
       message: finalMessage,

@@ -7,9 +7,9 @@
   border-radius: 20px;
   padding: 10px;
   box-shadow: var(--shadow, 0 4px 15px rgba(0, 255, 0, 0.1));
-  gap: 25px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.07));
+    gap: clamp(12px, 3vw, 25px);
 }
 
 /* Use themed shadow (light/dark) */
@@ -18,25 +18,28 @@
 .level_text {
   font-size: 15px;
   margin-left: 5px;
-  margin-top: 80%;
+    margin-top: 0;
 }
 
 .level {
   display: flex;
-  font-size: 40px;
   font-weight: bold;
   color: var(--accent-green, #00ff1e);
   text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
-  width: 30px;
   text-align: center;
   transition: color 0.3s ease, text-shadow 0.3s ease;
+    width: auto;
+    flex-shrink: 0;
+    align-items: baseline;
+    font-size: clamp(28px, 8vw, 40px);
 }
 
 .next {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  width: 90%;
+    width: 100%;
+    gap: 8px;
 }
 
 .progress_container {
@@ -44,6 +47,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+    min-width: 0;
 }
 
 .progress_bar {
@@ -70,12 +74,13 @@
 }
 
 .points_text {
-  width: 105px;
   margin-top: 15px;
   font-size: 16px;
   font-weight: bold;
   color: var(--foreground, white);
   transition: color 0.3s ease;
+    width: auto;
+    overflow-wrap: anywhere;
 }
 
 .nextLevel {
@@ -84,14 +89,16 @@
   font-weight: bold;
   color: var(--accent-green, #00ff1e);
   text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
-  width: 30px;
   transition: color 0.3s ease, text-shadow 0.3s ease;
+    width: auto;
+    flex-shrink: 0;
 }
 
 .points_text_wrapper {
   display: flex;
   justify-content: center;
   flex-grow: 1;
+    min-width: 0;
 }
 
 

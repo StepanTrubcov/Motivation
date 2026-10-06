@@ -1,8 +1,44 @@
+import { loadAchievementImage } from '@/lib/loadAchievementImage';
 // route.js для Next.js (Node runtime)
 import { NextResponse } from 'next/server';
 import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 import path from 'path';
 import { randomUUID } from 'crypto';
+
+const RARITY_COLORS = {
+  common: {
+    border: 'rgba(0, 255, 65, 0.6)',
+    glow: 'rgba(72, 255, 0, 0.8)',
+    text: 'rgba(72, 255, 0, 0.8)',
+    ribbon: ' #00cc33',
+    label: 'Обычная',
+    points: '#00ff41',
+  },
+  rare: {
+    border: '#00e5ff',
+    glow: 'rgba(0,229,255,0.8)',
+    text: '#00e5ff',
+    ribbon: '#0099ff',
+    label: 'Редкая',
+    points: '#00ffff',
+  },
+  legendary: {
+    border: 'rgba(255, 0, 255, 0.48)',
+    glow: '#ff00ff',
+    text: '#ffcc33',
+    ribbon: '#ff00ff',
+    label: 'Легендарная',
+    points: 'rgba(255,204,51,0.9)',
+  },
+  epic: {
+    border: '#ff9a4d',
+    glow: '#ff9a4d',
+    text: '#ffcc33',
+    ribbon: '#ff8f44',
+    label: 'Эпическая',
+    points: '#ff9a4d',
+  },
+};
 
 // In-memory store для простоты (в продакшене храните в S3/Redis и т.п.)
 export const IMAGES = new Map(); // id -> { buffer, createdAt }
@@ -61,7 +97,7 @@ async function generateImageBuffer({
 
   // ===== ОСНОВНАЯ КАРТИНКА =====
   if (img) {
-    const image = await loadImage(img);
+    const image = await loadAchievementImage(img);
     ctx.drawImage(image, 40, 140, width - 80, 700);
   }
 

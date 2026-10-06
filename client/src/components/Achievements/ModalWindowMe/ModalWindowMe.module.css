@@ -12,22 +12,30 @@
   background-color: rgba(0, 0, 0, 0.823);
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 150px;
-  z-index: 1000;
-  margin: 0;
+    padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    padding-top: max(16px, env(safe-area-inset-top));
+    margin: 0;
+    z-index: 10000;
+    overflow-y: auto;
+    align-items: center;
 }
 
 .modalContent {
   border-radius: 1rem;
-  padding: 1.5rem;
-  max-width: 28rem;
   display: flex;
   position: relative;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    min-width: 0;
+    max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    overscroll-behavior: contain;
+    padding: 32px 16px 20px;
+    max-width: 378px;
+    justify-content: flex-start;
 }
 
 .closeButton {
@@ -48,12 +56,14 @@
 
 .card {
   background: #000;
-  margin: 12px;
-  width: 250px;
-  height: 340px;
+
   border-radius: 16px;
   overflow: hidden;
   animation: slideFadeIn 0.8s ease forwards;
+    width: min(250px, 100%);
+    height: auto;
+    flex-shrink: 0;
+    margin: 12px 0;
 }
 
 .cardInner {
@@ -140,7 +150,9 @@
 /* Свечение рамки по редкости */
 
 .img {
-  width: 250px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .imgS {
@@ -156,8 +168,11 @@
   text-align: center;
   padding: 5px;
   line-height: 1.3;
-  max-height: 40px;
   overflow: hidden;
+    height: auto;
+    min-height: 2.6em;
+    max-height: none;
+    overflow-wrap: anywhere;
 }
 
 .points {
@@ -186,7 +201,6 @@
 /* ===== HOW TO GET BLOCK ===== */
 
 .howToGet {
-  width: 250px;
   margin-top: 30px;
   background: #0b0b0b;
   border-radius: 12px;
@@ -194,6 +208,9 @@
   cursor: pointer;
   transition: background 0.2s;
   border-color: #000;
+    width: 100%;
+    max-width: 330px;
+    flex-shrink: 0;
 }
 
 .howToGet:hover {
@@ -219,4 +236,7 @@
 .previewText {
   font-size: 13px;
   color: #ffffff;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
 }
+.imageWrapper { width: 100%; aspect-ratio: 1; height: auto; }

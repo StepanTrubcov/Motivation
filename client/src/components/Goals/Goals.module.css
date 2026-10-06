@@ -8,8 +8,7 @@
   font-weight: 600;
   margin-top: 15px;
   margin-bottom: 16px;
-  color: var(--foreground, white);
-  transition: color 0.3s ease;
+  color: white;
 }
 
 .centeredText {
@@ -26,7 +25,7 @@
   height: 35px;
   border-radius: 100%;
   border: none;
-  background-color: var(--accent-green, #00ff1e);
+  background-color: #00ff1e;
   margin-left: auto;
   z-index: 1;
 }
@@ -40,16 +39,10 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background: var(--card-bg-secondary, #111);
-  border-radius: 20px;
+  background: #111;
+  border-radius: 12px;
   padding: 6px;
   overflow: hidden;
-  box-shadow: var(--shadow, none);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.light-theme .navigator {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navigatorSection {
@@ -57,16 +50,10 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  background: var(--card-bg-secondary, #111);
-  border-radius: 20px;
+  background: #111;
+  border-radius: 12px;
   padding: 6px;
   overflow: hidden;
-  box-shadow: var(--shadow, none);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.light-theme .navigatorSection {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .navItem {
@@ -76,15 +63,14 @@
   padding: 10px 12px;
   cursor: pointer;
   font-weight: 500;
-  color: var(--nav-text, #aaa);
+  color: #aaa;
   z-index: 2;
   transition: color 0.3s, text-shadow 0.3s;
 }
 
 .active {
-  color: var(--accent-green, #00ff1e);
-  text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  color: #00ff1e;
+  text-shadow: 0 0 8px rgba(0, 255, 42, 0.8);
 }
 
 .navHighlight {
@@ -93,18 +79,13 @@
   bottom: 4px;
   width: calc(100% / 3 - 8px);
   border-radius: 20px;
-  background: rgba(215, 215, 215, 0.15);
+  background: rgba(103, 103, 103, 0.15);
   transition: transform 0.7s ease;
   z-index: 1;
 }
 
-:global(.light-theme) .navHighlight,
-:global(.telegram-light) .navHighlight {
-  background: rgba(0, 0, 0, 0.15);
-}
-
 .navigator.tab-0 .navHighlight {
-  transform: translateX(0%);
+  transform: translateX(3%);
 }
 
 .navigator.tab-1 .navHighlight {

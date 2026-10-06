@@ -67,6 +67,7 @@
     font-size: 17px;
     color: var(--foreground, #ffffff);
     transition: color 0.3s ease;
+    overflow-wrap: anywhere;
 }
 
 .pts {
@@ -250,3 +251,7 @@
         transform: scale(1);
     }
 }
+
+.blok > div:first-child { min-width: 0; }
+
+.blok > div:last-child { flex-shrink: 0; }

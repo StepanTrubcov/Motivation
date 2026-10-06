@@ -3,6 +3,10 @@ const nextConfig = {
   // Fix for multiple lockfiles issue
   outputFileTracingRoot: __dirname,
   serverExternalPackages: ['@napi-rs/canvas'],
+  outputFileTracingIncludes: {
+    '/api/og-image': ['./public/Image/achievements/**/*'],
+    '/api/achievement/image': ['./public/Image/achievements/**/*'],
+  },
   
   // Увеличенные таймауты для обработки большого количества данных
   experimental: {

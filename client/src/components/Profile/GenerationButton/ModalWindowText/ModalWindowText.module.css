@@ -2,7 +2,7 @@
     position: relative;
   }
   
-  .modalBackdrop {
+.modalBackdrop {
     position: fixed;
     inset: 0;
     top: 0;
@@ -11,12 +11,15 @@
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
     display: flex;
-    align-items: center;
     justify-content: center;
-    z-index: 1000;
+
+    padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    padding-top: max(16px, env(safe-area-inset-top));
     margin: 0;
-    padding: 16px;
-  }
+    z-index: 10000;
+    overflow-y: auto;
+    align-items: center;
+}
   
   .modalImg {
     width: 100px;
@@ -24,16 +27,21 @@
     margin: 0 auto;
   }
   
-  .modalContent {
+.modalContent {
     background-color: var(--card-bg, #151515);
     border-radius: 1rem;
     padding: 1.5rem;
     max-width: 28rem;
-    width: 90%;
     position: relative;
     box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05));
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
+    width: 100%;
+    min-width: 0;
+    max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    overscroll-behavior: contain;
+}
 
   .light-theme .modalContent {
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);

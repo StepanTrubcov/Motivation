@@ -1,24 +1,35 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from '@/context/LanguageContext';
 import c from "./Lights.module.css";
+import l1 from "../../../../img/lights/2-1-no-bg-preview.png"
+import l2 from "../../../../img/lights/2-2-no-bg-preview.png"
+import l3 from "../../../../img/lights/2-3-no-bg-preview.png"
+import l4 from "../../../../img/lights/2-4-no-bg-preview.png"
+import l5 from "../../../../img/lights/2-5-no-bg-preview.png"
+import l6 from "../../../../img/lights/2-6-no-bg-preview.png"
+import l7 from "../../../../img/lights/2-7-no-bg-preview.png"
+import l8 from "../../../../img/lights/2-8-no-bg-preview.png"
+import l9 from "../../../../img/lights/2-9-no-bg-preview.png"
+import l10 from "../../../../img/lights/2-10-no-bg-preview.png"
+import l from "../../../../img/lights/752049b9-f85f-4d4e-a777-58c12ac42fbd.png"
 
 const Lights = ({ num, isTodayCompleted }) => {
     const { t } = useLanguage();
 
     const levelsOfLights = [
-        { url: "https://i.postimg.cc/KYgdfzYy/2-1-no-bg-preview-(carve-photos).png", daysMin: 2, daysMax: 9 },
-        { url: "https://i.postimg.cc/SRt1ybVn/2-2-no-bg-preview-(carve-photos)-edited-free-(carve-photos).png", daysMin: 10, daysMax: 19 },
-        { url: "https://i.postimg.cc/KvRQBWjz/2-3-no-bg-preview-(carve-photos).png", daysMin: 20, daysMax: 35 },
-        { url: "https://i.postimg.cc/Sx9rtzcV/2-4-edited-free-(carve-photos).png", daysMin: 36, daysMax: 50 },
-        { url: "https://i.postimg.cc/BvB0JtFx/2-5-no-bg-preview-(carve-photos)-edited-free-(carve-photos).png", daysMin: 51, daysMax: 65 },
-        { url: "https://i.postimg.cc/wxbQqk2j/2-6-no-bg-preview-(carve-photos).png", daysMin: 66, daysMax: 80 },
-        { url: "https://i.postimg.cc/Jhqj9309/2-7-no-bg-preview-(carve-photos).png", daysMin: 81, daysMax: 95 },
-        { url: "https://i.postimg.cc/NGVRqjsV/2-8-edited-free-(carve-photos).png", daysMin: 96, daysMax: 110 },
-        { url: "https://i.postimg.cc/YSpWf4R3/2-9-no-bg-preview-(carve-photos).png", daysMin: 111, daysMax: 140 },
-        { url: "https://i.postimg.cc/Gts8hvL5/2-10-no-bg-preview-(carve-photos).png", daysMin: 141, daysMax: 190 },
+        { url: l1.src, daysMin: 2, daysMax: 9 },
+        { url: l2.src, daysMin: 10, daysMax: 19 },
+        { url: l3.src, daysMin: 20, daysMax: 35 },
+        { url: l4.src, daysMin: 36, daysMax: 50 },
+        { url: l5.src, daysMin: 51, daysMax: 65 },
+        { url: l6.src, daysMin: 66, daysMax: 80 },
+        { url: l7.src, daysMin: 81, daysMax: 95 },
+        { url: l8.src, daysMin: 96, daysMax: 110 },
+        { url: l9.src, daysMin: 111, daysMax: 140 },
+        { url: l10.src, daysMin: 141, daysMax: 190 },
     ];
 
-    const grayLightUrl = "https://i.postimg.cc/gJDK9gn6/752049b9-f85f-4d4e-a777-58c12ac42fbd.png";
+    const grayLightUrl = l.src;
 
     const milestones = [2, 5, 10, 30, 60, 100, 120, 150, 180, 210, 240, 270, 300, 330, 365];
 

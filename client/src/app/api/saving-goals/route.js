@@ -2,33 +2,59 @@ import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 import { goalsTranslations } from '@/utils/goalsTranslations';
 
-function create120DaysGoals(initialGoalData, numberOfDays = 120, selectedOption = null) {
+const VALID_CALENDAR_PERIODS = [30, 60, 120];
+
+/** Длина календаря: в приоритете selectedOption (30/60/120), иначе numberOfDays, иначе 120. */
+function resolveSavingGoalsCalendarLength(numberOfDays, selectedOption) {
+  if (selectedOption !== null && selectedOption !== undefined) {
+    const opt = Number(selectedOption);
+    if (VALID_CALENDAR_PERIODS.includes(opt)) return opt;
+  }
+  const n = Number(numberOfDays);
+  if (Number.isFinite(n) && n >= 1) return Math.floor(n);
+  return 120;
+}
+
+function create120DaysGoals(initialGoalData, numberOfDays, selectedOption = null, startDateStr = null) {
   const goals = [];
-  const today = new Date();
-  const daysToCreate = numberOfDays;
+  const start = startDateStr
+    ? new Date(`${startDateStr}T12:00:00`)
+    : new Date();
+  const daysToCreate = resolveSavingGoalsCalendarLength(numberOfDays, selectedOption);
 
   for (let i = 0; i < daysToCreate; i++) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + i);
-
-    let goalData = [];
-    if (initialGoalData && selectedOption !== null && selectedOption !== undefined) {
-      if (i < selectedOption) {
-        goalData = [initialGoalData];
-      }
-    } else if (initialGoalData) {
-      goalData = [initialGoalData];
-    }
+    const date = new Date(start);
+    date.setDate(start.getDate() + i);
 
     const goalObject = {
       date: date.toISOString().split('T')[0],
-      goalData: goalData
+      goalData: initialGoalData ? [initialGoalData] : [],
     };
 
     goals.push(goalObject);
   }
 
   return goals;
+}
+
+/** Добавляет в календарь недостающие даты на periodDays начиная с targetDate. */
+function ensureCalendarCoversPeriod(goals, targetDate, periodDays) {
+  const base = Array.isArray(goals) ? [...goals] : [];
+  const datesSet = new Set(base.map((d) => d.date).filter(Boolean));
+  const start = new Date(`${targetDate}T12:00:00`);
+
+  for (let i = 0; i < periodDays; i++) {
+    const date = new Date(start);
+    date.setDate(start.getDate() + i);
+    const dateStr = date.toISOString().split('T')[0];
+
+    if (!datesSet.has(dateStr)) {
+      base.push({ date: dateStr, goalData: [] });
+      datesSet.add(dateStr);
+    }
+  }
+
+  return base.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function updateGoalsFromDate(goals, targetDate, newGoalData, selectedOption = null) {
@@ -467,15 +493,30 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
+    const targetDateToUse = targetDate || new Date().toISOString().split('T')[0];
+    const periodDays = resolveSavingGoalsCalendarLength(numberOfDays, selectedOption);
+
     let updatedGoals;
 
     if (!user.savingGoals || user.savingGoals.length === 0) {
-      // Создаем 120 дней с пустыми массивами goalData
-      updatedGoals = create120DaysGoals(goalData, numberOfDays, selectedOption);
+      updatedGoals = create120DaysGoals(
+        goalData,
+        numberOfDays,
+        selectedOption,
+        targetDateToUse
+      );
     } else {
-      // Обновляем существующие цели, используя selectedOption если он указан
-      const targetDateToUse = targetDate || new Date().toISOString().split('T')[0];
-      updatedGoals = updateGoalsFromDate(user.savingGoals, targetDateToUse, goalData, selectedOption);
+      const expanded = ensureCalendarCoversPeriod(
+        user.savingGoals,
+        targetDateToUse,
+        periodDays
+      );
+      updatedGoals = updateGoalsFromDate(
+        expanded,
+        targetDateToUse,
+        goalData,
+        selectedOption
+      );
     }
 
     const updatedUser = await prisma.user.update({

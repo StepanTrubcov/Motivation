@@ -47,10 +47,12 @@ async function backupDatabase() {
     console.log(`Размер файла: ${fs.statSync(backupFile).size} байт`);
     
     // Очистка старых резервных копий (оставляем только последние 7)
-    cleanupOldBackups(backupDir);
+    // Retention is opt-in: never remove backups during ordinary safety backups.
+    if (process.env.BACKUP_PRUNE === 'true') cleanupOldBackups(backupDir);
     
   } catch (error) {
     console.error('Ошибка при создании резервной копии:', error);
+    process.exitCode = 1;
   } finally {
     await prisma.$disconnect();
   }
@@ -64,11 +66,7 @@ function cleanupOldBackups(backupDir) {
     const backupFiles = files.filter(file => file.startsWith('prisma-backup-') && file.endsWith('.json'));
     
     // Сортируем по дате (новые первыми)
-    backupFiles.sort((a, b) => {
-      const dateA = new Date(a.replace('prisma-backup-', '').replace(/-/g, ':'));
-      const dateB = new Date(b.replace('prisma-backup-', '').replace(/-/g, ':'));
-      return dateB - dateA;
-    });
+    backupFiles.sort((a, b) => b.localeCompare(a));
     
     // Удаляем старые файлы (оставляем только последние 7)
     for (let i = 7; i < backupFiles.length; i++) {

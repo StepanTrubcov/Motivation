@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { resolveAchievementImage } from '@/lib/achievementImages';
 import { toast } from "react-hot-toast";
+
 
 let WebApp;
 let isWebAppLoading = true;
@@ -429,7 +431,7 @@ export async function initializeAchievements(userId) {
       "requirement": "",
       "rarity": "common",
       "status": "my",
-      "image": "https://i.postimg.cc/269msf3B/image-(1).jpg",
+      "image": "/Image/achievements/achievement-1.webp",
       "gif": "https://i.postimg.cc/zfr8v0t6/Untitled-kopia-3.gif",
       "points": 0
     },
@@ -438,7 +440,7 @@ export async function initializeAchievements(userId) {
       "title": "Активирован прогресс",
       "rarity": "common",
       "status": "locked",
-      "image": "https://i.postimg.cc/L8VcMLD4/8G2Wy.jpg",
+      "image": "/Image/achievements/achievement-28.webp",
       "gif": "https://i.postimg.cc/WzryYkzf/213.gif",
       "requirement": "• Достичь 20 уровня\n",
       "points": 200,
@@ -451,7 +453,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/fyjPfH7x/Untitled.gif",
       "requirement": "• Пройти обучение\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/13RkJZjN/h3p-S8.jpg",
+      "image": "/Image/achievements/achievement-27.webp",
       "points": 100,
       "type": "event_based",
       "rarity": "common",
@@ -462,7 +464,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/0yN7300y/Untitled-kopia-4.gif",
       "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/MpCkKwQK/899d46fe-fff2-45d0-85c8-1bafc42b7159.png",
+      "image": "/Image/achievements/achievement-2.webp",
       "points": 250,
       "type": "goal_based",
       "goalIds": [
@@ -477,7 +479,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/BZV3Hq7c/Untitled-kopia-9.gif",
       "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/YScT80Q1/image-(2).jpg",
+      "image": "/Image/achievements/achievement-3.webp",
       "points": 250,
       "type": "goal_based",
       "goalIds": [
@@ -491,7 +493,7 @@ export async function initializeAchievements(userId) {
       "title": "Кодерский марафон",
       "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/d0kBmqFQ/image-(1).jpg",
+      "image": "/Image/achievements/achievement-4.webp",
       "gif": "https://i.postimg.cc/8cFqt6Xc/Untitled-kopia.gif",
       "points": 250,
       "type": "goal_based",
@@ -506,7 +508,7 @@ export async function initializeAchievements(userId) {
       "title": "Здоровый рацион",
       "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/prdSyFMC/image-(1)-kopia.jpg",
+      "image": "/Image/achievements/achievement-5.webp",
       "points": 250,
       "type": "goal_based",
       "goalIds": [
@@ -521,7 +523,7 @@ export async function initializeAchievements(userId) {
       "title": "Ранний старт",
       "requirement": "• Взять себе цель «Рано проснуться»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/dtLXYrB6/image-kopia.jpg",
+      "image": "/Image/achievements/achievement-6.webp",
       "gif": "https://i.postimg.cc/jj1VNcZx/Untitled234.gif",
       "points": 250,
       "type": "goal_based",
@@ -537,7 +539,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/tgjnbdh9/Untitled-kopia-6.gif",
       "requirement": "• Взять себе цель «Облиться ❄️ водой»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/nLtwB5tT/dddbeae1-1d89-463d-a5e3-91d2b9e6adaa.png",
+      "image": "/Image/achievements/achievement-7.webp",
       "points": 250,
       "type": "goal_based",
       "goalIds": [
@@ -552,7 +554,7 @@ export async function initializeAchievements(userId) {
       "title": "Сила отжиманий",
       "requirement": "• Взять себе цель «Сделать 20 отжиманий»\n• Выполнить эту цель 30 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/SN2Z5qSL/image-kopia-2.jpg",
+      "image": "/Image/achievements/achievement-8.webp",
       "points": 250,
       "type": "goal_based",
       "goalIds": [
@@ -567,7 +569,7 @@ export async function initializeAchievements(userId) {
       "title": "Месяц прогресса",
       "requirement": "• Пользоваться ботом и приложением \n на протяжении 30 дней\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/SNQftmtq/d53eaa62-bd66-4b4c-b2a3-d1706214cb33.png",
+      "image": "/Image/achievements/achievement-9.webp",
       "points": 300,
       "type": "time_based",
       "rarity": "common",
@@ -579,7 +581,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/L8RxsWKW/Untitled-(1).gif",
       "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/HkhH4Tkq/12d6730e-ce3c-4b7e-a7ed-e3728d47a448-kopia.png",
+      "image": "/Image/achievements/achievement-10.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [
@@ -594,7 +596,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/SNbrZPsp/Untitled-(1)-kopia.gif",
       "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/bNYj7ZGC/image-(3).jpg",
+      "image": "/Image/achievements/achievement-11.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [
@@ -609,7 +611,7 @@ export async function initializeAchievements(userId) {
       "title": "Кодерский марафон",
       "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/fWKGfMHc/077e34ab-3f3e-422b-b45e-cc308ec45db5.png",
+      "image": "/Image/achievements/achievement-12.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [
@@ -624,7 +626,7 @@ export async function initializeAchievements(userId) {
       "title": "Здоровый рацион",
       "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/sgBbz7VV/image.jpg",
+      "image": "/Image/achievements/achievement-13.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [
@@ -639,7 +641,7 @@ export async function initializeAchievements(userId) {
       "title": "Ранний старт",
       "requirement": "• Взять себе цель «Рано проснуться»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/cJwjgWgm/image-(1)-kopia-2.jpg",
+      "image": "/Image/achievements/achievement-14.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [       
@@ -654,7 +656,7 @@ export async function initializeAchievements(userId) {
       "title": "Ледяная закалка",
       "requirement": "• Взять себе цель «Облиться ❄️ водой»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/C5P6TLXZ/78478168-36c0-45f4-99c8-366e0baa665c.png",
+      "image": "/Image/achievements/achievement-15.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [
@@ -669,7 +671,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/DZ5xLw2P/345.gif",
       "requirement": "• Взять себе цель «Сделать 20 отжиманий»\n• Выполнить эту цель 60 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/yY2vF5zG/image-(1)-kopia-3.jpg",
+      "image": "/Image/achievements/achievement-16.webp",
       "points": 500,
       "type": "goal_based",
       "goalIds": [
@@ -684,7 +686,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/RZ49HDkt/Untitled-kopia-11.gif",
       "requirement": "• Пользоваться ботом и приложением \n на протяжении 180 дней\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/26f4dYZ6/image-kopia-3.jpg",
+      "image": "/Image/achievements/achievement-17.webp",
       "points": 800,
       "type": "time_based",
       "rarity": "rare",
@@ -696,7 +698,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/g0nNBZBS/65.gif",
       "requirement": "• Достичь 50 уровня \n",
       "status": "locked",
-      "image": "https://i.postimg.cc/4yTPdF4P/Qgo-IX.jpg",
+      "image": "/Image/achievements/achievement-29.webp",
       "points": 400,
       "rarity": "rare",
       "type": "level_based",
@@ -708,7 +710,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/fTxhF1vn/Untitled-kopia-5.gif",
       "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 120 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/jdWbXLDd/abc30db4-c0ce-4e0a-ac5d-d66933c97033-kopia.png",
+      "image": "/Image/achievements/achievement-18.webp",
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
@@ -722,7 +724,7 @@ export async function initializeAchievements(userId) {
       "title": "Ледяная закалка",
       "requirement": "• Взять себе цель «Облиться ❄️ водой»\n• Выполнить эту цель 120 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/hGnRcspW/73664e2a-ece4-40a0-b985-ec6e31d57a4c.png",
+      "image": "/Image/achievements/achievement-19.webp",
       "points": 1000,
       "gif": "https://i.postimg.cc/XJpbzJsw/Untitled-kopia-8.gif",
       "type": "goal_based",
@@ -737,7 +739,7 @@ export async function initializeAchievements(userId) {
       "title": "Кодерский марафон",
       "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 90 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/nhngk9R3/2c7f25f1-85f5-49ca-96ef-5f4325f18de5.png",
+      "image": "/Image/achievements/achievement-20.webp",
       "points": 1000,
       "gif": "https://i.postimg.cc/Qx5XDFhz/Untitled-kopia-2.gif",
       "type": "goal_based",
@@ -752,7 +754,7 @@ export async function initializeAchievements(userId) {
       "title": "Сила отжиманий",
       "requirement": "• Взять себе цель «Сделать 20 отжиманий»\n• Выполнить эту цель 120 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/5NQhzTrW/image-(2)-kopia-2.jpg",
+      "image": "/Image/achievements/achievement-21.webp",
       "points": 1000,
       "type": "goal_based",
       "gif": "https://i.postimg.cc/x8cWt41D/5.gif",
@@ -768,7 +770,7 @@ export async function initializeAchievements(userId) {
       "gif": "https://i.postimg.cc/bwD1pHdm/Untitled-(2).gif",
       "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 120 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/KjGn26gL/image-(4).jpg",
+      "image": "/Image/achievements/achievement-22.webp",
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
@@ -783,7 +785,7 @@ export async function initializeAchievements(userId) {
       "title": "Здоровый рацион",
       "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 120 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/hjrdp23D/image-(5).jpg",
+      "image": "/Image/achievements/achievement-23.webp",
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
@@ -798,7 +800,7 @@ export async function initializeAchievements(userId) {
       "title": "Ранний старт",
       "requirement": "• Взять себе цель «Рано проснуться»\n• Выполнить эту цель 120 раз\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/zGgH9zcV/image-(2)-kopia.jpg",
+      "image": "/Image/achievements/achievement-24.webp",
       "points": 1000,
       "type": "goal_based",
       "goalIds": [
@@ -812,7 +814,7 @@ export async function initializeAchievements(userId) {
       "title": "Великий дисциплинатор",
       "requirement": "• Пользоваться ботом и приложением \n на протяжении 365 дней\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/KcfnTdvK/image-(1)-kopia-4.jpg",
+      "image": "/Image/achievements/achievement-25.webp",
       "points": 1500,
       "gif": "https://i.postimg.cc/NftZJrdY/Untitled-kopia-12.gif",
       "type": "time_based",
@@ -824,7 +826,7 @@ export async function initializeAchievements(userId) {
       "title": "Создатель системы",
       "requirement": "• Достичь 100 уровня\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/dVzywZ0K/z7ob0.jpg",
+      "image": "/Image/achievements/achievement-30.webp",
       "points": 900,
       "gif": "https://i.postimg.cc/YCJWMLCF/Untitled-kopia.gif",
       "type": "level_based",
@@ -836,7 +838,7 @@ export async function initializeAchievements(userId) {
       "title": "Коллекционер",
       "requirement": "• Получить все ачивки кроме Эпических\n",
       "status": "locked",
-      "image": "https://i.postimg.cc/ydNnWPkk/Zaz9K.jpg",
+      "image": "/Image/achievements/achievement-31.webp",
       "points": 1000,
       "gif": "https://i.postimg.cc/GpdXnrrR/Untitled-(1).gif",
       "type": "collection_based",
@@ -848,7 +850,7 @@ export async function initializeAchievements(userId) {
       "title": "Один из первых",
       "requirement": "• Эту ачивку получили первые 100\nпользователей бота.\n• Больше эту ачивку получить нельзя! \n",
       "status": "my",
-      "image": "https://i.postimg.cc/05B1mwDJ/image-(1)-kopia-5.jpg",
+      "image": "/Image/achievements/achievement-26.webp",
       "points": 0,
       "gif": "https://allwebs.ru/images/2026/01/16/13d99a897de68b6dcfc0a1a35d6a2c85.gif",
       "rarity": "epic",
@@ -869,7 +871,12 @@ export async function initializeAchievements(userId) {
 export async function getAchievements(userId) {
   try {
     const res = await axios.get(`${BASE_URL}/users/${userId}/achievements`);
-    return res.data;
+    return Array.isArray(res.data)
+      ? res.data.map(achievement => ({
+          ...achievement,
+          image: resolveAchievementImage(achievement.image),
+        }))
+      : res.data;
   } catch (error) {
     console.error("Ошибка при получении достижений:", error.response?.data || error.message);
     throw error;
@@ -961,7 +968,7 @@ export async function addCustomGoal(userId, title, category) {
  * @param {string|number} userId — telegramId
  * @param {{ idGoals: string|number, status?: string }} goalData — id цели и статус (обычно "in_progress")
  * @param {string|null} [targetDate] — "YYYY-MM-DD", с какой даты; по умолчанию сегодня на сервере
- * @param {30|60|120|null} [selectedOption] — на сколько дней вперёд дублировать цель (30 / 60 / 120)
+ * @param {30|60|120|null} [selectedOption] — период цели (30 / 60 / 120): столько же дней в календаре и столько дней с этой целью
  */
 export async function addSavingGoal(userId, goalData, targetDate = null, selectedOption = null) {
   try {

@@ -62,9 +62,13 @@
   backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin: 8px;
-  z-index: 100;
+
+    padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    padding-top: max(16px, env(safe-area-inset-top));
+    margin: 0;
+    z-index: 10000;
+    overflow-y: auto;
+    align-items: center;
 }
 
 .modalContent {
@@ -73,10 +77,15 @@
   color: #d5f2ff;
   padding: 22px;
   border-radius: 18px;
-  width: 90%;
   max-width: 380px;
   box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
   overflow: hidden;
+    width: 100%;
+    min-width: 0;
+    max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-wrap: anywhere;
+    overscroll-behavior: contain;
 }
 
 .closeButton {

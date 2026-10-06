@@ -1,3 +1,4 @@
+import { resolveAchievementImage } from '@/lib/achievementImages';
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
 
@@ -169,7 +170,7 @@ export async function POST(request, { params }) {
             description: ach.description || '',
             requirement: ach.requirement || '',
             status: nextStatus,
-            image: ach.image || '',
+            image: resolveAchievementImage(ach.image),
             gif: ach.gif || '',
             points: ach.points || 0,
             type: ach.type || null,
@@ -196,7 +197,7 @@ export async function POST(request, { params }) {
             description: ach.description || '',
             requirement: ach.requirement || '',
             status: legacyMy ? 'my' : desiredStatus,
-            image: ach.image || '',
+            image: resolveAchievementImage(ach.image),
             gif: ach.gif || '',
             points: ach.points || 0,
             type: ach.type || null,

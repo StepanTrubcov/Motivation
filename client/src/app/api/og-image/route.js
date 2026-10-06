@@ -1,6 +1,7 @@
+import { loadAchievementImage } from '@/lib/loadAchievementImage';
 // route.js для Next.js (Node runtime) - отдельный эндпоинт для получения изображений по ID
 import { NextResponse } from 'next/server';
-import { createCanvas, GlobalFonts, loadImage } from '@napi-rs/canvas';
+import { createCanvas, GlobalFonts } from '@napi-rs/canvas';
 import path from 'path';
 import { randomUUID } from 'crypto';
 
@@ -148,7 +149,7 @@ async function generateImageBuffer({
 
   // ===== Изображение (от края до края) =====
   if (img) {
-    const image = await loadImage(img);
+    const image = await loadAchievementImage(img);
     const imgW = cardW;
     const ratio = image.height / image.width;
     const imgH = imgW * ratio;

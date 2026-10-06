@@ -32,20 +32,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    padding: 16px 12px;
+    overflow-y: auto;
+    z-index: 10000;
 }
 
 .modal {
-    width: 90%;
     max-width: 380px;
     border-radius: 20px;
     padding: 30px 20px;
     text-align: center;
     animation: scaleIn 0.25s ease;
+    width: 100%;
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    overflow-wrap: anywhere;
 }
 
 .modalImg {
     width: 210px;
+    max-width: 100%;
+    height: auto;
 }
 
 .number {

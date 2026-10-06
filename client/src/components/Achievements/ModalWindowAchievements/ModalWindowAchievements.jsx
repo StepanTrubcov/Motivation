@@ -1,3 +1,4 @@
+import AchievementImage from '../AchievementImage';
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronRight } from "lucide-react";
@@ -48,9 +49,10 @@ const ModalWindowAchievements = ({ isModalOpen, closeModal }) => {
                         >
                             <div className={styles.cardInner}>
                                 <div className={styles.imageWrapper}>
-                                    <img
+                                    <AchievementImage
                                         className={styles.img}
-                                        src={isModalOpen?.gif}
+                                        image={isModalOpen?.img}
+                                        gif={isModalOpen?.gif}
                                         alt={isModalOpen?.title}
                                     />
                                 </div>
