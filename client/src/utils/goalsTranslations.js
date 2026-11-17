@@ -1,3 +1,6 @@
+import frozenCatalogs from '@/lib/progress/goalCatalogVersions.json';
+import { decorateTestGoal } from '@/lib/testGoalCatalog';
+import { decorateGoalTime } from '@/lib/goalTimeOptions';
 // Переводы для всех стандартных целей
 export const goalsTranslations = {
     ru: {
@@ -99,11 +102,14 @@ export const translateGoals = (goals, language) => {
 
     return goals.map(goal => {
         if (!goal) return goal;
+        if (goal.testCatalog) return decorateGoalTime(decorateTestGoal(goal, language), language);
         
         // Пробуем определить ID стандартной цели по хвосту id (например, userId_14 -> 14)
         const idRaw = goal.id?.toString() || '';
         let id = idRaw;
-        const tailDigits = idRaw.match(/(\d+)$/)?.[1];
+        const prefix = `${goal.userId}_`;
+        const tailDigits = goal.userId && idRaw.startsWith(prefix) ? idRaw.slice(prefix.length).match(/^(\d+)$/)?.[1] : /^\d+$/.test(idRaw) ? idRaw : null;
+        if (!tailDigits) return decorateGoalTime(goal, language);
         if (tailDigits) {
             id = tailDigits;
         }
@@ -111,7 +117,7 @@ export const translateGoals = (goals, language) => {
         let foundId = null;
         
         // Сначала пробуем найти по ID (формат "1"-"75")
-        if (id && /^([1-9]|[1-9][0-9]|7[0-5])$/.test(id)) {
+        if (id && /^\d+$/.test(id)) {
             foundId = id;
         } else {
             // Если ID не подходит, пробуем найти по title в обеих локалях
@@ -174,11 +180,11 @@ export const translateGoals = (goals, language) => {
         
         // Если ID не найден, возвращаем оригинал (возможно, это пользовательская цель)
         if (!foundId) {
-            return goal;
+            return decorateGoalTime(goal, language);
         }
         
-        const translatedTitle = getGoalTranslation(foundId, language, 'title');
-        const translatedDescription = getGoalTranslation(foundId, language, 'description');
+        const translatedTitle = goal.catalogVersion ? frozenCatalogs.translations[language]?.[foundId]?.title : getGoalTranslation(foundId, language, 'title');
+        const translatedDescription = goal.catalogVersion ? frozenCatalogs.translations[language]?.[foundId]?.description : getGoalTranslation(foundId, language, 'description');
         
         // Если перевод найден (не пустая строка), используем его, иначе оригинал
         const finalTitle = translatedTitle && translatedTitle.trim() !== '' 
@@ -189,10 +195,11 @@ export const translateGoals = (goals, language) => {
             ? translatedDescription 
             : (goal.description || '');
         
-        return {
+        return decorateGoalTime({
             ...goal,
             title: finalTitle,
+            baseTitle: finalTitle,
             description: finalDescription,
-        };
+        }, language);
     });
 };

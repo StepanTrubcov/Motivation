@@ -1,23 +1,24 @@
 'use client';
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import Goals from "./Goals";
 import { connect } from "react-redux";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { translateGoals } from '@/utils/goalsTranslations';
 import Filter from "../../utils/Filter/filter";
-import {checkTimeGoalsSaving, addStatusNew, addGoals, addStatus, NewGoals, newSavingGoal, newStatusSavingGoal, deleteGoalsSaving } from '../../redux/goals_reducer';
-import { toast } from "react-hot-toast";
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import {changeGoalLifecycle, changeGoalCompletion, checkTimeGoalsSaving, addStatusNew, addGoals, addStatus, NewGoals, newSavingGoal, newStatusSavingGoal, deleteGoalsSaving } from '../../redux/goals_reducer';
+import { notifications } from "@/lib/notifications";
 import styles from "./Goals.module.css";
 import ModalWindow from "../../utils/ModalWindow/ModalWindow";
 import { setPoints, deletePoints } from "../../redux/profile_reducer";
 
-const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, newSavingGoal, NewGoals, profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints }) => {
+const GoalsConteiner = ({ changeGoalLifecycle, changeGoalCompletion, checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, newSavingGoal, NewGoals, profile, goals, userId, addStatusNew, addGoals, addStatus, setPoints }) => {
     const { t, language } = useLanguage();
-    const { onTutorialActionDone, isOpen: isTutorialOpen, currentStep, nextStep, setGoalModalOpen, setGoalModalTutorialPhase, goalModalTutorialPhase, setLastCreatedGoalCategory } = useTutorial();
+    const { onTutorialActionDone, isOpen: isTutorialOpen, currentStep, nextStep, setGoalModalOpen, setGoalModalTutorialPhase, goalModalTutorialPhase, setLastCreatedGoalCategory, setLastCreatedGoalId } = useTutorial();
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [loading, setLoading] = useState(true);
+    const completionBusy = useRef(false);
+    const [query, setQuery] = useState('');
 
     // Переводим весь массив целей один раз
     const translatedGoals = useMemo(() => {
@@ -27,8 +28,8 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
         try {
             const goalsCopy = goals.goals.map(g => ({ ...g }));
             const translated = translateGoals(goalsCopy, language);
-            return Array.isArray(translated) && translated.length === goals.goals.length 
-                ? translated 
+            return Array.isArray(translated) && translated.length === goals.goals.length
+                ? translated
                 : goalsCopy;
         } catch (error) {
             console.error('Error translating goals:', error);
@@ -36,12 +37,6 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
         }
     }, [goals?.goals, language]);
 
-    useEffect(() => {
-        if (userId) {
-            addStatus(userId)
-            addGoals(userId)
-        }
-    }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
         if (goal.status === "not_started") {
@@ -85,66 +80,44 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
         setGoalModalTutorialPhase?.('button');
     }, [setGoalModalTutorialPhase]);
 
-    const handleNewGoals = useCallback(async (userId, title, category, resetForm, closeModalCb) => {
-        await NewGoals(userId, title, category, resetForm, closeModalCb);
+    const handleNewGoals = useCallback(async (userId, title, category, resetForm, closeModalCb, options = {}) => {
+        const selectedCategory = category || 'Discipline';
+        const createdGoal = await changeGoalLifecycle(userId, {
+            action: 'create', title, category: selectedCategory,
+            selectedOption: options.selectedOption, durationMinutes: options.durationMinutes,
+        });
+
+        resetForm?.();
+        closeModalCb?.();
         if (isTutorialOpen && currentStep?.id === 'goals-create') {
-            setLastCreatedGoalCategory?.(category);
+            setLastCreatedGoalCategory?.(selectedCategory);
+            setLastCreatedGoalId?.(createdGoal.id);
         }
         onTutorialActionDone('create_goal');
-    }, [NewGoals, onTutorialActionDone, isTutorialOpen, currentStep?.id, setLastCreatedGoalCategory]);
+        return createdGoal;
+    }, [changeGoalLifecycle, onTutorialActionDone, isTutorialOpen, currentStep?.id, setLastCreatedGoalCategory, t]);
 
     const addNewStatus = async (selectedOption, options = {}) => {
+        const notice = notifications.begin(t('takingGoal'));
         const fromTutorial = options.fromTutorial === true;
-        const loadingToastDurationMs = fromTutorial ? 5000 : 0;
-        let loadingToast;
         try {
-            loadingToast = toast.loading(t('takingGoal'), {
-                duration: fromTutorial ? 5000 : undefined,
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-            });
-            await addStatusNew(isModalOpen.id, userId, "in_progress", selectedOption);
-            const dismissAndSuccess = () => {
-                toast.dismiss(loadingToast);
-                toast.success(`${t('goalTaken')} ${selectedOption} ${t('goalTakenDays')}`, {
-                    style: {
-                        background: '#333',
-                        color: '#fff',
-                        marginTop: '80px',
-                    }
-                });
+
+            const timeSettings = {
+                quantity: options.quantity,
+                durationMinutes: options.durationMinutes,
+                targetTime: options.targetTime,
             };
-            if (loadingToastDurationMs > 0) {
-                setTimeout(dismissAndSuccess, loadingToastDurationMs);
-            } else {
-                dismissAndSuccess();
-            }
-            setIsModalOpen(null);
+            await changeGoalLifecycle(userId, { action: 'take', goalId: isModalOpen.id, selectedOption, ...timeSettings });
 
-            const targetDate = new Date().toISOString().slice(0, 10)
-            const goalData = {
-                idGoals: isModalOpen.id,
-                status: "in_progress",
-            }
-
-
-            await newSavingGoal(profile.telegramId, goalData, targetDate, selectedOption);
-
+            closeModal();
+            notice.success(`${t('goalTaken')} ${selectedOption} ${t('goalTakenDays')}`);
             if (!fromTutorial) onTutorialActionDone('take_goal');
 
         } catch (error) {
-            if (loadingToast != null) toast.dismiss(loadingToast);
+
             console.error(t('goalTakeError'), error);
-            toast.error(t('goalTakeErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            notice.error(t('goalTakeErrorRetry'));
+            throw error;
         }
     };
 
@@ -154,134 +127,75 @@ const GoalsConteiner = ({ checkTimeGoalsSaving, deletePoints, deleteGoalsSaving,
         onTutorialActionDone('take_goal');
     }, [setGoalModalOpen, setGoalModalTutorialPhase, onTutorialActionDone]);
 
-    const addNewStatusDone = async (isModalOpenDone) => {
-        const until = new Date().toISOString().slice(0, 10);
+    const performCompletion = async (goal, action) => {
+        if (completionBusy.current) return;
+        completionBusy.current = true;
+        setLoading(false);
+        const completing = action === 'complete';
+        const notice = notifications.begin(t(completing ? 'completingGoal' : 'cancelingGoal'));
         try {
-            setLoading(false)
-            const loadingToast = toast.loading(t('completingGoal'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-                icon: <LoadingSpinner size={20} />
-            });
-            await addStatusNew(isModalOpenDone.id, userId, "done");
-            await checkTimeGoalsSaving(profile.telegramId)
-            await setPoints(userId, isModalOpenDone.points)
-            await addStatus(userId);
-
-            const result = await newStatusSavingGoal(profile.telegramId, until, isModalOpenDone.id, "completed")
-            if (result) {
-                setLoading(true)
-            }
-            toast.dismiss(loadingToast);
-            toast.success(t('goalCompleted'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            await changeGoalCompletion(userId, goal.id, action);
+            notice.success(t(completing ? 'goalCompleted' : 'goalMoved'));
+            onTutorialActionDone(completing ? 'complete_goal' : 'undo_goal', goal.id);
         } catch (error) {
-            console.error(t('goalError'), error);
-            toast.error(t('goalErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            console.error('Could not save goal completion:', error);
+            notice.error(t(completing ? 'goalErrorRetry' : 'goalMoveErrorRetry'));
+        } finally {
+            completionBusy.current = false;
+            setLoading(true);
         }
     };
-
-    const addNewStatusInProgress = async (isModalOpen) => {
-        const until = new Date().toISOString().slice(0, 10);
-        try {
-            setLoading(false)
-            const loadingToast = toast.loading(t('cancelingGoal'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-                icon: <LoadingSpinner size={20} />
-            });
-
-            await addStatusNew(isModalOpen.id, userId, "in_progress");
-            await deletePoints(userId, isModalOpen.points)
-            await checkTimeGoalsSaving(profile.telegramId)
-            await addStatus(userId);
-
-            const result = await newStatusSavingGoal(profile.telegramId, until, isModalOpen.id, "in_progress")
-
-            toast.dismiss(loadingToast);
-            toast.success(t('goalMoved'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-
-            if (result) {
-                setLoading(true)
-            }
-        } catch (error) {
-            console.error(t('goalMoveError'), error);
-            toast.error(t('goalMoveErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-        }
-    };
-
-    const toastStyle = {
-        style: { background: '#333', color: '#fff', marginTop: '80px' },
-    };
+    const addNewStatusDone = goal => performCompletion(goal, 'complete');
+    const addNewStatusInProgress = goal => performCompletion(goal, 'undo');
 
     const addOldStatus = async (goalData) => {
-        const loadingToast = toast.loading(t('deletingGoal'), toastStyle);
+        const notice = notifications.begin(t('deletingGoal'));
+
         try {
-            const until = new Date().toISOString().slice(0, 10);
-            if (goalData.status === "completed") {
-                await deletePoints(userId, goalData.points);
-                await checkTimeGoalsSaving(profile.telegramId);
-            }
-            await addStatusNew(goalData.id, userId, "not_started");
-            await deleteGoalsSaving(profile.telegramId, goalData.id);
-            toast.dismiss(loadingToast);
-            toast.success(t('goalRemoved'), toastStyle);
+            await changeGoalLifecycle(userId, { action: 'remove', goalId: goalData.id });
+
+            notice.success(t('goalRemoved'));
             onTutorialActionDone('delete_goal');
         } catch (error) {
-            toast.dismiss(loadingToast);
+
             console.error(t('goalRemoveError'), error);
-            toast.error(t('goalRemoveErrorRetry'), toastStyle);
+            notice.error(t('goalRemoveErrorRetry'));
         }
     };
 
-    const All_goals = translatedGoals.filter(goal => goal.status === "not_started");
-    const goalsSport = All_goals.filter(goal => goal.category === "Sport");
-    const goalsDiscipline = All_goals.filter(goal => goal.category === "Discipline");
-    const goalsSpirituality = All_goals.filter(goal => goal.category === "Spirituality");
-    const goalsSelfDevelopment = All_goals.filter(goal => goal.category === "Self_development");
+    const normalizedQuery = query.trim().toLocaleLowerCase();
+    const searchWord = normalizedQuery.split(/\s+/u)[0] || '';
+    const matchesQuery = (goal) => {
+        if (!searchWord) return true;
+        const titleWords = String(goal.title || '').toLocaleLowerCase().split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+        return titleWords.some((word) => word.startsWith(searchWord));
+    };
+    const matchingGoals = translatedGoals.filter(matchesQuery);
+    const All_goals = translatedGoals.filter(goal => goal.status === "not_started" && !goal.retiredFromCatalog);
+    const catalogSearchGoals = All_goals.filter(matchesQuery);
+    const goalsSport = All_goals.filter(goal => goal.category === "Sport" && matchesQuery(goal));
+    const goalsDiscipline = All_goals.filter(goal => goal.category === "Discipline" && matchesQuery(goal));
+    const goalsSpirituality = All_goals.filter(goal => goal.category === "Spirituality" && matchesQuery(goal));
+    const goalsSelfDevelopment = All_goals.filter(goal => goal.category === "Self_development" && matchesQuery(goal));
     return (
         <div className={styles.container}>
             <Goals
                 completed={Filter(
-                    translatedGoals,
+                    matchingGoals,
                     "completed",
                     Modal,
-                    "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png", true, addOldStatus
+                    "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png", false, addOldStatus
                 )}
-                inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', true, addOldStatus)}
+                inProgress={Filter(matchingGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus)}
                 sportGoals={Filter(goalsSport, "not_started", Modal)}
                 disciplineGoals={Filter(goalsDiscipline, "not_started", Modal)}
                 spiritualityGoals={Filter(goalsSpirituality, "not_started", Modal)}
                 selfDevelopmentGoals={Filter(goalsSelfDevelopment, "not_started", Modal)}
+                catalogSearchResults={Filter(catalogSearchGoals, "not_started", Modal, undefined, false)}
+                catalogSearchCount={catalogSearchGoals.length}
+                query={query}
+                setQuery={setQuery}
+                myCount={matchingGoals.filter(goal => goal.status === 'in_progress' || goal.status === 'completed').length}
                 userId={userId}
                 NewGoals={handleNewGoals}
             />
@@ -304,4 +218,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile?.id,
 });
 
-export default connect(mapStateToProps, { checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, newSavingGoal, NewGoals, addStatusNew, addGoals, addStatus, setPoints })(GoalsConteiner);
+export default connect(mapStateToProps, { changeGoalLifecycle, changeGoalCompletion, checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, newSavingGoal, NewGoals, addStatusNew, addGoals, addStatus, setPoints })(GoalsConteiner);

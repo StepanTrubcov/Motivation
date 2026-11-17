@@ -1,21 +1,21 @@
 'use client';
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import TodaysGoals from "./TodaysGoals";
 import { connect } from "react-redux";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { translateGoals } from '@/utils/goalsTranslations';
 import Filter from "../../../utils/Filter/filter";
-import { addStatusNew, addGoals, addStatus, newStatusSavingGoal, deleteGoalsSaving,checkTimeGoalsSaving } from "../../../redux/goals_reducer";
-import { toast } from "react-hot-toast";
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import { changeGoalLifecycle, changeGoalCompletion, addStatusNew, addGoals, addStatus, newStatusSavingGoal, deleteGoalsSaving,checkTimeGoalsSaving } from "../../../redux/goals_reducer";
+import { notifications } from "@/lib/notifications";
 import { setPoints, deletePoints } from "../../../redux/profile_reducer";
 
-const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsSaving, newStatusSavingGoal, profile, addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
+const TodaysGoalsConteiner = ({ changeGoalLifecycle, changeGoalCompletion,checkTimeGoalsSaving,  deletePoints, deleteGoalsSaving, newStatusSavingGoal, profile, addStatusNew, goals, userId, addStatus, addGoals, setPoints }) => {
     const { t, language } = useLanguage();
-    const { isOpen: isTutorialOpen, currentStep, onTutorialActionDone } = useTutorial();
+    const { isOpen: isTutorialOpen, currentStep, onTutorialActionDone, completeGoalTutorialPhase } = useTutorial();
     const [home, setHome] = useState(null);
     const [loading, setLoading] = useState(true);
+    const completionBusy = useRef(false);
 
     // Переводим весь массив целей один раз
     const translatedGoals = useMemo(() => {
@@ -25,8 +25,8 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
         try {
             const goalsCopy = goals.goals.map(g => ({ ...g }));
             const translated = translateGoals(goalsCopy, language);
-            return Array.isArray(translated) && translated.length === goals.goals.length 
-                ? translated 
+            return Array.isArray(translated) && translated.length === goals.goals.length
+                ? translated
                 : goalsCopy;
         } catch (error) {
             console.error('Error translating goals:', error);
@@ -49,12 +49,6 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
         0
     );
 
-    useEffect(() => {
-        if (userId) {
-            addStatus(userId)
-            addGoals(userId)
-        }
-    }, [userId, addGoals, addStatus]);
 
     const Modal = (goal) => {
         if (goal.status === "in_progress") {
@@ -79,113 +73,38 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
 
     };
 
-    const addNewStatusInProgress = async (goalData) => {
-        const until = new Date().toISOString().slice(0, 10);
+    const performCompletion = async (goal, action) => {
+        if (completionBusy.current) return;
+        completionBusy.current = true;
+        setLoading(false);
+        const completing = action === 'complete';
+        const notice = notifications.begin(t(completing ? 'completingGoal' : 'cancelingGoal'));
         try {
-            setLoading(false)
-            const loadingToast = toast.loading(t('cancelingGoal'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-                icon: <LoadingSpinner size={20} />
-            });
-            await addStatusNew(goalData.id, userId, "in_progress");
-            await deletePoints(userId, goalData.points)
-            await checkTimeGoalsSaving(profile.telegramId)
-            await addStatus(userId);
-
-            const result = await newStatusSavingGoal(profile.telegramId, until, goalData.id, "in_progress")
-
-            if (result) {
-                setLoading(true)
-            }
-            toast.dismiss(loadingToast);
-            toast.success(t('goalMoved'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-
+            await changeGoalCompletion(userId, goal.id, action);
+            notice.success(t(completing ? 'goalCompleted' : 'goalMoved'));
+            onTutorialActionDone(completing ? 'complete_goal' : 'undo_goal', goal.id);
         } catch (error) {
-            console.error(t('goalMoveError'), error);
-            toast.error(t('goalMoveErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            console.error('Could not save goal completion:', error);
+            notice.error(t(completing ? 'goalErrorRetry' : 'goalMoveErrorRetry'));
+        } finally {
+            completionBusy.current = false;
+            setLoading(true);
         }
     };
-
-    const addNewStatusDone = async (isModalOpen) => {
-        const until = new Date().toISOString().slice(0, 10);
-        try {
-            setLoading(false)
-            const loadingToast = toast.loading(t('completingGoal'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-                icon: <LoadingSpinner size={20} />
-            });
-            addStatusNew(isModalOpen.id, userId, "done");
-            checkTimeGoalsSaving(profile.telegramId)
-            setPoints(userId, isModalOpen.points)
-            await addStatus(userId);
-            addGoals(userId)
-
-            const result = await newStatusSavingGoal(profile.telegramId, until, isModalOpen.id, "completed")
-
-            if (result) {
-                setLoading(true)
-            }
-            toast.dismiss(loadingToast);
-            toast.success(t('goalCompleted'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-            onTutorialActionDone('complete_goal');
-        } catch (error) {
-            console.error(t('goalError'), error);
-            toast.error(t('goalErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-        }
-    };
-
-    const toastStyle = {
-        style: { background: '#333', color: '#fff', marginTop: '80px' },
-    };
+    const addNewStatusDone = goal => performCompletion(goal, 'complete');
+    const addNewStatusInProgress = goal => performCompletion(goal, 'undo');
 
     const addOldStatus = async (goalData) => {
-        const loadingToast = toast.loading(t('deletingGoal'), toastStyle);
+        const notice = notifications.begin(t('deletingGoal'));
+
         try {
-            const until = new Date().toISOString().slice(0, 10);
-            if (goalData.status === "completed") {
-                await deletePoints(userId, goalData.points);
-                await checkTimeGoalsSaving(profile.telegramId);
-            }
-            await addStatusNew(goalData.id, userId, "not_started");
-            await deleteGoalsSaving(profile.telegramId, goalData.id);
-            toast.dismiss(loadingToast);
-            toast.success(t('goalRemoved'), toastStyle);
+            await changeGoalLifecycle(userId, { action: 'remove', goalId: goalData.id });
+
+            notice.success(t('goalRemoved'));
         } catch (error) {
-            toast.dismiss(loadingToast);
+
             console.error(t('goalRemoveError'), error);
-            toast.error(t('goalRemoveErrorRetry'), toastStyle);
+            notice.error(t('goalRemoveErrorRetry'));
         }
     };
 
@@ -201,10 +120,10 @@ const TodaysGoalsConteiner = ({checkTimeGoalsSaving,  deletePoints, deleteGoalsS
                 "https://i.postimg.cc/g00CMHm0/png-clipart-information-management-service-compute-no-bg-preview-carve-photos.png",
                 false,
                 addOldStatus,
-                isTutorialOpen,
+                isTutorialOpen && !(currentStep?.id === 'complete-goal' && completeGoalTutorialPhase === 'undo'),
                 false
             )}
-            inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus, isTutorialOpen && currentStep?.id !== 'complete-goal', false)} />
+            inProgress={Filter(translatedGoals, "in_progress", Modal, 'https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png', false, addOldStatus, isTutorialOpen && !(currentStep?.id === 'complete-goal' && completeGoalTutorialPhase === 'complete'), false)} />
     </div>
 }
 
@@ -214,4 +133,4 @@ const mapStateToProps = (state) => ({
     userId: state.profile.profile.id,
 })
 
-export default connect(mapStateToProps, { checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);
+export default connect(mapStateToProps, { changeGoalLifecycle, changeGoalCompletion, checkTimeGoalsSaving, deletePoints, deleteGoalsSaving, newStatusSavingGoal, addStatusNew, addStatus, addGoals, setPoints })(TodaysGoalsConteiner);

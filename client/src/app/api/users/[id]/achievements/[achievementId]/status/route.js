@@ -1,51 +1,37 @@
+import { readUser, readGoals, readAchievements, awardAchievement } from '@/lib/progress/store.mjs';
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { canUnlockAchievement, isFirstHundred } from '@/lib/achievementEligibility.mjs';
 
 export async function PUT(request, { params }) {
   try {
     const { id: userId, achievementId } = await params;
-    const { newStatus } = await request.json();
-
-    if (!newStatus) {
-      return NextResponse.json({ error: 'newStatus is required' }, { status: 400 });
-    }
-
-    const achievement = await prisma.achievement.findFirst({
-      where: { id: String(achievementId), userId: String(userId) }
-    });
-
-    if (!achievement) {
-      return NextResponse.json({ error: 'Achievement not found' }, { status: 404 });
-    }
-
-    if (achievement.status === newStatus) {
-      return NextResponse.json({ achievement, changed: false });
-    }
-
-    // Начисляем очки на сервере и только при реальном переходе в `my`.
-    const result = await prisma.$transaction(async (tx) => {
-      const updated = await tx.achievement.update({
-        where: { id: achievement.id },
-        data: { status: newStatus }
-      });
-
-      let ptsAdded = 0;
-      if (achievement.status !== 'my' && newStatus === 'my') {
-        ptsAdded = Math.max(0, Number(updated.points) || 0);
-        if (ptsAdded > 0) {
-          await tx.user.update({
-            where: { id: String(userId) },
-            data: { pts: { increment: ptsAdded } }
-          });
-        }
+    const { newStatus, event } = await request.json();
+    if (newStatus !== 'my') return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+    let result;
+    for (let attempt = 0; ; attempt++) {
+      try {
+        result = await prisma.$transaction(async tx => {
+      const user = await readUser(tx, { id: userId });
+      const [goals, assignments] = await Promise.all([readGoals(tx, userId, user), readAchievements(tx, userId, user)]);
+      const achievement = assignments.find(row => row.id === achievementId);
+      if (!achievement || !user) throw Object.assign(new Error('Not found'), { status: 404 });
+      if (achievement.status === 'my') return { achievement, changed: false };
+      const first100 = achievement.templateId === 'v2:27' && await isFirstHundred(tx, userId);
+      if (!canUnlockAchievement(achievement, { goals, assignments, user, first100, tutorialCompleted: event === 'tutorial_completed' })) {
+        throw Object.assign(new Error('Условие получения ачивки ещё не выполнено'), { status: 409 });
       }
-
-      return { updated, ptsAdded };
-    });
-
-    return NextResponse.json({ achievement: result.updated, changed: true, ptsAdded: result.ptsAdded });
+      const updated = await awardAchievement(tx, user, achievement);
+      return { achievement: updated, changed: true };
+        }, { isolationLevel: 'Serializable', timeout: 15000 });
+        break;
+      } catch (error) {
+        if (error.code === 'P2034' && attempt < 3) continue;
+        throw error;
+      }
+    }
+    return NextResponse.json(result);
   } catch (error) {
-    console.error('Error updating achievement status:', error);
-    return NextResponse.json({ error: 'Не удалось изменить статус достижения' }, { status: 500 });
+    return NextResponse.json({ error: error.status ? error.message : 'Не удалось сохранить ачивку' }, { status: error.status || 500 });
   }
 }

@@ -1,22 +1,23 @@
 .GenerationButton {
-    margin-bottom: 10px;
-    margin-top: 15px;
+    margin-bottom: 0;
+    margin-top: var(--space-4);
 }
 
 .button {
     display: flex;
     justify-content: center;
     width: 100%;
-    padding: 8px;
-    background-color: var(--accent-green, #00ff1e);
-    color: rgb(0, 0, 0);
-    border-radius: 20px;
+    padding: 8px 16px;
+    background-color: transparent;
+    color: var(--foreground, #ededed);
+    border-radius: var(--radius-control);
     font-weight: 600;
     font-size: 15px;
-    border: none;
+    border: 1px solid var(--accent-green, #00ff1e);
     cursor: pointer;
     transition: background-color 0.2s;
     display: flex;
+    align-items: center;
 }
 
 .img {
@@ -27,5 +28,22 @@
 .text {
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    gap: 10px;
 }
+.icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--accent-green, #00ff1e);
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+
+/* Light appearance */
+:global(.light-theme) .button { background: var(--accent-green); color: var(--accent-on); }
+:global(.light-theme) .icon { color: inherit; }

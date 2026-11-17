@@ -12,3 +12,7 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Light appearance */
+:global(.light-theme) .spinner { border-color: color-mix(in srgb, currentColor 20%, transparent); border-top-color: currentColor; }

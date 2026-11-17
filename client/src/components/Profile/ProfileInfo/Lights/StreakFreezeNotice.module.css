@@ -1,0 +1,15 @@
+.modal { background: radial-gradient(ellipse at 50% 25%, #123f69 0%, #101e32 58%, #0d1727 100%); border-color: #3f91c866; }
+.flame { animation: freezeEnter 650ms cubic-bezier(.2,.7,.3,1) both; }
+.compactHero { width: min(150px, 42vw, 20dvh); }
+.title { font-size: clamp(24px, 6vw, 29px); }
+.actions { display: grid; gap: 10px; }
+.more { min-height: 44px; border: 1px solid #65bdff66; border-radius: 12px; background: #5caeff12; color: #b6e3ff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+.more:focus-visible { outline: 2px solid #b6e3ff; outline-offset: 3px; }
+.details { margin: -6px 0 20px; padding: 15px; border: 1px solid #65bdff33; border-radius: 14px; background: #6db8ff0c; color: #d5eaff; text-align: left; font-size: 13px; line-height: 1.5; }
+.details h3 { margin: 0 0 8px; font-size: 14px; }
+.details ul { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+@keyframes freezeEnter { from { opacity: 0; transform: translateY(12px) scale(.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .flame { animation: none; } }
+:global(.light-theme) .modal { background: radial-gradient(ellipse at 50% 25%, #d7efff, #f7fbff 75%); border-color: #a6d6f4; }
+:global(.light-theme) .more { color: #155a8b; background: #e7f4ff; border-color: #a6d6f4; }
+:global(.light-theme) .details { color: #234966; background: #e7f4ff; border-color: #b9dff7; }

@@ -1,0 +1,22 @@
+[
+  {
+    "templateId": "v2:23",
+    "previousImage": "/Image/achievements/achievement-25.webp",
+    "image": "/Image/achievements/legendary-23-v1.webp"
+  },
+  {
+    "templateId": "v2:24",
+    "previousImage": "/Image/achievements/achievement-30.webp",
+    "image": "/Image/achievements/legendary-24-v1.webp"
+  },
+  {
+    "templateId": "v2:25",
+    "previousImage": "/Image/achievements/achievement-28.webp",
+    "image": "/Image/achievements/legendary-25-v1.webp"
+  },
+  {
+    "templateId": "v2:26",
+    "previousImage": "/Image/achievements/achievement-31.webp",
+    "image": "/Image/achievements/legendary-26-v1.webp"
+  }
+]

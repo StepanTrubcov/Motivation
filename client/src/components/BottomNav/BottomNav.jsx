@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from "react";
-import { FaHome, FaBars, FaTrophy } from "react-icons/fa";
+import React from "react";
+import { CalendarDays, Target, Trophy } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 import c from './BottomNav.module.css';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ import { useTutorial } from '@/context/TutorialContext';
 const BottomNav = () => {
     const pathname = usePathname();
     const router = useRouter();
-    const [activeTab, setActiveTab] = useState("home");
+    const { t } = useLanguage();
     const { isOpen: isTutorialOpen, currentStep, onTutorialNavigateToHome, onTutorialNavigateToGoals, onTutorialNavigateToAchievements } = useTutorial();
 
     const handleGoalsClick = (e) => {
@@ -19,59 +20,63 @@ const BottomNav = () => {
             onTutorialNavigateToGoals();
             router.push('/goals');
         }
-        setActiveTab("goals");
     };
 
     const handleAchievementsClick = (e) => {
         if (currentStep?.id === 'achievements-tab') {
             onTutorialNavigateToAchievements();
         }
-        setActiveTab("achievements");
     };
 
     const isNavRequiredStep = currentStep?.id === 'home-tab' || currentStep?.id === 'goals-tab' || currentStep?.id === 'achievements-tab';
     const blockNav = isTutorialOpen && !isNavRequiredStep;
 
     return (
-        <div
+        <nav
+            aria-label={t('mainNavigation')}
             className={`${c.navbar} ${blockNav ? c.navbarUnderTutorial : ''}`}
             onClick={blockNav ? (e) => { e.preventDefault(); e.stopPropagation(); } : undefined}
         >
             <Link
                 href='/profile'
-                className={`${c.navItem} ${pathname === '/profile' || pathname === '/' || activeTab === "home" ? c.active : ""}`}
+                aria-current={pathname === '/profile' || pathname === '/' ? 'page' : undefined}
+                className={`${c.navItem} ${pathname === '/profile' || pathname === '/' ? c.active : ""}`}
                 onClick={(e) => {
                     if (isTutorialOpen && currentStep?.id !== 'home-tab') { e.preventDefault(); e.stopPropagation(); return; }
                     if (currentStep?.id === 'home-tab') onTutorialNavigateToHome?.();
-                    setActiveTab("home");
                 }}
                 data-tutorial-id="home-tab"
             >
-                <FaHome />
+                <CalendarDays size={26} strokeWidth={1.8} aria-hidden="true" />
+                <span>{t('navToday')}</span>
             </Link>
             <Link
                 href='/goals'
-                className={`${c.navItem} ${pathname === '/goals' || activeTab === "goals" ? c.active : ""}`}
+                aria-current={pathname === '/goals' ? 'page' : undefined}
+                className={`${c.navItem} ${pathname === '/goals' ? c.active : ""}`}
                 onClick={(e) => {
                     if (isTutorialOpen && currentStep?.id !== 'goals-tab') { e.preventDefault(); e.stopPropagation(); }
                     else handleGoalsClick(e);
                 }}
                 data-tutorial-id="goals-tab"
             >
-                <FaBars />
+                <Target size={26} strokeWidth={1.8} aria-hidden="true" />
+                <span>{t('goals')}</span>
             </Link>
             <Link
                 href='/achievements'
-                className={`${c.navItem} ${pathname === '/achievements' || activeTab === "achievements" ? c.active : ""}`}
+                aria-current={pathname === '/achievements' ? 'page' : undefined}
+                className={`${c.navItem} ${pathname === '/achievements' ? c.active : ""}`}
                 onClick={(e) => {
                     if (isTutorialOpen && currentStep?.id !== 'achievements-tab') { e.preventDefault(); e.stopPropagation(); }
                     else handleAchievementsClick(e);
                 }}
                 data-tutorial-id="achievements-tab"
             >
-                <FaTrophy />
+                <Trophy size={26} strokeWidth={1.8} aria-hidden="true" />
+                <span>{t('achievements')}</span>
             </Link>
-        </div>
+        </nav>
     );
 };
 

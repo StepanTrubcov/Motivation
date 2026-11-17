@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1",
+    "title": "Красавчик!",
+    "image": "/Image/achievements/achievement-1.webp",
+    "gif": "/Image/achievements/animated/common-1-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 6608513,
+    "animation": "/Image/achievements/animated/common-1-v1.webp",
+    "animationBytes": 2178118
+  },
+  {
+    "id": "2",
+    "title": "В игре",
+    "image": "/Image/achievements/achievement-27.webp",
+    "gif": "/Image/achievements/animated/common-2-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 8822699,
+    "animation": "/Image/achievements/animated/common-2-v1.webp",
+    "animationBytes": 1885244
+  },
+  {
+    "id": "3",
+    "title": "30 дней бега",
+    "image": "/Image/achievements/achievement-2.webp",
+    "gif": "/Image/achievements/animated/common-3-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 15175747,
+    "animation": "/Image/achievements/animated/common-3-v1.webp",
+    "animationBytes": 5333528
+  },
+  {
+    "id": "4",
+    "title": "Книжный марафон",
+    "image": "/Image/achievements/achievement-3.webp",
+    "gif": "/Image/achievements/animated/common-4-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 14795361,
+    "animation": "/Image/achievements/animated/common-4-v1.webp",
+    "animationBytes": 3938698
+  },
+  {
+    "id": "5",
+    "title": "Кодерский марафон",
+    "image": "/Image/achievements/achievement-4.webp",
+    "gif": "/Image/achievements/animated/common-5-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 9083145,
+    "animation": "/Image/achievements/animated/common-5-v1.webp",
+    "animationBytes": 2152358
+  },
+  {
+    "id": "6",
+    "title": "Гибкость начинается",
+    "image": "/Image/achievements/achievement-32.webp",
+    "gif": "/Image/achievements/animated/common-6-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 7577766,
+    "animation": "/Image/achievements/animated/common-6-v1.webp",
+    "animationBytes": 2842136
+  },
+  {
+    "id": "7",
+    "title": "Утро в движении",
+    "image": "/Image/achievements/achievement-33-v2.webp",
+    "gif": "/Image/achievements/animated/common-7-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 8190301,
+    "animation": "/Image/achievements/animated/common-7-v1.webp",
+    "animationBytes": 3088586
+  },
+  {
+    "id": "8",
+    "title": "Шаг за шагом",
+    "image": "/Image/achievements/achievement-34.webp",
+    "gif": "/Image/achievements/animated/common-8-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 4899791,
+    "animation": "/Image/achievements/animated/common-8-v1.webp",
+    "animationBytes": 1755706
+  },
+  {
+    "id": "9",
+    "title": "Прыжок к цели",
+    "image": "/Image/achievements/achievement-35.webp",
+    "gif": "/Image/achievements/animated/common-9-v1.gif",
+    "width": 1254,
+    "height": 1254,
+    "frames": 24,
+    "bytes": 7806062,
+    "animation": "/Image/achievements/animated/common-9-v1.webp",
+    "animationBytes": 4235950
+  }
+]

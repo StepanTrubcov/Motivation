@@ -1,21 +1,24 @@
 .blok {
-    margin: 20px 10px;
-    background: var(--card-bg, #151515);
+    margin: var(--space-3) 0;
+    background: var(--surface-bg);
     color: var(--foreground, #ffffff);
-    padding: 20px;
-    border-radius: 10px;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-card);
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 10px;
     opacity: 0;
     transform: translateY(20px);
     animation: slideFadeIn 0.6s ease forwards;
-    box-shadow: var(--shadow, none);
+    box-shadow: var(--surface-shadow);
     transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: var(--surface-border);
+    height: 70px;
 }
 
-.light-theme .blok {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+:global(.light-theme) .blok {
+    box-shadow: var(--surface-shadow);
 }
 
 .blok:nth-child(1) {
@@ -71,7 +74,7 @@
 }
 
 .pts {
-    margin-top: 10px;
+    margin-top: 6px;
     font-size: 15px;
     color: var(--accent-green, #00ff1e);
     text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
@@ -80,18 +83,20 @@
 
 .img {
     width: 50px;
-    margin-left: 10px;
+    margin-left: 0;
 }
 
-/* Круг с стрелкой вправо (CSS вместо картинки) */
+/* Add action for catalog goals, drawn locally without an image request. */
 .circleButton {
-    width: 50px;
-    height: 50px;
-    min-width: 50px;
-    min-height: 50px;
-    margin-left: 10px;
-    border-radius: 50%;
-    background-color: #000000;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: var(--radius-control);
+    border: 1px solid var(--border-color, #343d42);
+    background: var(--card-bg-secondary, #191e21);
+    color: var(--foreground, #ededed);
+    opacity: 0.8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,29 +104,18 @@
     flex-shrink: 0;
 }
 
-/* Два отрезка стрелки: остриё справа, ровно по центру */
 .circleButton::before,
 .circleButton::after {
     content: '';
     position: absolute;
-    width: 17px;
-    height: 4px;
-    left:15px;
-    top: 50%;
-    margin-top: -2px;
-    background-color: var(--accent-green, #85FF97);
-    border-radius: 9999px 0 0 9999px;
-    transform-origin: 16px 2px;
-    transition: background-color 0.3s ease;
-    backface-visibility: hidden;
-}
-
-.circleButton::before {
-    transform: rotate(-45deg);
+    width: 20px;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
 }
 
 .circleButton::after {
-    transform: rotate(45deg);
+    transform: rotate(90deg);
 }
 
 /* Круг с галочкой (completed) — обводка + checkmark внутри */
@@ -130,7 +124,7 @@
     height: 50px;
     min-width: 50px;
     min-height: 50px;
-    margin-left: 10px;
+    margin-left: 0;
     border-radius: 50%;
     border: 4px solid var(--accent-green, #00ff1e);
     background: transparent;
@@ -194,19 +188,20 @@
     right: 0px;
     top: calc(100% + 8px); /* ниже блока на 8px */
     transform: scale(0.85);
-    background: var(--card-bg-secondary, #1e1e1e);
+    background: var(--surface-bg);
     padding: 10px 16px;
     border-radius: 12px;
-    box-shadow: var(--shadow-lg, 0 8px 20px rgba(0, 0, 0, 0.45));
+    box-shadow: var(--surface-shadow);
     opacity: 0;
     animation: popupShow 0.22s ease forwards;
     z-index: 30;
     white-space: nowrap;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    border: var(--surface-border);
 }
 
-.light-theme .popup {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+:global(.light-theme) .popup {
+    box-shadow: var(--surface-shadow);
 }
 
 /* Треугольник */
@@ -255,3 +250,193 @@
 .blok > div:first-child { min-width: 0; }
 
 .blok > div:last-child { flex-shrink: 0; }
+
+.goalText { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+/* Goal cards share one fixed footprint, regardless of title or saved time. */
+.goalCard:not(.blokCarousel) { margin-block: var(--space-2); }
+
+
+.goalCard .goalText {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-height: 20px;
+    overflow: hidden;
+}
+
+.goalCard .title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.goalTime {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--foreground, #ffffff);
+    opacity: 0.68;
+    font-size: 13px;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.goalCard .pts {
+    margin-top: 0;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.goalCard.blokCarousel {
+    height: 112px;
+    min-height: 112px;
+}
+
+.swipeWrapper {
+    /* overflow: hidden; */
+    border-radius: var(--radius-card);
+    touch-action: pan-y;
+}
+
+/* Cards in the swipable list stay opaque so the trash action never flashes through. */
+.swipeWrapper .goalCard {
+    opacity: 1;
+    transform: none;
+    animation: none;
+}
+
+.deleteReveal {
+    position: absolute;
+    top: var(--space-2);
+    bottom: var(--space-2);
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 76px;
+    padding-left: 6px;
+    box-sizing: border-box;
+    color: #fff;
+}
+
+.deleteRevealButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--radius-control);
+    background: #d94343;
+    color: #fff;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.swipeSurface {
+    position: relative;
+    z-index: 1;
+    transition: transform 180ms ease;
+    will-change: transform;
+}
+
+.swipeDragging {
+    transition: none;
+}
+
+.deleteConfirm {
+    position: absolute;
+    z-index: 3;
+    top: var(--space-2);
+    right: 0;
+    bottom: var(--space-2);
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    border: var(--surface-border);
+    border-radius: var(--radius-card);
+    background: var(--surface-bg);
+    box-shadow: var(--surface-shadow);
+}
+
+.deleteConfirm p {
+    margin: 0;
+    color: var(--foreground);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.deleteConfirmActions {
+    display: flex;
+    gap: 8px;
+}
+
+.cancelDeleteButton,
+.deleteConfirmActions .deleteBtn {
+    min-width: 0;
+    min-height: 34px;
+    padding: 6px 12px;
+    border-radius: var(--radius-control);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.cancelDeleteButton {
+    flex: 1;
+    border: var(--surface-border);
+    background: var(--card-bg-secondary);
+    color: var(--foreground);
+}
+
+.deleteConfirmActions .deleteBtn {
+    flex: 1;
+    width: auto;
+    background: #d94343;
+}
+
+@media (max-width: 380px) {
+    .deleteConfirm {
+        gap: 6px;
+        padding: 8px 10px;
+    }
+
+    .deleteConfirm p {
+        font-size: 12px;
+    }
+
+    .cancelDeleteButton,
+    .deleteConfirmActions .deleteBtn {
+        padding-inline: 8px;
+        font-size: 12px;
+    }
+}
+
+
+/* Light appearance */
+:global(.light-theme) .pts { text-shadow: none; }
+:global(.light-theme) .goalTime { color: var(--muted-foreground); opacity: 1; }
+:global(.light-theme) .circleButton { opacity: 1; color: var(--muted-foreground); }
+:global(.light-theme) .deleteConfirm { box-shadow: var(--shadow-lg); }
+:global(.light-theme) .deleteBtn, :global(.light-theme) .deleteConfirmActions .deleteBtn { background: #be3443; }
+
+
+
+:global(.light-theme) .goalCard[data-completed="true"] {
+    background: color-mix(in srgb, var(--accent-green) 6%, #fff);
+    border-color: color-mix(in srgb, var(--accent-green) 24%, #fff);
+}

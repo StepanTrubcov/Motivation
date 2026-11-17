@@ -26,6 +26,13 @@ const nextConfig = {
   },
   turbopack: {},
 
+  async headers() {
+    return ['/api/:path*'].map(source => ({
+      source,
+      headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
+    }));
+  },
+
   webpack: (config) => {
     // Добавляем поддержку шрифтов
     config.module.rules.push({

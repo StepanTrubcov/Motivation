@@ -32,23 +32,30 @@
 .common {
   color: #ffffff;
   background: linear-gradient(135deg, #00ff41, #00cc33);
-  border-radius: 20px;
+  border-radius: var(--radius-control);
 }
 
 .rare {
   color: #ffffff;
   background: linear-gradient(135deg, #00ffff, #0099ff);
-  border-radius: 20px;
+  border-radius: var(--radius-control);
 }
 
 .legendary {
   color: #ffffff;
   background: linear-gradient(135deg, #ff00ff, #ff6600);
-  border-radius: 20px;
+  border-radius: var(--radius-control);
 }
 
 .epic {
   color: #ffffff;
   background: linear-gradient(135deg, #FFD84D, #FF4D4D, #9B4DFF);
-  border-radius: 20px;
+  border-radius: var(--radius-control);
 }
+
+/* Light appearance */
+:global(.light-theme) .active { color: var(--accent-on); text-shadow: none; }
+:global(.light-theme) .common { background: var(--rarity-common); color: #fff; }
+:global(.light-theme) .rare { background: var(--rarity-rare); color: #fff; }
+:global(.light-theme) .legendary { background: var(--rarity-legendary); color: #fff; }
+:global(.light-theme) .epic { background: var(--rarity-epic); color: #fff; }

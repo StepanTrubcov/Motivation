@@ -1,0 +1,2230 @@
+{
+  "standard-v1": [
+    {
+      "id": "1",
+      "title": "Пробежать 1 км",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "3",
+      "title": "Пробежать 5 км",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "5",
+      "title": "Сделать 50 приседаний",
+      "points": 25,
+      "category": "Sport"
+    },
+    {
+      "id": "8",
+      "title": "Сделать 20 отжиманий",
+      "points": 15,
+      "category": "Sport"
+    },
+    {
+      "id": "14",
+      "title": "Пройти 5000 шагов",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "18",
+      "title": "Утренняя зарядка 10 минут",
+      "points": 15,
+      "category": "Sport"
+    },
+    {
+      "id": "25",
+      "title": "Сделать планку 1 минуту",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "49",
+      "title": "Сделать 15 минут йоги",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "52",
+      "title": "Покататься на велосипеде 30 минут",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "61",
+      "title": "Сделать растяжку 10 минут",
+      "points": 15,
+      "category": "Sport"
+    },
+    {
+      "id": "62",
+      "title": "Сделать 200 прыжков на скакалке",
+      "points": 25,
+      "category": "Sport"
+    },
+    {
+      "id": "63",
+      "title": "Погулять 30 минут на свежем воздухе",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "64",
+      "title": "Сделать разминку перед началом дня",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "65",
+      "title": "Сделать растяжку после сна",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "131",
+      "title": "Пробежка утром",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "132",
+      "title": "Сделать тренировку ног 15 минут",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "133",
+      "title": "Сделать тренировку рук 15 минут",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "134",
+      "title": "Пройти 10 000 шагов",
+      "points": 25,
+      "category": "Sport"
+    },
+    {
+      "id": "135",
+      "title": "Сделать упражнения для спины",
+      "points": 15,
+      "category": "Sport"
+    },
+    {
+      "id": "136",
+      "title": "Сделать разминку шеи",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "137",
+      "title": "Сделать вечернюю прогулку",
+      "points": 15,
+      "category": "Sport"
+    },
+    {
+      "id": "138",
+      "title": "Сделать дыхательные упражнения",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "139",
+      "title": "Сделать тренировку корпуса",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "140",
+      "title": "Выпить стакан воды утром",
+      "points": 10,
+      "category": "Sport"
+    },
+    {
+      "id": "4",
+      "title": "Кодить 1 час",
+      "points": 30,
+      "category": "Discipline"
+    },
+    {
+      "id": "16",
+      "title": "Облиться холодной водой",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "35",
+      "title": "Лечь спать до 23:00",
+      "points": 25,
+      "category": "Discipline"
+    },
+    {
+      "id": "36",
+      "title": "Рано проснуться",
+      "points": 20,
+      "category": "Discipline"
+    },
+    {
+      "id": "45",
+      "title": "2 часа без телефона",
+      "points": 30,
+      "category": "Discipline"
+    },
+    {
+      "id": "54",
+      "title": "Составить распорядок дня",
+      "points": 20,
+      "category": "Discipline"
+    },
+    {
+      "id": "66",
+      "title": "Убрать рабочее место",
+      "points": 10,
+      "category": "Discipline"
+    },
+    {
+      "id": "68",
+      "title": "Провести день без сладкого",
+      "points": 25,
+      "category": "Discipline"
+    },
+    {
+      "id": "69",
+      "title": "Поработать 2 часа без отвлечений",
+      "points": 25,
+      "category": "Discipline"
+    },
+    {
+      "id": "70",
+      "title": "Проснуться без телефона",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "144",
+      "title": "Проснуться без откладывания будильника",
+      "points": 20,
+      "category": "Discipline"
+    },
+    {
+      "id": "145",
+      "title": "Сделать план на завтра вечером",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "146",
+      "title": "Не заходить в соцсети утром",
+      "points": 20,
+      "category": "Discipline"
+    },
+    {
+      "id": "147",
+      "title": "Сфокусироваться на работе 1 час",
+      "points": 25,
+      "category": "Discipline"
+    },
+    {
+      "id": "148",
+      "title": "Сделать сложную задачу дня",
+      "points": 25,
+      "category": "Discipline"
+    },
+    {
+      "id": "149",
+      "title": "Закончить начатое дело",
+      "points": 20,
+      "category": "Discipline"
+    },
+    {
+      "id": "150",
+      "title": "Соблюдать режим питания",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "151",
+      "title": "Не есть перед сном",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "152",
+      "title": "Работать по таймеру Pomodoro",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "153",
+      "title": "Подготовить вещи на завтра",
+      "points": 10,
+      "category": "Discipline"
+    },
+    {
+      "id": "154",
+      "title": "Отключить лишние уведомления",
+      "points": 10,
+      "category": "Discipline"
+    },
+    {
+      "id": "155",
+      "title": "Сделать цифровой детокс 1 час",
+      "points": 15,
+      "category": "Discipline"
+    },
+    {
+      "id": "2",
+      "title": "Читать книгу 20 минут",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "6",
+      "title": "Учить английский",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "13",
+      "title": "Поработать над стартапом",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "24",
+      "title": "Смотреть обучающее видео",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "34",
+      "title": "Выучить 20 английских слов",
+      "points": 40,
+      "category": "Self_development"
+    },
+    {
+      "id": "47",
+      "title": "Прочитать статью о саморазвитии",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "55",
+      "title": "Прослушать подкаст о личностном росте",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "71",
+      "title": "Посмотреть документальный фильм",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "72",
+      "title": "Записать 3 идеи",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "73",
+      "title": "Вести дневник благодарности",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "74",
+      "title": "Учить новый навык 30 минут",
+      "points": 25,
+      "category": "Self_development"
+    },
+    {
+      "id": "75",
+      "title": "Поставить цель на завтра",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "158",
+      "title": "Выучить 3 новых слова",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "159",
+      "title": "Посмотреть образовательное видео",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "160",
+      "title": "Написать запись в дневник",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "161",
+      "title": "Повторить английские слова",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "162",
+      "title": "Прочитать полезную статью",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "163",
+      "title": "Изучить новую тему 10 минут",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "164",
+      "title": "Записать идею проекта",
+      "points": 10,
+      "category": "Self_development"
+    },
+    {
+      "id": "165",
+      "title": "Посмотреть лекцию",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "166",
+      "title": "Сделать заметки по обучению",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "167",
+      "title": "Практиковать иностранный язык",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "168",
+      "title": "Сделать мини-исследование темы",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "169",
+      "title": "Посмотреть интервью эксперта",
+      "points": 15,
+      "category": "Self_development"
+    },
+    {
+      "id": "57",
+      "title": "Прочитать одну главу Евангелия",
+      "points": 20,
+      "category": "Spirituality"
+    },
+    {
+      "id": "58",
+      "title": "Помолиться утром и вечером",
+      "points": 15,
+      "category": "Spirituality"
+    },
+    {
+      "id": "60",
+      "title": "Прочитать молитву перед сном",
+      "points": 10,
+      "category": "Spirituality"
+    },
+    {
+      "id": "174",
+      "title": "Помолиться утром",
+      "points": 10,
+      "category": "Spirituality"
+    },
+    {
+      "id": "175",
+      "title": "Помолиться вечером",
+      "points": 10,
+      "category": "Spirituality"
+    },
+    {
+      "id": "176",
+      "title": "Прочитать духовный текст",
+      "points": 15,
+      "category": "Spirituality"
+    },
+    {
+      "id": "177",
+      "title": "Поблагодарить Бога за день",
+      "points": 10,
+      "category": "Spirituality"
+    },
+    {
+      "id": "178",
+      "title": "Помолиться своими словами",
+      "points": 10,
+      "category": "Spirituality"
+    },
+    {
+      "id": "179",
+      "title": "Помолиться за близких",
+      "points": 15,
+      "category": "Spirituality"
+    },
+    {
+      "id": "180",
+      "title": "Провести 5 минут в молитве",
+      "points": 15,
+      "category": "Spirituality"
+    },
+    {
+      "id": "181",
+      "title": "Прочитать псалом",
+      "points": 15,
+      "category": "Spirituality"
+    },
+    {
+      "id": "182",
+      "title": "Заниматься пением",
+      "points": 20,
+      "category": "Self_development"
+    },
+    {
+      "id": "183",
+      "title": "Поделиться своим отчётом",
+      "points": 20,
+      "category": "Discipline"
+    },
+    {
+      "id": "184",
+      "title": "Танцевать",
+      "points": 20,
+      "category": "Sport"
+    },
+    {
+      "id": "185",
+      "title": "Записать расходы за день",
+      "points": 20,
+      "category": "Discipline"
+    }
+  ],
+  "testbot-v1": [
+    {
+      "id": "1",
+      "title": "Бегать",
+      "points": 10,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Run",
+      "quantityOptions": [
+        1,
+        2,
+        3,
+        5,
+        10
+      ],
+      "defaultQuantity": 1,
+      "quantityUnit": "км",
+      "quantityUnitEn": "km"
+    },
+    {
+      "id": "3",
+      "title": "Бегать",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Run",
+      "quantityOptions": [
+        1,
+        2,
+        3,
+        5,
+        10
+      ],
+      "defaultQuantity": 5,
+      "quantityUnit": "км",
+      "quantityUnitEn": "km"
+    },
+    {
+      "id": "5",
+      "title": "Приседать",
+      "points": 25,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Do squats",
+      "quantityOptions": [
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "defaultQuantity": 50,
+      "quantityUnit": "раз",
+      "quantityUnitEn": "reps"
+    },
+    {
+      "id": "8",
+      "title": "Отжиматься",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Do push-ups",
+      "quantityOptions": [
+        5,
+        10,
+        15,
+        20,
+        30,
+        50
+      ],
+      "defaultQuantity": 20,
+      "quantityUnit": "раз",
+      "quantityUnitEn": "reps"
+    },
+    {
+      "id": "14",
+      "title": "Ходить пешком",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Walk",
+      "quantityOptions": [
+        1000,
+        3000,
+        5000,
+        7000,
+        10000,
+        15000
+      ],
+      "defaultQuantity": 5000,
+      "quantityUnit": "шагов",
+      "quantityUnitEn": "steps"
+    },
+    {
+      "id": "134",
+      "title": "Ходить пешком",
+      "points": 25,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Walk",
+      "quantityOptions": [
+        1000,
+        3000,
+        5000,
+        7000,
+        10000,
+        15000
+      ],
+      "defaultQuantity": 10000,
+      "quantityUnit": "шагов",
+      "quantityUnitEn": "steps"
+    },
+    {
+      "id": "18",
+      "title": "Утренняя зарядка",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Morning exercise"
+    },
+    {
+      "id": "25",
+      "title": "Сделать планку",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [
+        1,
+        2,
+        3
+      ],
+      "defaultDuration": 1,
+      "titleEn": "Hold a plank"
+    },
+    {
+      "id": "49",
+      "title": "Заниматься йогой",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [
+        10,
+        15,
+        30,
+        45,
+        60
+      ],
+      "defaultDuration": 15,
+      "titleEn": "Practice yoga"
+    },
+    {
+      "id": "52",
+      "title": "Покататься на велосипеде",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Ride a bike"
+    },
+    {
+      "id": "61",
+      "title": "Сделать растяжку",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Stretch"
+    },
+    {
+      "id": "62",
+      "title": "Прыгать на скакалке",
+      "points": 25,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Jump rope",
+      "quantityOptions": [
+        50,
+        100,
+        200,
+        300,
+        500,
+        1000
+      ],
+      "defaultQuantity": 200,
+      "quantityUnit": "раз",
+      "quantityUnitEn": "reps"
+    },
+    {
+      "id": "63",
+      "title": "Погулять на свежем воздухе",
+      "points": 10,
+      "category": "Sport",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Walk outdoors"
+    },
+    {
+      "id": "135",
+      "title": "Сделать упражнения для спины",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Do back exercises"
+    },
+    {
+      "id": "138",
+      "title": "Практиковать спокойное дыхание",
+      "points": 10,
+      "category": "Sport",
+      "durationOptions": [
+        3,
+        5,
+        10,
+        15
+      ],
+      "defaultDuration": 5,
+      "titleEn": "Practice calm breathing"
+    },
+    {
+      "id": "4",
+      "title": "Программировать",
+      "points": 30,
+      "category": "Discipline",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120,
+        180
+      ],
+      "defaultDuration": 60,
+      "titleEn": "Program"
+    },
+    {
+      "id": "35",
+      "title": "Лечь спать в выбранное время",
+      "points": 25,
+      "category": "Discipline",
+      "durationOptions": [],
+      "timePicker": true,
+      "defaultTime": "23:00",
+      "titleEn": "Go to bed at your chosen time"
+    },
+    {
+      "id": "36",
+      "title": "Встать в запланированное время",
+      "points": 20,
+      "category": "Discipline",
+      "durationOptions": [],
+      "timePicker": true,
+      "defaultTime": "07:00",
+      "titleEn": "Get up at your planned time"
+    },
+    {
+      "id": "45",
+      "title": "Провести время без телефона",
+      "points": 30,
+      "category": "Discipline",
+      "durationOptions": [
+        30,
+        60,
+        90,
+        120,
+        180,
+        240
+      ],
+      "defaultDuration": 120,
+      "titleEn": "Spend time without your phone"
+    },
+    {
+      "id": "54",
+      "title": "Записать главные задачи на завтра",
+      "points": 20,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Plan tomorrow’s main tasks",
+      "quantityOptions": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "defaultQuantity": 3,
+      "quantityUnit": "задач",
+      "quantityUnitEn": "tasks"
+    },
+    {
+      "id": "66",
+      "title": "Убрать рабочее место",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Clean your workspace"
+    },
+    {
+      "id": "68",
+      "title": "Провести день без сладостей",
+      "titleEn": "Spend a day without sweets",
+      "category": "Discipline",
+      "points": 25,
+      "durationOptions": []
+    },
+    {
+      "id": "70",
+      "title": "Начать утро без телефона",
+      "points": 15,
+      "category": "Discipline",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Start the morning without your phone"
+    },
+    {
+      "id": "144",
+      "title": "Встать после первого будильника",
+      "points": 20,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Get up after the first alarm"
+    },
+    {
+      "id": "147",
+      "title": "Работать без отвлечений",
+      "points": 25,
+      "category": "Discipline",
+      "durationOptions": [
+        25,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 60,
+      "titleEn": "Work without distractions"
+    },
+    {
+      "id": "153",
+      "title": "Подготовить вещи на завтра",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Prepare your things for tomorrow"
+    },
+    {
+      "id": "2",
+      "title": "Читать книгу",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Read a book"
+    },
+    {
+      "id": "13",
+      "title": "Работать над своим проектом",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120,
+        180
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Work on your project"
+    },
+    {
+      "id": "24",
+      "title": "Изучить материал и записать выводы",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Study and write conclusions",
+      "quantityOptions": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "defaultQuantity": 3,
+      "quantityUnit": "выводов",
+      "quantityUnitEn": "conclusions"
+    },
+    {
+      "id": "34",
+      "title": "Выучить новые иностранные слова",
+      "points": 40,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Learn new foreign words",
+      "quantityOptions": [
+        3,
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultQuantity": 5,
+      "quantityUnit": "слов",
+      "quantityUnitEn": "words"
+    },
+    {
+      "id": "47",
+      "title": "Прочитать статью и записать главный вывод",
+      "points": 10,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Read an article and note its main takeaway"
+    },
+    {
+      "id": "72",
+      "title": "Записать одну идею и следующий шаг",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Write down an idea and the next step"
+    },
+    {
+      "id": "73",
+      "title": "Записать благодарности",
+      "points": 10,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Write down things you are grateful for",
+      "quantityOptions": [
+        1,
+        3,
+        5,
+        10
+      ],
+      "defaultQuantity": 3,
+      "quantityUnit": "пунктов",
+      "quantityUnitEn": "items"
+    },
+    {
+      "id": "74",
+      "title": "Практиковать выбранный навык",
+      "points": 25,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Practice your chosen skill"
+    },
+    {
+      "id": "160",
+      "title": "Записать итоги дня",
+      "points": 10,
+      "category": "Self_development",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20
+      ],
+      "defaultDuration": 5,
+      "titleEn": "Write a daily reflection"
+    },
+    {
+      "id": "161",
+      "title": "Повторить иностранные слова",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Review foreign words"
+    },
+    {
+      "id": "166",
+      "title": "Изучать выбранную тему",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Study your chosen topic"
+    },
+    {
+      "id": "167",
+      "title": "Практиковать иностранный язык",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        15,
+        30,
+        45,
+        60,
+        90
+      ],
+      "defaultDuration": 15,
+      "titleEn": "Practice a foreign language"
+    },
+    {
+      "id": "57",
+      "title": "Прочитать одну главу Евангелия",
+      "points": 20,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Read one chapter of the Gospel"
+    },
+    {
+      "id": "174",
+      "title": "Помолиться утром",
+      "points": 10,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Pray in the morning"
+    },
+    {
+      "id": "175",
+      "title": "Помолиться вечером",
+      "points": 10,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Pray in the evening"
+    },
+    {
+      "id": "176",
+      "title": "Читать духовную литературу",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        30,
+        45,
+        60
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Read spiritual literature"
+    },
+    {
+      "id": "179",
+      "title": "Помолиться за близких",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Pray for loved ones"
+    },
+    {
+      "id": "180",
+      "title": "Личная молитва",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 5,
+      "titleEn": "Personal prayer"
+    },
+    {
+      "id": "181",
+      "title": "Прочитать псалом",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Read a psalm"
+    },
+    {
+      "id": "182",
+      "title": "Заниматься пением",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        60
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Practice singing"
+    },
+    {
+      "id": "183",
+      "title": "Поделиться своим отчётом",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Share your report"
+    },
+    {
+      "id": "184",
+      "title": "Танцевать",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        10,
+        20,
+        30
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Dance"
+    },
+    {
+      "id": "185",
+      "title": "Записать расходы за день",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Record your daily expenses"
+    },
+    {
+      "id": "16",
+      "title": "Облиться холодной водой",
+      "titleEn": "Cold water rinse",
+      "points": 20,
+      "category": "Sport"
+    }
+  ],
+  "timeSpecs": [
+    {
+      "id": "1",
+      "title": "Бегать",
+      "points": 10,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Run",
+      "quantityOptions": [
+        1,
+        2,
+        3,
+        5,
+        10
+      ],
+      "defaultQuantity": 1,
+      "quantityUnit": "км",
+      "quantityUnitEn": "km"
+    },
+    {
+      "id": "3",
+      "title": "Бегать",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Run",
+      "quantityOptions": [
+        1,
+        2,
+        3,
+        5,
+        10
+      ],
+      "defaultQuantity": 5,
+      "quantityUnit": "км",
+      "quantityUnitEn": "km"
+    },
+    {
+      "id": "5",
+      "title": "Приседать",
+      "points": 25,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Do squats",
+      "quantityOptions": [
+        10,
+        20,
+        30,
+        50,
+        75,
+        100
+      ],
+      "defaultQuantity": 50,
+      "quantityUnit": "раз",
+      "quantityUnitEn": "reps"
+    },
+    {
+      "id": "8",
+      "title": "Отжиматься",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Do push-ups",
+      "quantityOptions": [
+        5,
+        10,
+        15,
+        20,
+        30,
+        50
+      ],
+      "defaultQuantity": 20,
+      "quantityUnit": "раз",
+      "quantityUnitEn": "reps"
+    },
+    {
+      "id": "14",
+      "title": "Ходить пешком",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Walk",
+      "quantityOptions": [
+        1000,
+        3000,
+        5000,
+        7000,
+        10000,
+        15000
+      ],
+      "defaultQuantity": 5000,
+      "quantityUnit": "шагов",
+      "quantityUnitEn": "steps"
+    },
+    {
+      "id": "134",
+      "title": "Ходить пешком",
+      "points": 25,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Walk",
+      "quantityOptions": [
+        1000,
+        3000,
+        5000,
+        7000,
+        10000,
+        15000
+      ],
+      "defaultQuantity": 10000,
+      "quantityUnit": "шагов",
+      "quantityUnitEn": "steps"
+    },
+    {
+      "id": "18",
+      "title": "Утренняя зарядка",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Morning exercise"
+    },
+    {
+      "id": "25",
+      "title": "Сделать планку",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [
+        1,
+        2,
+        3
+      ],
+      "defaultDuration": 1,
+      "titleEn": "Hold a plank"
+    },
+    {
+      "id": "49",
+      "title": "Заниматься йогой",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [
+        10,
+        15,
+        30,
+        45,
+        60
+      ],
+      "defaultDuration": 15,
+      "titleEn": "Practice yoga"
+    },
+    {
+      "id": "52",
+      "title": "Покататься на велосипеде",
+      "points": 20,
+      "category": "Sport",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Ride a bike"
+    },
+    {
+      "id": "61",
+      "title": "Сделать растяжку",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Stretch"
+    },
+    {
+      "id": "62",
+      "title": "Прыгать на скакалке",
+      "points": 25,
+      "category": "Sport",
+      "durationOptions": [],
+      "titleEn": "Jump rope",
+      "quantityOptions": [
+        50,
+        100,
+        200,
+        300,
+        500,
+        1000
+      ],
+      "defaultQuantity": 200,
+      "quantityUnit": "раз",
+      "quantityUnitEn": "reps"
+    },
+    {
+      "id": "63",
+      "title": "Погулять на свежем воздухе",
+      "points": 10,
+      "category": "Sport",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Walk outdoors"
+    },
+    {
+      "id": "135",
+      "title": "Сделать упражнения для спины",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Do back exercises"
+    },
+    {
+      "id": "138",
+      "title": "Практиковать спокойное дыхание",
+      "points": 10,
+      "category": "Sport",
+      "durationOptions": [
+        3,
+        5,
+        10,
+        15
+      ],
+      "defaultDuration": 5,
+      "titleEn": "Practice calm breathing"
+    },
+    {
+      "id": "4",
+      "title": "Программировать",
+      "points": 30,
+      "category": "Discipline",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120,
+        180
+      ],
+      "defaultDuration": 60,
+      "titleEn": "Program"
+    },
+    {
+      "id": "35",
+      "title": "Лечь спать в выбранное время",
+      "points": 25,
+      "category": "Discipline",
+      "durationOptions": [],
+      "timePicker": true,
+      "defaultTime": "23:00",
+      "titleEn": "Go to bed at your chosen time"
+    },
+    {
+      "id": "36",
+      "title": "Встать в запланированное время",
+      "points": 20,
+      "category": "Discipline",
+      "durationOptions": [],
+      "timePicker": true,
+      "defaultTime": "07:00",
+      "titleEn": "Get up at your planned time"
+    },
+    {
+      "id": "45",
+      "title": "Провести время без телефона",
+      "points": 30,
+      "category": "Discipline",
+      "durationOptions": [
+        30,
+        60,
+        90,
+        120,
+        180,
+        240
+      ],
+      "defaultDuration": 120,
+      "titleEn": "Spend time without your phone"
+    },
+    {
+      "id": "54",
+      "title": "Записать главные задачи на завтра",
+      "points": 20,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Plan tomorrow’s main tasks",
+      "quantityOptions": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "defaultQuantity": 3,
+      "quantityUnit": "задач",
+      "quantityUnitEn": "tasks"
+    },
+    {
+      "id": "66",
+      "title": "Убрать рабочее место",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Clean your workspace"
+    },
+    {
+      "id": "68",
+      "title": "Провести день без сладостей",
+      "titleEn": "Spend a day without sweets",
+      "category": "Discipline",
+      "points": 25,
+      "durationOptions": []
+    },
+    {
+      "id": "70",
+      "title": "Начать утро без телефона",
+      "points": 15,
+      "category": "Discipline",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Start the morning without your phone"
+    },
+    {
+      "id": "144",
+      "title": "Встать после первого будильника",
+      "points": 20,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Get up after the first alarm"
+    },
+    {
+      "id": "147",
+      "title": "Работать без отвлечений",
+      "points": 25,
+      "category": "Discipline",
+      "durationOptions": [
+        25,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 60,
+      "titleEn": "Work without distractions"
+    },
+    {
+      "id": "153",
+      "title": "Подготовить вещи на завтра",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Prepare your things for tomorrow"
+    },
+    {
+      "id": "2",
+      "title": "Читать книгу",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Read a book"
+    },
+    {
+      "id": "13",
+      "title": "Работать над своим проектом",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        15,
+        30,
+        45,
+        60,
+        90,
+        120,
+        180
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Work on your project"
+    },
+    {
+      "id": "24",
+      "title": "Изучить материал и записать выводы",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Study and write conclusions",
+      "quantityOptions": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "defaultQuantity": 3,
+      "quantityUnit": "выводов",
+      "quantityUnitEn": "conclusions"
+    },
+    {
+      "id": "34",
+      "title": "Выучить новые иностранные слова",
+      "points": 40,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Learn new foreign words",
+      "quantityOptions": [
+        3,
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultQuantity": 5,
+      "quantityUnit": "слов",
+      "quantityUnitEn": "words"
+    },
+    {
+      "id": "47",
+      "title": "Прочитать статью и записать главный вывод",
+      "points": 10,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Read an article and note its main takeaway"
+    },
+    {
+      "id": "72",
+      "title": "Записать одну идею и следующий шаг",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Write down an idea and the next step"
+    },
+    {
+      "id": "73",
+      "title": "Записать благодарности",
+      "points": 10,
+      "category": "Self_development",
+      "durationOptions": [],
+      "titleEn": "Write down things you are grateful for",
+      "quantityOptions": [
+        1,
+        3,
+        5,
+        10
+      ],
+      "defaultQuantity": 3,
+      "quantityUnit": "пунктов",
+      "quantityUnitEn": "items"
+    },
+    {
+      "id": "74",
+      "title": "Практиковать выбранный навык",
+      "points": 25,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 30,
+      "titleEn": "Practice your chosen skill"
+    },
+    {
+      "id": "160",
+      "title": "Записать итоги дня",
+      "points": 10,
+      "category": "Self_development",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20
+      ],
+      "defaultDuration": 5,
+      "titleEn": "Write a daily reflection"
+    },
+    {
+      "id": "161",
+      "title": "Повторить иностранные слова",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Review foreign words"
+    },
+    {
+      "id": "166",
+      "title": "Изучать выбранную тему",
+      "points": 15,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        45,
+        60,
+        90,
+        120
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Study your chosen topic"
+    },
+    {
+      "id": "167",
+      "title": "Практиковать иностранный язык",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        15,
+        30,
+        45,
+        60,
+        90
+      ],
+      "defaultDuration": 15,
+      "titleEn": "Practice a foreign language"
+    },
+    {
+      "id": "57",
+      "title": "Прочитать одну главу Евангелия",
+      "points": 20,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Read one chapter of the Gospel"
+    },
+    {
+      "id": "174",
+      "title": "Помолиться утром",
+      "points": 10,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Pray in the morning"
+    },
+    {
+      "id": "175",
+      "title": "Помолиться вечером",
+      "points": 10,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Pray in the evening"
+    },
+    {
+      "id": "176",
+      "title": "Читать духовную литературу",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        30,
+        45,
+        60
+      ],
+      "defaultDuration": 10,
+      "titleEn": "Read spiritual literature"
+    },
+    {
+      "id": "179",
+      "title": "Помолиться за близких",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Pray for loved ones"
+    },
+    {
+      "id": "180",
+      "title": "Личная молитва",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "defaultDuration": 5,
+      "titleEn": "Personal prayer"
+    },
+    {
+      "id": "181",
+      "title": "Прочитать псалом",
+      "points": 15,
+      "category": "Spirituality",
+      "durationOptions": [],
+      "titleEn": "Read a psalm"
+    },
+    {
+      "id": "182",
+      "title": "Заниматься пением",
+      "points": 20,
+      "category": "Self_development",
+      "durationOptions": [
+        10,
+        20,
+        30,
+        60
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Practice singing"
+    },
+    {
+      "id": "183",
+      "title": "Поделиться своим отчётом",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Share your report"
+    },
+    {
+      "id": "184",
+      "title": "Танцевать",
+      "points": 15,
+      "category": "Sport",
+      "durationOptions": [
+        10,
+        20,
+        30
+      ],
+      "defaultDuration": 20,
+      "titleEn": "Dance"
+    },
+    {
+      "id": "185",
+      "title": "Записать расходы за день",
+      "points": 10,
+      "category": "Discipline",
+      "durationOptions": [],
+      "titleEn": "Record your daily expenses"
+    },
+    {
+      "id": "16",
+      "title": "Облиться холодной водой",
+      "titleEn": "Cold water rinse",
+      "points": 20,
+      "category": "Sport"
+    }
+  ],
+  "translations": {
+    "ru": {
+      "1": {
+        "title": "Пробежать 1 км",
+        "description": "Пробегайте по 1 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость."
+      },
+      "2": {
+        "title": "Читать книгу 20 минут",
+        "description": "Читайте ежедневно для развития мышления и внимания."
+      },
+      "3": {
+        "title": "Пробежать 5 км",
+        "description": "Пробегайте по 5 км несколько раз в неделю. Это укрепит сердце и мышцы."
+      },
+      "4": {
+        "title": "Кодить 1 час за ноутбуком",
+        "description": "Программируйте ежедневно для развития дисциплины и навыков."
+      },
+      "5": {
+        "title": "Сделать 50 приседаний",
+        "description": "Ежедневно делайте по 50 приседаний для укрепления ног и ягодиц."
+      },
+      "6": {
+        "title": "Учить английский",
+        "description": "Учите новые английские слова ежедневно."
+      },
+      "8": {
+        "title": "Сделать 20 отжиманий",
+        "description": "Отжимайтесь ежедневно для укрепления мышц груди и рук."
+      },
+      "13": {
+        "title": "Поработать над стартапом",
+        "description": "Развивайте свои идеи и продвигайте личные проекты."
+      },
+      "14": {
+        "title": "Пройти 5000 шагов",
+        "description": "Проходите 5000 шагов ежедневно. Это поддержит здоровье и тонус."
+      },
+      "16": {
+        "title": "Облиться холодной водой",
+        "description": "Закаляйтесь холодной водой для укрепления духа и тела."
+      },
+      "18": {
+        "title": "Утренняя зарядка 10 минут",
+        "description": "Делайте утреннюю зарядку для энергии на день."
+      },
+      "24": {
+        "title": "Смотреть обучающее видео",
+        "description": "Смотрите обучающие материалы для роста."
+      },
+      "25": {
+        "title": "Сделать планку 1 минуту",
+        "description": "Держите планку по 1 минуте ежедневно. Это укрепит мышцы кора."
+      },
+      "34": {
+        "title": "Выучить 20 английских слов",
+        "description": "Пополняйте словарный запас каждый день."
+      },
+      "35": {
+        "title": "Лечь спать до 23:00",
+        "description": "Соблюдайте режим сна для восстановления энергии."
+      },
+      "36": {
+        "title": "Рано проснуться",
+        "description": "Начинайте день рано — для продуктивности и спокойствия."
+      },
+      "45": {
+        "title": "2 часа без телефона",
+        "description": "Отложите телефон, чтобы сосредоточиться на важных делах."
+      },
+      "47": {
+        "title": "Прочитать статью о саморазвитии",
+        "description": "Читайте статьи о личностном росте ежедневно."
+      },
+      "49": {
+        "title": "Сделать 15 минут йоги",
+        "description": "Практикуйте йогу ежедневно для гибкости и спокойствия."
+      },
+      "51": {
+        "title": "Пройти пешком на работу",
+        "description": "Замените транспорт пешей прогулкой — заряд бодрости на день."
+      },
+      "52": {
+        "title": "Покататься на велосипеде 30 минут",
+        "description": "Катайтесь на велосипеде для здоровья и удовольствия."
+      },
+      "54": {
+        "title": "Составить распорядок дня",
+        "description": "Распланируйте свой день и следуйте плану."
+      },
+      "55": {
+        "title": "Прослушать подкаст о личностном росте",
+        "description": "Слушайте полезные подкасты о саморазвитии."
+      },
+      "57": {
+        "title": "Прочитать одну главу Евангелия",
+        "description": "Читайте ежедневно одну главу Евангелия для укрепления веры."
+      },
+      "58": {
+        "title": "Помолиться утром и вечером",
+        "description": "Начинайте и завершайте день молитвой и благодарностью."
+      },
+      "60": {
+        "title": "Прочитать молитву перед сном",
+        "description": "Завершайте день молитвой, осмысливая прожитое."
+      },
+      "61": {
+        "title": "Сделать растяжку 10 минут",
+        "description": "Растягивайтесь ежедневно для гибкости и здоровья суставов."
+      },
+      "62": {
+        "title": "Сделать 200 прыжков на скакалке",
+        "description": "Прыжки на скакалке улучшают координацию и кардио."
+      },
+      "63": {
+        "title": "Погулять 30 минут на свежем воздухе",
+        "description": "Прогулка помогает снять стресс и улучшает настроение."
+      },
+      "64": {
+        "title": "Сделать разминку перед началом дня",
+        "description": "Небольшая разминка активирует мышцы и улучшает кровообращение."
+      },
+      "65": {
+        "title": "Сделать растяжку после сна",
+        "description": "Мягко разомните тело после сна для энергии и гибкости."
+      },
+      "66": {
+        "title": "Убрать рабочее место",
+        "description": "Поддерживайте порядок на столе — это помогает концентрации."
+      },
+      "68": {
+        "title": "Провести день без сладкого",
+        "description": "Контролируйте свои привычки и укрепляйте дисциплину."
+      },
+      "69": {
+        "title": "Поработать 2 часа без отвлечений",
+        "description": "Сосредоточьтесь на задаче и не переключайтесь."
+      },
+      "70": {
+        "title": "Проснуться без телефона в руках",
+        "description": "Начните утро без гаджетов для чистого фокуса."
+      },
+      "71": {
+        "title": "Посмотреть документальный фильм",
+        "description": "Расширяйте кругозор, изучая новые темы."
+      },
+      "72": {
+        "title": "Записать 3 идеи для улучшения жизни",
+        "description": "Ежедневно фиксируйте идеи и наблюдения."
+      },
+      "73": {
+        "title": "Вести дневник благодарности",
+        "description": "Каждый вечер записывайте 3 вещи, за которые благодарны."
+      },
+      "74": {
+        "title": "Научиться новому навыку 30 минут",
+        "description": "Ежедневно осваивайте хоть что-то новое."
+      },
+      "75": {
+        "title": "Придумать цель на завтра",
+        "description": "Планируйте следующий день заранее для ясности и фокуса."
+      }
+    },
+    "en": {
+      "1": {
+        "title": "Run 1 km",
+        "description": "Run 1 km every day for 30 days. This will strengthen your heart and increase endurance."
+      },
+      "2": {
+        "title": "Read a book for 20 minutes",
+        "description": "Read daily to develop thinking and attention."
+      },
+      "3": {
+        "title": "Run 5 km",
+        "description": "Run 5 km several times a week. This will strengthen your heart and muscles."
+      },
+      "4": {
+        "title": "Code for 1 hour on laptop",
+        "description": "Program daily to develop discipline and skills."
+      },
+      "5": {
+        "title": "Do 50 squats",
+        "description": "Do 50 squats daily to strengthen your legs and glutes."
+      },
+      "6": {
+        "title": "Learn English",
+        "description": "Learn new English words daily."
+      },
+      "8": {
+        "title": "Do 20 push-ups",
+        "description": "Do push-ups daily to strengthen your chest and arm muscles."
+      },
+      "13": {
+        "title": "Work on startup",
+        "description": "Develop your ideas and advance personal projects."
+      },
+      "14": {
+        "title": "Walk 5000 steps",
+        "description": "Walk 5000 steps daily. This will maintain health and tone."
+      },
+      "16": {
+        "title": "Pour cold water",
+        "description": "Harden yourself with cold water to strengthen your spirit and body."
+      },
+      "18": {
+        "title": "Morning exercise 10 minutes",
+        "description": "Do morning exercises for energy throughout the day."
+      },
+      "24": {
+        "title": "Watch educational video",
+        "description": "Watch educational materials for growth."
+      },
+      "25": {
+        "title": "Hold plank for 1 minute",
+        "description": "Hold a plank for 1 minute daily. This will strengthen your core muscles."
+      },
+      "34": {
+        "title": "Learn 20 English words",
+        "description": "Expand your vocabulary every day."
+      },
+      "35": {
+        "title": "Go to bed before 11 PM",
+        "description": "Maintain a sleep schedule for energy recovery."
+      },
+      "36": {
+        "title": "Wake up early",
+        "description": "Start your day early — for productivity and peace."
+      },
+      "45": {
+        "title": "2 hours without phone",
+        "description": "Put away your phone to focus on important tasks."
+      },
+      "47": {
+        "title": "Read self-development article",
+        "description": "Read articles about personal growth daily."
+      },
+      "49": {
+        "title": "Do 15 minutes of yoga",
+        "description": "Practice yoga daily for flexibility and calm."
+      },
+      "51": {
+        "title": "Walk to work",
+        "description": "Replace transport with a walk — a boost of energy for the day."
+      },
+      "52": {
+        "title": "Ride bike for 30 minutes",
+        "description": "Ride a bike for health and enjoyment."
+      },
+      "54": {
+        "title": "Create daily schedule",
+        "description": "Plan your day and follow the plan."
+      },
+      "55": {
+        "title": "Listen to personal growth podcast",
+        "description": "Listen to useful podcasts about self-development."
+      },
+      "57": {
+        "title": "Read one chapter of Gospel",
+        "description": "Read one chapter of the Gospel daily to strengthen your faith."
+      },
+      "58": {
+        "title": "Pray morning and evening",
+        "description": "Start and end your day with prayer and gratitude."
+      },
+      "60": {
+        "title": "Read prayer before sleep",
+        "description": "End your day with prayer, reflecting on what you've lived."
+      },
+      "61": {
+        "title": "Do 10 minutes of stretching",
+        "description": "Stretch daily for flexibility and joint health."
+      },
+      "62": {
+        "title": "Do 200 jump rope jumps",
+        "description": "Jump rope improves coordination and cardio."
+      },
+      "63": {
+        "title": "Walk 30 minutes outdoors",
+        "description": "Walking helps relieve stress and improves mood."
+      },
+      "64": {
+        "title": "Do warm-up before starting day",
+        "description": "A light warm-up activates muscles and improves circulation."
+      },
+      "65": {
+        "title": "Do stretching after sleep",
+        "description": "Gently stretch your body after sleep for energy and flexibility."
+      },
+      "66": {
+        "title": "Clean workspace",
+        "description": "Maintain order on your desk — it helps with concentration."
+      },
+      "68": {
+        "title": "Have a day without sweets",
+        "description": "Control your habits and strengthen discipline."
+      },
+      "69": {
+        "title": "Work 2 hours without distractions",
+        "description": "Focus on the task and don't switch."
+      },
+      "70": {
+        "title": "Wake up without phone in hands",
+        "description": "Start your morning without gadgets for clear focus."
+      },
+      "71": {
+        "title": "Watch documentary film",
+        "description": "Expand your horizons by exploring new topics."
+      },
+      "72": {
+        "title": "Write 3 ideas to improve life",
+        "description": "Record ideas and observations daily."
+      },
+      "73": {
+        "title": "Keep gratitude journal",
+        "description": "Each evening write down 3 things you're grateful for."
+      },
+      "74": {
+        "title": "Learn new skill for 30 minutes",
+        "description": "Master something new every day."
+      },
+      "75": {
+        "title": "Come up with goal for tomorrow",
+        "description": "Plan the next day in advance for clarity and focus."
+      }
+    }
+  }
+}

@@ -9,7 +9,10 @@ import { useTheme } from '@/context/ThemeContext';
 import { ChevronLeft } from 'lucide-react';
 import styles from './TutorialOverlay.module.css';
 import { getAchievementsNewStatus } from '@/redux/assignments_reducer';
-import { setPoints } from '@/redux/profile_reducer';
+import { notifications } from '@/lib/notifications';
+import { findTutorialAchievement } from '@/lib/firstTimeOnboarding.mjs';
+import { GOALS_TUTORIAL_TARGETS } from '@/lib/tutorialGoals.mjs';
+import { tutorialPlacement } from '@/lib/tutorialPlacement.mjs';
 
 const TOAST_STEP_LOCK_MS = 5000;
 
@@ -20,10 +23,11 @@ export default function TutorialOverlay() {
   const [mounted, setMounted] = useState(false);
   const [toastStepLockedUntil, setToastStepLockedUntil] = useState(null);
   useEffect(() => setMounted(true), []);
-  const { isOpen, currentStep, stepIndex, steps, isLastStep, nextStep, prevStep, closeTutorial, requireSettingsClick, requireHomeClick, requireGoalsClick, requireAchievementsClick, requireCategoryClick, requireAction, isColorPickerOpenForTutorial, goalModalOpen, goalModalTutorialPhase, createGoalModalTutorialPhase, completeGoalTutorialPhase, achievementHowToGetArrowClicked } = useTutorial();
+  const { isOpen, currentStep, stepIndex, steps, isLastStep, nextStep, prevStep, closeTutorial, requireSettingsClick, requireHomeClick, requireGoalsClick, requireAchievementsClick, requireCategoryClick, requireAction, isColorPickerOpenForTutorial, goalModalOpen, goalModalTutorialPhase, createGoalModalTutorialPhase, completeGoalTutorialPhase, achievementHowToGetArrowClicked, isExplanatoryTutorial, hasTodayGoals } = useTutorial();
   const { t } = useLanguage();
   const { theme } = useTheme();
   const [targetRect, setTargetRect] = useState(null);
+  const [tooltipHeight, setTooltipHeight] = useState(210);
   /** Рект модалки «Создать цель» для дырки в оверлее (стрелка — по targetRect) */
   const [createGoalModalRect, setCreateGoalModalRect] = useState(null);
   /** Рект области анимации в модалке достижения (для подсветки) */
@@ -36,10 +40,7 @@ export default function TutorialOverlay() {
 
   const handleTutorialCompleteClose = async () => {
     // Антидубль: если уже выдавали (или уже в процессе) — просто закрываем.
-    if (tutorialCompleteUnlockingRef.current) {
-      closeTutorial();
-      return;
-    }
+    if (tutorialCompleteUnlockingRef.current) return;
 
     // Выдаём ачивку только на шаге tutorial-complete.
     if (currentStep?.id !== 'tutorial-complete' || !userId) {
@@ -47,34 +48,32 @@ export default function TutorialOverlay() {
       return;
     }
 
-    const list = Array.isArray(assignments) ? assignments : [];
-    const ach =
-      list.find((a) => String(a?.templateId || '') === '27') ||
-      list.find((a) => String(a?.id || '') === '27') ||
-      list.find((a) => (a?.title || '').trim() === 'В игре');
-
-    // Антидубль: если уже my — ничего не делаем.
-    if (!ach || ach.status === 'my') {
+    const ach = findTutorialAchievement(assignments);
+    if (!ach) {
+      notifications.error(t('tutorialRewardRetry'));
+      return;
+    }
+    if (ach.status === 'my') {
       closeTutorial();
       return;
     }
 
     tutorialCompleteUnlockingRef.current = true;
     try {
-      const res = await dispatch(getAchievementsNewStatus(ach, userId));
-      if (res?.changed) {
-        await dispatch(setPoints(userId, Number(ach.points) || 0));
-      }
+      await dispatch(getAchievementsNewStatus(ach, userId));
+      closeTutorial();
+    } catch (error) {
+      console.error('Tutorial achievement could not be saved', error);
+      notifications.error(t('tutorialRewardRetry'));
     } finally {
       tutorialCompleteUnlockingRef.current = false;
-      closeTutorial();
     }
   };
   useEffect(() => {
     if (!isOpen) toastStepLockShownRef.current = false;
   }, [isOpen]);
   useEffect(() => {
-    if (currentStep?.id === 'goals-toast-success') {
+    if (currentStep?.id === 'goals-toast-success' && isExplanatoryTutorial) {
       if (!toastStepLockShownRef.current) {
         toastStepLockShownRef.current = true;
         setToastStepLockedUntil(Date.now() + TOAST_STEP_LOCK_MS);
@@ -86,13 +85,13 @@ export default function TutorialOverlay() {
     setToastStepLockedUntil(null);
   }, [currentStep?.id]);
 
-  const toastStepButtonsLocked = currentStep?.id === 'goals-toast-success' && toastStepLockedUntil !== null;
+  const toastStepButtonsLocked = isExplanatoryTutorial && currentStep?.id === 'goals-toast-success' && toastStepLockedUntil !== null;
   const hidePrevButton = currentStep?.id === 'goals-toast-success' || currentStep?.id === 'today-goals' || currentStep?.id === 'achievements-cards' || currentStep?.id === 'achievements-earned' || currentStep?.id === 'achievements-earned-modal' || currentStep?.id === 'achievements-all' || currentStep?.id === 'complete-goal';
 
   const effectiveTargetId = currentStep?.id === 'settings-color' && isColorPickerOpenForTutorial
     ? 'settings-color-picker'
     : currentStep?.id === 'goals-find-added'
-      ? 'goals-find-added-list'
+      ? 'tutorial-custom-goal'
       : currentStep?.id === 'generate-report'
         ? 'generate-button'
         : currentStep?.id === 'report-view'
@@ -102,7 +101,7 @@ export default function TutorialOverlay() {
             : currentStep?.id === 'achievements-earned-modal'
               ? 'achievements-earned-modal'
               : currentStep?.id === 'achievements-how-to-get'
-                ? 'achievements-how-to-get-block'
+                ? 'achievement-goal-action'
                 : currentStep?.id;
 
   useEffect(() => {
@@ -111,7 +110,7 @@ export default function TutorialOverlay() {
       return;
     }
     const stepId = currentStep.id;
-    if (stepId === 'goals-toast-success') {
+    if (stepId === 'goals-toast-success' && isExplanatoryTutorial) {
       const w = typeof window !== 'undefined' ? window.innerWidth : 280;
       const cardW = Math.min(280, w - 24);
       const left = Math.max(12, (w - cardW) / 2);
@@ -129,13 +128,14 @@ export default function TutorialOverlay() {
     setTargetRect(null);
     if (stepId !== 'achievements-earned-modal') setAchievementModalAnimationRect(null);
     if (stepId !== 'achievements-how-to-get') setAchievementHowToGetModalRect(null);
-    if (stepId === 'intro') return;
+    if (['intro', 'home-intro', 'goals-catalog-intro'].includes(stepId) || (stepId === 'goals-toast-success' && !isExplanatoryTutorial)) return;
 
     const delayTimeouts = [];
     if (stepId === 'goals-create' && createGoalModalTutorialPhase) {
       const modalEl = document.querySelector('[data-tutorial-id="goals-create-modal"]');
-      const phaseTargetId = createGoalModalTutorialPhase === 'name' ? 'goals-create-input' : createGoalModalTutorialPhase === 'category' ? 'goals-create-category' : 'goals-create-submit';
+      const phaseTargetId = ({name:'goals-create-input',category:'goals-create-category',options:'goals-create-options',period:'goals-create-period',button:'goals-create-submit'})[createGoalModalTutorialPhase];
       const targetEl = document.querySelector(`[data-tutorial-id="${phaseTargetId}"]`);
+      targetEl?.scrollIntoView({ block: 'nearest', behavior: 'instant' });
       const updateBoth = () => {
         if (modalEl) {
           const r = modalEl.getBoundingClientRect();
@@ -168,7 +168,7 @@ export default function TutorialOverlay() {
     }
 
     setCreateGoalModalRect(null);
-    let targetId = effectiveTargetId;
+    let targetId = GOALS_TUTORIAL_TARGETS[stepId] || effectiveTargetId;
     if ((stepId === 'goals-take-one' || stepId === 'goals-take-added') && goalModalOpen) {
       targetId = goalModalTutorialPhase === 'button' ? 'goals-take-modal-button' : 'goals-take-modal-duration';
     }
@@ -176,15 +176,45 @@ export default function TutorialOverlay() {
 
     const updateRect = (element) => {
       if (!element) return;
-      const rect = element.getBoundingClientRect();
-      setTargetRect({
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height,
-        stepId,
-      });
+      let rect = element.getBoundingClientRect();
+      if (stepId === 'goals-take-one' && !goalModalOpen) {
+        const categories = document.querySelector('[data-tutorial-id="goals-category-tabs"]')?.getBoundingClientRect();
+        if (categories) {
+          const top = Math.min(rect.top, categories.top);
+          const left = Math.min(rect.left, categories.left);
+          const right = Math.max(rect.right, categories.right);
+          const bottom = Math.max(rect.bottom, categories.bottom);
+          rect = { top, left, right, bottom, width: right - left, height: bottom - top };
+        }
+      }
+      const clippedList = ['goals-take-one', 'achievements-earned-choose', 'achievements-cards', 'complete-goal'].includes(stepId) && !goalModalOpen;
+      const top = clippedList ? Math.max(8, rect.top) : rect.top;
+      const height = clippedList
+        ? Math.max(0, Math.min(rect.bottom, window.innerHeight - 76) - top) : rect.height;
+      const next = { top, left: rect.left, width: rect.width, height, stepId };
+      setTargetRect(previous => previous && Object.keys(next).every(key => previous[key] === next[key]) ? previous : next);
     };
+
+    if ((GOALS_TUTORIAL_TARGETS[stepId] || ['achievements-earned-choose','achievements-cards','complete-goal'].includes(stepId)) && !goalModalOpen) {
+      let observed;
+      const resize = new ResizeObserver(() => observed && updateRect(observed));
+      const update = () => {
+        const element = document.querySelector(`[data-tutorial-id="${targetId}"]`);
+        if (!element) return;
+        if (observed !== element) { resize.disconnect(); observed = element; resize.observe(element); }
+        updateRect(element);
+      };
+      const observer = new MutationObserver(update);
+      observer.observe(document.body, { childList: true, subtree: true });
+      window.addEventListener('scroll', update, true);
+      window.addEventListener('resize', update);
+      update();
+      return () => {
+        observer.disconnect(); resize.disconnect();
+        window.removeEventListener('scroll', update, true);
+        window.removeEventListener('resize', update);
+      };
+    }
 
     let el = document.querySelector(`[data-tutorial-id="${targetId}"]`);
     if (el) {
@@ -248,10 +278,11 @@ export default function TutorialOverlay() {
       }
       const obs = new ResizeObserver(() => updateRect(el));
       obs.observe(el);
-      window.addEventListener('scroll', () => updateRect(el), true);
+      const onScroll = () => updateRect(el);
+      window.addEventListener('scroll', onScroll, true);
       return () => {
         obs.disconnect();
-        window.removeEventListener('scroll', () => updateRect(el), true);
+        window.removeEventListener('scroll', onScroll, true);
         delayTimeouts.forEach((id) => (typeof id === 'function' ? id() : window.clearTimeout(id)));
         if (stepId === 'achievements-earned-modal') setAchievementModalAnimationRect(null);
         if (stepId === 'achievements-how-to-get') setAchievementHowToGetModalRect(null);
@@ -263,6 +294,17 @@ export default function TutorialOverlay() {
       if (stepId === 'achievements-how-to-get') setAchievementHowToGetModalRect(null);
     };
   }, [isOpen, currentStep, effectiveTargetId, goalModalOpen, goalModalTutorialPhase, createGoalModalTutorialPhase]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const card = document.querySelector('[data-tutorial-overlay] [data-tutorial-card]');
+    if (!card) return;
+    const measure = () => setTooltipHeight(card.getBoundingClientRect().height);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [isOpen, currentStep?.id, targetRect, createGoalModalTutorialPhase, goalModalTutorialPhase]);
 
   if (!isOpen) return null;
   if (!mounted || typeof document === 'undefined') return null;
@@ -286,8 +328,6 @@ export default function TutorialOverlay() {
     : null;
 
   const gap = 14;
-  const goalModalTooltipOffset = 15;
-  const toastStepTooltipTop = 300;
   const cardWidth = typeof window !== 'undefined' ? Math.min(280, window.innerWidth - 24) : 280;
   const cardCenter = cardWidth / 2;
   const targetCenterX = rectForStep ? rectForStep.left + rectForStep.width / 2 : 0;
@@ -300,7 +340,7 @@ export default function TutorialOverlay() {
   const goalModalArrowLeft = isGoalModalStep && rectForStep
     ? Math.min(cardWidth - 28, Math.max(28, targetCenterX - goalModalCardLeft - 8))
     : Math.min(cardWidth - 28, Math.max(28, targetCenterX - cardLeft - 8));
-  const placeBelow = isGoalModalStep
+  const preferBelow = isGoalModalStep
     ? goalModalTutorialPhase === 'duration'
     : isCreateGoalModalStep
       ? true
@@ -317,29 +357,29 @@ export default function TutorialOverlay() {
       : currentStep?.id === 'achievements-earned-choose' || currentStep?.id === 'achievements-earned-modal' || currentStep?.id === 'achievements-cards' || currentStep?.id === 'achievements-how-to-get'
         ? false
         : !!rectForStep && currentStep?.id !== 'calendar' && currentStep?.id !== 'goals-tab' && currentStep?.id !== 'achievements-tab' && currentStep?.id !== 'goals-take-one' && !isColorPickerStep;
-  const needsActionLock = requireAction && !(currentStep?.id === 'complete-goal' && completeGoalTutorialPhase === 'undo');
-  const hideNavButtons = requireSettingsClick || requireHomeClick || requireGoalsClick || requireAchievementsClick || requireCategoryClick || needsActionLock || currentStep?.id === 'goals-find-added' || (currentStep?.id === 'achievements-how-to-get' && !achievementHowToGetArrowClicked);
+  const placement = rectForStep ? tutorialPlacement(rectForStep, tooltipHeight, window.innerHeight, preferBelow) : null;
+  const placeBelow = placement?.placeBelow;
+  const needsActionLock = requireAction && !(currentStep?.id === 'complete-goal' && completeGoalTutorialPhase === (isExplanatoryTutorial ? 'undo' : 'done')) && !(currentStep?.id === 'achievements-how-to-get' && achievementHowToGetArrowClicked);
+  const hideNavButtons = requireSettingsClick || requireHomeClick || requireGoalsClick || requireAchievementsClick || requireCategoryClick || needsActionLock || (currentStep?.id === 'achievements-how-to-get' && !achievementHowToGetArrowClicked);
   const hideNavOnlyOnAchievementsEarnedChoose = currentStep?.id === 'achievements-earned-choose';
   const showNavButtons = !hideNavButtons && !hideNavOnlyOnAchievementsEarnedChoose;
   const showArrowToBlock = !!rectForStep;
 
   const tutorialDescKey = currentStep?.id === 'settings-color' && isColorPickerOpenForTutorial
     ? 'tutorialStepSettingsColorChoose'
-    : currentStep?.descKey;
+    : currentStep?.id === 'today-goals' && !hasTodayGoals ? 'tutorialTodayEmptyDesc' : currentStep?.descKey;
   const descText = currentStep ? t(tutorialDescKey || currentStep?.descKey) : '';
   const modalPhaseDesc = (currentStep?.id === 'goals-take-one' || currentStep?.id === 'goals-take-added') && goalModalTutorialPhase
-    ? (currentStep?.id === 'goals-take-added'
-      ? t('tutorialTakeAddedGoal')
-      : (goalModalTutorialPhase === 'button' ? t('tutorialGoalModalClickButton') : t('tutorialGoalModalChooseDays')))
+    ? (goalModalTutorialPhase === 'button' ? t('tutorialGoalModalClickButton') : t('tutorialGoalModalChooseDays'))
     : '';
   const createGoalModalPhaseDesc = currentStep?.id === 'goals-create' && createGoalModalTutorialPhase
-    ? (createGoalModalTutorialPhase === 'name' ? t('tutorialCreateGoalPhaseName') : createGoalModalTutorialPhase === 'category' ? t('tutorialCreateGoalPhaseCategory') : t('tutorialCreateGoalPhaseButton'))
+    ? t(({name:'tutorialCreateGoalPhaseName',category:'tutorialCreateGoalPhaseCategory',options:'tutorialCreateGoalPhaseTime',period:'tutorialCreateGoalPhasePeriod',button:'tutorialCreateGoalPhaseButton'})[createGoalModalTutorialPhase])
     : '';
   const isCompactStep = currentStep?.id === 'goals-take-one';
   const completeGoalPhaseDesc = currentStep?.id === 'complete-goal'
-    ? (completeGoalTutorialPhase === 'undo' ? t('tutorialCompleteGoalsStep2') : t('tutorialCompleteGoalsStep1'))
+    ? t(completeGoalTutorialPhase === 'done' ? 'tutorialCompleteGoalsDone' : completeGoalTutorialPhase === 'undo' ? 'tutorialCompleteGoalsStep2' : 'tutorialCompleteGoalsStep1')
     : '';
-  const tooltipDesc = modalPhaseDesc || createGoalModalPhaseDesc || completeGoalPhaseDesc || (descText && !isCompactStep ? descText : '');
+  const tooltipDesc = modalPhaseDesc || createGoalModalPhaseDesc || completeGoalPhaseDesc || (descText || '');
 
   const themeClass = theme === 'light' ? 'light-theme' : 'dark-theme';
   const colorPickerBackdropClass = isColorPickerStep ? ` ${styles.backdropColorPicker}` : '';
@@ -348,12 +388,13 @@ export default function TutorialOverlay() {
   const mainOverlay = createPortal(
     <AnimatePresence>
       <motion.div
-        className={`${styles.backdrop} ${themeClass}${colorPickerBackdropClass}`}
+        data-tutorial-overlay="true"
+        className={`${styles.backdrop} ${themeClass}${colorPickerBackdropClass} ${styles.tutorialStyle}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        {!isNavRequiredStep && (
+        {!isNavRequiredStep && !['achievements-earned-modal', 'achievements-how-to-get'].includes(currentStep?.id) && (
           <div className={styles.dimNavBlocker} onClick={(e) => e.stopPropagation()} aria-hidden />
         )}
         {rectForStep && hole && currentStep?.id !== 'goals-intro' && currentStep?.id !== 'achievements-earned-modal' && currentStep?.id !== 'achievements-how-to-get' && (
@@ -415,7 +456,7 @@ export default function TutorialOverlay() {
               }}
             />
             )}
-            {currentStep?.id === 'generate-button' && (
+            {['generate-button', 'goals-find-added', 'goals-take-added'].includes(currentStep?.id) && (
               <div
                 className={styles.highlightBlock}
                 style={{
@@ -431,13 +472,13 @@ export default function TutorialOverlay() {
                 aria-hidden
               />
             )}
-            {!isColorPickerStep && !isGoalModalStep && (placeBelow ? (
+            {!isColorPickerStep && !isGoalModalStep && !(isCreateGoalModalStep && createGoalModalTutorialPhase === 'category') && (placeBelow ? (
             <motion.div
               className={styles.tooltipWrapBelow}
               style={{
                 width: cardWidth,
                 left: cardLeft,
-                top: currentStep?.id === 'goals-toast-success' ? toastStepTooltipTop : rectForStep.top + rectForStep.height + gap,
+                top: placement.top,
               }}
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -445,7 +486,7 @@ export default function TutorialOverlay() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className={styles.arrowTop} style={{ left: Math.min(cardWidth - 28, Math.max(28, targetCenterX - cardLeft - 8)) }} />
-              <div className={`${styles.tooltipCard} ${isCompactStep && !isGoalModalStep ? styles.tooltipCardCompact : ''} ${(isGoalModalStep || isCreateGoalModalStep) ? styles.tooltipCardSingleLine : ''}`}>
+              <div data-tutorial-card="true" className={`${styles.tooltipCard} ${isCompactStep && !isGoalModalStep ? styles.tooltipCardCompact : ''} ${(isGoalModalStep || isCreateGoalModalStep) ? styles.tooltipCardSingleLine : ''}`}>
                 {!isGoalModalStep && !isCreateGoalModalStep && <span className={styles.stepBadge}>{stepIndex + 1} / {steps.length}</span>}
                 {(isGoalModalStep || isCreateGoalModalStep) ? (
                   <h3 className={styles.tooltipTitle}>{isGoalModalStep ? modalPhaseDesc : createGoalModalPhaseDesc}</h3>
@@ -479,7 +520,7 @@ export default function TutorialOverlay() {
               className={styles.tooltipWrapAboveAnchor}
               style={{
                 left: cardLeft,
-                top: rectForStep.top - gap,
+                top: placement.anchorTop,
                 width: cardWidth,
               }}
               onClick={(e) => e.stopPropagation()}
@@ -491,7 +532,7 @@ export default function TutorialOverlay() {
                 transition={{ duration: 0.25 }}
               >
                 <div className={styles.arrowBottom} style={{ left: Math.min(cardWidth - 28, Math.max(28, targetCenterX - cardLeft - 8)) }} />
-                <div className={`${styles.tooltipCard} ${isCompactStep && !isGoalModalStep ? styles.tooltipCardCompact : ''} ${(isGoalModalStep || isCreateGoalModalStep) ? styles.tooltipCardSingleLine : ''}`}>
+                <div data-tutorial-card="true" className={`${styles.tooltipCard} ${isCompactStep && !isGoalModalStep ? styles.tooltipCardCompact : ''} ${(isGoalModalStep || isCreateGoalModalStep) ? styles.tooltipCardSingleLine : ''}`}>
                   {!isGoalModalStep && !isCreateGoalModalStep && <span className={styles.stepBadge}>{stepIndex + 1} / {steps.length}</span>}
                   {(isGoalModalStep || isCreateGoalModalStep) ? (
                     <h3 className={styles.tooltipTitle}>{isGoalModalStep ? modalPhaseDesc : createGoalModalPhaseDesc}</h3>
@@ -540,7 +581,7 @@ export default function TutorialOverlay() {
               style={{
                 width: cardWidth,
                 left: cardLeft,
-                top: rectForStep.top + rectForStep.height + gap,
+                top: placement.top,
               }}
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -548,7 +589,7 @@ export default function TutorialOverlay() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className={styles.arrowTop} style={{ left: Math.min(cardWidth - 28, Math.max(28, targetCenterX - cardLeft - 8)) }} />
-              <div className={`${styles.tooltipCard} ${styles.tooltipCardAchievementModal}`}>
+              <div data-tutorial-card="true" className={`${styles.tooltipCard} ${styles.tooltipCardAchievementModal}`}>
                 <span className={styles.stepBadge}>{stepIndex + 1} / {steps.length}</span>
                 <p className={`${styles.tooltipDescSmall} ${styles.tooltipDescAccent}`}>{t(currentStep.descKey)}</p>
                 <div className={styles.actions}>
@@ -562,9 +603,9 @@ export default function TutorialOverlay() {
                           <ChevronLeft size={20} />
                         </button>
                       )}
-                      <button type="button" className={styles.btnPrimary} onClick={nextStep}>
+                      {showNavButtons && <button type="button" className={styles.btnPrimary} onClick={nextStep}>
                         {isLastStep ? t('tutorialDone') : t('tutorialNext')}
-                      </button>
+                      </button>}
                     </div>
                   )}
                 </div>
@@ -587,10 +628,10 @@ export default function TutorialOverlay() {
             <div className={styles.dimClickLeft} style={{ top: hole.top, left: 0, width: hole.left, height: hole.height }} onClick={(e) => e.stopPropagation()} aria-hidden />
             <div className={styles.dimClickRight} style={{ top: hole.top, left: hole.left + hole.width, width: `calc(100vw - ${hole.left + hole.width}px)`, height: hole.height }} onClick={(e) => e.stopPropagation()} aria-hidden />
             <motion.div className={styles.highlight} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.2 }} style={{ top: rectForStep.top, left: rectForStep.left, width: rectForStep.width, height: rectForStep.height }} aria-hidden />
-            <div className={styles.tooltipWrapAboveAnchor} style={{ left: cardLeft, top: rectForStep.top - gap, width: cardWidth }} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.tooltipWrapAboveAnchor} style={{ left: cardLeft, top: placement.anchorTop, width: cardWidth }} onClick={(e) => e.stopPropagation()}>
               <motion.div className={styles.tooltipWrapAboveInner} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
                 <div className={styles.arrowBottom} style={{ left: Math.min(cardWidth - 28, Math.max(28, targetCenterX - cardLeft - 8)) }} />
-                <div className={styles.tooltipCard}>
+                <div data-tutorial-card="true" className={styles.tooltipCard}>
                   <span className={styles.stepBadge}>{stepIndex + 1} / {steps.length}</span>
                   <p className={`${styles.tooltipDescSmall} ${styles.tooltipDescAccent}`}>{t(currentStep.descKey)}</p>
                   <div className={styles.actions}>
@@ -617,7 +658,7 @@ export default function TutorialOverlay() {
               animate={{ opacity: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className={`${styles.tooltipCard} ${styles.tooltipCardCenter}`}>
+              <div data-tutorial-card="true" className={`${styles.tooltipCard} ${styles.tooltipCardCenter}`}>
                 <h3 className={styles.tooltipTitle}>{t('tutorialCompleteTitle')}</h3>
                 <p className={styles.tooltipDesc}>{t('tutorialCompleteDesc')}</p>
                 <p className={styles.tooltipDesc}>
@@ -636,14 +677,14 @@ export default function TutorialOverlay() {
         )}
 
         {currentStep && (
-          (!rectForStep || currentStep.id === 'goals-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro' || (!rectForStep && (currentStep.id === 'achievements-earned-modal' || currentStep.id === 'achievements-how-to-get')))
+          (!rectForStep || currentStep.id === 'goals-intro' || currentStep.id === 'goals-catalog-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro' || (!rectForStep && (currentStep.id === 'achievements-earned-modal' || currentStep.id === 'achievements-how-to-get')))
           && currentStep.id !== 'tutorial-complete'
         ) && (
           <>
             <div className={styles.dimFull} onClick={(e) => e.stopPropagation()} aria-hidden />
             <motion.div
               className={
-                currentStep.id === 'intro' || currentStep.id === 'goals-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro' || currentStep.id === 'achievements-earned-modal' || currentStep.id === 'achievements-how-to-get'
+                currentStep.id === 'intro' || currentStep.id === 'goals-toast-success' || currentStep.id === 'home-intro' || currentStep.id === 'goals-intro' || currentStep.id === 'goals-catalog-intro' || currentStep.id === 'achievements-intro' || currentStep.id === 'home-two-goals-intro' || currentStep.id === 'goals-delete-intro' || currentStep.id === 'achievements-earned-modal' || currentStep.id === 'achievements-how-to-get'
                   ? styles.tooltipWrapCenter
                   : currentStep.id === 'calendar'
                     ? styles.tooltipWrapTop
@@ -653,11 +694,11 @@ export default function TutorialOverlay() {
               animate={{ opacity: 1, y: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className={`${styles.tooltipCard} ${styles.tooltipCardCenter}`}>
+              <div data-tutorial-card="true" className={`${styles.tooltipCard} ${styles.tooltipCardCenter}`}>
                 {currentStep.id === 'intro' ? (
                   <>
                     <h3 className={styles.tooltipTitle}>{t(currentStep.titleKey)}</h3>
-                    <p className={styles.tooltipDesc}>{t(tutorialDescKey || currentStep?.descKey)}</p>
+                    <p className={styles.tooltipDesc}>{t(currentStep.descKey)}</p>
                     <div className={styles.actions}>
                       <button type="button" className={styles.btnSkip} onClick={closeTutorial}>
                         {t('tutorialSkip')}
@@ -676,9 +717,9 @@ export default function TutorialOverlay() {
                       <button type="button" className={styles.btnSkip} onClick={closeTutorial}>
                         {t('tutorialSkip')}
                       </button>
-                      <button type="button" className={styles.btnPrimary} onClick={nextStep}>
+                      {showNavButtons && <button type="button" className={styles.btnPrimary} onClick={nextStep}>
                         {isLastStep ? t('tutorialDone') : t('tutorialNext')}
-                      </button>
+                      </button>}
                     </div>
                   </>
                 )}
@@ -698,14 +739,14 @@ export default function TutorialOverlay() {
     rectForStep &&
     typeof document !== 'undefined' &&
     createPortal(
-      <div className={styles.tooltipPortalWrap}>
+      <div data-tutorial-overlay="true" className={`${styles.tooltipPortalWrap} ${styles.tutorialStyle}`}>
         {placeBelow ? (
           <motion.div
             className={styles.tooltipWrapBelow}
             style={{
               width: cardWidth,
               left: goalModalCardLeft,
-              top: rectForStep.top + rectForStep.height + gap + goalModalTooltipOffset,
+              top: placement.top,
             }}
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -713,7 +754,7 @@ export default function TutorialOverlay() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className={styles.arrowTop} style={{ left: goalModalArrowLeft }} />
-            <div className={`${styles.tooltipCard} ${styles.tooltipCardSingleLine}`}>
+            <div data-tutorial-card="true" className={`${styles.tooltipCard} ${styles.tooltipCardSingleLine}`}>
               <h3 className={styles.tooltipTitle}>{modalPhaseDesc}</h3>
               <div className={styles.actions}>
                 <button type="button" className={styles.btnSkip} onClick={closeTutorial}>
@@ -725,12 +766,12 @@ export default function TutorialOverlay() {
         ) : (
           <div
             className={styles.tooltipWrapAboveAnchor}
-            style={{ left: goalModalCardLeft, top: rectForStep.top - gap, width: cardWidth }}
+            style={{ left: goalModalCardLeft, top: placement.anchorTop, width: cardWidth }}
             onClick={(e) => e.stopPropagation()}
           >
             <motion.div className={styles.tooltipWrapAboveInner} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}>
               <div className={styles.arrowBottom} style={{ left: goalModalArrowLeft }} />
-              <div className={`${styles.tooltipCard} ${styles.tooltipCardSingleLine}`}>
+              <div data-tutorial-card="true" className={`${styles.tooltipCard} ${styles.tooltipCardSingleLine}`}>
                 <h3 className={styles.tooltipTitle}>{modalPhaseDesc}</h3>
                 <div className={styles.actions}>
                   <button type="button" className={styles.btnSkip} onClick={closeTutorial}>

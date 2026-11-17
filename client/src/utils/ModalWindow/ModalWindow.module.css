@@ -28,7 +28,7 @@
   z-index: 10060;
 }
 
-.light-theme .modalBackdrop {
+:global(.light-theme) .modalBackdrop {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
@@ -39,12 +39,11 @@
 }
 
 .modalContent {
-  background-color: var(--card-bg, #151515);
-  border-radius: 1rem;
+  border-radius: var(--radius-card);
   padding: 1.5rem;
   max-width: 28rem;
   position: relative;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--surface-shadow);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
     min-width: 0;
@@ -52,6 +51,8 @@
     overflow-y: auto;
     overflow-wrap: anywhere;
     overscroll-behavior: contain;
+    background: var(--surface-bg);
+    border: var(--surface-border);
 }
 
 .modalContentTutorialDim {
@@ -85,12 +86,12 @@
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
 }
 
-.light-theme .tutorialModalDimHole {
+:global(.light-theme) .tutorialModalDimHole {
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
 }
 
-.light-theme .modalContent {
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+:global(.light-theme) .modalContent {
+  box-shadow: var(--surface-shadow);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -109,11 +110,11 @@
   color: var(--foreground, #000000);
 }
 
-.light-theme .closeButton {
+:global(.light-theme) .closeButton {
   color: #ec0000;
 }
 
-.light-theme .closeButton:hover {
+:global(.light-theme) .closeButton:hover {
   color: #cc0000;
 }
 
@@ -135,7 +136,7 @@
   transition: color 0.3s ease;
 }
 
-.light-theme .modalText {
+:global(.light-theme) .modalText {
   text-shadow: none;
 }
 
@@ -174,7 +175,7 @@
   border: 2px solid #4b5563;
 }
 
-.light-theme .radioButton {
+:global(.light-theme) .radioButton {
   background-color: #d1d5db;
   border-color: #9ca3af;
 }
@@ -220,7 +221,7 @@
   background-color: #1f2937;
 }
 
-.light-theme .actionButton:hover {
+:global(.light-theme) .actionButton:hover {
   background-color: #0cc91a;
 }
 
@@ -229,7 +230,7 @@
   cursor: not-allowed;
 }
 
-.light-theme .actionButton:disabled {
+:global(.light-theme) .actionButton:disabled {
   background-color: #9ca3af;
 }
 
@@ -255,7 +256,7 @@
   transition: box-shadow 0.2s;
 }
 
-.light-theme .tutorialDurationBlockWrap {
+:global(.light-theme) .tutorialDurationBlockWrap {
   border-color: var(--accent-green, #0a7c1a);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 0 16px rgba(10, 124, 26, 0.12);
 }
@@ -268,7 +269,7 @@
   transition: box-shadow 0.2s;
 }
 
-.light-theme .tutorialHighlightBlock {
+:global(.light-theme) .tutorialHighlightBlock {
   border-color: var(--accent-green, #0a7c1a);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
@@ -278,7 +279,125 @@
   box-shadow: 0 0 12px rgba(0, 255, 30, 0.35);
 }
 
-.light-theme .tutorialHighlightButton {
+.modalHeading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 2px 32px 20px 0;
+}
+
+.modalTitle {
+  min-width: 0;
+  margin: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+  text-shadow: none;
+  line-height: 1.25;
+}
+
+.modalText {
+  margin: -7px 0 18px;
+  text-align: left;
+  text-shadow: none;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  opacity: 0.8;
+}
+
+.choiceSection {
+  margin: 0 0 17px;
+}
+
+.choiceHeading,
+.timePickerLabel {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin: 0 0 9px;
+  color: var(--foreground, #f2f2f2);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.choiceHeading span {
+  color: var(--muted-foreground, #aeb4b7);
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.choiceGroup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.timeChoiceGroup {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.choiceButton {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 7px;
+  border: 1px solid var(--border-color, #3a3d40);
+  border-radius: var(--radius-control, 8px);
+  background: var(--card-bg-secondary, #1b1d1f);
+  color: var(--foreground, #f2f2f2);
+  font: inherit;
+  font-size: 0.86rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.choiceButtonSelected {
+  border-color: var(--accent-green, #59cf8d);
+  background: color-mix(in srgb, var(--accent-green, #59cf8d) 16%, var(--surface-bg, #242424));
+  color: var(--accent-green, #59cf8d);
+}
+
+.timePickerInput {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 48px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color, #3a3d40);
+  border-radius: var(--radius-control, 8px);
+  background: var(--card-bg-secondary, #1b1d1f);
+  color: var(--foreground, #f2f2f2);
+  font: inherit;
+  font-size: 1.15rem;
+  color-scheme: light dark;
+}
+
+.choiceButton:focus-visible,
+.timePickerInput:focus-visible {
+  outline: 2px solid var(--accent-green, #59cf8d);
+  outline-offset: 2px;
+}
+
+@media (max-width: 380px) {
+  .modalHeading {
+    gap: 9px;
+    margin-bottom: 17px;
+  }
+
+  .modalTitle {
+    font-size: 1.05rem;
+  }
+
+  .choiceGroup {
+    gap: 5px;
+  }
+
+  .choiceButton {
+    padding-inline: 4px;
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+}
+
+:global(.light-theme) .tutorialHighlightButton {
   border-color: var(--accent-green, #0a7c1a);
   box-shadow: 0 0 12px rgba(10, 124, 26, 0.25);
 }
@@ -305,7 +424,7 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-.light-theme .congratsCard {
+:global(.light-theme) .congratsCard {
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -316,3 +435,15 @@
   margin: 0 0 1.25rem 0;
   line-height: 1.4;
 }
+
+
+/* Light appearance */
+:global(.light-theme) .modalBackdrop, :global(.light-theme) .congratsBackdrop { background: var(--overlay-bg); }
+:global(.light-theme) .modalContent, :global(.light-theme) .congratsCard { box-shadow: var(--shadow-lg); }
+:global(.light-theme) .modalTitle { color: var(--foreground); text-shadow: none; }
+:global(.light-theme) .modalText { color: var(--muted-foreground); opacity: 1; }
+:global(.light-theme) .closeButton { color: var(--muted-foreground); }
+:global(.light-theme) .radioButton { background: var(--card-bg); border-color: var(--border-color); }
+:global(.light-theme) .actionButton { background: var(--accent-green); color: var(--accent-on); }
+:global(.light-theme) .actionButton:hover { background: var(--accent-green); filter: brightness(.95); }
+:global(.light-theme) .actionButton:disabled { background: var(--card-bg-tertiary); color: var(--muted-foreground); filter: none; }

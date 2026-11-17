@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLanguage } from '@/context/LanguageContext';
 import c from './TodaysGoals.module.css'
+import { useTutorial } from '@/context/TutorialContext';
 
 const toRows = (node) => {
     if (node == null) return [];
@@ -17,6 +18,8 @@ const TodaysGoals = ({
 }) => {
     const { t } = useLanguage();
     const [expanded, setExpanded] = useState(false);
+    const { isOpen, currentStep } = useTutorial();
+    useEffect(() => { if (isOpen && currentStep?.id === 'complete-goal') setExpanded(true); }, [isOpen, currentStep?.id]);
 
     const inProgressRows = toRows(inProgress);
     const completedRows = toRows(completed);

@@ -1,102 +1,191 @@
 .img {
-    width: 25px;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
-
 
 .Lights {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    min-height: 32px;
 }
 
 .text {
     font-weight: 600;
-    font-size: 25px;
-}
-
-.orange {
-    color: rgb(255, 89, 0);
-    text-shadow: 0 0 8px rgb(255, 153, 0);
-}
-
-.grey {
-    color: rgb(114, 114, 114);
-    text-shadow:  0 0 8px rgb(122, 122, 122);
+    font-size: clamp(16px, 4.8vw, 20px);
+    line-height: 1.25;
+    color: var(--foreground, #ededed);
+    text-shadow: none;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 .fullscreen {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.76);
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px 12px;
+    padding: max(16px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
     overflow-y: auto;
     z-index: 10000;
+    --celebration-colour: #ff8533;
+    --celebration-light: color-mix(in srgb, var(--celebration-colour) 60%, white);
+    --celebration-pale: color-mix(in srgb, var(--celebration-colour) 25%, white);
 }
-
 .modal {
-    max-width: 380px;
-    border-radius: 20px;
-    padding: 30px 20px;
-    text-align: center;
-    animation: scaleIn 0.25s ease;
+    position: relative;
+    isolation: isolate;
     width: 100%;
-    max-height: calc(100dvh - 32px);
+    max-width: 400px;
+    max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
     overflow-y: auto;
+    overflow-x: hidden;
     overscroll-behavior: contain;
     overflow-wrap: anywhere;
+    border-radius: 26px;
+    padding: 28px 24px 24px;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 29%, color-mix(in srgb, var(--celebration-colour) 40%, transparent), transparent 69%), #140e1b;
+    border: 1px solid color-mix(in srgb, var(--celebration-colour) 35%, #211b2c);
+    color: #fff8ff;
+    box-shadow: 0 12px 80px color-mix(in srgb, var(--celebration-colour) 18%, transparent);
+    animation: celebrationEnter 300ms ease-out both;
 }
-
-.modalImg {
-    width: 210px;
-    max-width: 100%;
-    height: auto;
-}
-
-.number {
-    color: #000000;
-    font-size: 48px;
+.eyebrow {
+    position: relative;
+    z-index: 2;
+    margin: 0 0 5px;
+    font-size: 12px;
     font-weight: 700;
-    margin: 0;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--celebration-pale);
 }
-
-.title {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 600;
-    margin-top: 10px;
+.hero {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(240px, 64vw, 31dvh);
+    aspect-ratio: 1;
+    margin: 0 auto;
 }
-
-.subtitle {
-    font-size: 16px;
-    color: #ffffff;
-    margin-top: 5px;
+.flameGlow {
+    position: absolute;
+    inset: -8%;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, color-mix(in srgb, var(--celebration-colour) 50%, transparent), transparent 70%);
 }
-
+.flameRing {
+    position: absolute;
+    inset: 8%;
+    border: 1px dashed color-mix(in srgb, var(--celebration-light) 65%, transparent);
+    border-radius: 50%;
+    animation: celebrationRing 1700ms 200ms ease-out both;
+}
+.modalImg {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: 50% 80%;
+    filter: drop-shadow(0 0 20px color-mix(in srgb, var(--celebration-colour) 55%, transparent));
+    animation: flameBurst 1000ms cubic-bezier(.2,.7,.25,1) both;
+}
+.number {
+    position: relative;
+    z-index: 2;
+    margin: -2px 0 0;
+    font-size: clamp(62px, 19vw, 88px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -3px;
+    color: var(--celebration-pale);
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 28px color-mix(in srgb, var(--celebration-colour) 38%, transparent);
+    animation: numberBurst 750ms 450ms ease-out both;
+}
+.title { position: relative; z-index: 2; font-size: 23px; font-weight: 700; line-height: 1.2; margin: 7px 0 0; }
+.subtitle { position: relative; z-index: 2; font-size: 14px; line-height: 1.5; color: #e9deed; margin: 16px 0 24px; }
 .button {
-    margin-top: 25px;
-    width: 40%;
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    background: #ff6a00;
-    color: white;
-    font-size: 13px;
-    font-weight: 600;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+    border: 0;
+    border-radius: 12px;
+    background: linear-gradient(105deg, var(--celebration-colour), var(--celebration-light));
+    color: #160a1f;
+    box-shadow: 0 6px 24px color-mix(in srgb, var(--celebration-colour) 26%, transparent);
+    font-size: 15px;
+    font-weight: 700;
     cursor: pointer;
 }
-
-@keyframes scaleIn {
-    from {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
+.button:focus-visible { outline: 2px solid var(--celebration-pale); outline-offset: 4px; }
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; border-radius: inherit; }
+.confettiPiece {
+    position: absolute;
+    top: -16px;
+    border-radius: 1px;
+    background: var(--piece-colour);
+    opacity: 0;
+    animation: confettiFall var(--duration) var(--delay) cubic-bezier(.3,.1,.8,.7) both;
 }
+.celebrationFlash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 31%, color-mix(in srgb, var(--celebration-pale) 65%, transparent), transparent 65%);
+    opacity: 0;
+    animation: celebrationFlash 900ms 300ms ease-out both;
+}
+@keyframes celebrationEnter { from { transform: translateY(18px); } to { transform: translateY(0); } }
+@keyframes flameBurst {
+    0% { transform: translateY(65px) scale(.3) rotate(-10deg); opacity: 0; }
+    60% { transform: translateY(-12px) scale(1.12) rotate(5deg); opacity: 1; }
+    80% { transform: translateY(3px) scale(.97) rotate(-2deg); }
+    100% { transform: translateY(0) scale(1) rotate(0); opacity: 1; }
+}
+@keyframes numberBurst {
+    0% { transform: translateY(20px) scale(.5); opacity: 0; }
+    65% { transform: translateY(-5px) scale(1.14); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+@keyframes celebrationRing {
+    0% { transform: scale(.2) rotate(-20deg); opacity: 0; }
+    30% { opacity: .8; }
+    100% { transform: scale(1.45) rotate(70deg); opacity: 0; }
+}
+@keyframes confettiFall {
+    0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 0; }
+    12% { opacity: 1; }
+    85% { opacity: .9; }
+    100% { transform: translate3d(var(--drift), min(700px, 95dvh), 0) rotate(var(--spin)); opacity: 0; }
+}
+@keyframes celebrationFlash { 0%, 100% { opacity: 0; } 35% { opacity: .4; } }
+@media (prefers-reduced-motion: reduce) {
+    .modal, .modalImg, .number { animation: none; }
+    .confetti, .flameRing, .celebrationFlash { display: none; }
+}
+@media (max-height: 550px) {
+    .modal { padding: 18px 20px; }
+    .hero { width: min(135px, 30dvh); }
+    .number { font-size: 56px; }
+    .title { font-size: 20px; }
+    .subtitle { margin: 10px 0 16px; }
+}
+
+
+/* Light appearance */
+:global(.light-theme) .fullscreen { background: var(--overlay-bg); }
+:global(.light-theme) .modal { background: radial-gradient(ellipse at 50% 29%, color-mix(in srgb, var(--celebration-colour) 17%, transparent), transparent 69%), #fff; border-color: color-mix(in srgb, var(--celebration-colour) 30%, var(--border-color)); color: var(--foreground); box-shadow: var(--shadow-lg); }
+:global(.light-theme) .eyebrow, :global(.light-theme) .number { color: color-mix(in srgb, var(--celebration-colour) 48%, #262333); text-shadow: none; }
+:global(.light-theme) .subtitle { color: var(--muted-foreground); }
+:global(.light-theme) .flameGlow { opacity: .65; }
+:global(.light-theme) .flameRing { border-color: color-mix(in srgb, var(--celebration-colour) 55%, transparent); }

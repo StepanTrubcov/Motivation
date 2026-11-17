@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import c from "./AchievementsMap.module.css";
-import { navigator } from "@/utils/Navigators/Navigators";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { translateAchievements, getAchievementTranslation, achievementsTranslations } from '@/utils/achievementsTranslations';
@@ -14,9 +13,8 @@ const AchievementsMap = ({
     setIsModalOpenLocked,
 }) => {
     const { t, language } = useLanguage();
-    const { currentStep, onTutorialActionDone, nextStep } = useTutorial();
+    const { currentStep, onTutorialActionDone, isOpen: isTutorialOpen } = useTutorial();
     const [active, setActive] = useState("common");
-    let rarity = null
 
     // Переводим весь массив achievements один раз с надежной проверкой
     const translatedAchievements = useMemo(() => {
@@ -56,6 +54,13 @@ const AchievementsMap = ({
         }
     }, [achievements, language]);
 
+    useEffect(() => {
+        if (isTutorialOpen && currentStep?.id === 'achievements-cards') {
+            const locked = translatedAchievements.find(a => a.status !== 'my');
+            if (locked?.rarity) setActive(locked.rarity);
+        }
+    }, [isTutorialOpen, currentStep?.id, translatedAchievements]);
+
     const handleModal = (info) => {
         if (!info) return;
         if (currentStep?.id === 'achievements-earned-choose') {
@@ -65,28 +70,32 @@ const AchievementsMap = ({
         setIsModalOpen({
             active: info.rarity,
             title: info.title || '',
+            description: info.description || '',
             gif: info.gif || '',
-            img: resolveAchievementImage(info.image) || '',
-            points: info.points || 0,
-            rarity: rarity,
+            img: resolveAchievementImage(info.image, info) || '',
+            rarity: info.rarity || '',
             id: info.id,
+            earnedAt: info.earnedAt || info.updatedAt || null,
         });
     };
 
     const handleModalLocked = (info) => {
         if (!info) return;
         if (currentStep?.id === 'achievements-cards') {
-            nextStep();
+            onTutorialActionDone('open_locked_achievement');
         }
         // Убеждаемся, что используем переведенные данные
         setIsModalOpenLocked({
             active: active,
             title: info.title || '',
+            description: info.description || '',
             requirement: info.requirement || '',
+            progress: info.progress,
+            type: info.type,
+            goalIds: info.goalIds || [],
             gif: info.gif || '',
-            img: resolveAchievementImage(info.image) || '',
-            points: info.points || 0,
-            rarity: rarity,
+            img: resolveAchievementImage(info.image, info) || '',
+            rarity: info.rarity || '',
             id: info.id,
         });
     };
@@ -111,6 +120,20 @@ const AchievementsMap = ({
     };
 
     const getRarityLabel = (rarity) => {
+        const key = rarity?.toLowerCase();
+        const russianLabels = {
+            common: 'Обычная',
+            'обычная': 'Обычная',
+            rare: 'Редкая',
+            'редкая': 'Редкая',
+            legendary: 'Легендарная',
+            'легендарная': 'Легендарная',
+            epic: 'Эпическая',
+            'эпическая': 'Эпическая',
+        };
+
+        if (language === 'ru' && russianLabels[key]) return russianLabels[key];
+
         switch (rarity?.toLowerCase()) {
             case "common":
             case "обычная":
@@ -188,54 +211,111 @@ const AchievementsMap = ({
     return (
         <div>
             {activeTab === "All" && (
-                <div>
-                    <div className={c.navigator} data-tutorial-id="achievements-rarities">
-                        <div className={c.navHighlight}></div>
-                        {navigator("common", setActive, active, t('common'), active)}
-                        {navigator("rare", setActive, active, t('rare'), active)}
-                        {navigator("legendary", setActive, active, t('legendary'), active)}
-                        {navigator("epic", setActive, active, t('epic'), active)}
-                    </div>
+                <div className={c.rarityTabs} role="tablist" aria-label={language === 'en' ? 'Achievement rarity' : 'Категория ачивок'} data-tutorial-id="achievements-rarities">
+                    {[
+                        ['common', t('common')],
+                        ['rare', t('rare')],
+                        ['legendary', t('legendary')],
+                        ['epic', t('epic')],
+                    ].map(([rarity, label]) => (
+                        <button
+                            key={rarity}
+                            type="button"
+                            role="tab"
+                            aria-selected={active === rarity}
+                            className={`${c.rarityTab} ${c[`rarityTab-${rarity}`]} ${active === rarity ? c.rarityTabActive : ''}`}
+                            onClick={() => setActive(rarity)}
+                        >
+                            <span>{label}</span>
+                        </button>
+                    ))}
                 </div>
             )}
             <div className={c.container} data-tutorial-id={activeTab === 'Earned' ? 'achievements-earned-cards' : 'achievements-cards'}>
                 {achievementRarities && Array.isArray(achievementRarities) && achievementRarities.length > 0 ? (
                     achievementRarities.map((a, index) => {
                         if (!a) return null;
-                        
+
                         const rarityClass = getRarityClass(a.rarity);
                         const rarityText = getRarityLabel(a.rarity)
-                        rarity = rarityText
-                        
-                        // Убеждаемся, что title переведен
                         const displayTitle = a.title || '';
-                        
+                        const earnedDate = a.status === 'my' && (a.earnedAt || a.updatedAt)
+                            ? new Date(a.earnedAt || a.updatedAt).toLocaleDateString('ru-RU', {
+                                day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC',
+                            })
+                            : '';
+                        const progress = a.progress;
+                        const progressLabel = progress
+                            ? language === 'en'
+                                ? progress.kind === 'level'
+                                    ? `Level ${progress.current} of ${progress.target}`
+                                    : progress.kind === 'time'
+                                        ? `${progress.current} of ${progress.target} days`
+                                        : progress.kind === 'streak'
+                                            ? `${progress.current} of ${progress.target} consecutive days`
+                                        : progress.kind === 'collection'
+                                            ? `${progress.current} of ${progress.target} achievements`
+                                            : progress.kind === 'category'
+                                                ? `${progress.current} of ${progress.target} categories`
+                                            : `${progress.current} of ${progress.target} completions`
+                                : progress.kind === 'level'
+                                    ? `Уровень ${progress.current} из ${progress.target}`
+                                    : progress.kind === 'time'
+                                        ? `${progress.current} из ${progress.target} дней`
+                                        : progress.kind === 'streak'
+                                            ? `${progress.current} из ${progress.target} дней подряд`
+                                        : progress.kind === 'collection'
+                                            ? `${progress.current} из ${progress.target} ачивок`
+                                        : progress.kind === 'category'
+                                            ? `${progress.current} из ${progress.target} категорий`
+                                            : `${progress.current} из ${progress.target} выполнений`
+                            : '';
+
                         return (
-                            <div
+                            <button
+                                type="button"
                                 key={a.id || a.title || index}
                                 className={`${c.card} ${rarityClass}`}
                                 onClick={() =>
-                                    a.status === "my" ? handleModal(a) : handleModalLocked(a)
+                                    isTutorialOpen && currentStep?.id === 'achievements-cards' && a.status === 'my' ? undefined : a.status === "my" ? handleModal(a) : handleModalLocked(a)
                                 }
-                                style={{ animationDelay: `${index * 0.15}s` }}
+                                aria-label={`${displayTitle}, ${rarityText}${a.status === 'my' ? `, ${language === 'en' ? 'Earned' : 'Получено'}` : ''}`}
                             >
-                                {
-                                    a.status === "my" &&
-                                    <div className={c.check} >
-                                        <Check size={20} color="#2e2e2e" />
-                                    </div>
-                                }
+                                {a.status === "my" && (
+                                    <span className={c.checkBadge} aria-hidden="true">
+                                        <Check size={23} strokeWidth={3} />
+                                    </span>
+                                )}
                                 <div className={c.cardInner}>
-                                    <div className={c.imageWrapper}>
-                                        <img className={c.img} src={resolveAchievementImage(a.image)} alt={displayTitle} loading="lazy" decoding="async" />
+                                    <div className={`${c.imageWrapper} ${rarityClass}`}>
+                                        <img className={c.img} src={resolveAchievementImage(a.image, a)} alt="" loading="lazy" decoding="async" />
                                     </div>
-                                    <div className={c.ribbon}>
-                                        <span>{rarityText}</span>
+                                    <div className={c.cardContent}>
+                                        <div className={c.title}>{displayTitle}</div>
+                                        {a.status === "my" ? (
+                                            <div className={c.earned}>
+                                                <span>{earnedDate}</span>
+                                            </div>
+                                        ) : progress ? (
+                                            <div className={c.progressBlock}>
+                                                <div className={c.progressRow}>
+                                                    <div
+                                                        className={c.progressTrack}
+                                                        role="progressbar"
+                                                        aria-label={language === 'en' ? `${displayTitle} progress` : `Прогресс: ${displayTitle}`}
+                                                        aria-valuemin={0}
+                                                        aria-valuemax={100}
+                                                        aria-valuenow={progress.percent}
+                                                    >
+                                                        <span style={{ width: `${progress.percent}%` }} />
+                                                    </div>
+                                                    <span className={c.percent}>{progress.percent}%</span>
+                                                </div>
+                                            </div>
+                                        ) : null}
                                     </div>
-                                    <div className={c.title}>{displayTitle}</div>
-                                    <div className={c.points}>{a.points || 0} {t('pts')}</div>
                                 </div>
-                            </div>
+                            </button>
                         );
                     })
                 ) : null}

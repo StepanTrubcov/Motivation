@@ -1,0 +1,67 @@
+[
+  {
+    "templateId": "v2:10",
+    "previousImage": "/Image/achievements/achievement-5.webp",
+    "image": "/Image/achievements/rare-10-v1.webp"
+  },
+  {
+    "templateId": "v2:11",
+    "previousImage": "/Image/achievements/achievement-6.webp",
+    "image": "/Image/achievements/rare-11-v1.webp"
+  },
+  {
+    "templateId": "v2:12",
+    "previousImage": "/Image/achievements/achievement-7.webp",
+    "image": "/Image/achievements/rare-12-v1.webp"
+  },
+  {
+    "templateId": "v2:13",
+    "previousImage": "/Image/achievements/achievement-8.webp",
+    "image": "/Image/achievements/rare-13-v1.webp"
+  },
+  {
+    "templateId": "v2:14",
+    "previousImage": "/Image/goals-v1/singing.webp",
+    "image": "/Image/achievements/rare-14-v1.webp"
+  },
+  {
+    "templateId": "v2:15",
+    "previousImage": "/Image/goals-v1/exercise.webp",
+    "image": "/Image/achievements/rare-15-v1.webp"
+  },
+  {
+    "templateId": "v2:16",
+    "previousImage": "/Image/goals-v1/idea.webp",
+    "image": "/Image/achievements/rare-16-v1.webp"
+  },
+  {
+    "templateId": "v2:17",
+    "previousImage": "/Image/goals-v1/clean.webp",
+    "image": "/Image/achievements/rare-17-v1.webp"
+  },
+  {
+    "templateId": "v2:18",
+    "previousImage": "/Image/goals-v1/clock.webp",
+    "image": "/Image/achievements/rare-18-v1.webp"
+  },
+  {
+    "templateId": "v2:19",
+    "previousImage": "/Image/goals-v1/star.webp",
+    "image": "/Image/achievements/rare-19-v1.webp"
+  },
+  {
+    "templateId": "v2:20",
+    "previousImage": "/Image/goals-v1/book.webp",
+    "image": "/Image/achievements/rare-20-v1.webp"
+  },
+  {
+    "templateId": "v2:21",
+    "previousImage": "/Image/goals-v1/idea.webp",
+    "image": "/Image/achievements/rare-21-v1.webp"
+  },
+  {
+    "templateId": "v2:22",
+    "previousImage": "/Image/goals-v1/custom.webp",
+    "image": "/Image/achievements/rare-22-v1.webp"
+  }
+]

@@ -523,3 +523,67 @@
   border: 2px solid var(--accent-green, #0a7c1a);
   box-shadow: none;
 }
+
+
+/* Light appearance */
+:global(.light-theme) .tooltipCard { background: var(--card-bg); color: var(--foreground); border-color: var(--border-color); box-shadow: var(--shadow-lg); }
+:global(.light-theme) .tooltipDesc, :global(.light-theme) .tooltipDescSmall { color: var(--foreground); }
+:global(.light-theme) .tooltipTitle, :global(.light-theme) .tooltipDescAccent { color: var(--accent-green); text-shadow: none; }
+:global(.light-theme) .btnPrimary { color: var(--accent-on); }
+:global(.light-theme) .btnPrimary:hover { box-shadow: none; }
+
+/* Home tutorial: compact copy and the application's current surfaces. */
+.tutorialStyle .tooltipCard {
+  width: 100%; padding: 18px;
+  color: var(--foreground); background: var(--surface-bg);
+  border: 1px solid var(--border-color); border-radius: 18px;
+  box-shadow: 0 12px 40px #0003;
+}
+.tutorialStyle .tooltipWrapCenter {
+  top: 0; left: 0; bottom: 0; right: 0;
+  width: 100%; max-height: none; transform: none;
+  display: flex; align-items: center; justify-content: center;
+  padding: max(24px, calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px) + 16px)) 18px max(24px, env(safe-area-inset-bottom));
+}
+.tutorialStyle .tooltipWrapCenter .tooltipCardCenter {
+  position: relative; right: auto; align-self: auto;
+  width: min(360px, 100%); max-height: 100%; overflow-y: auto;
+}
+.tutorialStyle .tooltipTitle {
+  margin: 0 0 10px; color: var(--foreground);
+  font-size: 19px; font-weight: 700; line-height: 1.3;
+  text-shadow: none; text-wrap: balance; overflow-wrap: anywhere;
+}
+.tutorialStyle .tooltipDesc, .tutorialStyle .tooltipDescSmall {
+  color: var(--muted-foreground); font-size: 14px; line-height: 1.5;
+  margin: 0 0 16px; text-shadow: none;
+}
+.tutorialStyle .tooltipDescAccent { color: var(--accent-green) !important; text-shadow: none; }
+.tutorialStyle .stepBadge { margin-bottom: 10px; font-size: 11px; background: var(--accent-green-muted); color: var(--accent-green); }
+.tutorialStyle .actions { gap: 10px; margin-top: 10px; }
+.tutorialStyle .btnPrimary {
+  min-height: 42px; padding: 10px 16px; border-radius: var(--radius-control, 12px);
+  background: var(--accent-green); color: var(--accent-on); font: inherit; font-size: 14px; font-weight: 600;
+}
+.tutorialStyle .btnPrimary:hover { transform: none; box-shadow: none; }
+.tutorialStyle .btnSkip { min-height: 42px; padding: 8px; color: var(--muted-foreground); font: inherit; font-size: 13px; }
+.tutorialStyle .btnSkip:hover { color: var(--foreground); }
+.tutorialStyle .arrowTop { border-bottom-color: var(--surface-bg); }
+.tutorialStyle .arrowBottom { border-top-color: var(--surface-bg); }
+.tutorialStyle .highlight { box-shadow: 0 0 0 3px var(--accent-green-muted); }
+.tutorialStyle .btnPrimary:focus-visible, .tutorialStyle .btnSkip:focus-visible { outline: 2px solid var(--accent-green); outline-offset: 3px; }
+
+
+/* Compact tutorial: title and counter together, primary action above cancellation. */
+.tutorialStyle .tooltipCard { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 10px; padding: 16px; }
+.tutorialStyle .tooltipTitle { grid-column: 1; grid-row: 1; text-align: left; align-self: center; margin: 0 0 14px; font-size: 18px; }
+.tutorialStyle .stepBadge { grid-column: 2; grid-row: 1; align-self: start; justify-self: end; margin: 3px 0 14px; padding: 0; background: transparent; color: var(--muted-foreground); font-weight: 400; }
+.tutorialStyle .tooltipDesc, .tutorialStyle .tooltipDescSmall { grid-column: 1 / -1; margin: 0 0 18px; }
+.tutorialStyle .tooltipCardSingleLine .tooltipTitle { grid-column: 1 / -1; }
+.tutorialStyle .actions { grid-column: 1 / -1; display: flex; flex-direction: column-reverse; align-items: stretch; gap: 4px; margin-top: 0; }
+.tutorialStyle .navGroup { display: flex; width: 100%; gap: 8px; }
+.tutorialStyle .btnPrimary { flex: 1; width: 100%; min-height: 42px; padding: 10px; border-radius: 10px; }
+.tutorialStyle .btnSkip { align-self: center; min-height: 36px; padding: 8px 14px; font-size: 12px; }
+.tutorialStyle .btnNav { flex: 0 0 42px; width: 42px; height: 42px; border-radius: 10px; background: var(--card-bg-secondary); border: 1px solid var(--border-color); color: var(--foreground); }
+.tutorialStyle .btnNav:hover { transform: none; background: var(--card-bg-tertiary); }
+.tutorialStyle .tutorialBotLink { grid-column: 1 / -1; }

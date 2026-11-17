@@ -3,7 +3,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--nav-bg, #000000);
+    background-color: var(--surface-bg, #191e21);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -11,7 +11,8 @@
     z-index: 9999;
     box-shadow: var(--shadow, none);
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-    height: calc(60px + env(safe-area-inset-bottom));
+    box-sizing: border-box;
+    height: calc(64px + env(safe-area-inset-bottom));
     padding-bottom: env(safe-area-inset-bottom);
 }
 
@@ -21,19 +22,59 @@
     pointer-events: none !important;
 }
 
-.light-theme .navbar {
+:global(.light-theme) .navbar {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .navItem {
-    font-size: 24px;
-    color: var(--nav-text, #888);
+    flex: 1;
+    min-width: 0;
+    height: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 4px;
+    box-sizing: border-box;
+    font-size: 12px;
+    line-height: 1.25;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--foreground, #ededed);
+    opacity: 0.65;
     cursor: pointer;
-    transition: color 0.3s, text-shadow 0.3s;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.navItem svg {
+    flex-shrink: 0;
 }
 
 .navItem.active {
     color: var(--accent-green, #00ff1e);
-    text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
-    transition: color 0.3s ease, text-shadow 0.3s ease;
+    opacity: 1;
+}
+
+
+/* Light appearance */
+:global(.light-theme) .navbar { background: var(--nav-bg); box-shadow: none; }
+:global(.light-theme) .navItem { color: var(--nav-text); opacity: 1; }
+:global(.light-theme) .navItem.active { color: var(--accent-green); }
+
+:global(.light-theme) .navItem.active {
+    position: relative;
+    isolation: isolate;
+}
+:global(.light-theme) .navItem.active::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 5px;
+    left: 50%;
+    width: 52px;
+    height: 34px;
+    transform: translateX(-50%);
+    background: var(--accent-green-muted);
+    border-radius: 12px;
 }

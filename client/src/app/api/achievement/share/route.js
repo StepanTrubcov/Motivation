@@ -2,14 +2,14 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const { title, description, points, username } = await request.json();
+    const { title, description, username } = await request.json();
 
     if (!title || !description) {
       return NextResponse.json({ success: false, message: 'Не хватает данных' }, { status: 400 });
     }
 
     // Делаем POST запрос к image API для генерации изображения с ID
-    const protocol = (request.headers.get('x-forwarded-proto') || 'https');
+    const protocol = new URL(request.url).protocol.slice(0, -1);
     const host = request.headers.get('host') || 'example.com';
     const imageUrl = `${protocol}://${host}/api/achievement/image`;
 
@@ -18,11 +18,12 @@ export async function POST(request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'x-telegram-init-data': request.headers.get('x-telegram-init-data') || '',
+        'x-development-telegram-id': request.headers.get('x-development-telegram-id') || '',
       },
       body: JSON.stringify({
         title,
         description,
-        points: points || 0,
         username: username || 'user'
       })
     });

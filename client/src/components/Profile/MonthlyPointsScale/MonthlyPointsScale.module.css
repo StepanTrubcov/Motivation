@@ -1,19 +1,19 @@
-.points_scale {  
+.points_scale {
   margin-top: 95px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--card-bg-tertiary, #343434);
-  border-radius: 20px;
-  padding: 10px;
-  box-shadow: var(--shadow, 0 4px 15px rgba(0, 255, 0, 0.1));
+  background: var(--surface-bg);
+  border-radius: var(--radius-card);
+  padding: 8px 16px;
+  box-shadow: var(--surface-shadow);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.07));
-    gap: clamp(12px, 3vw, 25px);
+  border: var(--surface-border);
+    gap: var(--space-4);
 }
 
 /* Use themed shadow (light/dark) */
-.light-theme .points_scale { box-shadow: var(--shadow, none); }
+:global(.light-theme) .points_scale { box-shadow: var(--surface-shadow); }
 
 .level_text {
   font-size: 15px;
@@ -61,7 +61,7 @@
   transition: background-color 0.3s ease;
 }
 
-.light-theme .progress_bar {
+:global(.light-theme) .progress_bar {
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
@@ -74,7 +74,7 @@
 }
 
 .points_text {
-  margin-top: 15px;
+  margin-top: 8px;
   font-size: 16px;
   font-weight: bold;
   color: var(--foreground, white);
@@ -104,8 +104,17 @@
 
 .points_text {
   text-align: center;
+  margin-top: 8px;
 }
 
 .nextLevel {
   text-align: right;
 }
+
+/* Light appearance */
+:global(.light-theme) .level, :global(.light-theme) .nextLevel { text-shadow: none; }
+:global(.light-theme) .progress_bar { background: var(--card-bg-tertiary); box-shadow: none; }
+:global(.light-theme) .progress_fill { box-shadow: none; }
+
+:global(.light-theme) .progress_bar { height: 7px; }
+:global(.light-theme) .progress_fill { background: var(--accent-vivid); }

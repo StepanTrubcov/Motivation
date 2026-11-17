@@ -27,25 +27,32 @@ enum UserLanguage {
 }
 
 model User {
-  id               String        @id @default(cuid())
-  telegramId       String        @unique
-  language         UserLanguage  @default(rus)
-  firstName        String?
-  username         String?
-  photoUrl         String?
-  pts              Int           @default(0)
-  savingGoals      Json[]
-  usersTag         String?
-  goals            Goal[]
-  achievements     Achievement[]
-  registrationDate DateTime?     @default(now())
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @default(now()) @updatedAt
+  id                String              @id @default(cuid())
+  telegramId        String              @unique
+  language          UserLanguage        @default(rus)
+  firstName         String?
+  username          String?
+  photoUrl          String?
+  pts               Int                 @default(0)
+  savingGoals       Json[]
+  storageVersion    Int                 @default(1)
+  progressMeta      Json?               @default("{\"goalCatalog\":\"standard-v1\",\"achievementCatalog\":\"v2\",\"achievementsInitialized\":false,\"calendar\":{\"ranges\":[],\"extras\":{}}}")
+  personalGoals     UserGoal[]
+  earnedRewards     EarnedAchievement[]
+  goalPeriods       GoalPeriod[]
+  dayStates         GoalDayState[]
+  operationReceipts OperationReceipt[]
+  usersTag          String?
+  goals             Goal[]
+  achievements      Achievement[]
+  registrationDate  DateTime?           @default(now())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @default(now()) @updatedAt
 }
 
 model Achievement {
-  id          String   @id @default(cuid())
-  /// Стабильный id из шаблона ачивок ("1"…"26") — для идемпотентного upsert без привязки к переводу title
+  id          String    @id @default(cuid())
+  /// Версионированный id шаблона (например, "v2:1") для синхронизации без привязки к переводу title.
   templateId  String?
   title       String
   gif         String
@@ -56,12 +63,13 @@ model Achievement {
   image       String
   points      Int
   type        String?
-  goalIds     String[] @default([])
+  goalIds     String[]  @default([])
   target      Int?
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  earnedAt    DateTime?
 
   @@unique([userId, templateId])
   @@index([userId, templateId])
@@ -82,4 +90,76 @@ model Goal {
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @default(now()) @updatedAt
+}
+
+// Shared definitions are versioned application assets. Only personal state is stored here.
+model UserGoal {
+  id             String     @id
+  userId         String
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId     String?
+  definitionKey  String?
+  custom         Json?
+  status         GoalStatus @default(not_started)
+  progress       Int        @default(0)
+  startDate      DateTime?
+  completionDate DateTime?
+  selectedOption Int?
+  settings       Json?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@index([userId])
+}
+
+model EarnedAchievement {
+  id         String    @id
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  templateId String
+  earnedAt   DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@unique([userId, templateId])
+}
+
+model GoalPeriod {
+  id         String         @id
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goalId     String
+  startDay   String
+  endDay     String
+  position   Int
+  data       Json
+  baseStatus String
+  states     GoalDayState[]
+
+  @@index([userId, goalId, startDay, endDay])
+}
+
+model GoalDayState {
+  id       String     @id
+  userId   String
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  periodId String
+  period   GoalPeriod @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  date     String
+  status   String
+
+  @@unique([periodId, date])
+  @@index([userId, date])
+}
+
+model OperationReceipt {
+  id        String @id
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  requestId String
+  kind      String
+  date      String
+  position  Int
+
+  @@unique([userId, kind, requestId])
 }

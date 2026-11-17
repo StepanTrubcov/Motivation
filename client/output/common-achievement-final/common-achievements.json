@@ -1,0 +1,142 @@
+[
+  {
+    "id": "1",
+    "title": "Красавчик!",
+    "description": "Вы начали пользоваться приложением и сделали первый шаг к своим целям.",
+    "requirement": "Начать пользоваться приложением.",
+    "status": "my",
+    "image": "/Image/achievements/achievement-1.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "event_based",
+    "goalIds": [],
+    "target": null
+  },
+  {
+    "id": "2",
+    "title": "В игре",
+    "description": "Вы прошли обучение и познакомились с приложением.",
+    "requirement": "Пройти обучение.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-27.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "event_based",
+    "goalIds": [],
+    "target": null
+  },
+  {
+    "id": "3",
+    "title": "30 дней бега",
+    "description": "Вы возвращались к бегу и укрепляли привычку.",
+    "requirement": "Выполнить цель «Бегать» 30 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-2.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "1"
+    ],
+    "target": 30
+  },
+  {
+    "id": "4",
+    "title": "Книжный марафон",
+    "description": "Регулярное чтение стало частью вашего дня.",
+    "requirement": "Выполнить цель «Читать книгу» 30 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-3.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "2"
+    ],
+    "target": 30
+  },
+  {
+    "id": "5",
+    "title": "Кодерский марафон",
+    "description": "Вы регулярно уделяли время программированию.",
+    "requirement": "Выполнить цель «Программировать» 30 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-4.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "4"
+    ],
+    "target": 30
+  },
+  {
+    "id": "6",
+    "title": "Гибкость начинается",
+    "description": "Небольшие занятия растяжкой складываются в привычку.",
+    "requirement": "Выполнить цель «Сделать растяжку после сна» 45 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-32.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "65"
+    ],
+    "target": 45
+  },
+  {
+    "id": "7",
+    "title": "Утро в движении",
+    "description": "Вы начали утро с зарядки.",
+    "requirement": "Выполнить цель «Утренняя зарядка» 30 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-33-v2.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "18"
+    ],
+    "target": 30
+  },
+  {
+    "id": "8",
+    "title": "Шаг за шагом",
+    "description": "Вы находили время для прогулок на свежем воздухе.",
+    "requirement": "Выполнить цель «Погулять на свежем воздухе» 30 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-34.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "63"
+    ],
+    "target": 30
+  },
+  {
+    "id": "9",
+    "title": "Прыжок к цели",
+    "description": "Вы выполнили много прыжков на скакалке.",
+    "requirement": "Выполнить цель «Прыгать на скакалке» 45 раз.",
+    "status": "locked",
+    "image": "/Image/achievements/achievement-35.webp",
+    "gif": "",
+    "points": 0,
+    "rarity": "common",
+    "type": "goal_based",
+    "goalIds": [
+      "62"
+    ],
+    "target": 45
+  }
+]

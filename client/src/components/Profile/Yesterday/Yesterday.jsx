@@ -1,25 +1,32 @@
-import React, { useEffect, useState } from "react";
+import GoalStatusIcon from '@/components/GoalStatusIcon/GoalStatusIcon';
+import GoalIcon from '@/components/GoalIcon/GoalIcon';
+import { pointsLabelKey } from '@/lib/formatPoints';
+import { formatGoalDuration } from '@/lib/goalTimeOptions';
+import React, { useEffect, useState, useRef } from "react";
 import c from './Yesterday.module.css';
+import { useDispatch } from 'react-redux';
+import { changeGoalCompletion } from '@/redux/goals_reducer';
 import { useLanguage } from '@/context/LanguageContext';
-import toast from "react-hot-toast";
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
-import { X, Copy } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { notifications } from "@/lib/notifications";
+import { ArrowLeft, FileText } from "lucide-react";
+import ModalWindowText from "../GenerationButton/ModalWindowText/ModalWindowText";
 
 const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingGoals, newStatusSavingGoal, profile, userId, setDate, goalsForSelectedDate, checkTimeGoalsSaving, setPoints, addStatus, series = 0, isTodayCompleted = false }) => {
     const { language, t } = useLanguage();
+    const dispatch = useDispatch();
+    const completionBusy = useRef(false);
     const [esterday, setEsterday] = useState(false)
     const [loading, setLoading] = useState(true)
     const [isModalOpenText, setIsModalOpenText] = useState(null)
-    const [button, setButton] = useState(true);
 
-    const [generatedText, setGeneratedText] = useState("");
 
     const date = new Date();
-    date.setDate(date.getDate() - 1);
+    date.setUTCDate(date.getUTCDate() - 1);
     const esterdayDate = date.toISOString().split('T')[0]
     const locale = language === 'en' ? 'en-US' : 'ru-RU';
     const formattedDate = date.toLocaleDateString(locale, { day: 'numeric', month: 'long' });
+    const weekday = date.toLocaleDateString(locale, { weekday: 'long' });
+    const completedCount = goalsForSelectedDate.filter(g => g.status === 'completed').length;
 
     useEffect(() => {
         setDate(esterdayDate);
@@ -35,91 +42,26 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
         }
     }
 
-    const addNewStatusDone = async (isModalOpenDone) => {
+    const performCompletion = async (goal, action) => {
+        if (completionBusy.current) return;
+        completionBusy.current = true;
+        setLoading(false);
+        const completing = action === 'complete';
+        const notice = notifications.begin(t(completing ? 'completingGoal' : 'cancelingGoal'));
         try {
-            setLoading(false)
-            const loadingToast = toast.loading(t('completingGoal'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-            
-                },
-                icon: <LoadingSpinner size={20} />
-            });
-
-            await checkTimeGoalsSaving(profile.telegramId)
-            await setPoints(userId, isModalOpenDone.points)
-            await addStatus(userId);
-
-            const result = await newStatusSavingGoal(profile.telegramId, esterdayDate, isModalOpenDone.id, "completed")
-
-            if (result.success) {
-                setLoading(true)
-            }
-            setSavingGoals(result.data.savingGoals)
-            toast.dismiss(loadingToast);
-            toast.success(t('goalCompleted'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            const result = await dispatch(changeGoalCompletion(userId, goal.id, action, esterdayDate));
+            setSavingGoals(result.user.savingGoals);
+            notice.success(t(completing ? 'goalCompleted' : 'goalCanceled'));
         } catch (error) {
-            console.error(t('goalError'), error);
-            toast.error(t('goalErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            console.error('Could not save yesterday goal:', error);
+            notice.error(t(completing ? 'goalErrorRetry' : 'goalMoveErrorRetry'));
+        } finally {
+            completionBusy.current = false;
+            setLoading(true);
         }
     };
-
-    const addNewStatusInProgress = async (isModalOpen) => {
-        try {
-            setLoading(false)
-            const loadingToast = toast.loading(t('cancelingGoal'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-                icon: <LoadingSpinner size={20} />
-            });
-
-            await deletePoints(userId, isModalOpen.points)
-            await checkTimeGoalsSaving(profile.telegramId)
-            await addStatus(userId);
-
-            const result = await newStatusSavingGoal(profile.telegramId, esterdayDate, isModalOpen.id, "in_progress")
-
-            toast.dismiss(loadingToast);
-            toast.success(t('goalCanceled'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-
-            if (result.success) {
-                setLoading(true)
-            }
-            setSavingGoals(result.data.savingGoals)
-        } catch (error) {
-            console.error(t('goalMoveError'), error);
-            toast.error(t('goalMoveErrorRetry'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
-        }
-    };
+    const addNewStatusDone = goal => performCompletion(goal, 'complete');
+    const addNewStatusInProgress = goal => performCompletion(goal, 'undo');
 
     const map = goalsForSelectedDate.map(g => {
         return <div
@@ -127,17 +69,26 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
             onClick={() => { clicGoals(g) }}
         >
             <div
-                className={c.blok}
+                className={`${c.blok} ${c.goalCard}`}
+                data-completed={g.status === 'completed' ? 'true' : undefined}
             >
-                <div>
-                    <div className={c.title}>{g.title}</div>
-                    <div className={c.pts}>{g.points} pts</div>
+                <GoalIcon goal={g} />
+                <div className={c.goalText}>
+                    <div className={c.title} title={g.title}>
+                        {g.durationMinutes != null || g.targetTime
+                            ? (g.targetTime ? g.timeBaseTitle : g.durationBaseTitle) || g.baseTitle || g.title
+                            : g.title}
+                    </div>
+                    {(g.durationMinutes != null || g.targetTime) ? (
+                        <div className={c.goalTime}>{g.targetTime || formatGoalDuration(g.durationMinutes, language)}</div>
+                    ) : null}
+                    <div className={c.pts}>{g.points} {t(language === 'ru' ? pointsLabelKey(g.points, language) : 'pts')}</div>
                 </div>
                 {g.status === 'in_progress' && <div>
-                    <img className={c.img} src='https://i.postimg.cc/hP8bTspx/3836f8c0-0e42-4e08-baaa-4d629dbe4995-no-bg-preview-carve-photos-1.png' alt="button" />
+                    <GoalStatusIcon />
                 </div> ||
                     <div>
-                        <div className={c.circleCheck} aria-hidden="true" />
+                        <GoalStatusIcon completed />
                     </div>
                 }
             </div>
@@ -147,26 +98,20 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
     const rollback = () => {
         setEsterday(true)
         setDisplay(false)
-        setButton(false)
     }
 
     const back = () => {
         setEsterday(false)
         setDisplay(true)
-        setButton(true)
     };
 
     const generation = async () => {
         if (loading) {
+            const notice = notifications.begin(t('generating'));
+            setLoading(false);
+            try {
 
-            const loadingToast = toast.loading(t('generating'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                },
-                icon: <LoadingSpinner size={20} />
-            });
+
 
             const goalsDone = goalsForSelectedDate.filter(g => g.status === 'completed');
 
@@ -174,119 +119,62 @@ const Yesterday = ({ addTextGenerationData, setDisplay, deletePoints, setSavingG
 
             const seriesForYesterday = isTodayCompleted && series > 0 ? series - 1 : series;
 
-            await addTextGenerationData(formattedDate, profile.usersTag, profile.telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, true, seriesForYesterday, language)
+            await addTextGenerationData(formattedDate, profile.usersTag, profile.telegramId, goalsDone, goalsInProgress, setIsModalOpenText, setLoading, true, seriesForYesterday, language)
 
-            toast.dismiss(loadingToast);
 
-            toast.success(t('ready'), {
-                style: {
-                    background: '#333',
-                    color: '#fff',
-                    marginTop: '80px',
-                }
-            });
+            notice.success(t('ready'));
 
-            setLoading(true)
+            } catch (error) {
+                console.error(error);
+                notice.error(t('generationError'));
+            } finally {
+                setLoading(true);
+            }
         }
-    };
-
-    const copyToClipboard = async (text) => {
-        await navigator.clipboard.writeText(text);
-        toast.success(t('reportCopied'), {
-            style: {
-                background: '#333',
-                color: '#fff',
-                marginTop: '80px',
-            },
-        });
-        setIsModalOpenText(null)
     };
 
     return (
         <div>
-            <div className={c.home} >
+            <div className={`${c.home} ${esterday ? c.historyHome : ''}`} >
                 {esterday && <div>
-                    <div className={c.text}>
-                        {t('yesterdayGoals')}
+                    <div className={c.pageHeader}>
+                        <button className={c.backButton} onClick={back} aria-label={t('returnToToday')}>
+                            <ArrowLeft size={20} aria-hidden="true" />
+                        </button>
+                        <div className={c.headingGroup}>
+                            <h2 className={c.pageTitle}>{t('yesterdayGoals')}</h2>
+                            <div className={c.dateLabel}>{formattedDate} · {weekday}</div>
+                        </div>
+                    </div>
+                    <div className={c.summary}>
+                        {t('yesterdayCompletedCount').replace('{done}', completedCount).replace('{total}', goalsForSelectedDate.length)}
                     </div>
                     {map}
                     <div className={c.GenerationButton} >
-                        <button className={c.button} onClick={generation} >
-                        📊 <div className={c.textButton} > {t('generateReport')}</div>
+                        <button className={c.button} onClick={generation} disabled={!loading}>
+                            <FileText size={20} className={c.reportIcon} aria-hidden="true" />
+                            <span>{t('generateReport')}</span>
                         </button>
                     </div>
-                    {generatedText &&
-                        <div>
-                            <div className={c.generatedBox}>
-                                <div onClick={() => setIsModalOpenText(generatedText)} className={c.previewWrapper}>
-                                    <pre className={c.previewText}>
-                                        {generatedText.split("\n").slice(0, 1).join("\n")}
-                                        {generatedText.split("\n").length > 1 ? "\n..." : ""}
-                                    </pre>
-                                </div>
-                                <button
-                                    className={c.copyButton}
-                                    onClick={() => copyToClipboard(generatedText)}
-                                    aria-label={t('copy')}
-                                >
-                                    <Copy size={28} />
-                                </button>
-                            </div>
-                        </div>
-                    }
+
                 </div>
                 }
             </div>
-            <div className={c.wrapper}>
-                <button disabled={!button} className={c.arrowBtn} onClick={rollback} style={!button ? { backgroundColor: '#1d1d1d', color: '#666666' } : {}}>
-                    <span>{"<"}</span>
-                </button>
-                {button && <div className={c.label}>{t('rollback')} </div> || <div className={c.label}>{t('back')} </div>}
-                <button disabled={button} onClick={back} className={c.arrowBtn} style={button ? { backgroundColor: '#1d1d1d', color: '#666666' } : {}}>
-                    <span>{">"}</span>
-                </button>
-            </div >
+            {esterday ? (
+                <button className={c.returnButton} onClick={back}>{t('returnToToday')}</button>
+            ) : (
+                <div className={c.wrapper}>
+                    <button className={c.historyLink} onClick={rollback}>
+                        <ArrowLeft size={20} aria-hidden="true" />
+                        <span>{t('viewYesterdayGoals')}</span>
+                    </button>
+                </div>
+            )}
 
-            {isModalOpenText && <AnimatePresence>
-                <motion.div
-                    className={c.modalBackdrop}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    onClick={() => setIsModalOpenText(null)}
-                >
-                    <motion.div
-                        className={c.modalContent}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            onClick={() => setIsModalOpenText(null)}
-                            className={c.closeButton}
-                            aria-label={t('close')}
-                        >
-                            <X size={24} />
-                        </button>
-                        <pre className={c.previewText}>
-                            {isModalOpenText}
-                        </pre>
-                        <div className={c.copyButtonIsModalBlok}>
-                            <button
-                                className={c.copyButtonIsModal}
-                                onClick={() => copyToClipboard(generatedText)}
-                                aria-label={t('copy')}
-                            >
-                                {t('copy')}
-                            </button>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            </AnimatePresence>
-            }
+            <ModalWindowText
+                isModalOpenText={isModalOpenText}
+                closeModalText={() => setIsModalOpenText(null)}
+            />
         </div >
     );
 };

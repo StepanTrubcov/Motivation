@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="ice" x1="140" y1="60" x2="370" y2="450" gradientUnits="userSpaceOnUse"><stop stop-color="#b4f5ff"/><stop offset=".45" stop-color="#45b8ff"/><stop offset="1" stop-color="#2256d8"/></linearGradient>
+    <linearGradient id="core" x1="230" y1="235" x2="285" y2="450" gradientUnits="userSpaceOnUse"><stop stop-color="#fff"/><stop offset="1" stop-color="#88e9ff"/></linearGradient>
+    <radialGradient id="halo"><stop stop-color="#5dccff" stop-opacity=".28"/><stop offset="1" stop-color="#5dccff" stop-opacity="0"/></radialGradient>
+  </defs>
+  <circle cx="256" cy="280" r="230" fill="url(#halo)"/>
+  <path d="M272 35c28 91-17 119 42 172 17-28 26-50 20-84 88 81 127 161 95 244-28 75-99 111-174 110-99-1-170-64-170-150 0-72 35-118 83-164-8 56 8 79 26 94 61-66 9-132 78-222Z" fill="url(#ice)" stroke="#bcf4ff" stroke-opacity=".65" stroke-width="5"/>
+  <path d="M263 250c-7 62-60 67-68 121-7 43 18 79 62 79 47 0 73-39 63-78-8-32-29-53-29-80-10 12-13 25-16 36-14-22-5-50-12-78Z" fill="url(#core)"/>
+  <g fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 304v88m-38-66 76 44m-76 0 76-44M243 315l13 12 13-12m-26 66 13-12 13 12m-50-39 18-5-4-17m47 56-4-17 18-5m-61 22 4-17-18-5m75-12-18-5 4-17"/>
+  </g>
+</svg>

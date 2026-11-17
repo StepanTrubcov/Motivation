@@ -1,14 +1,15 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { Settings, X, HelpCircle, Moon, Share2, Languages, GraduationCap, Palette } from "lucide-react";
+import { Settings, X, HelpCircle, Moon, Share2, Languages, GraduationCap, Palette, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { toast } from "react-hot-toast";
+import { notifications as toast } from "@/lib/notifications";
 import { useSelector } from 'react-redux';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { updateUserLanguage } from '@/lib/api/Api';
 import c from './QuestionButton.module.css';
+import { ACCENT_COLORS } from '@/lib/accentColors';
 
 const QuestionButton = () => {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -85,16 +86,7 @@ const QuestionButton = () => {
         toast.error(t('shareGenericFailed'));
     };
 
-    const colorOptions = [
-        { name: 'Зелёный', nameEn: 'Green', color: '#00ff1e' },
-        { name: 'Синий', nameEn: 'Blue', color: '#0080ff' },
-        { name: 'Фиолетовый', nameEn: 'Purple', color: '#9b4dff' },
-        { name: 'Розовый', nameEn: 'Pink', color: '#ff4d9b' },
-        { name: 'Оранжевый', nameEn: 'Orange', color: '#ff6b35' },
-        { name: 'Красный', nameEn: 'Red', color: '#ff3b30' },
-        { name: 'Голубой', nameEn: 'Cyan', color: '#00d4ff' },
-        { name: 'Жёлтый', nameEn: 'Yellow', color: '#ffd700' },
-    ];
+    const colorOptions = ACCENT_COLORS;
 
     const languageOptions = [
         { code: 'ru', name: 'Русский', nameEn: 'Russian' },
@@ -154,7 +146,7 @@ const QuestionButton = () => {
             <button
                 className={`${c.settingsButton} ${isSettingsBlocked ? c.settingsButtonBlocked : ''}`}
                 onClick={handleSettingsButtonClick}
-                aria-label="Настройки"
+                aria-label={t('settings')}
                 aria-disabled={isSettingsBlocked}
                 data-tutorial-id="settings-button"
             >
@@ -164,7 +156,7 @@ const QuestionButton = () => {
             </button>
 
             <AnimatePresence>
-                {isSettingsOpen && (
+                {isSettingsOpen && !isColorPickerOpen && !isLanguagePickerOpen && (
                     <motion.div
                         className={c.modalBackdrop}
                         initial={{ opacity: 0 }}
@@ -175,6 +167,8 @@ const QuestionButton = () => {
                     >
                         <motion.div
                             className={c.modalContent}
+                            role="dialog"
+                            aria-modal="true"
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -204,6 +198,7 @@ const QuestionButton = () => {
                                     <label className={c.toggleSwitch}>
                                         <input
                                             type="checkbox"
+                                            aria-label={t('lightTheme')}
                                             checked={theme === 'light'}
                                             onChange={toggleTheme}
                                         />
@@ -229,6 +224,9 @@ const QuestionButton = () => {
                                         >
                                             <Icon size={20} className={c.optionIcon} />
                                             <span className={c.optionLabel}>{option.label}</span>
+                                            {option.id === 'color' && <span className={c.currentColor} style={{ backgroundColor: accentColor }} aria-hidden="true" />}
+                                            {option.id === 'language' && <span className={c.optionValue}>{language === 'ru' ? 'Русский' : 'English'}</span>}
+                                            <ChevronRight size={16} className={c.chevron} aria-hidden="true" />
                                         </button>
                                     );
                                 })}
@@ -254,6 +252,8 @@ const QuestionButton = () => {
                     >
                         <motion.div
                             className={c.modalContent}
+                            role="dialog"
+                            aria-modal="true"
                             data-tutorial-id="settings-color-picker"
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -285,12 +285,8 @@ const QuestionButton = () => {
                                             setIsColorPickerOpenForTutorial?.(false);
                                             setIsColorPickerOpen(false);
                                         }}
-                                        style={{ 
-                                            backgroundColor: option.color,
-                                            boxShadow: accentColor === option.color 
-                                                ? `0 0 12px ${option.color}` 
-                                                : 'none'
-                                        }}
+                                        style={{ backgroundColor: option.color }}
+                                        aria-pressed={accentColor === option.color}
                                         aria-label={language === 'en' ? option.nameEn : option.name}
                                         title={language === 'en' ? option.nameEn : option.name}
                                     >
@@ -318,6 +314,8 @@ const QuestionButton = () => {
                     >
                         <motion.div
                             className={c.modalContent}
+                            role="dialog"
+                            aria-modal="true"
                             initial={{ scale: 0.9, opacity: 0, y: 20 }}
                             animate={{ scale: 1, opacity: 1, y: 0 }}
                             exit={{ scale: 0.9, opacity: 0, y: 20 }}

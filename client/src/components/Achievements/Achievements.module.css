@@ -1,9 +1,26 @@
-.title {
-  text-align: center;
-  font-size: 30px;
-  font-weight: 600;
-  margin-bottom: 16px;
+.header {
   margin-top: 90px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.title {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.15;
   color: var(--foreground, white);
   transition: color 0.3s ease;
 }
+
+.subtitle {
+  margin: 6px 0 0;
+  color: var(--foreground, white);
+  opacity: 0.7;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+
+/* Light appearance */
+:global(.light-theme) .subtitle { color: var(--muted-foreground); opacity: 1; }

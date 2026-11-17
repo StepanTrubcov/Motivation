@@ -19,7 +19,7 @@ fs.readdir(backupDir, (err, files) => {
   // Фильтруем файлы резервных копий (и .sql, и .json)
   const backupFiles = files.filter(file => 
     (file.startsWith('backup-') && file.endsWith('.sql')) ||
-    (file.startsWith('prisma-backup-') && file.endsWith('.json'))
+    ((file.startsWith('prisma-backup-') || file.startsWith('progress-full-')) && file.endsWith('.json'))
   );
   
   if (backupFiles.length === 0) {
@@ -53,21 +53,6 @@ fs.readdir(backupDir, (err, files) => {
 });
 
 function getDateFromFilename(filename) {
-  try {
-    // Для файлов формата backup-YYYY-MM-DDTHH-MM-SS-sssZ.sql
-    if (filename.startsWith('backup-')) {
-      const dateStr = filename.replace('backup-', '').replace('.sql', '').replace(/-/g, ':');
-      return new Date(dateStr);
-    }
-    
-    // Для файлов формата prisma-backup-YYYY-MM-DDTHH-MM-SS-sssZ.json
-    if (filename.startsWith('prisma-backup-')) {
-      const dateStr = filename.replace('prisma-backup-', '').replace('.json', '').replace(/-/g, ':');
-      return new Date(dateStr);
-    }
-    
-    return new Date(0);
-  } catch (error) {
-    return new Date(0);
-  }
+  const match = filename.match(/(\d{4})-(\d{2})-(\d{2})T(\d{2})-(\d{2})-(\d{2})-(\d{3})Z/);
+  return match ? new Date(Date.UTC(+match[1],+match[2]-1,+match[3],+match[4],+match[5],+match[6],+match[7])) : new Date(0);
 }

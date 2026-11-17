@@ -1,5 +1,8 @@
+import { canonicalGoalId } from '@/lib/achievementEligibility.mjs';
+import frozenCatalogs from '@/lib/progress/goalCatalogVersions.json';
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { decorateGoalTime } from '@/lib/goalTimeOptions';
 import { goalsTranslations } from '@/utils/goalsTranslations';
 
 const reportCopy = {
@@ -89,16 +92,11 @@ export async function POST(request, { params }) {
     const translations = goalsTranslations[lang] || goalsTranslations.ru;
     const translateGoal = (goal) => {
       if (!goal?.id) return goal;
-      const m = String(goal.id).match(/(\d+)$/);
-      const goalIdSuffix = m?.[1];
+      const goalIdSuffix = canonicalGoalId(goal);
       if (!goalIdSuffix) return goal;
-      const tr = translations?.[goalIdSuffix];
+      const tr = (goal.catalogVersion ? frozenCatalogs.translations[lang] : translations)?.[goalIdSuffix];
       if (!tr) return goal;
-      return {
-        ...goal,
-        title: tr.title ?? goal.title,
-        description: tr.description ?? goal.description,
-      };
+      return decorateGoalTime({ ...goal, title: tr.title ?? goal.title, description: tr.description ?? goal.description }, lang);
     };
 
     const allGoalsTranslated = lang === 'en'

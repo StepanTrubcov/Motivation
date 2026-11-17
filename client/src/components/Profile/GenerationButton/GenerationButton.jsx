@@ -4,8 +4,8 @@ import c from './GenerationButton.module.css'
 import ModalWindowText from "./ModalWindowText/ModalWindowText";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
-import { toast } from "react-hot-toast";
-import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner';
+import { notifications } from "@/lib/notifications";
+import { FileText } from 'lucide-react';
 
 
 const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDone = [], goalsInProgress = [], series = 0 }) => {
@@ -37,30 +37,23 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
     }, [generatedText, currentStep?.id, onTutorialActionDone]);
 
     const generation = async () => {
+        if (loading) return;
+        const notice = notifications.begin(t('generating'));
+        setLoading(true);
+        try {
 
-        setLoading(true)
-        const loadingToast = toast.loading(t('generating'), {
-            style: {
-                background: '#333',
-                color: '#fff',
-                marginTop: '80px',
-            },
-            icon: <LoadingSpinner size={20} />
-        });
 
         await addTextGenerationData(formattedDate, profile.usersTag, telegramId, goalsDone, goalsInProgress, setGeneratedText, setLoading, true, series, language)
 
-        toast.dismiss(loadingToast);
 
-        toast.success(t('ready'), {
-            style: {
-                background: '#333',
-                color: '#fff',
-                marginTop: '80px',
-            }
-        });
+        notice.success(t('ready'));
 
-        setLoading(false)
+        } catch (error) {
+            console.error(error);
+            notice.error(t('generationError'));
+        } finally {
+            setLoading(false);
+        }
     };
 
 
@@ -72,7 +65,7 @@ const GenerationButton = ({ profile, telegramId, addTextGenerationData, goalsDon
                 disabled={loading}
             >
                 <div className={c.text}>
-                📊
+                <FileText className={c.icon} aria-hidden="true" />
                     {t('generate')}
                 </div>
             </button>

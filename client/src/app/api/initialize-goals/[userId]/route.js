@@ -1,70 +1,21 @@
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { buildInitialGoalRecords } from '@/lib/initializeGoalRecords.mjs';
+import { TEMPLATE_GOALS_ARRAY } from '@/lib/goalCatalog.mjs';
+import { TEST_CATALOG_USER_ID, TEST_GOALS } from '@/lib/testGoalCatalog';
 
 export async function POST(request, { params }) {
   try {
     const { userId } = await params;
-    const { goalsArray } = await request.json();
-
-    if (!goalsArray || !Array.isArray(goalsArray)) {
-      return NextResponse.json({ error: 'goalsArray must be an array' }, { status: 400 });
-    }
-
-    for (const goal of goalsArray) {
-      if (!goal.id || !goal.title || !goal.points || !goal.status || !goal.description) {
-        return NextResponse.json({ error: `Invalid goal data: ${JSON.stringify(goal)}` }, { status: 400 });
-      }
-
-      let statusValue;
-      switch (goal.status) {
-        case 'done': 
-          statusValue = 'completed'; 
-          break;
-        case 'in_progress':
-        case 'not_started': 
-          statusValue = goal.status; 
-          break;
-        default:
-          return NextResponse.json({ error: `Invalid status value: ${goal.status}` }, { status: 400 });
-      }
-
-      // Проверяем категорию
-      const validCategories = ['Sport', 'Discipline', 'Self_development', 'Spirituality'];
-      const categoryValue = goal.category && validCategories.includes(goal.category) ? goal.category : null;
-
-      const uniqueGoalId = `${userId}_${goal.id}`;
-
-      await prisma.goal.upsert({
-        where: { id: uniqueGoalId },
-        update: {
-          title: goal.title,
-          points: goal.points,
-          status: statusValue,
-          category: categoryValue,
-          completionDate: goal.completionDate ? new Date(goal.completionDate) : null,
-          description: goal.description,
-          userId: String(userId),
-          startDate: goal.startDate ? new Date(goal.startDate) : null,
-          progress: goal.progress || 0,
-        },
-        create: {
-          id: uniqueGoalId,
-          title: goal.title,
-          points: goal.points,
-          status: statusValue,
-          category: categoryValue,
-          completionDate: goal.completionDate ? new Date(goal.completionDate) : null,
-          description: goal.description,
-          userId: String(userId),
-          startDate: goal.startDate ? new Date(goal.startDate) : null,
-          progress: goal.progress || 0,
-        },
-      });
-    }
-
-    return NextResponse.json({ message: 'Goals initialized' });
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, storageVersion: true } });
+    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (user.storageVersion === 1) return NextResponse.json({ message: "Shared catalog ready", created: 0 });
+    const catalog = userId === TEST_CATALOG_USER_ID ? TEST_GOALS : TEMPLATE_GOALS_ARRAY;
+    const records = buildInitialGoalRecords(userId, catalog);
+    const result = await prisma.goal.createMany({ data: records, skipDuplicates: true });
+    return NextResponse.json({ message: 'Goals initialized', created: result.count });
   } catch (error) {
-    console.error('Error in /api/initialize-goals/:userId:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('Goal catalog initialization failed:', error);
+    return NextResponse.json({ error: 'Не удалось создать каталог целей' }, { status: 500 });
   }
 }

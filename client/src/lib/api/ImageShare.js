@@ -1,15 +1,14 @@
-import axios from 'axios';
+import axios from './http';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '';
 
-export async function createImageAndShare({ title, description, username, points, language = 'ru' }) {
+export async function createImageAndShare({ title, description, username, language = 'ru' }) {
   try {
     // 1) создаём картинку на сервере; передаём нормальные строки, НЕ encodeURIComponent(...)
     const res = await axios.post(`${BASE_URL}/api/og-image`, {
       title,
       description,
       username,
-      points: String(points ?? 0),
       language,
     }, {
       headers: { 'Content-Type': 'application/json' }
@@ -62,17 +61,19 @@ export async function createImageAndShare({ title, description, username, points
 }
 
 // Функция для генерации изображения и получения URL
-export async function generateImage({ title, img, points, rarityClass, language = 'ru' }) {
+export async function generateImage({ title, img, rarityClass, language = 'ru', description = '', earnedAt }, { signal } = {}) {
   try {
     // создаём картинку на сервере; передаём нормальные строки, НЕ encodeURIComponent(...)
     const res = await axios.post(`${BASE_URL}/api/og-image`, {
       title,
       img,
-      points: String(points ?? 0),
       rarityClass,
       language,
+      description,
+      earnedAt,
     }, {
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      signal,
     });
 
     const imageUrl = res.data?.url;
@@ -80,7 +81,7 @@ export async function generateImage({ title, img, points, rarityClass, language 
 
     return imageUrl;
   } catch (err) {
-    console.error('Generate image error', err);
+    if (!signal?.aborted) console.error('Generate image error', err);
     throw err;
   }
 }

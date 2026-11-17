@@ -1,3 +1,4 @@
+import { readableLightAccent } from '@/lib/themeAccent.mjs';
 import { ReduxProvider } from '@/redux/provider';
 import SingleToastToaster from '@/components/Toast/SingleToastToaster';
 import { BottomNavProvider } from '@/context/BottomNavContext';
@@ -27,18 +28,20 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
         <script src="https://telegram.org/js/telegram-web-app.js" async />
-        <meta name="color-scheme" content="dark" />
+        <meta name="color-scheme" content="dark light" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var c = localStorage.getItem('app-accent-color');
-                  if (c && /^#[0-9a-fA-F]{6}$/.test(c)) {
-                    var r = parseInt(c.slice(1,3), 16), g = parseInt(c.slice(3,5), 16), b = parseInt(c.slice(5,7), 16);
-                    document.documentElement.style.setProperty('--accent-green', c);
-                    document.documentElement.style.setProperty('--accent-green-glow', 'rgba(' + r + ',' + g + ',' + b + ',0.8)');
-                    document.documentElement.style.setProperty('--accent-green-muted', 'rgba(' + r + ',' + g + ',' + b + ',0.25)');
+                  var root = document.documentElement;
+                  var theme = 'dark';
+                  root.classList.add(theme + '-theme');
+                  root.style.colorScheme = theme;
+                  var c = '#59cf8d';
+                  if (/^#[0-9a-fA-F]{6}$/.test(c)) {
+                    root.style.setProperty('--accent-dark', c);
+                    root.style.setProperty('--accent-light', (${readableLightAccent.toString()})(c));
                   }
                 } catch (e) {}
               })();
@@ -52,7 +55,7 @@ export default function RootLayout({ children }) {
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('app-theme') || 'dark';
+                  var theme = 'dark';
                   var root = document.documentElement;
                   var body = document.body;
                   if (theme === 'light') {
@@ -74,12 +77,12 @@ export default function RootLayout({ children }) {
           }}
         />
         <LanguageProvider>
-          <ThemeProvider>
-            <ReduxProvider>
+          <ReduxProvider>
+            <ThemeProvider>
               <TutorialProvider>
                 <TutorialRouteSync />
                 <BottomNavProvider>
-                  <div data-tutorial-id="toast-messages" style={{ position: 'fixed', top: 0, left: '50%', transform: 'translateX(-50%)', minWidth: 280, minHeight: 80, zIndex: 9999 }} aria-hidden>
+                  <div data-tutorial-id="toast-messages" style={{ position: 'fixed', top: 0, left: 0, right: 0, minHeight: 80, zIndex: 11000, pointerEvents: 'none' }}>
                   <SingleToastToaster />
                 </div>
                   <DataInitializer>
@@ -89,8 +92,8 @@ export default function RootLayout({ children }) {
                 </BottomNavProvider>
                 <TutorialOverlay />
               </TutorialProvider>
-            </ReduxProvider>
-          </ThemeProvider>
+            </ThemeProvider>
+          </ReduxProvider>
         </LanguageProvider>
       </body>
     </html>

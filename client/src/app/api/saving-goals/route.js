@@ -1,5 +1,10 @@
+import { calendarWindow } from '@/lib/progress/calendarWindow.mjs';
+import { userDay, shiftDay } from '@/lib/userDay.mjs';
+import { readSnapshot } from '@/lib/progress/readSnapshot.mjs';
+import { readUser } from '@/lib/progress/store.mjs';
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { getGoalTimeConfig } from '@/lib/goalTimeOptions';
 import { goalsTranslations } from '@/utils/goalsTranslations';
 
 const VALID_CALENDAR_PERIODS = [30, 60, 120];
@@ -18,13 +23,13 @@ function resolveSavingGoalsCalendarLength(numberOfDays, selectedOption) {
 function create120DaysGoals(initialGoalData, numberOfDays, selectedOption = null, startDateStr = null) {
   const goals = [];
   const start = startDateStr
-    ? new Date(`${startDateStr}T12:00:00`)
+    ? new Date(`${startDateStr}T12:00:00Z`)
     : new Date();
   const daysToCreate = resolveSavingGoalsCalendarLength(numberOfDays, selectedOption);
 
   for (let i = 0; i < daysToCreate; i++) {
     const date = new Date(start);
-    date.setDate(start.getDate() + i);
+    date.setUTCDate(start.getUTCDate() + i);
 
     const goalObject = {
       date: date.toISOString().split('T')[0],
@@ -41,11 +46,11 @@ function create120DaysGoals(initialGoalData, numberOfDays, selectedOption = null
 function ensureCalendarCoversPeriod(goals, targetDate, periodDays) {
   const base = Array.isArray(goals) ? [...goals] : [];
   const datesSet = new Set(base.map((d) => d.date).filter(Boolean));
-  const start = new Date(`${targetDate}T12:00:00`);
+  const start = new Date(`${targetDate}T12:00:00Z`);
 
   for (let i = 0; i < periodDays; i++) {
     const date = new Date(start);
-    date.setDate(start.getDate() + i);
+    date.setUTCDate(start.getUTCDate() + i);
     const dateStr = date.toISOString().split('T')[0];
 
     if (!datesSet.has(dateStr)) {
@@ -61,7 +66,7 @@ function updateGoalsFromDate(goals, targetDate, newGoalData, selectedOption = nu
   if (selectedOption !== null && selectedOption !== undefined) {
     const targetDateObj = new Date(targetDate);
     const endDateObj = new Date(targetDateObj);
-    endDateObj.setDate(targetDateObj.getDate() + selectedOption);
+    endDateObj.setUTCDate(targetDateObj.getUTCDate() + selectedOption);
 
     return goals.map(goal => {
       const goalDateObj = new Date(goal.date);
@@ -166,16 +171,16 @@ function appendDaysWithGoalTemplate(existingGoals, templateGoalData, numberOfDay
   const lastDateStr = getLastDateInSavingGoals(base);
 
   const start = lastDateStr
-    ? new Date(`${lastDateStr}T12:00:00`)
+    ? new Date(`${lastDateStr}T12:00:00Z`)
     : new Date();
   if (lastDateStr) {
-    start.setDate(start.getDate() + 1);
+    start.setUTCDate(start.getUTCDate() + 1);
   }
 
   const appended = [];
   for (let i = 0; i < numberOfDays; i++) {
     const date = new Date(start);
-    date.setDate(start.getDate() + i);
+    date.setUTCDate(start.getUTCDate() + i);
 
     appended.push({
       date: date.toISOString().split('T')[0],
@@ -493,6 +498,12 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
+    if (goalData?.quantity !== undefined) {
+      const goal = await prisma.goal.findFirst({ where: { id: String(goalData.idGoals), userId: user.id } });
+      if (!goal || !getGoalTimeConfig(goal.id)?.quantityOptions?.includes(goalData.quantity)) {
+        return NextResponse.json({ success: false, error: 'Invalid goal quantity' }, { status: 400 });
+      }
+    }
     const targetDateToUse = targetDate || new Date().toISOString().split('T')[0];
     const periodDays = resolveSavingGoalsCalendarLength(numberOfDays, selectedOption);
 
@@ -550,21 +561,36 @@ export async function GET(request) {
       return NextResponse.json({ success: false, error: 'userId is required' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { telegramId: userId },
-      select: { savingGoals: true }
-    });
+    let window = null;
+    if (searchParams.has('from') || searchParams.has('to')) {
+      try { window = calendarWindow(searchParams.get('from'), searchParams.get('to')); }
+      catch (error) { return NextResponse.json({ error: error.message }, { status: 400 }); }
+    }
+    const userMeta = await prisma.user.findUnique({ where: { telegramId: userId }, select: { id: true, progressMeta: true } });
+    if (!userMeta) return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
+    const todayStr = userDay(new Date(), userMeta.progressMeta?.timeZone || 'UTC');
+    const defaultWindow = !window && autoPeriod !== 'true' && !filterByDays
+      ? calendarWindow(shiftDay(todayStr, -370), todayStr) : null;
+    let filterWindow = null;
+    if (!window && filterByDays) {
+      const days = Number(filterByDays);
+      if (![30,60,120].includes(days)) return NextResponse.json({error:'Invalid calendar range'},{status:400});
+      filterWindow = calendarWindow(shiftDay(todayStr, 1-days), todayStr);
+    }
+    const readWindow = window || defaultWindow || filterWindow;
+    const user = await readSnapshot(prisma, tx => readUser(tx, { telegramId: userId }, { window: readWindow }));
 
     if (!user) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
     }
 
+    if (defaultWindow || filterWindow) return NextResponse.json({ success: true, savingGoals: user.savingGoals || [], from: readWindow.from, to: readWindow.to, truncated: true });
     let savingGoals = Array.isArray(user.savingGoals) ? user.savingGoals : [];
 
     // Если передан параметр autoPeriod, автоматически определяем период
     if (autoPeriod === 'true') {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = userDay(today, user.timeZone || user.progressMeta?.timeZone || 'UTC');
 
       // Находим индекс сегодняшней даты в массиве
       const todayIndex = savingGoals.findIndex(goal => goal.date === todayStr);
@@ -614,7 +640,7 @@ export async function GET(request) {
       const days = parseInt(filterByDays);
       if ([30, 60, 120].includes(days)) {
         const today = new Date();
-        const todayStr = today.toISOString().split('T')[0];
+        const todayStr = userDay(today, user.timeZone || user.progressMeta?.timeZone || 'UTC');
         const todayIndex = savingGoals.findIndex(goal => goal.date === todayStr);
 
         if (todayIndex !== -1) {
@@ -644,10 +670,7 @@ export async function GET_PERIOD(request) {
       return NextResponse.json({ success: false, error: 'userId is required' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { telegramId: userId },
-      select: { savingGoals: true }
-    });
+    const user = await readSnapshot(prisma, tx => readUser(tx, { telegramId: userId }));
 
     if (!user) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
@@ -848,10 +871,7 @@ export async function DELETE(request) {
     }
 
     // Ищем пользователя по telegramId
-    const user = await prisma.user.findUnique({
-      where: { telegramId: userId },
-      select: { savingGoals: true }
-    });
+    const user = await readSnapshot(prisma, tx => readUser(tx, { telegramId: userId }));
 
     if (!user) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
@@ -1094,7 +1114,7 @@ function analyzeGoalsForPeriod(savingGoals, goalsArray, period) {
   // Определяем конечную дату (сегодня)
   const today = new Date();
   const startDate = new Date(today);
-  startDate.setDate(today.getDate() - period + 1);
+  startDate.setUTCDate(today.getUTCDate() - period + 1);
   
   // Фильтруем цели по периоду
   const goalsForPeriod = goalsArray.filter(goal => {
@@ -1174,7 +1194,7 @@ function generateReportText(reportData, user, period, lang = 'ru') {
     const endDate = new Date(dates[dates.length - 1]);
     
     const formatDateShort = (date) => {
-      return `${date.getDate()} ${months[date.getMonth()]}`;
+      return `${date.getUTCDate()} ${months[date.getMonth()]}`;
     };
     
     periodText = `${formatDateShort(startDate)} - ${formatDateShort(endDate)}`;

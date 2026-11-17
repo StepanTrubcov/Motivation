@@ -2,9 +2,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    gap: 8px;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
+    gap: var(--space-4);
 }
 
 .avatar {
@@ -15,7 +15,7 @@
     height: clamp(48px, 15vw, 70px);
     object-fit: cover;
     flex-shrink: 0;
-    margin: 10px 6px;
+    margin: 0;
 }
 
 .nameLights {
@@ -28,6 +28,7 @@
 .info {
     display: flex;
     justify-content: space-between;
+    gap: var(--space-3);
 }
 
 .name {
@@ -42,28 +43,64 @@
 
 .lights {
     width: 100%;
-    background: var(--card-bg-tertiary, #343434);
-    border-radius: 20px;
-    padding: 5px;
-    margin-left: 5px;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.07));
-    box-shadow: var(--shadow, none);
+    background: var(--surface-bg);
+    border-radius: var(--radius-card);
+    padding: 8px 12px;
+    margin-left: 0;
+    border: var(--surface-border);
+    box-shadow: var(--surface-shadow);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    flex: 1;
+    min-width: 0;
+    min-height: 50px;
 }
 
 .glasses {
-    text-align: center;
-    background: var(--card-bg-tertiary, #343434);
-    width: 100%;
-    border-radius: 20px;
-    padding: 5px;
-    color: var(--accent-green, #00ff1e);
-    text-shadow: 0 0 8px var(--accent-green-glow, rgba(0, 255, 42, 0.8));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--surface-bg);
+    border-radius: var(--radius-card);
+    padding: 8px 12px;
+    color: var(--foreground, #ededed);
+    border: var(--surface-border);
+    box-shadow: var(--surface-shadow);
+    flex: 1;
+    min-width: 0;
+    min-height: 50px;
+}
+
+.pointsIcon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    color: var(--accent-green, #61bacb);
+}
+
+.pointsText {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 5px;
+    row-gap: 2px;
+    min-width: 0;
+}
+
+.pointsValue {
+    font-size: clamp(16px, 4.8vw, 20px);
+    line-height: 1.25;
     font-weight: 600;
-    font-size: 25px;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.07));
-    box-shadow: var(--shadow, none);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+}
+
+.pointsUnit {
+    font-size: 12px;
+    line-height: 1.25;
+    color: var(--foreground, #ededed);
+    opacity: 0.7;
 }
 
 .blok {
@@ -71,6 +108,9 @@
     /* border-radius: 14px; */
     /* box-shadow: var(--shadow, none);
     transition: background-color 0.3s ease, box-shadow 0.3s ease; */
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-4);
 }
+
+/* Light appearance */
+:global(.light-theme) .pointsUnit { color: var(--muted-foreground); opacity: 1; }

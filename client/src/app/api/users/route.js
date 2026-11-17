@@ -1,127 +1,59 @@
+import { readSnapshot } from '@/lib/progress/readSnapshot.mjs';
+import { readUser, publicUser } from '@/lib/progress/store.mjs';
 import { prisma } from '@/lib/prisma/prismaPostgresClient';
 import { NextResponse } from 'next/server';
+import { requestIdentity } from '@/lib/telegramAuth.mjs';
 
 export async function GET(request) {
+  const identity = requestIdentity(request);
+  if (!identity) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
-    const { searchParams } = new URL(request.url);
-    const telegramId = searchParams.get('telegramId');
-
-    if (!telegramId) {
-      return NextResponse.json({ error: 'telegramId is required' }, { status: 400 });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { telegramId: String(telegramId) },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    return NextResponse.json(user);
-  } catch (error) {
-    console.error('Ошибка при получении данных пользователя:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
+    const user = await readSnapshot(prisma, tx => readUser(tx, { telegramId: identity.telegramId }));
+    return NextResponse.json(publicUser(user) || { error: 'User not found' }, { status: user ? 200 : 404 });
+  } catch { return NextResponse.json({ error: 'Не удалось загрузить профиль' }, { status: 500 }); }
 }
-
 export async function POST(request) {
+  const identity = requestIdentity(request);
+  if (!identity) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
-    const { telegramId, firstName, username, photoUrl, usersTag } = await request.json();
-
-    console.log('Получен запрос на создание/обновление пользователя:', { telegramId, firstName, username, photoUrl, usersTag });
-
-    let user = await prisma.user.findUnique({
-      where: { telegramId: String(telegramId) },
-    });
-
-    console.log('Поиск пользователя в базе данных:', user ? 'Найден' : 'Не найден');
-
-    if (user) {
-      console.log('Обновление существующего пользователя');
-      if (!user.registrationDate) {
-        console.log('У пользователя нет даты регистрации, удаляем достижения и пользователя');
-        await prisma.achievement.deleteMany({ where: { userId: user.id } });
-        await prisma.user.delete({ where: { id: user.id } });
-        console.log('Создание нового пользователя');
-
-        user = await prisma.user.create({
-          data: {
-            telegramId: String(telegramId),
-            firstName,
-            username,
-            photoUrl,
-            registrationDate: new Date(),
-            usersTag,
-          },
-        });
-      } else {
-        console.log('Обновление данных пользователя');
-        user = await prisma.user.update({
-          where: { telegramId: String(telegramId) },
-          data: { firstName, username, photoUrl },
-        });
-      }
-    } else {
-      console.log('Создание нового пользователя');
-      user = await prisma.user.create({
-        data: {
-          telegramId: String(telegramId),
-          firstName,
-          username,
-          photoUrl,
-          registrationDate: new Date(),
-          usersTag,
-        },
-      });
+    const body = await request.json();
+    const data = { firstName: identity.first_name, username: identity.username || null, photoUrl: identity.photo_url || null };
+    const user = await prisma.user.upsert({ where: { telegramId: identity.telegramId },
+      create: { telegramId: identity.telegramId, ...data, storageVersion: 1, progressMeta: { onboardingStage: 'language', goalCatalog: 'standard-v1', achievementCatalog: 'v2', achievementsInitialized: false, calendar: { ranges: [], extras: {} } }, usersTag: typeof body.usersTag === 'string' ? body.usersTag.slice(0, 40) : null, savingGoals: [] },
+      update: data });
+    // Repair missing legacy registration dates without deleting their goals or achievements.
+    if (!user.registrationDate) {
+      await prisma.user.update({ where: { id: user.id }, data: { registrationDate: user.createdAt } });
     }
-
-    console.log('Пользователь успешно создан/обновлен:', user);
-
-    return NextResponse.json(user);
+    return NextResponse.json(publicUser(await readSnapshot(prisma, tx => readUser(tx, { id: user.id }))));
   } catch (error) {
-    console.error('Ошибка в /api/users:', error);
-    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
+    console.error('Profile initialization failed:', error);
+    return NextResponse.json({ error: 'Не удалось загрузить профиль' }, { status: 500 });
   }
 }
-
 export async function PUT(request) {
+  const identity = requestIdentity(request);
+  if (!identity) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   try {
-    const { telegramId, language } = await request.json();
+    const { language } = await request.json();
+    const value = ['ru', 'rus'].includes(language) ? 'rus' : ['en', 'ang'].includes(language) ? 'ang' : null;
+    if (!value) return NextResponse.json({ error: 'Invalid language' }, { status: 400 });
+    const user = await prisma.user.update({ where: { telegramId: identity.telegramId }, data: { language: value } });
+    return NextResponse.json({ success: true, user: publicUser(await readSnapshot(prisma, tx => readUser(tx, { id: user.id }))) });
+  } catch { return NextResponse.json({ error: 'Не удалось сохранить язык' }, { status: 500 }); }
+}
 
-    if (!telegramId) {
-      return NextResponse.json({ error: 'telegramId is required' }, { status: 400 });
-    }
-    if (!language) {
-      return NextResponse.json({ error: 'language is required' }, { status: 400 });
-    }
-
-    const normalized = String(language).toLowerCase();
-    const dbLanguage = normalized === 'ru' || normalized === 'rus' ? 'rus'
-      : normalized === 'en' || normalized === 'ang' ? 'ang'
-      : null;
-
-    if (!dbLanguage) {
-      return NextResponse.json({ error: "language must be one of: 'rus' or 'ang' (or 'ru'/'en')" }, { status: 400 });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { telegramId: String(telegramId) },
-      select: { id: true, telegramId: true },
+export async function PATCH(request) {
+  const identity = requestIdentity(request);
+  if (!identity) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  try {
+    const { stage, language } = await request.json();
+    if (!['welcome','tutorial-offer','tutorial','rewards','done'].includes(stage)) return NextResponse.json({error:'Invalid stage'},{status:400});
+    const user = await prisma.$transaction(async tx => {
+      await tx.$queryRaw`SELECT id FROM "User" WHERE "telegramId" = ${identity.telegramId} FOR UPDATE`;
+      const current = await tx.user.findUnique({where:{telegramId:identity.telegramId}});
+      return tx.user.update({where:{id:current.id},data:{progressMeta:{...(current.progressMeta || {}),onboardingStage:stage},...(['ru','en'].includes(language)?{language:language === 'en'?'ang':'rus'}:{})}});
     });
-
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: { telegramId: String(telegramId) },
-      data: { language: dbLanguage },
-    });
-
-    return NextResponse.json({ success: true, user: updatedUser });
-  } catch (error) {
-    console.error('Ошибка в /api/users (PUT):', error);
-    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 });
-  }
+    return NextResponse.json({success:true,stage:user.progressMeta.onboardingStage});
+  } catch { return NextResponse.json({error:'Could not save onboarding'},{status:500}); }
 }

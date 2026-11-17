@@ -1,0 +1,56 @@
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-sizing: border-box;
+  width: 54px;
+  min-height: 38px;
+  padding: 6px 12px;
+  border: 1px solid color-mix(in srgb, var(--accent-green, #59cf8d) 30%, #343838);
+  border-radius: 24px;
+  background: light-dark(#f7faf8, #202424);
+  color: var(--accent-green, #59cf8d);
+  box-shadow: 0 4px 16px #0003;
+  pointer-events: auto;
+  will-change: transform;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent-green, #59cf8d) 12%, #202424);
+}
+.spinner { animation: spin .8s linear infinite; }
+.enter { animation: enter .28s cubic-bezier(.2,.8,.2,1) both; }
+.exit { animation: exit .25s ease-in both; pointer-events: none; }
+.error {
+  width: auto;
+  max-width: min(360px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border-color: #9f5353;
+  color: #ffd4d4;
+  background: #302222;
+}
+.error .icon { background: transparent; color: #f28b82; }
+.message { font-size: 13px; line-height: 1.4; overflow-wrap: anywhere; }
+.close { display: grid; place-items: center; align-self: stretch; min-width: 36px; min-height: 36px; border: 0; padding: 0; background: transparent; color: inherit; }
+.srOnly { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes enter { from { transform: translateX(calc(50vw + 180px)); } to { transform: translateX(0); } }
+@keyframes exit { to { transform: translateX(calc(-50vw - 180px)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .enter, .exit { animation: none; }
+  .exit { opacity: 0; }
+  .spinner { animation: none; }
+}
+
+
+/* Light appearance */
+:global(.light-theme) .toast { color: var(--accent-green); background: var(--card-bg); border-color: color-mix(in srgb, var(--accent-green) 25%, var(--border-color)); box-shadow: 0 4px 16px #1b2a3514; }
+:global(.light-theme) .icon { background: var(--accent-green-muted); }
+:global(.light-theme) .error { background: #fff5f5; color: #91303c; border-color: #e8b4bc; }
+:global(.light-theme) .error .icon { color: #be3443; background: transparent; }

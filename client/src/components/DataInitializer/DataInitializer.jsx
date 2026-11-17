@@ -1,16 +1,15 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useBottomNav } from '@/context/BottomNavContext';
 import { useLanguage } from '@/context/LanguageContext';
 import LoadingScreen from '@/components/LoadingScreen/LoadingScreen';
 import FirstTimeOnboarding from '@/components/FirstTimeOnboarding/FirstTimeOnboarding';
 import { addProfile } from '@/redux/profile_reducer';
-import { addGoals, addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
-import { ensureAchievementsInitialized, getAchievementsNewStatus } from '@/redux/assignments_reducer';
-import { checkAll } from '@/utils/checkAll/checkAll';
-import { toast } from 'react-hot-toast';
+import { addStatus, checkTimeGoalsSaving } from '@/redux/goals_reducer';
+import { ensureAchievementsInitialized, checkAchievementsInBackground } from '@/redux/assignments_reducer';
+import AchievementCelebrationManager from '@/components/Achievements/AchievementCelebration/AchievementCelebrationManager';
 
 const DataInitializer = ({ children }) => {
     const dispatch = useDispatch();
@@ -20,110 +19,95 @@ const DataInitializer = ({ children }) => {
     const ThereAreUsers = useSelector((state) => state.goals.ThereAreUsers);
     const timeGoalsSaving = useSelector((state) => state.goals.timeGoalsSaving);
     const goals = useSelector((state) => state.goals.goals);
-    const assignments = useSelector((state) => state.assignments.assignments);
     const assignmentsLoaded = useSelector((state) => state.assignments.assignmentsLoaded);
 
-    const triggeredRef = useRef(new Set());
-    const lastLoadedTelegramIdRef = useRef(null);
+    const [loadError, setLoadError] = useState(null);
+    const [retry, setRetry] = useState(0);
+    const [loadedOwner, setLoadedOwner] = useState(() => user?.id && ThereAreUsers && assignmentsLoaded ? user.id : null);
+    const lastDayRef = useRef(new Date().toISOString().slice(0, 10));
     const lastAppliedDbLanguageRef = useRef(null);
-    const lastEnsuredAchievementsUserIdRef = useRef(null);
 
     useEffect(() => {
-        if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
-            if (!tg.isExpanded) {
-                tg.expand();
-            }
-        }
-        dispatch(addProfile());
-    }, [dispatch]);
-
-    // Синхронизируем язык интерфейса с БД только когда именно значение в БД изменилось.
-    // Это предотвращает откат UI-языка при локальном переключении до прихода обновленного профиля.
-    useEffect(() => {
-        if (!user?.language) return;
-        if (lastAppliedDbLanguageRef.current === user.language) return;
-
-        lastAppliedDbLanguageRef.current = user.language;
-        const targetLang = user.language === 'ang' ? 'en' : 'ru';
-        changeLanguage(targetLang);
-    }, [user?.language]);
+        let active = true;
+        setLoadError(null);
+        const tg = window.Telegram?.WebApp;
+        tg?.ready();
+        if (tg && !tg.isExpanded) tg.expand();
+        if (user?.id && retry === 0) return;
+        dispatch(addProfile()).catch(error => {
+            const unauthorized = [401, 403].includes(error.response?.status) || error.message?.includes('через Telegram');
+            if (active) setLoadError(unauthorized ? 'Откройте приложение через Telegram заново.' : 'Не удалось загрузить приложение. Проверьте соединение и попробуйте ещё раз.');
+        });
+        return () => { active = false; };
+    }, [dispatch, retry, user?.id]);
 
     useEffect(() => {
-        const telegramId = user?.telegramId;
-        if (!telegramId) return;
-
-        // Загружаем историю выполнений независимо от ThereAreUsers.
-        // Это фиксит гонку при старте, когда goals успевают загрузиться раньше.
-        if (lastLoadedTelegramIdRef.current !== telegramId || !Array.isArray(timeGoalsSaving)) {
-            lastLoadedTelegramIdRef.current = telegramId;
-            dispatch(checkTimeGoalsSaving(telegramId));
-        }
-    }, [user?.telegramId, dispatch, timeGoalsSaving]);
-
-    useEffect(() => {
-        if (user && !ThereAreUsers) {
-            dispatch(addGoals(user.id));
-            dispatch(addStatus(user.id));
-        }
-    }, [user, ThereAreUsers, dispatch]);
+        if (!user?.id) return;
+        setLoadedOwner(null);
+        let active = true;
+        setLoadError(null);
+        Promise.all([
+            dispatch(addStatus(user.id)),
+            dispatch(checkTimeGoalsSaving(user.telegramId)),
+            dispatch(ensureAchievementsInitialized(user.id)),
+        ]).then(() => { if (active) setLoadedOwner(user.id); }).catch(() => {
+            if (active) setLoadError('Не удалось загрузить данные. Проверьте соединение и попробуйте ещё раз.');
+        });
+        return () => { active = false; };
+    }, [dispatch, user?.id, user?.telegramId, retry]);
 
     useEffect(() => {
-        if (user && !assignmentsLoaded) {
-            if (lastEnsuredAchievementsUserIdRef.current === user.id) return;
-            lastEnsuredAchievementsUserIdRef.current = user.id;
-            dispatch(ensureAchievementsInitialized(user.id));
-        }
-    }, [user, assignmentsLoaded, dispatch]);
+        const key = `${user?.id}:${user?.language}`;
+        if (!user?.language || lastAppliedDbLanguageRef.current === key) return;
+        lastAppliedDbLanguageRef.current = key;
+        changeLanguage(user.language === 'ang' ? 'en' : 'ru');
+    }, [user?.id, user?.language, changeLanguage]);
+
+    const ready = Boolean(user?.id && loadedOwner === user.id && ThereAreUsers && assignmentsLoaded);
+    useEffect(() => { setShowBottomNav(ready); }, [ready, setShowBottomNav]);
 
     useEffect(() => {
-        if (user && ThereAreUsers && assignmentsLoaded) {
-            setShowBottomNav(true);
-            const newStatusAssignment = async (achievement, userId) => {
-                const res = await dispatch(getAchievementsNewStatus(achievement, userId));
-                if (res?.changed) {
-                    // Очки начисляет сервер (PUT /status). Здесь просто обновим профиль и покажем тост.
-                    await dispatch(addProfile());
-                    toast.success(t('newAchievement'), {
-                        style: {
-                            background: '#333',
-                            color: '#fff',
-                            marginTop: '80px',
-                        }
-                    });
+        if (ready) void dispatch(checkAchievementsInBackground(user.id));
+    }, [ready, user?.id, user?.pts, user?.registrationDate, goals, timeGoalsSaving, dispatch]);
+
+    useEffect(() => {
+        if (!ready) return;
+        const refresh = async () => {
+            if (document.visibilityState !== 'visible') return;
+            const today = new Date().toISOString().slice(0, 10);
+            try {
+                if (lastDayRef.current !== today) {
+                    await dispatch(addStatus(user.id));
+                    await dispatch(checkTimeGoalsSaving(user.telegramId));
+                    lastDayRef.current = today;
                 }
-            };
-            (async () => {
-                
-                await checkAll(
-                    assignments,
-                    triggeredRef,
-                    goals,
-                    newStatusAssignment,
-                    user.id,
-                    user.registrationDate,
-                    user.pts
-                );
-            })();
-        } else {
-            setShowBottomNav(false);
-        }
-    }, [user, ThereAreUsers, assignmentsLoaded, setShowBottomNav, assignments, goals, t, dispatch]);
+                await dispatch(checkAchievementsInBackground(user.id));
+            } catch (error) { console.error('Не удалось обновить данные после смены дня:', error); }
+        };
+        const interval = window.setInterval(refresh, 60000);
+        window.addEventListener('focus', refresh);
+        document.addEventListener('visibilitychange', refresh);
+        return () => {
+            window.clearInterval(interval);
+            window.removeEventListener('focus', refresh);
+            document.removeEventListener('visibilitychange', refresh);
+        };
+    }, [ready, user?.id, user?.telegramId, dispatch]);
 
-    if (!user) {
-        return <LoadingScreen title={t('loadingUser')} />;
-    }
-    if (!ThereAreUsers) {
-        return <LoadingScreen title={t('loadingGoalsInProgress')} />;
-    }
-    if (!assignmentsLoaded) {
-        return <LoadingScreen title={t('loadingAchievements')} />;
+    useEffect(() => {
+        if (ready || loadError) return;
+        const timer = window.setTimeout(() => setLoadError('Загрузка заняла слишком много времени. Попробуйте ещё раз. / Loading timed out. Please try again.'), 45000);
+        return () => window.clearTimeout(timer);
+    }, [ready, loadError, retry]);
+
+    if (!ready || loadError) {
+        return <LoadingScreen title={t('loadingGoalsInProgress')} error={loadError} onRetry={() => setRetry(value => value + 1)} />;
     }
 
     return (
         <FirstTimeOnboarding>
             {children}
+            <AchievementCelebrationManager />
         </FirstTimeOnboarding>
     );
 };

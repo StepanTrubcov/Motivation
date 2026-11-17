@@ -1,3 +1,4 @@
+import { temporaryImages as IMAGES } from '@/lib/serverImageStore';
 import { loadAchievementImage } from '@/lib/loadAchievementImage';
 // route.js для Next.js (Node runtime)
 import { NextResponse } from 'next/server';
@@ -12,7 +13,6 @@ const RARITY_COLORS = {
     text: 'rgba(72, 255, 0, 0.8)',
     ribbon: ' #00cc33',
     label: 'Обычная',
-    points: '#00ff41',
   },
   rare: {
     border: '#00e5ff',
@@ -20,7 +20,6 @@ const RARITY_COLORS = {
     text: '#00e5ff',
     ribbon: '#0099ff',
     label: 'Редкая',
-    points: '#00ffff',
   },
   legendary: {
     border: 'rgba(255, 0, 255, 0.48)',
@@ -28,7 +27,6 @@ const RARITY_COLORS = {
     text: '#ffcc33',
     ribbon: '#ff00ff',
     label: 'Легендарная',
-    points: 'rgba(255,204,51,0.9)',
   },
   epic: {
     border: '#ff9a4d',
@@ -36,13 +34,8 @@ const RARITY_COLORS = {
     text: '#ffcc33',
     ribbon: '#ff8f44',
     label: 'Эпическая',
-    points: '#ff9a4d',
   },
 };
-
-// In-memory store для простоты (в продакшене храните в S3/Redis и т.п.)
-export const IMAGES = new Map(); // id -> { buffer, createdAt }
-const IMAGE_TTL_MS = 1000 * 60 * 60; // 1 час
 
 export const runtime = 'nodejs';
 
@@ -62,20 +55,9 @@ try {
   console.error('Ошибка при регистрации шрифтов Inter:', error);
 }
 
-/** Утилита: чистим старые изображения из памяти */
-export function cleanupExpired() {
-  const now = Date.now();
-  for (const [id, meta] of IMAGES.entries()) {
-    if (now - meta.createdAt > IMAGE_TTL_MS) {
-      IMAGES.delete(id);
-    }
-  }
-}
-
 /** Генерация PNG (вынесена в функцию) */
 async function generateImageBuffer({
   title,
-  points = '0',
   username = 'user',
   img,
   rarityClass = 'common',
@@ -117,11 +99,6 @@ async function generateImageBuffer({
   ctx.textAlign = 'center';
   ctx.fillText(title, width / 2, 900);
 
-  // ===== POINTS =====
-  ctx.fillStyle = rarity.text;
-  ctx.font = `700 64px "${boldFontFamily}"`;
-  ctx.fillText(`${points} pts`, width / 2, 980);
-
   return canvas.toBuffer('image/png');
 }
 
@@ -131,16 +108,15 @@ export async function POST(request) {
 
     const buffer = await generateImageBuffer({
       title: body.title || 'Достижение',
-      points: body.points || '0',
       username: body.username || 'user',
       img: body.img,
       rarityClass: body.rarityClass || 'common',
     });
 
+    if (request.signal.aborted) return new NextResponse(null, { status: 499 });
     const id = randomUUID();
     IMAGES.set(id, { buffer, createdAt: Date.now() });
 
-    cleanupExpired();
 
     const protocol = request.headers.get('x-forwarded-proto') || 'https';
     const host = request.headers.get('host') || 'example.com';
@@ -182,19 +158,17 @@ export async function GET(request) {
       const titleRaw = searchParams.get('title') || 'Достижение';
       const descRaw = searchParams.get('description') || 'Описание достижения';
       const usernameRaw = searchParams.get('username') || 'user';
-      const pointsRaw = searchParams.get('points') || '0';
 
       const title = safeDecodeMaybeDoubleEncoded(titleRaw);
       const description = safeDecodeMaybeDoubleEncoded(descRaw);
       const username = safeDecodeMaybeDoubleEncoded(usernameRaw);
-      const points = safeDecodeMaybeDoubleEncoded(pointsRaw);
 
-      const buffer = generateImageBuffer({ title, description, username, points });
+      const buffer = await generateImageBuffer({ title, description, username });
 
       return new NextResponse(buffer, {
         headers: {
           'Content-Type': 'image/png',
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'private, no-store',
         },
       });
     }
@@ -206,7 +180,7 @@ export async function GET(request) {
     return new NextResponse(meta.buffer, {
       headers: {
         'Content-Type': 'image/png',
-        'Cache-Control': 'public, max-age=3600', // можно настроить
+        'Cache-Control': 'private, no-store',
       },
     });
   } catch (err) {

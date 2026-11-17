@@ -1,3 +1,4 @@
+import { getStreakSnapshot } from '@/lib/streakCelebrations.mjs';
 import React, { useState, useMemo, useEffect } from "react";
 import Yesterday from "./Yesterday";
 import { connect } from "react-redux";
@@ -7,30 +8,14 @@ import { addStatus, addStatusNew, checkTimeGoalsSaving, newStatusSavingGoal } fr
 import { deletePoints, setPoints } from "@/redux/profile_reducer";
 import { addTextGenerationData } from "@/redux/generation_reducer";
 
-function computeSeries(timeGoalsSaving) {
-    if (!timeGoalsSaving || !Array.isArray(timeGoalsSaving)) return 0;
-    const today = new Date().toISOString().split("T")[0];
-    const pastDays = timeGoalsSaving
-        .filter((item) => item.date < today)
-        .sort((a, b) => a.date.localeCompare(b.date));
-    let num = 0;
-    pastDays.forEach((s) => {
-        const r = (s.goalData || []).filter((g) => g.status === "completed");
-        if (r.length >= 1) num += 1;
-        else num = 0;
-    });
-    const todayDay = timeGoalsSaving.find((item) => item.date === today);
-    if (todayDay && todayDay.goalData) {
-        const r = todayDay.goalData.filter((g) => g.status === "completed");
-        if (r.length > 0) num += 1;
-    }
-    return num;
+function computeSeries(calendar) {
+    return getStreakSnapshot(calendar).days;
 }
 
 const YesterdayConteiner = (props) => {
     const { language } = useLanguage();
     const dates = new Date();
-    dates.setDate(dates.getDate() - 1);
+    dates.setUTCDate(dates.getUTCDate() - 1);
     const esterdayDate = dates.toISOString().split('T')[0]
 
     const [date, setDate] = useState(esterdayDate);
@@ -57,7 +42,10 @@ const YesterdayConteiner = (props) => {
             if (goal) {
                 return {
                     ...goal,
-                    status: goalData.status
+                    status: goalData.status,
+                    quantity: goalData.quantity ?? null,
+                    ...(goalData.durationMinutes !== undefined ? { durationMinutes: goalData.durationMinutes } : {}),
+                    ...(goalData.targetTime ? { targetTime: goalData.targetTime } : {}),
                 };
             }
 

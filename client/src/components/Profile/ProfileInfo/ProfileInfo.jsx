@@ -3,36 +3,18 @@ import { useLanguage } from '@/context/LanguageContext';
 import c from './ProfileInfo.module.css'
 import QuestionButton from "./QuestionButton/QuestionButton";
 import LightsConteiner from "./Lights/LightsConteiner";
-
-const formatPts = (value, language) => {
-    const n = Number(value);
-    if (!Number.isFinite(n)) return value ?? '';
-
-    const abs = Math.abs(n);
-    const isRu = language === 'ru';
-    const thousandSuffix = isRu ? 'к' : 'k';
-    const millionSuffix = isRu ? 'м' : 'M';
-
-    const formatOneDecimal = (x) => {
-        const rounded = Math.round(x * 10) / 10;
-        return Number.isInteger(rounded) ? String(rounded) : String(rounded);
-    };
-
-    if (abs >= 1_000_000) return `${formatOneDecimal(n / 1_000_000)}${millionSuffix}`;
-    if (abs >= 1_000) return `${formatOneDecimal(n / 1_000)}${thousandSuffix}`;
-    return String(n);
-};
+import { Gem } from 'lucide-react';
+import { formatPoints, pointsLabelKey } from '@/lib/formatPoints';
 
 const ProfileInfo = (props) => {
     const { t, language } = useLanguage();
-    if (!props.user) return null;
 
     const placeholderSrc = useMemo(
         () => "https://avatars.mds.yandex.net/i?id=a95d35e45f35ee2a8c92a8a16ec415ec5ae03c2a-5220409-images-thumbs&n=13",
         []
     );
 
-    const photoUrl = props.user.photoUrl || null;
+    const photoUrl = props.user?.photoUrl || null;
     const [avatarSrc, setAvatarSrc] = useState(placeholderSrc);
 
     useEffect(() => {
@@ -62,7 +44,10 @@ const ProfileInfo = (props) => {
         };
     }, [photoUrl, placeholderSrc]);
 
-    const ptsText = formatPts(props.user.pts, language);
+    if (!props.user) return null;
+
+    const ptsText = formatPoints(props.user.pts, language);
+    const ptsLabel = t(pointsLabelKey(props.user.pts, language));
 
     return <div className={c.blok} data-tutorial-id="profile-info">
         <div className={c.ProfileInfo} >
@@ -80,7 +65,13 @@ const ProfileInfo = (props) => {
             <QuestionButton />
         </div>
         <div className={c.info} >
-            <div className={c.glasses} data-tutorial-id="profile-points">{ptsText} {t('pts')}</div>
+            <div className={c.glasses} data-tutorial-id="profile-points">
+                <Gem className={c.pointsIcon} aria-hidden="true" />
+                <div className={c.pointsText}>
+                    <span className={c.pointsValue}>{ptsText}</span>
+                    <span className={c.pointsUnit}>{ptsLabel}</span>
+                </div>
+            </div>
             <div className={c.lights} >
                 <LightsConteiner />    
             </div>

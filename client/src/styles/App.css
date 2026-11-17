@@ -30,18 +30,18 @@ html, body {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #000000, #000000);
-  color: white;
+  background: var(--background);
+  color: var(--foreground);
   padding: 20px;
   text-align: center;
   font-family: "Inter", sans-serif;
 }
 
 .loading-box {
-  background: rgba(103, 103, 103, 0.15);
+  background: var(--surface-bg);
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--surface-shadow);
   max-width: 500px;
   width: 100%;
 }
@@ -55,7 +55,7 @@ html, body {
 .loading-text {
   font-size: 1rem;
   margin: 8px 0;
-  color: #cbd5e1;
+  color: var(--muted-foreground);
 }
 
 .loading-support {
@@ -63,29 +63,4 @@ html, body {
   font-size: 0.95rem;
   color: var(--accent-green, #00ff1e);
   font-weight: 500;
-}
-
-/* Принудительно устанавливаем темную тему */
-@media (prefers-color-scheme: dark) {
-  .App {
-    background-color: #000000;
-    color: #ffffff;
-  }
-  
-  .Loading {
-    background-color: #000000;
-    color: #ffffff;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  .App {
-    background-color: #000000;
-    color: #ffffff;
-  }
-  
-  .Loading {
-    background-color: #000000;
-    color: #ffffff;
-  }
 }

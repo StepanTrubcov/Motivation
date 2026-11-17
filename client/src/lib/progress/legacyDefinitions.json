@@ -1,0 +1,2177 @@
+{
+  "goals": {
+    "9a2dcbda46993b995ecb2b18": {
+      "title": "Сделать 20 отжиманий",
+      "points": 15,
+      "category": "Sport",
+      "description": "Отжимайтесь ежедневно для укрепления мышц груди и рук."
+    },
+    "6ff70c5569d67874024b3fa7": {
+      "title": "Провести день без сладостей",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Провести день без сладостей."
+    },
+    "574eac60e05d705d179ffd9e": {
+      "title": "Утренняя зарядка",
+      "points": 15,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,20,30],\"defaultDuration\":10}"
+    },
+    "cd7044aadebbb2cc43758807": {
+      "title": "Сделать растяжку после сна",
+      "points": 10,
+      "category": "Sport",
+      "description": "Мягко разомните тело после сна для энергии и гибкости."
+    },
+    "ca689cb72de04cdedbd14c5d": {
+      "title": "Бегать",
+      "points": 20,
+      "category": "Sport",
+      "description": "Бегать"
+    },
+    "04892033f6c140fbebf43c65": {
+      "title": "Приседать",
+      "points": 25,
+      "category": "Sport",
+      "description": "Приседать"
+    },
+    "ab600f0760a97b8d72092b8c": {
+      "title": "Отжиматься",
+      "points": 15,
+      "category": "Sport",
+      "description": "Отжиматься"
+    },
+    "91e2a8d877b8932926ad7ee7": {
+      "title": "Ходить пешком",
+      "points": 20,
+      "category": "Sport",
+      "description": "Ходить пешком"
+    },
+    "e012ac2cedbbf5c4468a3225": {
+      "title": "Сделать разминку перед началом дня",
+      "points": 10,
+      "category": "Sport",
+      "description": "Небольшая разминка активирует мышцы и улучшает кровообращение."
+    },
+    "f0ed91f91a00160bce291ca3": {
+      "title": "2 часа без телефона",
+      "points": 30,
+      "category": "Discipline",
+      "description": "Отложите телефон, чтобы сосредоточиться на важных делах."
+    },
+    "48ddfe782601a75efac24e8c": {
+      "title": "Учить английский",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Учите новые английские слова ежедневно."
+    },
+    "ed6317aadf289294027c34de": {
+      "title": "Убрать рабочее место",
+      "points": 10,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "3101e67068d64cb4f6e80cf8": {
+      "title": "Пробежать 1 км",
+      "points": 10,
+      "category": "Sport",
+      "description": "Пробегайте по 1 км каждый день на протяжении 30 дней. Это укрепит сердце и повысит выносливость."
+    },
+    "0bbd10e84d2cb25bfe1582cb": {
+      "title": "Пробежать 5 км",
+      "points": 20,
+      "category": "Sport",
+      "description": "Пробегайте по 5 км несколько раз в неделю. Это укрепит сердце и мышцы."
+    },
+    "7b9aa9370b9c4ad5c6f05b15": {
+      "title": "Сделать 50 приседаний",
+      "points": 25,
+      "category": "Sport",
+      "description": "Ежедневно делайте по 50 приседаний для укрепления ног и ягодиц."
+    },
+    "0efd3cbc92dff2db8e3424c9": {
+      "title": "Пройти 5000 шагов",
+      "points": 20,
+      "category": "Sport",
+      "description": "Проходите 5000 шагов ежедневно. Это поддержит здоровье и тонус."
+    },
+    "2d41ee31f519208131ab6466": {
+      "title": "Утренняя зарядка 10 минут",
+      "points": 15,
+      "category": "Sport",
+      "description": "Делайте утреннюю зарядку для энергии на день."
+    },
+    "af197f35134a039a6e05110a": {
+      "title": "Сделать планку 1 минуту",
+      "points": 20,
+      "category": "Sport",
+      "description": "Держите планку по 1 минуте ежедневно. Это укрепит мышцы кора."
+    },
+    "e8241a12f4a8a3281b23908b": {
+      "title": "Сделать 15 минут йоги",
+      "points": 20,
+      "category": "Sport",
+      "description": "Практикуйте йогу ежедневно для гибкости и спокойствия."
+    },
+    "8d7319223808a7f32727abb5": {
+      "title": "Пройти пешком на работу",
+      "points": 15,
+      "category": "Sport",
+      "description": "Замените транспорт пешей прогулкой — заряд бодрости на день."
+    },
+    "b3c889f7caaaaa6d94287f8b": {
+      "title": "Покататься на велосипеде 30 минут",
+      "points": 20,
+      "category": "Sport",
+      "description": "Катайтесь на велосипеде для здоровья и удовольствия."
+    },
+    "eed8ca00eea9ced03a3d033c": {
+      "title": "Сделать растяжку 10 минут",
+      "points": 15,
+      "category": "Sport",
+      "description": "Растягивайтесь ежедневно для гибкости и здоровья суставов."
+    },
+    "c8317f2fb3a09c2b71c158d6": {
+      "title": "Сделать 200 прыжков на скакалке",
+      "points": 25,
+      "category": "Sport",
+      "description": "Прыжки на скакалке улучшают координацию и кардио."
+    },
+    "3f7db6451aec35b4da9b5c9c": {
+      "title": "Погулять 30 минут на свежем воздухе",
+      "points": 10,
+      "category": "Sport",
+      "description": "Прогулка помогает снять стресс и улучшает настроение."
+    },
+    "0cf20d55241921f559484b24": {
+      "title": "Кодить 1 час за ноутбуком",
+      "points": 30,
+      "category": "Discipline",
+      "description": "Программируйте ежедневно для развития дисциплины и навыков."
+    },
+    "eb4d0bdd2ff992749434eb18": {
+      "title": "Облиться холодной водой",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Закаляйтесь холодной водой для укрепления духа и тела."
+    },
+    "40b95a74aa37a452a35401aa": {
+      "title": "Лечь спать до 23:00",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Соблюдайте режим сна для восстановления энергии."
+    },
+    "216d5109fc4bb991d55e1386": {
+      "title": "Рано проснуться",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Начинайте день рано — для продуктивности и спокойствия."
+    },
+    "f9acaa588d025eba94146286": {
+      "title": "Составить распорядок дня",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Распланируйте свой день и следуйте плану."
+    },
+    "34bcc5d34fba05a033c2ca84": {
+      "title": "Убрать рабочее место",
+      "points": 10,
+      "category": "Discipline",
+      "description": "Поддерживайте порядок на столе — это помогает концентрации."
+    },
+    "b6aead584a130a035f8e1527": {
+      "title": "Провести день без сладкого",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Контролируйте свои привычки и укрепляйте дисциплину."
+    },
+    "e0fb07ca42282e9511e10976": {
+      "title": "Поработать 2 часа без отвлечений",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Сосредоточьтесь на задаче и не переключайтесь."
+    },
+    "260d59172b298af58d724e0e": {
+      "title": "Проснуться без телефона в руках",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Начните утро без гаджетов для чистого фокуса."
+    },
+    "6b0a2bfabde3fc3ae82113e0": {
+      "title": "Читать книгу 20 минут",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Читайте ежедневно для развития мышления и внимания."
+    },
+    "36cb445f916f6deda3822d99": {
+      "title": "Смотреть обучающее видео",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Смотрите обучающие материалы для роста."
+    },
+    "6cb662c65106e11cff7bd571": {
+      "title": "Выучить 20 английских слов",
+      "points": 40,
+      "category": "Self_development",
+      "description": "Пополняйте словарный запас каждый день."
+    },
+    "da0d2615ef332cc205e02258": {
+      "title": "Прочитать статью о саморазвитии",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Читайте статьи о личностном росте ежедневно."
+    },
+    "e948c052db1feee2743cc82e": {
+      "title": "Прослушать подкаст о личностном росте",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Слушайте полезные подкасты о саморазвитии."
+    },
+    "a1b460c70ffbcbd36a0d898d": {
+      "title": "Посмотреть документальный фильм",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Расширяйте кругозор, изучая новые темы."
+    },
+    "b49b407e5dfbb67ad0cc84b0": {
+      "title": "Записать 3 идеи для улучшения жизни",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Ежедневно фиксируйте идеи и наблюдения."
+    },
+    "ad55bb14c6ee6cf3ccf8bd82": {
+      "title": "Вести дневник благодарности",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Каждый вечер записывайте 3 вещи, за которые благодарны."
+    },
+    "53cc03265f27ab4c8012644f": {
+      "title": "Научиться новому навыку 30 минут",
+      "points": 25,
+      "category": "Self_development",
+      "description": "Ежедневно осваивайте хоть что-то новое."
+    },
+    "f09ae21d13ef8f1d531d4131": {
+      "title": "Придумать цель на завтра",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Планируйте следующий день заранее для ясности и фокуса."
+    },
+    "5e720cba053cbf861af62531": {
+      "title": "Прочитать одну главу Евангелия",
+      "points": 20,
+      "category": "Spirituality",
+      "description": "Читайте ежедневно одну главу Евангелия для укрепления веры."
+    },
+    "ccb01e77a5904b7cfe6fd959": {
+      "title": "Помолиться утром и вечером",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Начинайте и завершайте день молитвой и благодарностью."
+    },
+    "97b09f66f4ef71eb132d4e78": {
+      "title": "Прочитать молитву перед сном",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Завершайте день молитвой, осмысливая прожитое."
+    },
+    "b6448acd4d8bdc2fbd40ea85": {
+      "title": "Поработать над стартапом",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Развивайте свои идеи и продвигайте личные проекты."
+    },
+    "198720e62d23c046e43630fa": {
+      "title": "Начать утро без телефона",
+      "points": 15,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[15,30,45,60],\"defaultDuration\":30}"
+    },
+    "cea1a286c482bfee40964357": {
+      "title": "Изучить материал и записать выводы",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Изучить материал и записать выводы"
+    },
+    "cd2efcc1a4ccf8bb54058ff9": {
+      "title": "Записать одну идею и следующий шаг",
+      "points": 15,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "03f0c84cde14f70c9cca3d55": {
+      "title": "Практиковать выбранный навык",
+      "points": 25,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,20,30,45,60,90,120],\"defaultDuration\":30}"
+    },
+    "c7b995f35fd05ac2e1b0ff2a": {
+      "title": "Прочитать одну главу Евангелия",
+      "points": 20,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "bbe36d5dc1049a7048111758": {
+      "title": "Записать благодарности",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Записать благодарности"
+    },
+    "efe9a5fa81361a458e3e8d6b": {
+      "title": "Бегать",
+      "points": 10,
+      "category": "Sport",
+      "description": "Бегать"
+    },
+    "491d5ef117c5d3e7da5a405a": {
+      "title": "Пробежать 1 км",
+      "points": 10,
+      "category": "Sport",
+      "description": "Пробежать 1 км"
+    },
+    "930af4854a94cc4f36ae2f8a": {
+      "title": "Пробежать 5 км",
+      "points": 20,
+      "category": "Sport",
+      "description": "Пробежать 5 км"
+    },
+    "53aa5ccd3ba122723db604b4": {
+      "title": "Посмотреть лекцию",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Посмотреть лекцию"
+    },
+    "0320226262a5f61f09504009": {
+      "title": "Сделать заметки по обучению",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Сделать заметки по обучению"
+    },
+    "6f816b296347418ae083a683": {
+      "title": "Практиковать иностранный язык",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Практиковать иностранный язык"
+    },
+    "9b48653c0a32896e7669902e": {
+      "title": "Сделать упражнения для спины",
+      "points": 15,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать упражнения для спины"
+    },
+    "cca9a188d148cc9b6ea06164": {
+      "title": "Сделать мини-исследование темы",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Сделать мини-исследование темы"
+    },
+    "0f6df648d395b6ab57f283a6": {
+      "title": "Посмотреть интервью эксперта",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Посмотреть интервью эксперта"
+    },
+    "6230bd046ef8582120f93e59": {
+      "title": "Помолиться утром",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Помолиться утром"
+    },
+    "0fa7513780ce828b638ec1c1": {
+      "title": "Помолиться вечером",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Помолиться вечером"
+    },
+    "de1d5e4c26a2dbdaee69f364": {
+      "title": "Прочитать духовный текст",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Прочитать духовный текст"
+    },
+    "68f05ac59aaffc529a1a5766": {
+      "title": "Поблагодарить Бога за день",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Поблагодарить Бога за день"
+    },
+    "a9b3f8311dfe41d514ac61de": {
+      "title": "Помолиться своими словами",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Помолиться своими словами"
+    },
+    "fbc915b73dcde24371adff85": {
+      "title": "Помолиться за близких",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Помолиться за близких"
+    },
+    "d00e29d7e77142adef5af2dc": {
+      "title": "Провести 5 минут в молитве",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Провести 5 минут в молитве"
+    },
+    "22a17bbba687d5c8a6d4f174": {
+      "title": "Прочитать псалом",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Шаблонная цель: Прочитать псалом"
+    },
+    "164ede2c0f5399e72d100535": {
+      "title": "Сделать разминку шеи",
+      "points": 10,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать разминку шеи"
+    },
+    "37945cb4c3e12ed10e0082ac": {
+      "title": "Пробежка утром",
+      "points": 20,
+      "category": "Sport",
+      "description": "Шаблонная цель: Пробежка утром"
+    },
+    "8508608248905308d6923f44": {
+      "title": "Сделать тренировку ног 15 минут",
+      "points": 20,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать тренировку ног 15 минут"
+    },
+    "73aac3e7ffb784f3e2d56087": {
+      "title": "Сделать тренировку рук 15 минут",
+      "points": 20,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать тренировку рук 15 минут"
+    },
+    "bcb27880cf929a9246649005": {
+      "title": "Сделать дыхательные упражнения",
+      "points": 10,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать дыхательные упражнения"
+    },
+    "3212821a6c3ed4be3bdc2fa8": {
+      "title": "Сделать тренировку корпуса",
+      "points": 20,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать тренировку корпуса"
+    },
+    "30d06f0095db31600988b979": {
+      "title": "Выпить стакан воды утром",
+      "points": 10,
+      "category": "Sport",
+      "description": "Шаблонная цель: Выпить стакан воды утром"
+    },
+    "893a3569d62b22ab64a024e0": {
+      "title": "Проснуться без откладывания будильника",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Проснуться без откладывания будильника"
+    },
+    "8882d5b69cb87a012b4450ab": {
+      "title": "Сделать план на завтра вечером",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Сделать план на завтра вечером"
+    },
+    "7543c7173afeaedfc476cdf3": {
+      "title": "Не заходить в соцсети утром",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Не заходить в соцсети утром"
+    },
+    "6bd1a99cd0a06d332cc7e265": {
+      "title": "Сфокусироваться на работе 1 час",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Сфокусироваться на работе 1 час"
+    },
+    "534ec83d0393992974356b09": {
+      "title": "Сделать сложную задачу дня",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Сделать сложную задачу дня"
+    },
+    "dd516a81dbc8e6f349bc7f0b": {
+      "title": "Закончить начатое дело",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Закончить начатое дело"
+    },
+    "aa37814545e456cb0065e0e5": {
+      "title": "Соблюдать режим питания",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Соблюдать режим питания"
+    },
+    "6f0eed72eda0c7b329cbd2b2": {
+      "title": "Не есть перед сном",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Не есть перед сном"
+    },
+    "23dc1e5e38b0981e62630bf2": {
+      "title": "Работать по таймеру Pomodoro",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Работать по таймеру Pomodoro"
+    },
+    "4a81929a2f9be56b5ceeb886": {
+      "title": "Подготовить вещи на завтра",
+      "points": 10,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Подготовить вещи на завтра"
+    },
+    "3c8c631dca2b0e50632bb0c5": {
+      "title": "Отключить лишние уведомления",
+      "points": 10,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Отключить лишние уведомления"
+    },
+    "711cfc18c66d9af0b78ec6b3": {
+      "title": "Сделать цифровой детокс 1 час",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Шаблонная цель: Сделать цифровой детокс 1 час"
+    },
+    "c766158072612d158a3dd5c4": {
+      "title": "Выучить 3 новых слова",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Выучить 3 новых слова"
+    },
+    "715ba73512eb1b8e6c0bbe9b": {
+      "title": "Посмотреть образовательное видео",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Посмотреть образовательное видео"
+    },
+    "1996cca459c398dcf89e0d3f": {
+      "title": "Написать запись в дневник",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Написать запись в дневник"
+    },
+    "aa1c7369ecf27380188a11a5": {
+      "title": "Повторить английские слова",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Повторить английские слова"
+    },
+    "e074acbe568ec6a6299cbcda": {
+      "title": "Прочитать полезную статью",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Прочитать полезную статью"
+    },
+    "80143f149f1bcdba1564db13": {
+      "title": "Изучить новую тему 10 минут",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Изучить новую тему 10 минут"
+    },
+    "84623beecb18c30f185c04a5": {
+      "title": "Пройти 10 000 шагов",
+      "points": 25,
+      "category": "Sport",
+      "description": "Шаблонная цель: Пройти 10 000 шагов"
+    },
+    "95ec7dbf4e5cc621fe3676d0": {
+      "title": "Сделать вечернюю прогулку",
+      "points": 15,
+      "category": "Sport",
+      "description": "Шаблонная цель: Сделать вечернюю прогулку"
+    },
+    "66882f6aafeb9cb8ab76c775": {
+      "title": "Сделать 50 приседаний",
+      "points": 25,
+      "category": "Sport",
+      "description": "Сделать 50 приседаний"
+    },
+    "682c783b82559bc18c9abc13": {
+      "title": "Сделать 20 отжиманий",
+      "points": 15,
+      "category": "Sport",
+      "description": "Сделать 20 отжиманий"
+    },
+    "ea36155a9085d4d27a1c0d88": {
+      "title": "Пройти 5000 шагов",
+      "points": 20,
+      "category": "Sport",
+      "description": "Пройти 5000 шагов"
+    },
+    "51679a11a6c803bf44a9d6cd": {
+      "title": "Утренняя зарядка 10 минут",
+      "points": 15,
+      "category": "Sport",
+      "description": "Утренняя зарядка 10 минут"
+    },
+    "34d580ce0633245c45e79429": {
+      "title": "Сделать планку 1 минуту",
+      "points": 20,
+      "category": "Sport",
+      "description": "Сделать планку 1 минуту"
+    },
+    "3e2a8445561442e8f26b913d": {
+      "title": "Сделать 15 минут йоги",
+      "points": 20,
+      "category": "Sport",
+      "description": "Сделать 15 минут йоги"
+    },
+    "501456d1227179ab0d501d60": {
+      "title": "Покататься на велосипеде 30 минут",
+      "points": 20,
+      "category": "Sport",
+      "description": "Покататься на велосипеде 30 минут"
+    },
+    "b71f46ab106cdcb5ea1782c5": {
+      "title": "Сделать растяжку 10 минут",
+      "points": 15,
+      "category": "Sport",
+      "description": "Сделать растяжку 10 минут"
+    },
+    "146fe5de86ee197082374d06": {
+      "title": "Сделать 200 прыжков на скакалке",
+      "points": 25,
+      "category": "Sport",
+      "description": "Сделать 200 прыжков на скакалке"
+    },
+    "1a11fa669afe9cfd092989c6": {
+      "title": "Записать идею проекта",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Шаблонная цель: Записать идею проекта"
+    },
+    "b040634047b5957937df3020": {
+      "title": "Изучать выбранную тему",
+      "points": 15,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,20,30,45,60,90,120],\"defaultDuration\":20}"
+    },
+    "b8356fd5882577b30e852450": {
+      "title": "Практиковать иностранный язык",
+      "points": 20,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,15,30,45,60,90],\"defaultDuration\":15}"
+    },
+    "0a11d9556c19b6342262b445": {
+      "title": "Помолиться утром",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "25bac217a9f8f27bde0c165b": {
+      "title": "Учить английский",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Учить английский"
+    },
+    "49bb50b2edede797772dbd10": {
+      "title": "Поработать над стартапом",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Поработать над стартапом"
+    },
+    "a58c6c6b111f36f038f7aae3": {
+      "title": "Помолиться вечером",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "4df7548287f313883a5e3fad": {
+      "title": "Читать духовную литературу",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,30,45,60],\"defaultDuration\":10}"
+    },
+    "790d25eb60391593ce8cd664": {
+      "title": "Помолиться за близких",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "0770c157a2c5f5baec52fd69": {
+      "title": "Прыгать на скакалке",
+      "points": 25,
+      "category": "Sport",
+      "description": "Прыгать на скакалке"
+    },
+    "f3842b5d53a0a03607a7eb4d": {
+      "title": "Ходить пешком",
+      "points": 25,
+      "category": "Sport",
+      "description": "Ходить пешком"
+    },
+    "187692be9f61852f74aaf465": {
+      "title": "Сделать планку",
+      "points": 20,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[1,2,3],\"defaultDuration\":1}"
+    },
+    "1e462782aaaaaeae65950d81": {
+      "title": "Заниматься йогой",
+      "points": 20,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,15,30,45,60],\"defaultDuration\":15}"
+    },
+    "697d5fb2b1936026b5481f1d": {
+      "title": "Покататься на велосипеде",
+      "points": 20,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[15,30,45,60,90,120],\"defaultDuration\":30}"
+    },
+    "1c1781c3e574c6e94efe3db3": {
+      "title": "Сделать растяжку",
+      "points": 15,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,20,30],\"defaultDuration\":10}"
+    },
+    "5d7eabbad330af19c81fe344": {
+      "title": "Читать книгу",
+      "points": 20,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,20,30,45,60,90,120],\"defaultDuration\":20}"
+    },
+    "6add86d8e829887b3a59fbb7": {
+      "title": "Погулять на свежем воздухе",
+      "points": 10,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[15,30,45,60,90,120],\"defaultDuration\":30}"
+    },
+    "355637bc2ada08328c4bd92b": {
+      "title": "Сделать упражнения для спины",
+      "points": 15,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,20,30],\"defaultDuration\":10}"
+    },
+    "66c73c2d35d54912bdf949a4": {
+      "title": "Практиковать спокойное дыхание",
+      "points": 10,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[3,5,10,15],\"defaultDuration\":5}"
+    },
+    "f0a55d2dd3361df246a63784": {
+      "title": "Лечь спать в выбранное время",
+      "points": 25,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[],\"timePicker\":true,\"defaultTime\":\"23:00\"}"
+    },
+    "409350dd83b7f38a816a0b12": {
+      "title": "Встать в запланированное время",
+      "points": 20,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[],\"timePicker\":true,\"defaultTime\":\"07:00\"}"
+    },
+    "cfe755379cb6d30a92b0e18f": {
+      "title": "Провести время без телефона",
+      "points": 30,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[30,60,90,120,180,240],\"defaultDuration\":120}"
+    },
+    "34995cb1c738ec9a2e4fce1e": {
+      "title": "Встать после первого будильника",
+      "points": 20,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "45e2741c475964c86cb62aea": {
+      "title": "Работать без отвлечений",
+      "points": 25,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[25,45,60,90,120],\"defaultDuration\":60}"
+    },
+    "7ae6be277e1507c222d17170": {
+      "title": "Подготовить вещи на завтра",
+      "points": 10,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "4069f3a35f611398c5768a9f": {
+      "title": "Прочитать статью и записать главный вывод",
+      "points": 10,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "e7d6660a5e49ef152e84986e": {
+      "title": "Записать итоги дня",
+      "points": 10,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,20],\"defaultDuration\":5}"
+    },
+    "4f3c6e787b8ebef6d3c2ff8a": {
+      "title": "Повторить иностранные слова",
+      "points": 15,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,20,30],\"defaultDuration\":10}"
+    },
+    "63612edd762dedcc7f48ad5b": {
+      "title": "Личная молитва",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[5,10,15,20,30],\"defaultDuration\":5}"
+    },
+    "cb3236a9d42f5108ed4158f7": {
+      "title": "Прочитать псалом",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "5274df0c9cdf01152f3c26ef": {
+      "title": "Заниматься пением",
+      "points": 20,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,20,30,60],\"defaultDuration\":20}"
+    },
+    "199231641b44fa1848dc4841": {
+      "title": "Поделиться своим отчётом",
+      "points": 10,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "833da7820df81d3cd41f202f": {
+      "title": "Танцевать",
+      "points": 15,
+      "category": "Sport",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[10,20,30],\"defaultDuration\":20}"
+    },
+    "d9bfc0bcea07fcf5df32c9b1": {
+      "title": "Записать расходы за день",
+      "points": 10,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[]}"
+    },
+    "7b0bcd43c8bf39cdc3c2e894": {
+      "title": "Записать главные задачи на завтра",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Записать главные задачи на завтра"
+    },
+    "f043243a3e6d36d3f056647a": {
+      "title": "Выучить новые иностранные слова",
+      "points": 40,
+      "category": "Self_development",
+      "description": "Выучить новые иностранные слова"
+    },
+    "59a8f8b6c0e64a264cf8ddf6": {
+      "title": "Работать над своим проектом",
+      "points": 20,
+      "category": "Self_development",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[15,30,45,60,90,120,180],\"defaultDuration\":30}"
+    },
+    "3894ac517aa4ba1247033820": {
+      "title": "Программировать",
+      "points": 30,
+      "category": "Discipline",
+      "description": "{\"catalogVersion\":1,\"durationOptions\":[15,30,45,60,90,120,180],\"defaultDuration\":60}"
+    },
+    "80c180f6737adfe88973aa66": {
+      "title": "Погулять 30 минут на свежем воздухе",
+      "points": 10,
+      "category": "Sport",
+      "description": "Погулять 30 минут на свежем воздухе"
+    },
+    "8400fca87b7e9856088a84c3": {
+      "title": "Сделать разминку перед началом дня",
+      "points": 10,
+      "category": "Sport",
+      "description": "Сделать разминку перед началом дня"
+    },
+    "659a4024c999e1ea7eed1c7c": {
+      "title": "Сделать растяжку после сна",
+      "points": 10,
+      "category": "Sport",
+      "description": "Сделать растяжку после сна"
+    },
+    "33a2420a3192ee25e475d264": {
+      "title": "Пробежка утром",
+      "points": 20,
+      "category": "Sport",
+      "description": "Пробежка утром"
+    },
+    "71347792a8ebe798a9e21a65": {
+      "title": "Сделать тренировку ног 15 минут",
+      "points": 20,
+      "category": "Sport",
+      "description": "Сделать тренировку ног 15 минут"
+    },
+    "00c886f1f41e397da4ad34f5": {
+      "title": "Сделать тренировку рук 15 минут",
+      "points": 20,
+      "category": "Sport",
+      "description": "Сделать тренировку рук 15 минут"
+    },
+    "41d3223cbc98562ad3d6eaca": {
+      "title": "Пройти 10 000 шагов",
+      "points": 25,
+      "category": "Sport",
+      "description": "Пройти 10 000 шагов"
+    },
+    "254e2f5a848a43e0d90eefeb": {
+      "title": "Сделать упражнения для спины",
+      "points": 15,
+      "category": "Sport",
+      "description": "Сделать упражнения для спины"
+    },
+    "d7c239af5d64b3952c112cdf": {
+      "title": "Сделать разминку шеи",
+      "points": 10,
+      "category": "Sport",
+      "description": "Сделать разминку шеи"
+    },
+    "4144c875ba8b36ae967708c7": {
+      "title": "Сделать вечернюю прогулку",
+      "points": 15,
+      "category": "Sport",
+      "description": "Сделать вечернюю прогулку"
+    },
+    "1a6119b0db698b84502a5dbc": {
+      "title": "Сделать дыхательные упражнения",
+      "points": 10,
+      "category": "Sport",
+      "description": "Сделать дыхательные упражнения"
+    },
+    "982faf1eb20ff4fe3eb058a3": {
+      "title": "Сделать тренировку корпуса",
+      "points": 20,
+      "category": "Sport",
+      "description": "Сделать тренировку корпуса"
+    },
+    "6f26a4fcc051f962dd34bc82": {
+      "title": "Выпить стакан воды утром",
+      "points": 10,
+      "category": "Sport",
+      "description": "Выпить стакан воды утром"
+    },
+    "cf0f1dea2480e3bdee4c8837": {
+      "title": "Кодить 1 час",
+      "points": 30,
+      "category": "Discipline",
+      "description": "Кодить 1 час"
+    },
+    "7ffb2bfd2acb561657ee1f31": {
+      "title": "Облиться холодной водой",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Облиться холодной водой"
+    },
+    "c25640835235cd3c94fc74b2": {
+      "title": "Рано проснуться",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Рано проснуться"
+    },
+    "809e22be8097f73df629e6bd": {
+      "title": "2 часа без телефона",
+      "points": 30,
+      "category": "Discipline",
+      "description": "2 часа без телефона"
+    },
+    "ec8c2dce7395677aa46733dc": {
+      "title": "Составить распорядок дня",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Составить распорядок дня"
+    },
+    "8a2e88040fc785714682de34": {
+      "title": "Убрать рабочее место",
+      "points": 10,
+      "category": "Discipline",
+      "description": "Убрать рабочее место"
+    },
+    "f485f399c8537e17fd124d12": {
+      "title": "Провести день без сладкого",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Провести день без сладкого"
+    },
+    "0798259471f27318da6c16de": {
+      "title": "Поработать 2 часа без отвлечений",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Поработать 2 часа без отвлечений"
+    },
+    "b947b73b5e7b8224d7c681d7": {
+      "title": "Проснуться без телефона",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Проснуться без телефона"
+    },
+    "d889becdc6061c8889cc02f2": {
+      "title": "Проснуться без откладывания будильника",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Проснуться без откладывания будильника"
+    },
+    "527d957d703daadcce7d14ae": {
+      "title": "Сделать план на завтра вечером",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Сделать план на завтра вечером"
+    },
+    "2ca6f7bc9fd38a63c9067008": {
+      "title": "Не заходить в соцсети утром",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Не заходить в соцсети утром"
+    },
+    "458bbd02f69fc4a23094abb0": {
+      "title": "Сфокусироваться на работе 1 час",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Сфокусироваться на работе 1 час"
+    },
+    "b41b364dbd4afe33eed43a34": {
+      "title": "Сделать сложную задачу дня",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Сделать сложную задачу дня"
+    },
+    "e804fd19e8bbfb7a7ca67124": {
+      "title": "Закончить начатое дело",
+      "points": 20,
+      "category": "Discipline",
+      "description": "Закончить начатое дело"
+    },
+    "4a2a3ef3d2244167cee1836f": {
+      "title": "Соблюдать режим питания",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Соблюдать режим питания"
+    },
+    "30dc5da7cf8b123b356ebfa2": {
+      "title": "Не есть перед сном",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Не есть перед сном"
+    },
+    "2e5d7879e98c1138454cfc06": {
+      "title": "Работать по таймеру Pomodoro",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Работать по таймеру Pomodoro"
+    },
+    "137c79b12e4dc56cf0439ece": {
+      "title": "Подготовить вещи на завтра",
+      "points": 10,
+      "category": "Discipline",
+      "description": "Подготовить вещи на завтра"
+    },
+    "707845229136e699eda6faa6": {
+      "title": "Отключить лишние уведомления",
+      "points": 10,
+      "category": "Discipline",
+      "description": "Отключить лишние уведомления"
+    },
+    "5934468662f862e77eed1a23": {
+      "title": "Сделать цифровой детокс 1 час",
+      "points": 15,
+      "category": "Discipline",
+      "description": "Сделать цифровой детокс 1 час"
+    },
+    "d32514383f5c572fa334ae17": {
+      "title": "Смотреть обучающее видео",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Смотреть обучающее видео"
+    },
+    "9fd33cc791c0d604d31b079d": {
+      "title": "Выучить 20 английских слов",
+      "points": 40,
+      "category": "Self_development",
+      "description": "Выучить 20 английских слов"
+    },
+    "c293c731435ce739fa559fd6": {
+      "title": "Прочитать статью о саморазвитии",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Прочитать статью о саморазвитии"
+    },
+    "35726209fcd652cb8c1e4748": {
+      "title": "Прослушать подкаст о личностном росте",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Прослушать подкаст о личностном росте"
+    },
+    "f2455b074ba773d94bbb5283": {
+      "title": "Посмотреть документальный фильм",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Посмотреть документальный фильм"
+    },
+    "c68a81f00c4e46b1578dbe25": {
+      "title": "Записать 3 идеи",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Записать 3 идеи"
+    },
+    "0f772d834e0b63e5c74a0e01": {
+      "title": "Вести дневник благодарности",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Вести дневник благодарности"
+    },
+    "6661f06947b7a2ab6fe137ed": {
+      "title": "Учить новый навык 30 минут",
+      "points": 25,
+      "category": "Self_development",
+      "description": "Учить новый навык 30 минут"
+    },
+    "4f1ede709a7af75329853744": {
+      "title": "Поставить цель на завтра",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Поставить цель на завтра"
+    },
+    "0199d7dadad3053760c1488f": {
+      "title": "Выучить 3 новых слова",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Выучить 3 новых слова"
+    },
+    "6c1abf42b9c6ecd6ce6568e0": {
+      "title": "Посмотреть образовательное видео",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Посмотреть образовательное видео"
+    },
+    "422ec2c7bfb5e91d38f30768": {
+      "title": "Написать запись в дневник",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Написать запись в дневник"
+    },
+    "64be37c410d30173697c6c23": {
+      "title": "Повторить английские слова",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Повторить английские слова"
+    },
+    "7ef21f6d3c52346883c90212": {
+      "title": "Прочитать полезную статью",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Прочитать полезную статью"
+    },
+    "7ccc69731a5b1d79a0ad05a3": {
+      "title": "Изучить новую тему 10 минут",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Изучить новую тему 10 минут"
+    },
+    "861d3be7bad92234b35e2f6f": {
+      "title": "Записать идею проекта",
+      "points": 10,
+      "category": "Self_development",
+      "description": "Записать идею проекта"
+    },
+    "25964e2543f46a713f518489": {
+      "title": "Посмотреть лекцию",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Посмотреть лекцию"
+    },
+    "b4ffdc1f30edc9ced15b00c9": {
+      "title": "Сделать заметки по обучению",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Сделать заметки по обучению"
+    },
+    "630f1d42efefd466283bc5d8": {
+      "title": "Практиковать иностранный язык",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Практиковать иностранный язык"
+    },
+    "2ded9175fff017e3389b648c": {
+      "title": "Сделать мини-исследование темы",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Сделать мини-исследование темы"
+    },
+    "5919538586496c80269fb9b8": {
+      "title": "Посмотреть интервью эксперта",
+      "points": 15,
+      "category": "Self_development",
+      "description": "Посмотреть интервью эксперта"
+    },
+    "34f4295955d29f959575d85e": {
+      "title": "Прочитать одну главу Евангелия",
+      "points": 20,
+      "category": "Spirituality",
+      "description": "Прочитать одну главу Евангелия"
+    },
+    "49214fd7b6a50ba8c3eb924c": {
+      "title": "Помолиться утром и вечером",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Помолиться утром и вечером"
+    },
+    "c4de139ab584e89143b42583": {
+      "title": "Прочитать молитву перед сном",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Прочитать молитву перед сном"
+    },
+    "ff28ccea1b9ca9a1c2cdd2ee": {
+      "title": "Помолиться утром",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Помолиться утром"
+    },
+    "d15c3c882e3d6d59a7ac4ab8": {
+      "title": "Помолиться вечером",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Помолиться вечером"
+    },
+    "d4874828e26b56be18ef17bc": {
+      "title": "Прочитать духовный текст",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Прочитать духовный текст"
+    },
+    "b7b534a8eb823bd575ac9407": {
+      "title": "Поблагодарить Бога за день",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Поблагодарить Бога за день"
+    },
+    "07635e424506f7448400eb8a": {
+      "title": "Помолиться своими словами",
+      "points": 10,
+      "category": "Spirituality",
+      "description": "Помолиться своими словами"
+    },
+    "f29491ca7cbdd2cab8bb0a0c": {
+      "title": "Помолиться за близких",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Помолиться за близких"
+    },
+    "388b181097b8063b015760fc": {
+      "title": "Провести 5 минут в молитве",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Провести 5 минут в молитве"
+    },
+    "2cb78029b6695676ae45b758": {
+      "title": "Прочитать псалом",
+      "points": 15,
+      "category": "Spirituality",
+      "description": "Прочитать псалом"
+    },
+    "ac083e8e9f36387ba03d379f": {
+      "title": "Лечь спать до 23:00",
+      "points": 25,
+      "category": "Discipline",
+      "description": "Лечь спать до 23:00"
+    },
+    "40fb1e4b4df9b8e90ccd9c4c": {
+      "title": "Читать книгу 20 минут",
+      "points": 20,
+      "category": "Self_development",
+      "description": "Читать книгу 20 минут"
+    }
+  },
+  "achievements": {
+    "b01b1f1a30659563fa856704": {
+      "templateId": "18",
+      "title": "120 дней бега",
+      "description": "",
+      "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 120 раз\n",
+      "image": "/Image/achievements/achievement-18.webp",
+      "gif": "https://i.postimg.cc/fTxhF1vn/Untitled-kopia-5.gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "1"
+      ],
+      "target": 120
+    },
+    "0672fc07a90e44a4b39e1a46": {
+      "templateId": "v2:9",
+      "title": "Прыжок к цели",
+      "description": "Вы выполнили много прыжков на скакалке.",
+      "requirement": "Выполнить цель «Прыгать на скакалке» 45 раз.",
+      "image": "/Image/achievements/achievement-35.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "62"
+      ],
+      "target": 45
+    },
+    "48e19d5329bd94ba5dbb621f": {
+      "templateId": "v2:13",
+      "title": "Сила отжиманий",
+      "description": "Вы выстроили регулярную привычку к упражнениям.",
+      "requirement": "Выполнить цель «Отжиматься» 90 раз.",
+      "image": "/Image/achievements/rare-13-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "8"
+      ],
+      "target": 90
+    },
+    "ebb249eb23589c6a5cdf2688": {
+      "templateId": "2",
+      "title": "30 дней бега",
+      "description": "",
+      "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-2.webp",
+      "gif": "https://i.postimg.cc/0yN7300y/Untitled-kopia-4.gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "1"
+      ],
+      "target": 30
+    },
+    "061acc1d2a433e52dbd38d8d": {
+      "templateId": "3",
+      "title": "Книжный марафон",
+      "description": "",
+      "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-3.webp",
+      "gif": "https://i.postimg.cc/BZV3Hq7c/Untitled-kopia-9.gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "2"
+      ],
+      "target": 30
+    },
+    "4fefc2464e91c313a6549246": {
+      "templateId": "5",
+      "title": "Здоровый рацион",
+      "description": "",
+      "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-5.webp",
+      "gif": "https://i.postimg.cc/cLsNNrr2/Untitled-(3).gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "68"
+      ],
+      "target": 30
+    },
+    "8464a9fe2ed6e9d4896b34a9": {
+      "templateId": "11",
+      "title": "Книжный марафон",
+      "description": "",
+      "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-11.webp",
+      "gif": "https://i.postimg.cc/SNbrZPsp/Untitled-(1)-kopia.gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "2"
+      ],
+      "target": 60
+    },
+    "c33b7b031bdca67476dc05c1": {
+      "templateId": "1",
+      "title": "Красавчик!",
+      "description": "",
+      "requirement": "",
+      "image": "/Image/achievements/achievement-1.webp",
+      "gif": "https://i.postimg.cc/zfr8v0t6/Untitled-kopia-3.gif",
+      "rarity": "common",
+      "type": null,
+      "goalIds": [],
+      "target": null
+    },
+    "a5dc745744b12e515f10f5b3": {
+      "templateId": "4",
+      "title": "Кодерский марафон",
+      "description": "",
+      "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-4.webp",
+      "gif": "https://i.postimg.cc/8cFqt6Xc/Untitled-kopia.gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "4"
+      ],
+      "target": 30
+    },
+    "28fa3c0a3fcf55155c95792a": {
+      "templateId": "6",
+      "title": "Ранний старт",
+      "description": "",
+      "requirement": "• Взять себе цель «Рано проснуться»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-6.webp",
+      "gif": "https://i.postimg.cc/jj1VNcZx/Untitled234.gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "36"
+      ],
+      "target": 30
+    },
+    "6b1bb957e1ff33c1377b1b7f": {
+      "templateId": "22",
+      "title": "Книжный марафон",
+      "description": "",
+      "requirement": "• Взять себе цель «Читать книгу 20 мин»\n• Выполнить эту цель 120 раз\n",
+      "image": "/Image/achievements/achievement-22.webp",
+      "gif": "https://i.postimg.cc/bwD1pHdm/Untitled-(2).gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "2"
+      ],
+      "target": 120
+    },
+    "3477d2b86bbd88e02293d66f": {
+      "templateId": "7",
+      "title": "Ледяная закалка",
+      "description": "",
+      "requirement": "• Взять себе цель «Облиться ❄️ водой»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-7.webp",
+      "gif": "https://i.postimg.cc/tgjnbdh9/Untitled-kopia-6.gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "16"
+      ],
+      "target": 30
+    },
+    "a14a646e00059ffb9dad5116": {
+      "templateId": "v2:1",
+      "title": "Красавчик!",
+      "description": "Вы начали пользоваться приложением и сделали первый шаг к своим целям.",
+      "requirement": "Начать пользоваться приложением.",
+      "image": "/Image/achievements/achievement-1.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "event_based",
+      "goalIds": [],
+      "target": null
+    },
+    "28ffc3881e09ff74bc695cf6": {
+      "templateId": "v2:3",
+      "title": "30 дней бега",
+      "description": "Вы возвращались к бегу и укрепляли привычку.",
+      "requirement": "Выполнить цель «Бегать» 30 раз.",
+      "image": "/Image/achievements/achievement-2.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "1"
+      ],
+      "target": 30
+    },
+    "f7184b4bd57362e585e8f0df": {
+      "templateId": "v2:4",
+      "title": "Книжный марафон",
+      "description": "Регулярное чтение стало частью вашего дня.",
+      "requirement": "Выполнить цель «Читать книгу» 30 раз.",
+      "image": "/Image/achievements/achievement-3.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "2"
+      ],
+      "target": 30
+    },
+    "30f937fe2ec605385d71ab1c": {
+      "templateId": "v2:5",
+      "title": "Кодерский марафон",
+      "description": "Вы регулярно уделяли время программированию.",
+      "requirement": "Выполнить цель «Программировать» 30 раз.",
+      "image": "/Image/achievements/achievement-4.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "4"
+      ],
+      "target": 30
+    },
+    "17c08b450886ef3fab79499c": {
+      "templateId": "v2:6",
+      "title": "Гибкость начинается",
+      "description": "Небольшие занятия растяжкой складываются в привычку.",
+      "requirement": "Выполнить цель «Сделать растяжку после сна» 45 раз.",
+      "image": "/Image/achievements/achievement-32.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "65"
+      ],
+      "target": 45
+    },
+    "8e7ef27868efb598e6e5a75b": {
+      "templateId": "v2:7",
+      "title": "Утро в движении",
+      "description": "Вы начали утро с зарядки.",
+      "requirement": "Выполнить цель «Утренняя зарядка» 30 раз.",
+      "image": "/Image/achievements/achievement-33-v2.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "18"
+      ],
+      "target": 30
+    },
+    "5d9f177ad9370f63a460311a": {
+      "templateId": "14",
+      "title": "Ранний старт",
+      "description": "",
+      "requirement": "• Взять себе цель «Рано проснуться»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-14.webp",
+      "gif": "https://i.postimg.cc/5NmwsNDM/Untitled-kopia23423.gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "36"
+      ],
+      "target": 60
+    },
+    "f252836aa59878ea4b20995f": {
+      "templateId": "v2:8",
+      "title": "Шаг за шагом",
+      "description": "Вы находили время для прогулок на свежем воздухе.",
+      "requirement": "Выполнить цель «Погулять на свежем воздухе» 30 раз.",
+      "image": "/Image/achievements/achievement-34.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "63"
+      ],
+      "target": 30
+    },
+    "21f37f035b5aca472a7e4ab1": {
+      "templateId": "27",
+      "title": "В игре",
+      "description": "",
+      "requirement": "• Пройти обучение\n",
+      "image": "/Image/achievements/achievement-27.webp",
+      "gif": "https://i.postimg.cc/fyjPfH7x/Untitled.gif",
+      "rarity": "common",
+      "type": "event_based",
+      "goalIds": [],
+      "target": null
+    },
+    "0849c1450baedf2d4117e947": {
+      "templateId": "v2:10",
+      "title": "Здоровый рацион",
+      "description": "Вы придерживались выбранного рациона и обходились без сладкого.",
+      "requirement": "Выполнить цель «Провести день без сладостей» 90 раз.",
+      "image": "/Image/achievements/rare-10-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "68"
+      ],
+      "target": 90
+    },
+    "0dadd54ad852c9f8661efaff": {
+      "templateId": "v2:11",
+      "title": "Ранний старт",
+      "description": "Вы закрепили привычку вставать в запланированное время.",
+      "requirement": "Выполнить цель «Встать в запланированное время» 90 раз.",
+      "image": "/Image/achievements/rare-11-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "36"
+      ],
+      "target": 90
+    },
+    "c99e1cf8214787fc68a94e7b": {
+      "templateId": "19",
+      "title": "Ледяная закалка",
+      "description": "",
+      "requirement": "• Взять себе цель «Облиться ❄️ водой»\n• Выполнить эту цель 120 раз\n",
+      "image": "/Image/achievements/achievement-19.webp",
+      "gif": "https://i.postimg.cc/XJpbzJsw/Untitled-kopia-8.gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "16"
+      ],
+      "target": 120
+    },
+    "8ef42bcca943aaf7abb12073": {
+      "templateId": "12",
+      "title": "Кодерский марафон",
+      "description": "",
+      "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-12.webp",
+      "gif": "https://i.postimg.cc/Qd0Jdxqg/Untitled.gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "4"
+      ],
+      "target": 60
+    },
+    "b8f1af0f310f21850778d6b8": {
+      "templateId": "21",
+      "title": "Сила отжиманий",
+      "description": "",
+      "requirement": "• Взять себе цель «Сделать 20 отжиманий»\n• Выполнить эту цель 120 раз\n",
+      "image": "/Image/achievements/achievement-21.webp",
+      "gif": "https://i.postimg.cc/x8cWt41D/5.gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "8"
+      ],
+      "target": 120
+    },
+    "5a05f00368553692b52bf4c9": {
+      "templateId": "8",
+      "title": "Сила отжиманий",
+      "description": "",
+      "requirement": "• Взять себе цель «Сделать 20 отжиманий»\n• Выполнить эту цель 30 раз\n",
+      "image": "/Image/achievements/achievement-8.webp",
+      "gif": "https://i.postimg.cc/PqyJkgXg/Untitled2312.gif",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "8"
+      ],
+      "target": 30
+    },
+    "1e4dd02abbaf7c4375c1bb39": {
+      "templateId": "15",
+      "title": "Ледяная закалка",
+      "description": "",
+      "requirement": "• Взять себе цель «Облиться ❄️ водой»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-15.webp",
+      "gif": "https://i.postimg.cc/bYxbvwzK/Untitled-kopia-7.gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "16"
+      ],
+      "target": 60
+    },
+    "0d2e6590b1dfd590960de1ca": {
+      "templateId": "25",
+      "title": "Великий дисциплинатор",
+      "description": "",
+      "requirement": "• Пользоваться ботом и приложением \n на протяжении 365 дней\n",
+      "image": "/Image/achievements/achievement-25.webp",
+      "gif": "https://i.postimg.cc/NftZJrdY/Untitled-kopia-12.gif",
+      "rarity": "legendary",
+      "type": "time_based",
+      "goalIds": [],
+      "target": 365
+    },
+    "82f8823b0e8d252b681b92e8": {
+      "templateId": "v2:12",
+      "title": "Ледяная закалка",
+      "description": "Вы регулярно практиковали закаливание.",
+      "requirement": "Выполнить цель «Облиться холодной водой» 90 раз.",
+      "image": "/Image/achievements/rare-12-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "16"
+      ],
+      "target": 90
+    },
+    "a54c2aa415b80af8511d1eb9": {
+      "templateId": "v2:14",
+      "title": "Голос души",
+      "description": "Вы регулярно занимались пением.",
+      "requirement": "Выполнить цель «Заниматься пением» 90 раз.",
+      "image": "/Image/achievements/rare-14-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "182"
+      ],
+      "target": 90
+    },
+    "55217326322b4719790aa91b": {
+      "templateId": "v2:15",
+      "title": "Танцевальный ритм",
+      "description": "Вы находили время для танцев и движения.",
+      "requirement": "Выполнить цель «Танцевать» 90 раз.",
+      "image": "/Image/achievements/rare-15-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "184"
+      ],
+      "target": 90
+    },
+    "e9a49aaf615d5a9fe10f5600": {
+      "templateId": "13",
+      "title": "Здоровый рацион",
+      "description": "",
+      "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-13.webp",
+      "gif": "https://i.postimg.cc/3NXg5KR7/Untitled-kopia-10.gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "68"
+      ],
+      "target": 60
+    },
+    "721d6f6b2d4cca067e6f7426": {
+      "templateId": "23",
+      "title": "Здоровый рацион",
+      "description": "",
+      "requirement": "• Взять себе цель «День без сладкого»\n• Выполнить эту цель 120 раз\n",
+      "image": "/Image/achievements/achievement-23.webp",
+      "gif": "https://i.postimg.cc/YqjWzfN7/Untitled-(1)-kopia-2.gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "68"
+      ],
+      "target": 120
+    },
+    "ff7fbc5b27e2ca1bb4c0a4f7": {
+      "templateId": "17",
+      "title": "Полгода прогресса",
+      "description": "",
+      "requirement": "• Пользоваться ботом и приложением \n на протяжении 180 дней\n",
+      "image": "/Image/achievements/achievement-17.webp",
+      "gif": "https://i.postimg.cc/RZ49HDkt/Untitled-kopia-11.gif",
+      "rarity": "rare",
+      "type": "time_based",
+      "goalIds": [],
+      "target": 180
+    },
+    "479986e02a713ce4db206c90": {
+      "templateId": "v2:16",
+      "title": "Финансовый порядок",
+      "description": "Вы последовательно записывали ежедневные расходы.",
+      "requirement": "Выполнить цель «Записать расходы за день» 90 раз.",
+      "image": "/Image/achievements/rare-16-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "185"
+      ],
+      "target": 90
+    },
+    "d3d3ec65cfe353a298f2510d": {
+      "templateId": "v2:17",
+      "title": "Чистое рабочее место",
+      "description": "Вы поддерживали порядок на рабочем месте.",
+      "requirement": "Выполнить цель «Убрать рабочее место» 90 раз.",
+      "image": "/Image/achievements/rare-17-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "66"
+      ],
+      "target": 90
+    },
+    "b068fcdaed3825bd698f91cb": {
+      "templateId": "v2:18",
+      "title": "Без телефона",
+      "description": "Вы регулярно откладывали телефон и сосредотачивались на своих делах.",
+      "requirement": "Выполнить цель «Провести время без телефона» 90 раз.",
+      "image": "/Image/achievements/rare-18-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "45"
+      ],
+      "target": 90
+    },
+    "58cd7f413c5f56a27e42c1eb": {
+      "templateId": "v2:19",
+      "title": "Поделиться прогрессом",
+      "description": "Вы делились своими результатами и поддерживали свой темп.",
+      "requirement": "Выполнить цель «Поделиться своим отчётом» 90 раз.",
+      "image": "/Image/achievements/rare-19-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "183"
+      ],
+      "target": 90
+    },
+    "d1d81ac2d7c9b59ea4e7164a": {
+      "templateId": "v2:20",
+      "title": "Языковой прогресс",
+      "description": "Вы регулярно изучали иностранный язык.",
+      "requirement": "Выполнить цель «Практиковать иностранный язык» 90 раз.",
+      "image": "/Image/achievements/rare-20-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "167"
+      ],
+      "target": 90
+    },
+    "dd36c835ff840567e690b1b0": {
+      "templateId": "v2:21",
+      "title": "Дневник мыслей",
+      "description": "Вы регулярно подводили итоги дня и записывали свои мысли.",
+      "requirement": "Выполнить цель «Записать итоги дня» 90 раз.",
+      "image": "/Image/achievements/rare-21-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "160"
+      ],
+      "target": 90
+    },
+    "3caf1aaf47a86af93085ed18": {
+      "templateId": "v2:22",
+      "title": "На новом уровне",
+      "description": "Вы достигли 25-го уровня.",
+      "requirement": "Достичь 25-го уровня.",
+      "image": "/Image/achievements/rare-22-v1.webp",
+      "gif": "",
+      "rarity": "rare",
+      "type": "level_based",
+      "goalIds": [],
+      "target": 25
+    },
+    "14f47304c6347ca8908837ab": {
+      "templateId": "v2:23",
+      "title": "Серия года",
+      "description": "Год регулярной работы над собой — большой результат.",
+      "requirement": "Пользоваться приложением 365 дней.",
+      "image": "/Image/achievements/legendary-23-v1.webp",
+      "gif": "",
+      "rarity": "legendary",
+      "type": "time_based",
+      "goalIds": [],
+      "target": 365
+    },
+    "d18b8ef2f0b350e363f7a3e3": {
+      "templateId": "v2:24",
+      "title": "Создатель системы",
+      "description": "Вы достигли 100 уровня благодаря постоянному прогрессу.",
+      "requirement": "Достичь 100 уровня.",
+      "image": "/Image/achievements/legendary-24-v1.webp",
+      "gif": "",
+      "rarity": "legendary",
+      "type": "level_based",
+      "goalIds": [],
+      "target": 100
+    },
+    "cd5f0a2449062d409e28debc": {
+      "templateId": "v2:25",
+      "title": "Тысяча выполнений",
+      "description": "Тысяча завершённых целей — внушительный путь.",
+      "requirement": "Выполнить любые цели суммарно 1000 раз.",
+      "image": "/Image/achievements/legendary-25-v1.webp",
+      "gif": "",
+      "rarity": "legendary",
+      "type": "completion_count_based",
+      "goalIds": [],
+      "target": 1000
+    },
+    "fcb22d4f6388b9c0dbf92515": {
+      "templateId": "v2:26",
+      "title": "Коллекционер",
+      "description": "Вы собрали все достижения, кроме эпических.",
+      "requirement": "Получить все ачивки, кроме эпических.",
+      "image": "/Image/achievements/legendary-26-v1.webp",
+      "gif": "",
+      "rarity": "legendary",
+      "type": "collection_based",
+      "goalIds": [],
+      "target": null
+    },
+    "db70c5182c0be21499a51bf8": {
+      "templateId": "v2:27",
+      "title": "Один из первых",
+      "description": "Эту ачивку получили первые 100 пользователей бота.",
+      "requirement": "Попасть в первые 100 пользователей бота.",
+      "image": "/Image/achievements/epic-27-v1.webp",
+      "gif": "",
+      "rarity": "epic",
+      "type": "event_based",
+      "goalIds": [],
+      "target": null
+    },
+    "7b3bf237e0743de489762c5a": {
+      "templateId": "9",
+      "title": "Месяц прогресса",
+      "description": "",
+      "requirement": "• Пользоваться ботом и приложением \n на протяжении 30 дней\n",
+      "image": "/Image/achievements/achievement-9.webp",
+      "gif": "https://i.postimg.cc/jjfHJ2CP/2.gif",
+      "rarity": "common",
+      "type": "time_based",
+      "goalIds": [],
+      "target": 30
+    },
+    "68fd3be05f32a73f176c7982": {
+      "templateId": "v2:2",
+      "title": "В игре",
+      "description": "Вы прошли обучение и познакомились с приложением.",
+      "requirement": "Пройти обучение.",
+      "image": "/Image/achievements/achievement-27.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "event_based",
+      "goalIds": [],
+      "target": null
+    },
+    "873db974453c39cd108544fa": {
+      "templateId": "28",
+      "title": "Активирован прогресс",
+      "description": "",
+      "requirement": "• Достичь 20 уровня\n",
+      "image": "/Image/achievements/achievement-28.webp",
+      "gif": "https://i.postimg.cc/WzryYkzf/213.gif",
+      "rarity": "common",
+      "type": "level_based",
+      "goalIds": [],
+      "target": 20
+    },
+    "730e47569b09f5859e64132e": {
+      "templateId": "v2:3",
+      "title": "30 дней бега",
+      "description": "Вы возвращались к бегу и укрепляли привычку.",
+      "requirement": "Выполнить цель «Бегать» 30 раз.",
+      "image": "/Image/achievements/achievement-2.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "1",
+        "3"
+      ],
+      "target": 30
+    },
+    "f3842d84016b818ede189928": {
+      "templateId": "v2:6",
+      "title": "Гибкость начинается",
+      "description": "Небольшие занятия растяжкой складываются в привычку.",
+      "requirement": "Выполнить цель «Сделать растяжку после сна» 45 раз.",
+      "image": "/Image/achievements/achievement-32.webp",
+      "gif": "",
+      "rarity": "common",
+      "type": "goal_based",
+      "goalIds": [
+        "61",
+        "65"
+      ],
+      "target": 45
+    },
+    "7dac4423969271711fffd325": {
+      "templateId": "26",
+      "title": "Один из первых",
+      "description": "",
+      "requirement": "• Эту ачивку получили первые 100\nпользователей бота.\n• Больше эту ачивку получить нельзя! \n",
+      "image": "/Image/achievements/achievement-26.webp",
+      "gif": "https://allwebs.ru/images/2026/01/16/13d99a897de68b6dcfc0a1a35d6a2c85.gif",
+      "rarity": "epic",
+      "type": null,
+      "goalIds": [],
+      "target": null
+    },
+    "d8a3110843907901d2d6f41e": {
+      "templateId": "16",
+      "title": "Сила отжиманий ",
+      "description": "",
+      "requirement": "• Взять себе цель «Сделать 20 отжиманий»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-16.webp",
+      "gif": "https://i.postimg.cc/DZ5xLw2P/345.gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "8"
+      ],
+      "target": 60
+    },
+    "3f5ac9f3fd74cb5ba7317b07": {
+      "templateId": "24",
+      "title": "Ранний старт",
+      "description": "",
+      "requirement": "• Взять себе цель «Рано проснуться»\n• Выполнить эту цель 120 раз\n",
+      "image": "/Image/achievements/achievement-24.webp",
+      "gif": "https://i.postimg.cc/FRDYj777/Untitled-(1)24324.gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "36"
+      ],
+      "target": 120
+    },
+    "398037f018366dfa9c73fc94": {
+      "templateId": "31",
+      "title": "Коллекционер",
+      "description": "",
+      "requirement": "• Получить все ачивки кроме Эпических\n",
+      "image": "/Image/achievements/achievement-31.webp",
+      "gif": "https://i.postimg.cc/GpdXnrrR/Untitled-(1).gif",
+      "rarity": "legendary",
+      "type": "collection_based",
+      "goalIds": [],
+      "target": null
+    },
+    "2a290e0565021fdfad37cd93": {
+      "templateId": "20",
+      "title": "Кодерский марафон",
+      "description": "",
+      "requirement": "• Взять себе цель «Кодить 1 час на 💻»\n• Выполнить эту цель 90 раз\n",
+      "image": "/Image/achievements/achievement-20.webp",
+      "gif": "https://i.postimg.cc/Qx5XDFhz/Untitled-kopia-2.gif",
+      "rarity": "legendary",
+      "type": "goal_based",
+      "goalIds": [
+        "4"
+      ],
+      "target": 120
+    },
+    "64f30d8c6cb54e33661465f7": {
+      "templateId": "10",
+      "title": "60 дней бега",
+      "description": "",
+      "requirement": "• Взять себе цель «Пробежать 1 км»\n• Выполнить эту цель 60 раз\n",
+      "image": "/Image/achievements/achievement-10.webp",
+      "gif": "https://i.postimg.cc/L8RxsWKW/Untitled-(1).gif",
+      "rarity": "rare",
+      "type": "goal_based",
+      "goalIds": [
+        "1"
+      ],
+      "target": 60
+    },
+    "8ee0d346328875afff04b725": {
+      "templateId": "30",
+      "title": "Создатель системы",
+      "description": "",
+      "requirement": "• Достичь 100 уровня\n",
+      "image": "/Image/achievements/achievement-30.webp",
+      "gif": "https://i.postimg.cc/YCJWMLCF/Untitled-kopia.gif",
+      "rarity": "legendary",
+      "type": "level_based",
+      "goalIds": [],
+      "target": 100
+    },
+    "0482e68d7838f23e2d8fc3a1": {
+      "templateId": "29",
+      "title": "Закалённый системой",
+      "description": "",
+      "requirement": "• Достичь 50 уровня \n",
+      "image": "/Image/achievements/achievement-29.webp",
+      "gif": "https://i.postimg.cc/g0nNBZBS/65.gif",
+      "rarity": "rare",
+      "type": "level_based",
+      "goalIds": [],
+      "target": 50
+    }
+  },
+  "catalogs": {
+    "b2aa5b182f6bac1fa5601a4e": [
+      "0482e68d7838f23e2d8fc3a1",
+      "061acc1d2a433e52dbd38d8d",
+      "0d2e6590b1dfd590960de1ca",
+      "1e4dd02abbaf7c4375c1bb39",
+      "21f37f035b5aca472a7e4ab1",
+      "28fa3c0a3fcf55155c95792a",
+      "2a290e0565021fdfad37cd93",
+      "3477d2b86bbd88e02293d66f",
+      "398037f018366dfa9c73fc94",
+      "3f5ac9f3fd74cb5ba7317b07",
+      "4fefc2464e91c313a6549246",
+      "5a05f00368553692b52bf4c9",
+      "5d9f177ad9370f63a460311a",
+      "64f30d8c6cb54e33661465f7",
+      "6b1bb957e1ff33c1377b1b7f",
+      "721d6f6b2d4cca067e6f7426",
+      "7b3bf237e0743de489762c5a",
+      "7dac4423969271711fffd325",
+      "8464a9fe2ed6e9d4896b34a9",
+      "873db974453c39cd108544fa",
+      "8ee0d346328875afff04b725",
+      "8ef42bcca943aaf7abb12073",
+      "a5dc745744b12e515f10f5b3",
+      "b01b1f1a30659563fa856704",
+      "b8f1af0f310f21850778d6b8",
+      "c33b7b031bdca67476dc05c1",
+      "c99e1cf8214787fc68a94e7b",
+      "d8a3110843907901d2d6f41e",
+      "e9a49aaf615d5a9fe10f5600",
+      "ebb249eb23589c6a5cdf2688",
+      "ff7fbc5b27e2ca1bb4c0a4f7"
+    ],
+    "c7f52fb990c8f3879c0266e8": [
+      "0672fc07a90e44a4b39e1a46",
+      "0849c1450baedf2d4117e947",
+      "0dadd54ad852c9f8661efaff",
+      "14f47304c6347ca8908837ab",
+      "30f937fe2ec605385d71ab1c",
+      "3caf1aaf47a86af93085ed18",
+      "479986e02a713ce4db206c90",
+      "48e19d5329bd94ba5dbb621f",
+      "55217326322b4719790aa91b",
+      "58cd7f413c5f56a27e42c1eb",
+      "68fd3be05f32a73f176c7982",
+      "730e47569b09f5859e64132e",
+      "82f8823b0e8d252b681b92e8",
+      "8e7ef27868efb598e6e5a75b",
+      "a14a646e00059ffb9dad5116",
+      "a54c2aa415b80af8511d1eb9",
+      "b068fcdaed3825bd698f91cb",
+      "cd5f0a2449062d409e28debc",
+      "d18b8ef2f0b350e363f7a3e3",
+      "d1d81ac2d7c9b59ea4e7164a",
+      "d3d3ec65cfe353a298f2510d",
+      "db70c5182c0be21499a51bf8",
+      "dd36c835ff840567e690b1b0",
+      "f252836aa59878ea4b20995f",
+      "f3842d84016b818ede189928",
+      "f7184b4bd57362e585e8f0df",
+      "fcb22d4f6388b9c0dbf92515"
+    ],
+    "8ccf8c45764238158ff25e28": [
+      "0672fc07a90e44a4b39e1a46",
+      "0849c1450baedf2d4117e947",
+      "0dadd54ad852c9f8661efaff",
+      "14f47304c6347ca8908837ab",
+      "17c08b450886ef3fab79499c",
+      "28ffc3881e09ff74bc695cf6",
+      "30f937fe2ec605385d71ab1c",
+      "3caf1aaf47a86af93085ed18",
+      "479986e02a713ce4db206c90",
+      "48e19d5329bd94ba5dbb621f",
+      "55217326322b4719790aa91b",
+      "58cd7f413c5f56a27e42c1eb",
+      "68fd3be05f32a73f176c7982",
+      "82f8823b0e8d252b681b92e8",
+      "8e7ef27868efb598e6e5a75b",
+      "a14a646e00059ffb9dad5116",
+      "a54c2aa415b80af8511d1eb9",
+      "b068fcdaed3825bd698f91cb",
+      "cd5f0a2449062d409e28debc",
+      "d18b8ef2f0b350e363f7a3e3",
+      "d1d81ac2d7c9b59ea4e7164a",
+      "d3d3ec65cfe353a298f2510d",
+      "db70c5182c0be21499a51bf8",
+      "dd36c835ff840567e690b1b0",
+      "f252836aa59878ea4b20995f",
+      "f7184b4bd57362e585e8f0df",
+      "fcb22d4f6388b9c0dbf92515"
+    ]
+  }
+}

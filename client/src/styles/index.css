@@ -15,18 +15,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-/* Принудительно устанавливаем темную тему */
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000000;
-    color: #ffffff;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    background-color: #000000;
-    color: #ffffff;
-  }
-}

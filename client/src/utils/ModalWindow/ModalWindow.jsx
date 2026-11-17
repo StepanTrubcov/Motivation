@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import GoalIcon from '@/components/GoalIcon/GoalIcon';
 import { useLanguage } from '@/context/LanguageContext';
+import { formatGoalQuantity, formatGoalDurationChoice, formatGoalTitleWithTime } from '@/lib/goalTimeOptions';
 import styles from './ModalWindow.module.css'
 
 
@@ -14,15 +16,20 @@ const ModalWindow = ({
     onTutorialDurationSelect,
     onTutorialTakeGoalConfirm,
 }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const number = [
-        { id: 0, name: t('days120'), value: 120 },
-        { id: 1, name: t('days60'), value: 60 },
-        { id: 2, name: t('days30'), value: 30 },
+        { name: t('days30'), value: 30 },
+        { name: t('days60'), value: 60 },
+        { name: t('days120'), value: 120 },
     ];
 
     const [selectedOption, setSelectedOption] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [selectedDuration, setSelectedDuration] = useState(null);
+    const [selectedTime, setSelectedTime] = useState('');
+    const [selectedQuantity, setSelectedQuantity] = useState(null);
+    const quantityOptions = isModalOpen?.quantityOptions || [];
     const [showCongrats, setShowCongrats] = useState(false);
     const modalContentRef = useRef(null);
     const durationBlockRef = useRef(null);
@@ -31,6 +38,22 @@ const ModalWindow = ({
     const showTutorialDurationHighlight = isTutorialGoalModal && tutorialPhase === 'duration';
     const showTutorialButtonHighlight = isTutorialGoalModal && tutorialPhase === 'button';
     const showTutorialDimInModal = showTutorialDurationHighlight && dimRects;
+    const durationOptions = isModalOpen?.durationOptions || [];
+    const hasDurationPicker = durationOptions.length > 0;
+    const hasTimePicker = isModalOpen?.timePicker === true;
+    const baseTitle = isModalOpen?.baseTitle || isModalOpen?.title || '';
+    const liveBaseTitle = hasDurationPicker
+        ? isModalOpen?.durationBaseTitle || baseTitle
+        : hasTimePicker
+            ? isModalOpen?.timeBaseTitle || baseTitle
+            : baseTitle;
+    const liveTitle = formatGoalTitleWithTime(liveBaseTitle, {
+        quantity: quantityOptions.length ? selectedQuantity : undefined,
+        quantityUnit: isModalOpen?.quantityUnit,
+        quantityUnitEn: isModalOpen?.quantityUnitEn,
+        durationMinutes: selectedDuration,
+        targetTime: selectedTime,
+    }, language);
 
     useLayoutEffect(() => {
         const isDurationStep = isTutorialGoalModal && tutorialPhase === 'duration';
@@ -63,10 +86,16 @@ const ModalWindow = ({
     }, [isTutorialGoalModal, tutorialPhase, isModalOpen]);
 
     useEffect(() => {
+        setSelectedOption(null);
+        setShowCongrats(false);
         if (!isModalOpen) {
-            setSelectedOption(null);
-            setShowCongrats(false);
+            setSelectedDuration(null);
+            setSelectedTime('');
+            return;
         }
+        setSelectedQuantity(isModalOpen.quantity ?? isModalOpen.defaultQuantity ?? null);
+        setSelectedDuration(isModalOpen.durationMinutes ?? isModalOpen.defaultDuration ?? isModalOpen.durationOptions?.[0] ?? null);
+        setSelectedTime(isModalOpen.targetTime || isModalOpen.defaultTime || '');
     }, [isModalOpen]);
 
     const handleOptionChange = (id) => {
@@ -76,22 +105,25 @@ const ModalWindow = ({
         }
     };
 
-    const handleAddStatus = () => {
-        if (selectedOption === null) return;
-        if (isTutorialGoalModal) {
-            const days = number[selectedOption]?.value;
-            onTutorialTakeGoalConfirm?.(days);
-            closeModal();
-            addNewStatus(days, { fromTutorial: true });
-            return;
-        }
-        addNewStatus(number[selectedOption]?.value);
+    const handleAddStatus = async () => {
+        if (submitting || selectedOption === null || (hasDurationPicker && selectedDuration === null) || (hasTimePicker && !selectedTime)) return;
+        setSubmitting(true);
+        try {
+            await addNewStatus(selectedOption, {
+                fromTutorial: !!isTutorialGoalModal,
+                quantity: quantityOptions.length ? selectedQuantity : undefined,
+                durationMinutes: hasDurationPicker ? selectedDuration : undefined,
+                targetTime: hasTimePicker ? selectedTime : undefined,
+            });
+            if (isTutorialGoalModal) onTutorialTakeGoalConfirm?.(selectedOption);
+        } catch { /* The request handler displays the error; stay on this step. */ }
+        finally { setSubmitting(false); }
     };
 
     const handleCongratsClose = () => {
         setShowCongrats(false);
         if (selectedOption !== null && onTutorialTakeGoalConfirm) {
-            onTutorialTakeGoalConfirm(number[selectedOption]?.value);
+            onTutorialTakeGoalConfirm(selectedOption);
         }
     };
 
@@ -125,39 +157,78 @@ const ModalWindow = ({
                     >
                         <X size={24} />
                     </button>
-                    <h2 className={styles.modalTitle}>{isModalOpen.title}</h2>
-                    {isModalOpen.image && (<img className={styles.modalImg} src={isModalOpen.image} />)}
-                    <p className={styles.modalText}>{isModalOpen.description}</p>
+                    <div className={styles.modalHeading}>
+                        <GoalIcon goal={isModalOpen} />
+                        <h2 className={styles.modalTitle} aria-live="polite">{liveTitle}</h2>
+                    </div>
+                    {/* {!hasDurationPicker && !hasTimePicker && <p className={styles.modalText}>{isModalOpen.description}</p>} */}
                     <div>
-                        <div
+                        {quantityOptions.length > 0 && <section className={styles.choiceSection}>
+                            <div className={styles.choiceHeading}>{language === 'ru' ? 'Количество на день' : 'Daily quantity'}</div>
+                            <div className={styles.choiceGroup} role="group" aria-label={language === 'ru' ? 'Количество' : 'Quantity'}>
+                                {quantityOptions.map(value => <button type="button" key={value} className={`${styles.choiceButton} ${selectedQuantity === value ? styles.choiceButtonSelected : ''}`} aria-pressed={selectedQuantity === value} onClick={() => setSelectedQuantity(value)}>{formatGoalQuantity(value, isModalOpen.quantityUnit, isModalOpen.quantityUnitEn, language)}</button>)}
+                            </div>
+                        </section>}
+                        {hasDurationPicker && (
+                            <section className={styles.choiceSection} aria-label={t('goalTimePerDay')}>
+                                <div className={styles.choiceHeading}>{t('goalTimePerDay')} <span>{t('everyDay')}</span></div>
+                                <div className={`${styles.choiceGroup} ${styles.timeChoiceGroup}`} role="group" aria-label={t('goalTimePerDay')}>
+                                    {durationOptions.map((minutes) => (
+                                        <button
+                                            key={minutes}
+                                            type="button"
+                                            className={`${styles.choiceButton} ${selectedDuration === minutes ? styles.choiceButtonSelected : ''}`}
+                                            aria-pressed={selectedDuration === minutes}
+                                            onClick={() => setSelectedDuration(minutes)}
+                                        >
+                                            {formatGoalDurationChoice(minutes, language)}
+                                        </button>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {hasTimePicker && (
+                            <section className={styles.choiceSection} aria-label={t('goalTimeAt')}>
+                                <label className={styles.timePickerLabel} htmlFor="goal-time-picker">{t('goalTimeAt')}</label>
+                                <input
+                                    id="goal-time-picker"
+                                    className={styles.timePickerInput}
+                                    type="time"
+                                    value={selectedTime}
+                                    onChange={(event) => setSelectedTime(event.target.value)}
+                                />
+                            </section>
+                        )}
+
+                        <section
                             ref={durationBlockRef}
+                            className={styles.choiceSection}
                             {...(isTutorialGoalModal ? { 'data-tutorial-id': 'goals-take-modal-duration' } : {})}
                         >
-                            <div className={styles.radioGroup}>
+                            <div className={styles.choiceHeading}>{t('goalCommitment')}</div>
+                            <div className={styles.choiceGroup} role="group" aria-label={t('goalCommitment')}>
                                 {number.map((item) => (
-                                    <label key={item.id} className={styles.radioLabel}>
-                                        <input
-                                            type="radio"
-                                            name="duration"
-                                            value={item.id}
-                                            checked={selectedOption === item.id}
-                                            onChange={() => handleOptionChange(item.id)}
-                                            className={styles.radioInput}
-                                        />
-                                        <span className={styles.radioButton}></span>
+                                    <button
+                                        key={item.value}
+                                        type="button"
+                                        className={`${styles.choiceButton} ${styles.daysChoiceButton} ${selectedOption === item.value ? styles.choiceButtonSelected : ''}`}
+                                        aria-pressed={selectedOption === item.value}
+                                        onClick={() => handleOptionChange(item.value)}
+                                    >
                                         {item.name}
-                                    </label>
+                                    </button>
                                 ))}
                             </div>
-                        </div>
+                        </section>
 
                         <button
                             onClick={handleAddStatus}
                             className={`${styles.actionButton} ${showTutorialButtonHighlight ? styles.tutorialHighlightButton : ''}`}
-                            disabled={selectedOption === null}
+                            disabled={submitting || selectedOption === null || (hasDurationPicker && selectedDuration === null) || (hasTimePicker && !selectedTime)}
                             {...(isTutorialGoalModal ? { 'data-tutorial-id': 'goals-take-modal-button' } : {})}
                         >
-                            {t('takeGoalFor')} {number[selectedOption]?.name}
+                            {t('takeGoalFor')} {number.find((item) => item.value === selectedOption)?.name}
                         </button>
                     </div>
                 </motion.div>

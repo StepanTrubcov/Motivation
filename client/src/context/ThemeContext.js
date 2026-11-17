@@ -1,26 +1,21 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
+
+import { readableLightAccent } from '@/lib/themeAccent.mjs';
+import { DEFAULT_ACCENT, normalizeAccent } from '@/lib/accentColors';
+import { readUserAppearance, saveUserAppearance } from '@/lib/userAppearance.mjs';
 
 const ThemeContext = createContext();
+const storage = () => { try { return window.localStorage; } catch { return null; } };
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState('dark');
-    const [accentColor, setAccentColor] = useState('#00ff1e');
+    const userId = useSelector(state => state.profile?.profile?.id ?? null);
+    const [appearance, setAppearance] = useState({ userId: null, theme: 'dark', accentColor: DEFAULT_ACCENT });
+    const theme = appearance.userId === userId ? appearance.theme : 'dark';
+    const accentColor = appearance.userId === userId ? appearance.accentColor : DEFAULT_ACCENT;
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('app-theme') || 'dark';
-        const savedColor = localStorage.getItem('app-accent-color') || '#00ff1e';
-        setTheme(savedTheme);
-        setAccentColor(savedColor);
-        applyTheme(savedTheme);
-        applyAccentColor(savedColor);
-    }, []);
-
-     useEffect(() => {
-        applyAccentColor(accentColor);
-    }, [accentColor]);
-
-    const applyTheme = (newTheme) => {
+    function applyTheme(newTheme) {
         const root = document.documentElement;
         const body = document.body;
         
@@ -39,30 +34,36 @@ export const ThemeProvider = ({ children }) => {
         }
     };
 
-    const applyAccentColor = (color) => {
+    function applyAccentColor(color) {
         const root = document.documentElement;
-        const r = parseInt(color.slice(1, 3), 16);
-        const g = parseInt(color.slice(3, 5), 16);
-        const b = parseInt(color.slice(5, 7), 16);
-        const glowColor = `rgba(${r}, ${g}, ${b}, 0.8)`;
-        const mutedColor = `rgba(${r}, ${g}, ${b}, 0.25)`;
-        
-        root.style.setProperty('--accent-green', color);
-        root.style.setProperty('--accent-green-glow', glowColor);
-        root.style.setProperty('--accent-green-muted', mutedColor);
+        root.style.setProperty('--accent-dark', color);
+        root.style.setProperty('--accent-light', readableLightAccent(color));
+        // Remove properties left by a previous runtime during Fast Refresh.
+        ['--accent-green', '--accent-green-glow', '--accent-green-muted'].forEach(name => root.style.removeProperty(name));
     };
+
+    useLayoutEffect(() => {
+        const saved = readUserAppearance(storage(), userId, DEFAULT_ACCENT);
+        const restored = { ...saved, accentColor: normalizeAccent(saved.accentColor) };
+        setAppearance({ userId, ...restored });
+        applyTheme(restored.theme);
+        applyAccentColor(restored.accentColor);
+    }, [userId]);
+
 
     const toggleTheme = () => {
         const newTheme = theme === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-        localStorage.setItem('app-theme', newTheme);
+        const next = { theme: newTheme, accentColor };
+        setAppearance({ userId, ...next });
+        saveUserAppearance(storage(), userId, next);
         applyTheme(newTheme);
     };
 
     const setAccentColorHandler = (color) => {
-        setAccentColor(color);
-        localStorage.setItem('app-accent-color', color);
-        applyAccentColor(color);
+        const next = { theme, accentColor: normalizeAccent(color) };
+        setAppearance({ userId, ...next });
+        saveUserAppearance(storage(), userId, next);
+        applyAccentColor(next.accentColor);
     };
 
     return (

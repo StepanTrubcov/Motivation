@@ -1,7 +1,6 @@
 'use client';
 import React, { useEffect, useRef } from "react";
 import c from "./MonthlyPointsScale.module.css";
-import { toast } from "react-hot-toast";
 import { LEVEL_THRESHOLDS, calcLevelFromPts } from "@/utils/levels";
 
 const MonthlyPointsScale = ({ userPoints = 0 }) => {
@@ -9,8 +8,8 @@ const MonthlyPointsScale = ({ userPoints = 0 }) => {
     const currentLevel = calcLevelFromPts(userPoints);
 
     const levelMin = levels[currentLevel - 1];
-    const levelMax = levels[currentLevel];
-    const progress = Math.min(((userPoints - levelMin) / (levelMax - levelMin)) * 100, 100);
+    const levelMax = levels[currentLevel] ?? levelMin;
+    const progress = levelMax > levelMin ? Math.max(0, Math.min(((userPoints - levelMin) / (levelMax - levelMin)) * 100, 100)) : 100;
 
     const prevLevel = useRef(currentLevel)
     return (

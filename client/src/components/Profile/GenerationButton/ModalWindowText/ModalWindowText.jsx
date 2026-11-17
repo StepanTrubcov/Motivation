@@ -2,28 +2,28 @@
 import styles from './ModalWindowText.module.css'
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import { X, Copy } from "lucide-react";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
-import toast from "react-hot-toast";
+import { notifications as toast } from "@/lib/notifications";
 
 const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
     const { t } = useLanguage();
     const { onTutorialActionDone, currentStep } = useTutorial();
     const isReportViewStep = currentStep?.id === 'report-view';
     const copyToClipboard = async (text) => {
-        await navigator.clipboard.writeText(text);
-        toast.success(t('reportCopied'), {
-            style: {
-                background: '#333',
-                color: '#fff',
-                marginTop: '80px',
-            }
-        });
-        closeModalText();
+        const notice = toast.begin(t('generating'));
+        try {
+            await navigator.clipboard.writeText(text);
+            notice.success(t('reportCopied'));
+            if (onTutorialActionDone) onTutorialActionDone('copy_report');
+            closeModalText();
+        } catch (error) {
+            console.error(error);
+            notice.error(t('shareGenericFailed'));
+        }
     };
     const handleCopyClick = () => {
-        if (onTutorialActionDone) onTutorialActionDone('copy_report');
         copyToClipboard(isModalOpenText);
     };
 
@@ -47,6 +47,8 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                         onClick={(e) => e.stopPropagation()}
                         data-tutorial-id="report-modal"
                     >
+                        <div className={styles.modalHeader}>
+                        <h2 className={styles.modalTitle}>{t('reportWindowTitle')}</h2>
                         <button
                             type="button"
                             onClick={isReportViewStep ? undefined : closeModalText}
@@ -57,6 +59,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                         >
                             <X size={24} />
                         </button>
+                        </div>
                         <pre className={styles.previewText}>
                             {isModalOpenText}
                         </pre>
@@ -66,6 +69,7 @@ const ModalWindowText = ({ isModalOpenText, closeModalText }) => {
                                 onClick={handleCopyClick}
                                 aria-label={t('copy')}
                             >
+                                <Copy size={18} aria-hidden="true" />
                                 {t('copy')}
                             </button>
                         </div>

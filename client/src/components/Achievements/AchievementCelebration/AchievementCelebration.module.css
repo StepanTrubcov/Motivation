@@ -1,0 +1,44 @@
+.overlay {
+  --celebration-color: #70f0aa;
+  --spark: #70f0aa;
+  --button-ink: #142b21;
+  position: fixed; inset: 0; z-index: 10900;
+  display: flex; align-items: center; justify-content: center;
+  padding: max(28px, calc(var(--tg-safe-area-inset-top, 0px) + var(--tg-content-safe-area-inset-top, 0px) + 16px)) 18px max(20px, env(safe-area-inset-bottom));
+  background: #0009; backdrop-filter: blur(5px);
+}
+.rare { --celebration-color: #78b9ff; --spark: #78b9ff; }
+.legendary { --celebration-color: #ffd166; --spark: #ffd166; }
+.epic { --celebration-color: #d09aff; --spark: #d09aff; }
+.panel {
+  position: relative; width: 100%; max-width: 360px;
+  max-height: 100%; overflow-y: auto; overscroll-behavior: contain;
+  padding: 28px 22px 16px; border-radius: 22px;
+  color: var(--foreground, #ededed); background: var(--surface-bg, #222627);
+  border: 1px solid color-mix(in srgb, var(--celebration-color) 40%, transparent);
+  text-align: center; box-shadow: 0 20px 70px #0006;
+  animation: achievement-pop 600ms cubic-bezier(.22, 1.2, .3, 1) both;
+}
+.close { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 36px; height: 36px; color: var(--muted-foreground); background: transparent; border: 0; border-radius: 50%; cursor: pointer; }
+.eyebrow { margin: 0 20px 8px; color: var(--celebration-color); font-size: 15px; font-weight: 700; }
+.art { display: grid; grid-template-rows: minmax(0, 1fr); place-items: center; width: 100%; height: min(230px, 30dvh); margin: 8px 0; background: radial-gradient(ellipse, color-mix(in srgb, var(--spark) 19%, transparent), transparent 70%); }
+.art img { display: block; width: 100%; height: 100%; min-width: 0; min-height: 0; object-fit: contain; animation: achievement-art 750ms cubic-bezier(.22, 1.2, .3, 1) both; }
+.title { margin: 8px 0; font-size: clamp(22px, 6vw, 28px); font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; text-wrap: balance; }
+.description { margin: 12px 0 8px; font-size: 14px; line-height: 1.5; color: var(--muted-foreground, #b5c1bb); }
+.rarity { margin: 8px 0 22px; font-size: 12px; line-height: 1.5; color: var(--celebration-color); }
+.primary, .share { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 46px; border: 0; border-radius: var(--radius-control, 12px); font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+.primary { background: var(--celebration-color); color: var(--button-ink); }
+.share { margin-top: 6px; background: transparent; color: var(--celebration-color); }
+.primary:focus-visible, .share:focus-visible, .close:focus-visible { outline: 2px solid var(--celebration-color); outline-offset: 3px; }
+.confetti { position: absolute; z-index: 2; inset: 0; overflow: hidden; pointer-events: none; }
+.piece { position: absolute; top: -20px; border-radius: 2px; background: var(--piece-color); opacity: 0; animation: achievement-confetti var(--duration) var(--delay) ease-in both; }
+@keyframes achievement-pop { from { opacity: 0; transform: translateY(24px) scale(.84); } to { opacity: 1; transform: none; } }
+@keyframes achievement-art { from { opacity: 0; transform: translateY(25px) scale(.7) rotate(-7deg); } to { opacity: 1; transform: none; } }
+@keyframes achievement-confetti { 0% { opacity: 0; transform: translateY(-20px) rotate(0); } 8%, 80% { opacity: .95; } 100% { opacity: 0; transform: translate(var(--drift), calc(100dvh + 45px)) rotate(var(--spin)); } }
+:global(.light-theme) .overlay { background: var(--overlay-bg); --button-ink: #fff; }
+:global(.light-theme) .common { --celebration-color: var(--rarity-common); }
+:global(.light-theme) .rare { --celebration-color: var(--rarity-rare); }
+:global(.light-theme) .legendary { --celebration-color: var(--rarity-legendary); }
+:global(.light-theme) .epic { --celebration-color: var(--rarity-epic); }
+@media (prefers-reduced-motion: reduce) { .panel, .art img { animation: none; } .confetti { display: none; } }
+@media (max-height: 580px) { .panel { padding-top: 20px; } .art { height: 120px; } .title { font-size: 22px; } .rarity { margin-bottom: 12px; } }
