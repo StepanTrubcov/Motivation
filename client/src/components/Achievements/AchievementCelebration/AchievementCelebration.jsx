@@ -4,7 +4,7 @@ import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Share2 } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-import { resolveAchievementImage } from '@/lib/achievementImages';
+import { achievementImageSrc } from '@/lib/achievementImages';
 import c from './AchievementCelebration.module.css';
 
 const CONFETTI = Array.from({ length: 140 }, (_, index) => ({
@@ -58,7 +58,7 @@ export default function AchievementCelebration({ achievement, onClose, onShare }
       <section ref={panelRef} className={c.panel} role="dialog" aria-modal="true" aria-labelledby={titleId}>
         <button className={c.close} type="button" onClick={onClose} aria-label={en ? 'Close' : 'Закрыть'}><X size={20} /></button>
         <p className={c.eyebrow}>{en ? 'New achievement!' : 'Новая ачивка!'}</p>
-        <div className={c.art}><img src={resolveAchievementImage(achievement.image, achievement)} alt="" width={512} height={512} loading="eager" /></div>
+        <div className={c.art}><img src={achievementImageSrc(achievement.image, achievement)} alt="" width={512} height={512} loading="eager" /></div>
         <h2 id={titleId} className={c.title}>{achievement.title}</h2>
         {achievement.description && <p className={c.description}>{achievement.description}</p>}
         <p className={c.rarity}>{label} · {en ? 'In your collection' : 'В коллекции'}</p>

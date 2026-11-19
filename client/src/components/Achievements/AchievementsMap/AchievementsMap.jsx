@@ -3,7 +3,7 @@ import c from "./AchievementsMap.module.css";
 import { useLanguage } from '@/context/LanguageContext';
 import { useTutorial } from '@/context/TutorialContext';
 import { translateAchievements, getAchievementTranslation, achievementsTranslations } from '@/utils/achievementsTranslations';
-import { resolveAchievementImage } from '@/lib/achievementImages';
+import { achievementImageSrc, resolveAchievementImage } from '@/lib/achievementImages';
 import { Check } from "lucide-react";
 
 const AchievementsMap = ({
@@ -288,7 +288,7 @@ const AchievementsMap = ({
                                 )}
                                 <div className={c.cardInner}>
                                     <div className={`${c.imageWrapper} ${rarityClass}`}>
-                                        <img className={c.img} src={resolveAchievementImage(a.image, a)} alt="" loading="lazy" decoding="async" />
+                                        <img className={c.img} src={achievementImageSrc(a.image, a)} alt="" loading="lazy" decoding="async" />
                                     </div>
                                     <div className={c.cardContent}>
                                         <div className={c.title}>{displayTitle}</div>
