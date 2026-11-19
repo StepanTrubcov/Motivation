@@ -18,8 +18,6 @@ export async function POST(request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-telegram-init-data': request.headers.get('x-telegram-init-data') || '',
-        'x-development-telegram-id': request.headers.get('x-development-telegram-id') || '',
       },
       body: JSON.stringify({
         title,

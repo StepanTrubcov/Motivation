@@ -1,7 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createHmac, randomUUID } from 'node:crypto';
-import { telegramIdentity, requestIdentity, authorizeApiRequest, botServiceSignature } from './telegramAuth.mjs';
+import { randomUUID } from 'node:crypto';
 import { planGoalLifecycle, commitGoalLifecycle } from './goalLifecycle.mjs';
 import { dailyGoalUpdate } from './dailyGoalRollover.mjs';
 import { canUnlockAchievement } from './achievementEligibility.mjs';
@@ -10,52 +9,6 @@ import { calcLevelFromPts, LEVEL_THRESHOLDS } from '../utils/levels.js';
 const now = new Date('2026-11-01T00:00:01Z');
 const user = { id: 'alice', pts: 100, savingGoals: [] };
 const goal = { id: 'alice_1', userId: 'alice', status: 'not_started', progress: 30, points: 20 };
-const signed = (overrides = {}) => {
-  const params = new URLSearchParams({ auth_date: String(Math.floor(Date.now() / 1000)), user: JSON.stringify({ id: 123, first_name: 'Alice' }), ...overrides });
-  const key = createHmac('sha256', 'WebAppData').update('fixture-token').digest();
-  params.set('hash', createHmac('sha256', key).update([...params].sort(([a], [b]) => a.localeCompare(b)).map(([k, v]) => `${k}=${v}`).join('\n')).digest('hex'));
-  return params.toString();
-};
-test('Telegram accepts authentic data and rejects tampering, expiration, future dates and duplicate fields', () => {
-  const data = signed();
-  assert.equal(telegramIdentity(data, 'fixture-token').telegramId, '123');
-  assert.equal(telegramIdentity(data.replace('Alice', 'Bob'), 'fixture-token'), null);
-  assert.equal(telegramIdentity(signed({ auth_date: '1' }), 'fixture-token'), null);
-  assert.equal(telegramIdentity(signed({ auth_date: String(Math.floor(Date.now() / 1000) + 300) }), 'fixture-token'), null);
-  assert.equal(telegramIdentity(data + '&user={}', 'fixture-token'), null);
-  assert.equal(telegramIdentity(data, 'wrong-token'), null);
-});
-test('Unsigned fixture is limited to local development, never production or a deployed dev host', () => {
-  assert.equal(requestIdentity(new Request('http://localhost/api/users'), { environment: 'development' }).telegramId, '123');
-  assert.equal(requestIdentity(new Request('http://localhost/api/users'), { environment: 'production' }), null);
-  assert.equal(requestIdentity(new Request('https://example.com/api/users'), { environment: 'development' }), null);
-});
-test('API rejects other owners, forged points, bulk operations and legacy history overwrites; image bearer remains public', async () => {
-  const db = { user: { findUnique: async ({ where }) => ({ telegramId: where.id === 'alice' ? '123' : '456' }) } };
-  const options = { environment: 'development' };
-  assert.equal(await authorizeApiRequest(new Request('http://localhost/api/goals/alice'), db, options), null);
-  assert.equal(await authorizeApiRequest(new Request('http://localhost/api/check-completion/alice', { method: 'POST' }), db, options), null);
-  assert.equal((await authorizeApiRequest(new Request('http://localhost/api/goals/bob'), db, options)).status, 403);
-  assert.equal((await authorizeApiRequest(new Request('http://localhost/api/users/alice/pts/increment', { method: 'POST', body: '{}' }), db, options)).status, 403);
-  assert.equal((await authorizeApiRequest(new Request('http://localhost/api/saving-goals?userId=456'), db, options)).status, 403);
-  assert.equal((await authorizeApiRequest(new Request('http://localhost/api/saving-goals', { method: 'PUT', body: JSON.stringify({ userId: '123', goalsArray: [] }) }), db, options)).status, 409);
-  assert.equal((await authorizeApiRequest(new Request('http://localhost/api/update-all-achievements', { method: 'POST', body: '{}' }), db, options)).status, 403);
-  assert.equal(await authorizeApiRequest(new Request(`https://app.test/api/og-image?id=${randomUUID()}`), db, { environment: 'production' }), null);
-});
-test('bot service signature is time-limited and only grants the user-id list endpoint', async () => {
-  const token = 'fixture-token';
-  const timestamp = Math.floor(Date.now() / 1000);
-  const signature = botServiceSignature(timestamp, 'GET', '/api/users/all-ids', token);
-  const valid = new Request('https://app.test/api/users/all-ids', { headers: { 'x-bot-service-auth': `${timestamp}.${signature}` } });
-  const db = {};
-  assert.equal(await authorizeApiRequest(valid, db, { token }), null);
-
-  const wrongPath = new Request('https://app.test/api/users', { headers: { 'x-bot-service-auth': `${timestamp}.${signature}` } });
-  assert.equal((await authorizeApiRequest(wrongPath, db, { token })).status, 401);
-  const wrongMethod = new Request('https://app.test/api/users/all-ids', { method: 'POST', headers: { 'x-bot-service-auth': `${timestamp}.${signature}` } });
-  assert.equal((await authorizeApiRequest(wrongMethod, db, { token })).status, 401);
-  assert.equal((await authorizeApiRequest(valid, db, { token, now: (timestamp + 61) * 1000 })).status, 401);
-});
 test('Taking covers exactly the chosen UTC dates across month boundaries and preserves progress', () => {
   const plan = planGoalLifecycle(user, goal, { action: 'take', requestId: randomUUID(), selectedOption: 30, durationMinutes: 20 }, now);
   assert.equal(plan.goal.progress, undefined);

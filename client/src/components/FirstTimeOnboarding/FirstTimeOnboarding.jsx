@@ -44,7 +44,7 @@ export default function FirstTimeOnboarding({ children }) {
     transitionRef.current = true;
     setSaving(true); setSaveError(false);
     try {
-    await http.patch('/api/users', { stage: next, language });
+    await http.patch('/api/users', { telegramId: user?.telegramId, stage: next, language });
     if (language) changeLanguage(language);
     saveOnboardingStage(user?.id, next, getStorage());
     setSession({ userId: user?.id, stage: next });
