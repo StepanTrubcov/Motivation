@@ -21,17 +21,10 @@ export function resolveGoalDefinition(key) {
   if (!value) throw new Error(`Missing immutable goal definition ${key}`);
   return value;
 }
-export function achievementCatalog(user) {
-  const key = user.progressMeta?.achievementCatalog || 'v2';
-  if (key === 'v2') return ACHIEVEMENT_TEMPLATES.map(a => ({ ...a, templateId: `v2:${a.id}` }));
-  const keys = definitions.catalogs[key];
-  if (!keys) throw new Error(`Unknown achievement catalog ${key}`);
-  const historical = keys.map(key => ({ ...definitions.achievements[key], definitionKey: key,
-    templateId: definitions.achievements[key].templateId || `legacy:${key}`, points: 0 }));
-  // New streak milestones are available to every account while the rest of an
-  // immutable legacy catalog remains unchanged for historical compatibility.
-  return [...historical, ...ACHIEVEMENT_TEMPLATES.filter(item => item.type === 'streak_based')
-    .map(item => ({ ...item, templateId: `v2:${item.id}` }))];
+export function achievementCatalog() {
+  // Compact accounts always use the canonical catalog shipped with the app.
+  // Legacy achievement snapshots are never revived from per-user metadata.
+  return ACHIEVEMENT_TEMPLATES.map(a => ({ ...a, templateId: `v2:${a.id}` }));
 }
 export function legacyCatalogKey(rows) {
   const keys = rows.map(row => hashValue(achievementDefinition(row))).sort();

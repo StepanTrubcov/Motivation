@@ -82,12 +82,18 @@ export async function readAchievements(db, userId, existingUser) {
   if (!user) return [];
   if (!compact(user)) return db.achievement.findMany({ where: { userId } });
   const earned = new Map((await db.earnedAchievement.findMany({ where: { userId } })).map(a => [a.templateId,a]));
-  return achievementCatalog(user).sort((a,b) => String(a.templateId).localeCompare(String(b.templateId))).map(template => {
+  const templates = achievementCatalog().sort((a,b) => String(a.templateId).localeCompare(String(b.templateId)));
+  const currentTemplateIds = new Set(templates.map(template => template.templateId));
+  const hasStaleEarnedRows = [...earned.keys()].some(templateId => !currentTemplateIds.has(templateId));
+  const catalogInitialized = (user.progressMeta?.achievementCatalog || 'v2') === 'v2'
+    && user.progressMeta?.achievementsInitialized === true
+    && !hasStaleEarnedRows;
+  return templates.map(template => {
     const reward = earned.get(template.templateId);
     return { ...template, id: reward?.id || virtualAchievementId(user, template.templateId), userId,
       status: reward ? 'my' : 'locked', points: 0, earnedAt: reward?.earnedAt || null,
       createdAt: reward?.createdAt || user.createdAt, updatedAt: reward?.updatedAt || user.createdAt,
-      catalogBacked: true, catalogInitialized: user.progressMeta?.achievementsInitialized === true };
+      catalogBacked: true, catalogInitialized };
   });
 }
 export async function awardAchievement(db, user, achievement, now = new Date()) {
