@@ -256,42 +256,45 @@
 /* Goal cards share one fixed footprint, regardless of title or saved time. */
 .goalCard:not(.blokCarousel) { margin-block: var(--space-2); }
 
+.goalCard:not(.blokCarousel) { padding-block: 5px; }
+
 
 .goalCard .goalText {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 2px;
-    min-height: 20px;
+    gap: 1px;
+    max-height: 100%;
+    min-height: 0;
     overflow: hidden;
 }
 
 .goalCard .title {
     display: -webkit-box;
+    overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
-    overflow: hidden;
-    line-height: 1.2;
+    line-height: 1.1;
     overflow-wrap: anywhere;
 }
 
-.goalTime {
+.goalCard:not(.blokCarousel) .goalTime {
     min-width: 0;
     overflow: hidden;
     color: var(--foreground, #ffffff);
     opacity: 0.68;
-    font-size: 13px;
-    line-height: 18px;
+    font-size: 12px;
+    line-height: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.goalCard .pts {
+.goalCard:not(.blokCarousel) .pts {
     margin-top: 0;
     overflow: hidden;
-    font-size: 13px;
-    line-height: 18px;
+    font-size: 12px;
+    line-height: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
